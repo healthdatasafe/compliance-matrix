@@ -281,7 +281,7 @@ requirements:
     draft: true
     pryv_primitives: [access, event, stream, audit]
     derives_from: [gdpr.Art.15, gdpr.Art.16, gdpr.Art.17, gdpr.Art.20]
-    tests: [AA01, EGSQ, U9HQ, PTU1, USAD]
+    tests: [AA01, EGSQ, UZEV, PTU1, USAD]
     overview: |
       The personal-token Pryv API gives the data subject direct access
       to events, streams, accesses, audit data. Implementer wraps it

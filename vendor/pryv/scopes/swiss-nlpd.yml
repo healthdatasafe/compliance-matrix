@@ -57,7 +57,7 @@ requirements:
     draft: true
     pryv_primitives: [access, permissions, clientData, audit]
     derives_from: [gdpr.Art.5]
-    tests: [GLHP, U9HQ, AA01]
+    tests: [GLHP, UZEV, AA01]
     overview: |
       Same Pryv contributions as GDPR Art. 5: permissions enforce
       purpose-limitation technically; audit + access versioning give
@@ -243,7 +243,7 @@ requirements:
     pryv_primitives: [access, stream, event, audit, data-types, account-backup-tool]
     derives_from: [gdpr.Art.15]
     functional_specs: [EVENT.BASE, STREAM.BASE]
-    tests: [AA01, EGSQ, U9HQ]
+    tests: [AA01, EGSQ, UZEV]
     overview: |
       Same implementation as GDPR Art. 15: subject holding a personal
       token reads everything via the standard Pryv API (events, streams,
@@ -556,7 +556,7 @@ requirements:
     pryv_primitives: [access, clientData, audit, CMC, data-residency]
     derives_from: [gdpr.Art.30]
     docs: [customer-resources/audit-setup.md, guides/audit-logs.md]
-    tests: [U9HQ, QXCH, AA01]
+    tests: [UZEV, TJ8S, AA01]
     overview: |
       Same primitive-set mapping as GDPR Art. 30: access + clientData
       + audit + CMC + data-residency form the technical register

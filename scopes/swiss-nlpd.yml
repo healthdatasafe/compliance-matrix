@@ -1,0 +1,1122 @@
+id: swiss-nlpd
+title: Swiss Federal Act on Data Protection (revised FADP / nLPD)
+short: Swiss nLPD
+type: regulation
+jurisdiction: Switzerland (extraterritorial via Art. 3 for processing affecting CH)
+version: SR 235.1 (revFADP / nLPD, in force 2023-09-01)
+version_date: "2023-09-01"
+canonical_url: https://www.fedlex.admin.ch/eli/cc/2022/491/en
+matrix_language: EN
+layered_on_pryv: swiss-nlpd
+regions: [ch]
+
+changelog:
+  - date: "2026-06-15"
+    change: >
+      Initial draft of the HDS layer over the Swiss nLPD. All rows draft pending
+      review.
+
+requirements:
+
+  - ref: Art.5
+    title: Definitions
+    text: |
+      Defines key terms including personal data, sensitive personal data,
+      processing, controller and processor. The nLPD's sensitive-data category
+      is broader than GDPR Art. 9, adding social-assistance measures and data
+      on administrative or criminal proceedings and sanctions.
+    pryv_ref: Art.5
+    draft: true
+    hds:
+      coverage: facilitated
+      effort_saved: medium
+      facilitation_mode: primitive
+      regions: [ch]
+      overview: |
+        On top of Pryv's primitive model, HDS operates the platform on which the
+        controller designs the stream layout. The classification of a data
+        category as sensitive — including the nLPD's broader categories — is the
+        controller's editorial decision, which HDS carries into the access and
+        audit record.
+      detail: |
+        The recommended pattern dedicates separate stream subtrees per
+        sensitive-data category and grants accesses scoped to the smallest
+        necessary subtree, so the heightened-protection posture follows the
+        topology. HDS stores and enforces that layout; it does not assign the
+        sensitivity classification.
+      evidence:
+        internal_docs:
+          - hipaa/policies/access-control
+    implementer:
+      - persona: controller
+        coverage: documented
+        overview: |
+          Classify data categories — including the nLPD's broader sensitive
+          categories — and design stream topology and permission scopes
+          accordingly.
+      - persona: processor
+        coverage: documented
+        overview: |
+          Process the categories the controller designates only as instructed.
+        templates: [dpa]
+      - persona: data-subject
+        coverage: out-of-scope
+
+  - ref: Art.6
+    title: Principles of processing
+    text: |
+      Processing must be lawful, in good faith and proportionate. Personal data
+      may be collected only for a purpose recognisable to the data subject;
+      accuracy must be ensured and data destroyed or anonymised when no longer
+      needed.
+    pryv_ref: Art.6
+    draft: true
+    hds:
+      coverage: implemented
+      effort_saved: high
+      regions: [ch]
+      overview: |
+        HDS operates the platform whose permission model enforces purpose
+        limitation technically and whose audit log and access version history
+        provide the accountability artefact. Event update with version
+        preservation supports the accuracy duty. The substantive purpose and
+        proportionality judgements remain the controller's.
+      detail: |
+        The purpose written into the access client-data should mirror the purpose
+        presented to the data subject, satisfying the nLPD's recognisability
+        criterion as a durable record. Storage limitation is operated through the
+        same erasure mechanics described under Art. 32; automated retention
+        enforcement is a known gap that the controller must cover by process.
+      evidence:
+        internal_docs:
+          - hipaa/policies/minimum-necessary
+          - hipaa/policies/access-control
+    implementer:
+      - persona: controller
+        coverage: documented
+        overview: |
+          Determine the lawful purpose, present it recognisably at collection,
+          and define a retention and destruction policy.
+      - persona: processor
+        coverage: documented
+        overview: |
+          Process only within the controller's stated purpose and instructions.
+        templates: [dpa]
+      - persona: data-subject
+        coverage: facilitated
+        overview: |
+          You exercise rectification through the platform; prior versions are
+          preserved.
+
+  - ref: Art.7
+    title: Data protection by design and by default
+    text: |
+      The controller must ensure, from planning through implementation, that
+      processing complies with the Act through suitable technical and
+      organisational measures, with privacy-protective default settings.
+    pryv_ref: Art.7
+    draft: true
+    hds:
+      coverage: facilitated
+      effort_saved: high
+      facilitation_mode: infrastructure
+      regions: [ch]
+      overview: |
+        The Pryv architecture HDS operates is privacy-protective by
+        construction — per-user storage isolation, stream-scoped permissions,
+        distinct access types, system streams for privileged data and
+        audit-by-default. HDS runs this baseline; the per-deployment default
+        configuration is the controller's.
+      detail: |
+        What stays on the controller is the deployment-time choice of token
+        scopes minted, retention selected and the notice shown at registration.
+        HDS supplies and operates the privacy-by-design substrate that those
+        choices configure.
+      evidence:
+        internal_docs:
+          - hipaa/policies/access-control
+    implementer:
+      - persona: controller
+        coverage: documented
+        overview: |
+          Configure privacy-protective defaults at deployment — minimal token
+          scopes, retention policy and registration notice.
+      - persona: processor
+        coverage: documented
+        overview: |
+          Operate within the design and defaults the controller sets.
+        templates: [dpa]
+      - persona: data-subject
+        coverage: out-of-scope
+
+  - ref: Art.8
+    title: Data security
+    text: |
+      The controller and processor must ensure data security through appropriate
+      technical and organisational measures; the Federal Council may set minimum
+      requirements through the Ordinance on Data Protection.
+    pryv_ref: Art.8
+    draft: true
+    hds:
+      coverage: facilitated
+      effort_saved: high
+      facilitation_mode: infrastructure
+      regions: [ch]
+      overview: |
+        HDS operates the technical security baseline: TLS in transit, stream-scoped
+        permissions, MFA, multi-core high availability and operated backup and
+        restore. At-rest encryption of customer event data is a known gap and is
+        flagged so the controller can weigh it in its security assessment.
+      detail: |
+        The OPDP minimum-requirements detailing and the organisational measures
+        remain the controller's and processor's compliance work. HDS supplies the
+        technical and hosting safeguards and operates them; at-rest encryption of
+        the event store is not implemented and must be treated as a residual risk.
+      evidence:
+        internal_docs:
+          - hipaa/policies/transmission-security
+          - hipaa/policies/encryption
+          - hipaa/risk/at-rest-encryption-gap
+    implementer:
+      - persona: controller
+        coverage: documented
+        overview: |
+          Assess whether the operated measures meet your security obligation,
+          accounting for the at-rest encryption gap, and add organisational
+          measures.
+      - persona: processor
+        coverage: documented
+        overview: |
+          Ensure equivalent security for any processing you perform and report
+          measures to the controller.
+        templates: [dpa]
+      - persona: data-subject
+        coverage: out-of-scope
+
+  - ref: Art.19
+    title: Information duty when collecting personal data
+    text: |
+      The controller must inform the data subject of any acquisition of personal
+      data, whether collected from the subject or from a third party, including
+      controller identity, purpose, recipients and any transfer abroad.
+    pryv_ref: Art.19
+    draft: true
+    hds:
+      coverage: facilitated
+      effort_saved: medium
+      facilitation_mode: storage
+      regions: [ch]
+      overview: |
+        HDS preserves the notice text presented to each data subject as
+        client-data on the relevant access or as a dedicated consent event, so
+        what was shown is recoverable per subject and per time. The notice
+        content and its presentation are the controller's editorial
+        responsibility.
+      detail: |
+        The nLPD unifies direct and indirect collection into a single
+        information duty; where data did not come from the subject, provenance
+        metadata on the event client-data records the source. HDS stores these
+        artefacts; presenting the notice is the controller's.
+      evidence:
+        internal_docs:
+          - hipaa/policies/notice-of-privacy-practices
+    implementer:
+      - persona: controller
+        coverage: documented
+        overview: |
+          Author the information notice, present it at collection and record the
+          source where data is acquired indirectly.
+      - persona: data-subject
+        coverage: out-of-scope
+
+  - ref: Art.21
+    title: Automated individual decisions
+    text: |
+      The controller must inform the data subject of a decision based exclusively
+      on automated processing that has a legal effect or significantly affects
+      them; the subject may state their view.
+    pryv_ref: Art.21
+    draft: true
+    hds:
+      coverage: facilitated
+      effort_saved: low
+      facilitation_mode: evidence
+      regions: [ch]
+      overview: |
+        Automated decisioning is the controller's application logic, not HDS's.
+        HDS contributes the audit log, which records when automated-decision
+        processing ran and on which inputs, and events as the carrier for the
+        subject's expressed view.
+      detail: |
+        A typical pattern records the subject's objection or statement as a
+        dedicated event on a designated stream, time-anchored by the audit log.
+        The decision logic and the duty to inform are the controller's.
+      evidence:
+        internal_docs:
+          - hipaa/procedures/security-incident-response
+    implementer:
+      - persona: controller
+        coverage: documented
+        overview: |
+          Identify exclusively-automated decisions, inform the subject and offer
+          the opportunity to state a view.
+      - persona: data-subject
+        coverage: facilitated
+        overview: |
+          You may record your view on an automated decision as an event.
+
+  - ref: Art.22
+    title: Data protection impact assessment
+    text: |
+      The controller must carry out a data protection impact assessment in
+      advance where processing may entail a high risk to the personality or
+      fundamental rights of the data subject.
+    pryv_ref: Art.22
+    draft: true
+    hds:
+      coverage: facilitated
+      effort_saved: low
+      facilitation_mode: evidence
+      regions: [ch]
+      overview: |
+        The DPIA is a written assessment the controller produces. HDS contributes
+        its inputs: data residency tells you where each subject's data lives, the
+        audit and access-version data describe the processing-flow technical
+        layer, and system-stream isolation gives a defensible sensitive-data
+        boundary.
+      detail: |
+        The methodology and the writing of the assessment remain the controller's.
+        HDS supplies concrete technical artefacts that populate the
+        data-flow and residency sections of the DPIA.
+      evidence:
+        internal_docs:
+          - gdpr/registers/records-of-processing
+    implementer:
+      - persona: controller
+        coverage: documented
+        overview: |
+          Determine when a DPIA is required, run it, and use the platform
+          artefacts as inputs.
+      - persona: processor
+        coverage: documented
+        overview: |
+          Assist the controller's DPIA with information about your processing.
+        templates: [dpa]
+      - persona: data-subject
+        coverage: out-of-scope
+
+  - ref: Art.24
+    title: Notification of data security breaches
+    text: |
+      The controller must notify the Federal Data Protection and Information
+      Commissioner of a breach likely to result in a high risk to the personality
+      or fundamental rights of the data subject as soon as possible; subject
+      notification is required only where needed for their protection or on the
+      Commissioner's request.
+    pryv_ref: Art.24
+    draft: true
+    hds:
+      coverage: facilitated
+      effort_saved: medium
+      facilitation_mode: evidence
+      regions: [ch]
+      overview: |
+        HDS operates the audit log and access version chain that let the
+        controller scope a breach — which subjects, which streams, by which
+        access. The nLPD's "as soon as possible" timeline is the controller's to
+        meet; HDS provides the underlying scoping evidence.
+      detail: |
+        As a processor, HDS notifies the controller of breaches it detects so the
+        controller can meet its Commissioner-notification duty. The subject
+        notification trigger is more conditional than under GDPR; the controller's
+        incident-response matrix should encode both regimes where it faces both.
+        At-rest encryption of the event store is not implemented, which affects
+        the safe-harbour assessment of a leaked artefact.
+      evidence:
+        internal_docs:
+          - hipaa/procedures/security-incident-response
+          - gdpr/procedures/breach-notification-72h
+          - hipaa/risk/at-rest-encryption-gap
+    implementer:
+      - persona: controller
+        coverage: documented
+        overview: |
+          Run the risk assessment, notify the Commissioner as soon as possible and
+          assess whether subject notification is required.
+      - persona: processor
+        coverage: documented
+        overview: |
+          Notify the controller of breaches without undue delay and assist
+          scoping.
+        templates: [dpa]
+      - persona: data-subject
+        coverage: out-of-scope
+
+  - ref: Art.25
+    title: Right to information (data-subject access)
+    text: |
+      A data subject may request information from the controller as to whether
+      personal data about them is processed, with the information needed to
+      assert their rights — purpose, categories, recipients, retention, source
+      and any automated decisions.
+    pryv_ref: Art.25
+    draft: true
+    hds:
+      coverage: implemented
+      effort_saved: high
+      regions: [ch]
+      overview: |
+        Pryv is user-centric: the data subject, holding a personal token, reads
+        everything through the standard API — events, streams, accesses with
+        history, audit records and attachments — in canonical JSON. HDS operates
+        this access capability end-to-end.
+      detail: |
+        The nLPD's extended minimum-information set maps onto the same artefacts as
+        a GDPR access request, plus a Swiss-specific source duty satisfied by the
+        provenance recorded on event client-data when data did not come from the
+        subject directly. The response timeline is the controller's process target.
+      evidence:
+        internal_docs:
+          - gdpr/procedures/data-subject-rights
+          - hipaa/procedures/security-incident-response
+    implementer:
+      - persona: data-subject
+        coverage: facilitated
+        overview: |
+          You access your own data directly through the standard API or a portal
+          built on it.
+      - persona: controller
+        coverage: documented
+        overview: |
+          Operate the request process, meet the response timeline and supply the
+          extended minimum-information set.
+      - persona: processor
+        coverage: documented
+        overview: |
+          Make data available to the controller to satisfy access requests.
+        templates: [dpa]
+
+  - ref: Art.28
+    title: Right to data portability
+    text: |
+      The data subject has the right to receive personal data they have provided
+      to the controller in a commonly used electronic format and to have it
+      transmitted to another controller where feasible.
+    pryv_ref: Art.28
+    draft: true
+    hds:
+      coverage: implemented
+      effort_saved: high
+      regions: [ch]
+      overview: |
+        The HDS-operated API returns events and streams as canonical JSON
+        validated against the data-type schemas — a commonly used electronic
+        format. For controller-to-controller transmission, the consent and
+        capability-access flow mints a URL the receiving controller can read.
+      detail: |
+        Portability requires no operational lift on the data subject's side. HDS
+        operates the read path that produces the structured export and the
+        cross-account capability used for direct controller-to-controller
+        transmission.
+      evidence:
+        internal_docs:
+          - gdpr/procedures/data-subject-rights
+    implementer:
+      - persona: data-subject
+        coverage: facilitated
+        overview: |
+          You export your data in canonical JSON or transmit it to another
+          controller via the capability flow.
+      - persona: controller
+        coverage: documented
+        overview: |
+          Support the portability request and any feasible direct transmission.
+      - persona: processor
+        coverage: documented
+        overview: |
+          Provide the controller with the data needed to satisfy portability.
+        templates: [dpa]
+
+  - ref: Art.31
+    title: Justification for processing sensitive personal data
+    text: |
+      Processing of sensitive personal data without consent requires an
+      overriding private or public interest, with enumerated grounds such as
+      medical care, social assistance and statistics under conditions.
+    pryv_ref: Art.31
+    draft: true
+    hds:
+      coverage: facilitated
+      effort_saved: low
+      facilitation_mode: storage
+      regions: [ch]
+      overview: |
+        The legal-ground determination is the controller's programmatic decision.
+        HDS preserves the cited ground per access in client-data so the
+        justification travels with the technical authorization and lives in the
+        audit trail.
+      detail: |
+        The nLPD's enumerated grounds drive the vocabulary the controller uses for
+        the recorded legal-ground values. HDS stores and audits the ground; it does
+        not determine which ground applies.
+      evidence:
+        internal_docs:
+          - hipaa/policies/access-control
+    implementer:
+      - persona: controller
+        coverage: documented
+        overview: |
+          Determine the overriding interest or consent basis and record the cited
+          ground on each access.
+      - persona: processor
+        coverage: documented
+        overview: |
+          Process sensitive data only on the ground the controller records.
+        templates: [dpa]
+      - persona: data-subject
+        coverage: out-of-scope
+
+  - ref: Art.32
+    title: Rectification, erasure and destruction of personal data
+    text: |
+      The controller must take appropriate measures to keep personal data
+      accurate; the data subject may request rectification, erasure or
+      destruction of inaccurate or no-longer-needed personal data.
+    pryv_ref: Art.32
+    draft: true
+    hds:
+      coverage: implemented
+      effort_saved: high
+      regions: [ch]
+      overview: |
+        HDS exposes event update as the rectification primitive with version
+        preservation, and operates account deletion as the erasure path. The
+        backup semantics of erasure depend on the configured storage engine, and
+        retention automation is a known gap the controller covers by process.
+      detail: |
+        Rectification preserves prior versions for auditability; erasure removes
+        the account, with engine-dependent backup behaviour the controller should
+        account for. Automated time-based destruction is not implemented and must
+        be operated as a controller process.
+      evidence:
+        internal_docs:
+          - gdpr/procedures/data-subject-rights
+    implementer:
+      - persona: data-subject
+        coverage: facilitated
+        overview: |
+          You rectify your data through the API and may request erasure.
+      - persona: controller
+        coverage: documented
+        overview: |
+          Run the rectification and erasure process and operate retention and
+          destruction as automation is not built in.
+      - persona: processor
+        coverage: documented
+        overview: |
+          Execute rectification and erasure on the controller's instruction.
+        templates: [dpa]
+
+  - ref: Art.34
+    title: Disclosure of personal data abroad
+    text: |
+      Personal data may be disclosed abroad only where the receiving state
+      guarantees adequate protection or, in defined cases, with appropriate
+      safeguards such as standard contractual clauses or Federal Council
+      approval.
+    pryv_ref: Art.34
+    draft: true
+    hds:
+      coverage: configurable
+      effort_saved: high
+      regions: [ch]
+      overview: |
+        Data residency is the technical control: HDS hosts CH-region data in
+        Switzerland, so binding a subject to the CH region keeps the data in
+        Switzerland and the cross-border question moot. For legitimate transfers
+        the per-user hosting field exposes which jurisdiction the data sits in,
+        recoverable for audit.
+      detail: |
+        Cross-account disclosures inherit the same control: the counterparty
+        access endpoint reveals the receiving jurisdiction, and the legal basis —
+        adequacy, standard contractual clauses or another safeguard — is recorded
+        on the originating access client-data. The CH region is operated in
+        Switzerland; residency is enforced at the core level by architecture.
+      evidence:
+        internal_docs:
+          - gdpr/policies/international-transfers
+          - hipaa/registers/hosting-provider-attestations
+    implementer:
+      - persona: controller
+        coverage: documented
+        overview: |
+          Choose the residency region per subject, and where data leaves
+          Switzerland record the adequacy or safeguard basis.
+      - persona: processor
+        coverage: documented
+        overview: |
+          Disclose abroad only on the controller's instruction and recorded basis.
+        templates: [dpa]
+      - persona: data-subject
+        coverage: out-of-scope
+
+  - ref: Art.35
+    title: Disclosure of personal data abroad — particular cases
+    text: |
+      Disclosure abroad without adequate protection requires one of the defined
+      exceptions, such as the subject's consent, performance of a contract or an
+      overriding interest.
+    pryv_ref: Art.35
+    draft: true
+    hds:
+      coverage: facilitated
+      effort_saved: low
+      facilitation_mode: storage
+      regions: [ch]
+      overview: |
+        Exception-based transfers require recording the legal basis. HDS stores the
+        exception type on the access authorising the disclosure, and the audit row
+        at disclosure time anchors the exception to the specific events
+        transferred.
+      detail: |
+        The exception vocabulary follows the nLPD enumeration; HDS preserves the
+        cited exception and the disclosure event. Whether an exception applies is
+        the controller's legal judgement.
+      evidence:
+        internal_docs:
+          - gdpr/policies/international-transfers
+    implementer:
+      - persona: controller
+        coverage: documented
+        overview: |
+          Determine the applicable exception and record it on the disclosing
+          access.
+      - persona: processor
+        coverage: documented
+        overview: |
+          Transfer under an exception only on the controller's recorded basis.
+        templates: [dpa]
+      - persona: data-subject
+        coverage: out-of-scope
+
+  - ref: Art.2
+    title: Material scope
+    text: |
+      The Act applies to the processing of personal data of natural persons by
+      private persons and federal bodies; it does not apply to purely personal
+      use, parliamentary proceedings, or pending judicial or administrative
+      procedures.
+    pryv_ref: Art.2
+    draft: true
+    hds:
+      coverage: facilitated
+      effort_saved: low
+      facilitation_mode: awareness
+      regions: [ch]
+      overview: |
+        An HDS deployment is fully in scope as automated processing of personal
+        data. The purely-personal-use exception does not reach a hosted deployment
+        where the controller acts for others. HDS contributes awareness, not a
+        scope-determining control.
+      detail: |
+        HDS makes no scope determination; the controller establishes whether and
+        how the Act applies to its processing. The platform's audit and access
+        records evidence that processing occurs.
+      evidence:
+        internal_docs:
+          - hipaa/policies/access-control
+    implementer:
+      - persona: controller
+        coverage: documented
+        overview: |
+          Determine whether and how the Act applies to your processing.
+      - persona: data-subject
+        coverage: out-of-scope
+
+  - ref: Art.3
+    title: Territorial scope
+    text: |
+      The Act applies to facts that have an effect in Switzerland, even if
+      initiated abroad.
+    pryv_ref: Art.3
+    draft: true
+    hds:
+      coverage: facilitated
+      effort_saved: low
+      facilitation_mode: infrastructure
+      regions: [ch]
+      overview: |
+        Applicability turns on whether processing affects data subjects in
+        Switzerland, not on where infrastructure lives. HDS operates a CH region in
+        Switzerland to which subjects can be bound explicitly when CH jurisdiction
+        is the chosen regime.
+      detail: |
+        The cross-border transfer side is handled under Art. 34. HDS supplies the
+        residency mechanism; the determination of territorial applicability is the
+        controller's.
+      evidence:
+        internal_docs:
+          - hipaa/registers/hosting-provider-attestations
+    implementer:
+      - persona: controller
+        coverage: documented
+        overview: |
+          Determine territorial applicability and bind subjects to the CH region
+          where appropriate.
+      - persona: data-subject
+        coverage: out-of-scope
+
+  - ref: Art.16
+    title: Disclosure of personal data abroad — principles (cross-link)
+    text: |
+      Personal data may be disclosed abroad only where adequate protection has
+      been determined or appropriate safeguards are in place; Art. 34 sets out
+      the operative framework.
+    pryv_ref: Art.16
+    draft: true
+    hds:
+      coverage: facilitated
+      effort_saved: low
+      facilitation_mode: awareness
+      regions: [ch]
+      overview: |
+        This is a framing row pointing at Art. 34 for the operative HDS mapping.
+        HDS's contribution — data residency and recorded transfer basis — is
+        described there.
+      detail: |
+        See Art. 34 for the data-residency control and the basis-recording
+        pattern that satisfy the cross-border principle in practice.
+      evidence:
+        internal_docs:
+          - gdpr/policies/international-transfers
+    implementer:
+      - persona: controller
+        coverage: documented
+        overview: |
+          Apply the Art. 34 framework; this row is cross-reference only.
+      - persona: data-subject
+        coverage: out-of-scope
+
+  - ref: Art.30
+    title: Justification of breaches of privacy
+    text: |
+      Processing that breaches privacy is unlawful unless justified by the
+      subject's consent, an overriding private or public interest, or by law.
+    pryv_ref: Art.30
+    draft: true
+    hds:
+      coverage: facilitated
+      effort_saved: low
+      facilitation_mode: storage
+      regions: [ch]
+      overview: |
+        HDS records the justification basis on the access client-data, drawing on
+        the nLPD's vocabulary, so the basis travels with the technical
+        authorization and lives in the audit trail. Determining which basis
+        applies is the controller's editorial and legal judgement.
+      detail: |
+        The pattern mirrors lawful-basis recording: the cited basis is stored per
+        access and anchored in time by the audit log. HDS stores and audits it; it
+        does not select it.
+      evidence:
+        internal_docs:
+          - hipaa/policies/access-control
+    implementer:
+      - persona: controller
+        coverage: documented
+        overview: |
+          Determine the justification basis and record it on the relevant access.
+      - persona: processor
+        coverage: documented
+        overview: |
+          Process only on the basis the controller records.
+        templates: [dpa]
+      - persona: data-subject
+        coverage: out-of-scope
+
+  - ref: Art.4
+    title: Federal Data Protection and Information Commissioner (FDPIC)
+    text: |
+      The Commissioner supervises application of data-protection law by federal
+      bodies and private persons, advises them, investigates breaches and issues
+      recommendations and orders.
+    pryv_ref: Art.4
+    draft: true
+    hds:
+      coverage: out-of-scope
+      regions: [ch]
+      overview: |
+        The Commissioner is a regulator; there is no software role. Where an
+        investigation involves an HDS deployment, the audit log and access version
+        chain are the evidence layer the controller can provide.
+      detail: |
+        Interaction with the Commissioner is the controller's legal and regulatory
+        process. HDS supplies no control specific to this Article.
+    implementer:
+      - persona: controller
+        coverage: documented
+        overview: |
+          Manage your interaction with the Commissioner; use platform records as
+          evidence where needed.
+      - persona: data-subject
+        coverage: out-of-scope
+
+  - ref: Art.23
+    title: Privacy by default
+    text: |
+      The controller must by default ensure processing is limited to the minimum
+      required for the purpose, in particular through appropriate technical
+      settings.
+    pryv_ref: Art.23
+    draft: true
+    hds:
+      coverage: facilitated
+      effort_saved: medium
+      facilitation_mode: primitive
+      regions: [ch]
+      overview: |
+        The platform HDS operates leans privacy-protective by construction: the
+        smallest-permission default is none, system streams isolate privileged
+        data, and per-user storage isolates subjects. Whether the by-default
+        posture is fully exercised depends on the controller's deployment-time
+        choices.
+      detail: |
+        Token-scope defaults, retention policy and MFA settings are the
+        controller's configuration. HDS supplies the minimum-by-default
+        primitives those settings exercise.
+      evidence:
+        internal_docs:
+          - hipaa/policies/minimum-necessary
+          - hipaa/policies/access-control
+    implementer:
+      - persona: controller
+        coverage: documented
+        overview: |
+          Configure minimal defaults — token scopes, retention and MFA — so
+          processing is limited to the minimum required.
+      - persona: processor
+        coverage: documented
+        overview: |
+          Operate within the minimal defaults the controller sets.
+        templates: [dpa]
+      - persona: data-subject
+        coverage: out-of-scope
+
+  - ref: Art.26
+    title: Restriction of the right to information
+    text: |
+      The right to information under Art. 25 may be restricted, refused or
+      deferred where a law so provides, where an overriding third-party interest
+      requires it, or where the request is manifestly unfounded.
+    pryv_ref: Art.26
+    draft: true
+    hds:
+      coverage: facilitated
+      effort_saved: low
+      facilitation_mode: storage
+      regions: [ch]
+      overview: |
+        When the controller invokes Art. 26 to restrict, refuse or defer an access
+        request, HDS supports recording the rationale as an event on a designated
+        stream with the cited statutory letter, time-anchored by the audit log.
+        Whether the restriction is justified is the controller's legal judgement.
+      detail: |
+        The restriction record travels with the request artefacts so the decision
+        is reconstructable later. HDS stores and audits the rationale; it makes no
+        determination of justification.
+      evidence:
+        internal_docs:
+          - gdpr/procedures/data-subject-rights
+    implementer:
+      - persona: controller
+        coverage: documented
+        overview: |
+          Determine whether a restriction applies and record the basis and
+          rationale.
+      - persona: data-subject
+        coverage: out-of-scope
+
+  - ref: Art.33
+    title: Cross-border international cooperation
+    text: |
+      The Federal Council may conclude international treaties on the cross-border
+      exchange of personal data, including treaties on mutual data-protection
+      cooperation.
+    pryv_ref: Art.33
+    draft: true
+    hds:
+      coverage: out-of-scope
+      regions: [ch]
+      overview: |
+        This is treaty-level activity with no software role. No implementer
+        obligation arises from this Article alone, and HDS supplies no control
+        specific to it.
+      detail: |
+        The Article addresses inter-state instruments rather than processing
+        operations; HDS's residency and transfer controls under Art. 34 are the
+        relevant operational layer.
+    implementer:
+      - persona: controller
+        coverage: out-of-scope
+      - persona: data-subject
+        coverage: out-of-scope
+
+  - ref: Art.9
+    title: Processing by a processor
+    text: |
+      The controller may entrust processing to a processor only where the
+      processor processes data solely as instructed, ensures equivalent data
+      security, and obtains controller approval before engaging a sub-processor.
+    pryv_ref: Art.9
+    draft: true
+    hds:
+      coverage: facilitated
+      effort_saved: medium
+      facilitation_mode: storage
+      regions: [ch]
+      overview: |
+        Where HDS acts as processor distinct from the controller, it offers a Data
+        Processing Agreement and maintains a sub-processor register. The audit log
+        makes processing demonstrably attributable to instructed accesses, so the
+        only-as-instructed duty rests on a record.
+      detail: |
+        Sub-processor engagement follows the DPA's approval and flow-down terms.
+        HDS keeps the sub-processor register and uses the audit and access
+        primitives to evidence instructed-only processing; the substantive
+        instructions are the controller's.
+      evidence:
+        internal_docs:
+          - hipaa/registers/subprocessor-register
+          - hipaa/policies/access-control
+    implementer:
+      - persona: controller
+        coverage: documented
+        overview: |
+          Execute a DPA, give documented instructions and approve sub-processors.
+        templates: [dpa]
+      - persona: processor
+        coverage: documented
+        overview: |
+          Process only as instructed, ensure equivalent security and obtain
+          approval before engaging sub-processors.
+        templates: [dpa, subprocessor]
+      - persona: data-subject
+        coverage: out-of-scope
+
+  - ref: Art.12
+    title: Register of processing activities
+    text: |
+      Each controller and processor must maintain a register of processing
+      activities, subject to an exception for smaller enterprises whose
+      processing poses a low risk; content parallels GDPR Art. 30.
+    pryv_ref: Art.12
+    draft: true
+    hds:
+      coverage: facilitated
+      effort_saved: high
+      facilitation_mode: evidence
+      regions: [ch]
+      overview: |
+        HDS supplies the technical register substrate — access, client-data, audit
+        and data-residency records describe much of the processing. The register
+        as a maintained document is a known gap: HDS does not generate or keep the
+        controller's register, which the controller must author.
+      detail: |
+        The nLPD's small-enterprise exception drops the obligation for low-risk
+        processing under the prescribed threshold; whether it applies is the
+        controller's legal judgement. The substrate is available regardless, but
+        the register document itself is the controller's and processor's to
+        maintain.
+      evidence:
+        internal_docs:
+          - gdpr/registers/records-of-processing
+    implementer:
+      - persona: controller
+        coverage: documented
+        overview: |
+          Author and maintain your register of processing activities, using
+          platform records as input.
+      - persona: processor
+        coverage: documented
+        overview: |
+          Maintain your own register of the processing you perform for the
+          controller.
+        templates: [dpa]
+      - persona: data-subject
+        coverage: out-of-scope
+
+  - ref: Art.17
+    title: Exceptions to the duty to inform
+    text: |
+      The information duty may be waived where the subject already has the
+      information, the processing is provided for by law, the controller is bound
+      by professional secrecy, or informing would be disproportionate.
+    pryv_ref: Art.17
+    draft: true
+    hds:
+      coverage: out-of-scope
+      regions: [ch]
+      overview: |
+        Exception applicability is the controller's legal judgement with no
+        software role. Where an exception applies, HDS supports documenting the
+        reasoning as client-data so it is available for auditor questions.
+      detail: |
+        HDS makes no exception determination. The controller's reasoning can be
+        stored alongside the account or notice artefacts for traceability.
+    implementer:
+      - persona: controller
+        coverage: documented
+        overview: |
+          Determine whether an exception applies and document the reasoning.
+      - persona: data-subject
+        coverage: out-of-scope
+
+  - ref: Art.18
+    title: Information when collecting personal data — specific cases
+    text: |
+      Beyond the Art. 19 baseline, the controller must provide additional
+      information when transferring abroad, when processing involves automated
+      decision-making, and in cases involving sensitive personal data.
+    pryv_ref: Art.18
+    draft: true
+    hds:
+      coverage: facilitated
+      effort_saved: low
+      facilitation_mode: storage
+      regions: [ch]
+      overview: |
+        HDS stores the additional disclosures alongside the baseline notice as
+        client-data or dedicated notice events. The cross-border element ties to
+        Art. 34 and the automated-decision element to Art. 21; HDS preserves what
+        was presented.
+      detail: |
+        The content of the additional disclosures is the controller's editorial
+        responsibility. HDS makes the presented text recoverable per subject and
+        per time as a durable artefact.
+      evidence:
+        internal_docs:
+          - hipaa/policies/notice-of-privacy-practices
+    implementer:
+      - persona: controller
+        coverage: documented
+        overview: |
+          Provide the additional information for transfers abroad, automated
+          decisions and sensitive data, and record what was presented.
+      - persona: data-subject
+        coverage: out-of-scope
+
+  - ref: Art.11
+    title: Codes of conduct
+    text: |
+      Professional, sector or trade associations may submit codes of conduct to
+      the Commissioner, who takes a position on the code.
+    pryv_ref: Art.11
+    draft: true
+    hds:
+      coverage: out-of-scope
+      regions: [ch]
+      overview: |
+        Codes of conduct are a sector-level instrument with no software role.
+        Adherence to a code may be cited as one of the appropriate-measures
+        indicators on a deployment, but HDS supplies no control specific to this
+        Article.
+      detail: |
+        Drafting, submitting and adhering to a code is an association and
+        controller matter outside the platform's scope.
+    implementer:
+      - persona: controller
+        coverage: documented
+        overview: |
+          Decide whether to adhere to an applicable code of conduct.
+      - persona: data-subject
+        coverage: out-of-scope
+
+  - ref: Art.14
+    title: Representative in Switzerland
+    text: |
+      A controller established abroad whose processing concerns persons in
+      Switzerland on a large scale, regularly and with high risk must designate a
+      representative in Switzerland.
+    pryv_ref: Art.14
+    draft: true
+    hds:
+      coverage: out-of-scope
+      regions: [ch]
+      overview: |
+        Designating a Swiss representative is a contractual and regulatory
+        registration step for non-Swiss controllers with no software role. HDS
+        supplies no control specific to this requirement.
+      detail: |
+        Whether the threshold is met and who is designated are the controller's
+        decisions outside the platform's scope.
+    implementer:
+      - persona: controller
+        coverage: documented
+        overview: |
+          Determine whether you must designate a Swiss representative and do so if
+          required.
+      - persona: data-subject
+        coverage: out-of-scope
+
+  - ref: Art.15
+    title: Duty of the processor to inform the controller
+    text: |
+      The processor must inform the controller of all data security breaches
+      without delay and cooperate with the controller in fulfilling its
+      obligations toward data subjects.
+    pryv_ref: Art.15
+    draft: true
+    hds:
+      coverage: facilitated
+      effort_saved: medium
+      facilitation_mode: evidence
+      regions: [ch]
+      overview: |
+        Where HDS acts as processor, breach notification to the controller is its
+        contractual commitment under the DPA. HDS uses the audit and access
+        primitives to give the controller the scoping data needed for the
+        notification and to cooperate on data-subject rights.
+      detail: |
+        The notification channel and the assistance on subject requests are
+        DPA-defined. HDS supplies the scoping evidence and cooperates; the duties
+        toward subjects are ultimately the controller's.
+      evidence:
+        internal_docs:
+          - hipaa/procedures/security-incident-response
+          - gdpr/procedures/breach-notification-72h
+    implementer:
+      - persona: processor
+        coverage: documented
+        overview: |
+          Notify the controller of breaches without delay and assist with
+          data-subject obligations.
+        templates: [dpa]
+      - persona: controller
+        coverage: documented
+        overview: |
+          Ensure your DPA obliges processors to notify breaches and assist.
+        templates: [dpa]
+      - persona: data-subject
+        coverage: out-of-scope
+
+  - ref: Art.29
+    title: Information from official registers
+    text: |
+      Anyone may obtain information from official registers under the conditions
+      set out in special legislation.
+    pryv_ref: Art.29
+    draft: true
+    hds:
+      coverage: out-of-scope
+      regions: [ch]
+      overview: |
+        Access to official public registers is a regulatory framing with no
+        software role. HDS supplies no control specific to this Article.
+      detail: |
+        The Article concerns statutory public-register access rather than the
+        controller's own processing operations.
+    implementer:
+      - persona: controller
+        coverage: out-of-scope
+      - persona: data-subject
+        coverage: out-of-scope

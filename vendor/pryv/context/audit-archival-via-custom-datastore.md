@@ -14,9 +14,9 @@ provides the **architectural hook**: the audit log is exposed via
 `@pryv/datastore` (`auditDataStore` registered as `_audit` in
 `Mall.addStore`), so an operator can write a custom datastore (or
 custom `auditStorage` engine plugin) that **tiers hot recent rows
-+ cold archived rows** behind the same `audit.getLogs` API. End
-users see one continuous log; the operator chooses how the
-storage backs it.
++ cold archived rows** behind the same `events.get` / `:_audit:`
+read path. End users see one continuous log; the operator chooses
+how the storage backs it.
 
 ## Why no pruning primitive
 
@@ -51,8 +51,8 @@ The audit data store at `components/audit/src/datastore/
 auditDataStore.ts` registers as `id: '_audit'` via
 `mall.addStore` (`components/mall/src/index.ts:69-73`). It
 exposes `streams` + `events` properties implementing the
-`@pryv/datastore` interface. Audit reads (`audit.getLogs`) flow
-through the Mall like any other data-store read.
+`@pryv/datastore` interface. Audit reads (`events.get` over the
+`:_audit:` store) flow through the Mall like any other data-store read.
 
 A tiered implementation has two flavours:
 

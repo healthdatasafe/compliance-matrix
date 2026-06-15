@@ -45,9 +45,9 @@ file or PG rows keyed by `user_id`).
 Once a user is registered + bound to a core:
 
 - `accesses.get` returns only accesses on that core's storage.
-- `events.get`, `streams.get`, `audit.getLogs`,
-  `GET /events/<id>/series` etc. — all served from the home core's
-  storage.
+- `events.get`, `streams.get` (audit logs included, via the `:_audit:`
+  store), `GET /events/<id>/series` etc. — all served from the home
+  core's storage.
 - Webhooks fire from the home core.
 - `auth.delete` runs the pipeline on the home core; only that
   core's stores need updating.

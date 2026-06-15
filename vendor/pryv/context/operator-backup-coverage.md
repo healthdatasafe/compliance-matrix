@@ -18,31 +18,36 @@ Pryv has shipped **three** backup tools with non-overlapping audiences. Two are 
 | Restore semantics | full re-import via engine-level write paths (PG `INSERT`, SQLite `INSERT`) | re-create via standard public API (`events.create`, `streams.create`, `addPointsToHFEvent`); audit / webhooks / accesses deliberately NOT replayed (system-generated or token-bearing) |
 | Compliance role | disaster recovery, migration, regulator-mandated record retention | GDPR Art.15 (access) / Art.20 (portability) / CCPA §1798.110 / PIPEDA Principle 4.9 / Swiss nLPD Art.25 |
 
-## Third tier — operator-hosted subject Web UI (`pryv/example-service-bluebutton`, currently dormant)
+## Third tier — operator-hosted subject Web UI (`pryv-account-backup-webapp`)
 
-`pryv/example-service-bluebutton` is a public, unarchived example service that wraps `@pryv/account-backup` behind a Web UI. Subjects log in via a Web form, the server runs the CLI on their behalf, and the bundle is downloaded as a ZIP. Last substantive release v1.2.0 on 2022-10-11; last commit 2024-12-17 (single-character fix). The public Pryv-operated instance at `https://bluebutton.pryv.me/` is currently dormant (DNS does not resolve as of 2026-06-13).
+`pryv-account-backup-webapp` is the current sample web UI for subject-facing backups. Operator hosts the static bundle on their own domain; subjects log in via a web form, click **Start backup**, download a series of ZIP files. The webapp consumes the browser-isomorphic resource fetchers from `pryv-account-backup` v0.6.0+ (`api-resources`, `events-chunked`, `audit-as-events`, `accesses-history`) — no server-side runtime, deploy via `npm run build && copy dist/ to your web server's docroot`.
 
-| | `pryv/example-service-bluebutton` (Web UI tier) |
+| | `pryv-account-backup-webapp` (Web UI tier, v0.6.0+) |
 |---|---|
-| Audience | end user (the subject) — same as the CLI tier, but no Node / CLI knowledge required |
-| Surface | operator-hosted Express service; routes `login`, `status`, `infos`, `delete` (post-download cleanup) |
-| Auth | subject's Pryv credentials submitted via the Web form (operator's TLS) |
-| Distribution | Docker image (was on JFrog/Bintray, sunset 2021 — operators wanting this tier today should rebuild from source) |
-| Compliance role | same as the CLI tier — GDPR Art.15 / Art.20 / §1798.110 — with significantly lower subject-side friction (no clone / install / CLI run) |
+| Audience | end user (the subject) — no Node / CLI knowledge required |
+| Surface | static site bundled by esbuild; vanilla JS + vanilla CSS; ~150 LOC of orchestrator + UI; no backend |
+| Auth | subject's Pryv credentials submitted via the web form (operator's TLS); direct `Service.login` (no MFA handling — webapp directs MFA-enabled subjects at the CLI) |
+| Distribution | git-clone + `npm install && npm run build`; deploy `dist/` behind operator's HTTPS |
+| Compliance role | same as the CLI tier — GDPR Art.15 / Art.20 / §1798.110 / PIPEDA Principle 4.9 / Swiss nLPD Art.25 — with significantly lower subject-side friction (no clone / install / CLI run) |
+| Coverage caveat | webapp omits attachments / HFS series / webhooks / per-file sha256 manifest (CLI-only resources); for subjects whose disclosure needs these, use the CLI |
 
 **Why it matters for the symmetry audit:**
 
 - This is the **most ergonomic** path for an actual DSAR — a subject who can't be expected to install Node or run a CLI can still self-serve.
-- It is **operator-hosted**, so it moves the "who runs the export" responsibility back to the operator while keeping the output bundle subject-portable (the operator never sees the bundle's contents — it streams to the subject's browser and is deleted server-side after download).
-- The 2022 release was built on top of `pryv-account-backup` 1.0.x (pre-DSAR-completeness). An operator who re-deploys bluebutton today against `@pryv/account-backup` v0.5.0 inherits all the chunked-events / accesses-all / per-access-history / audit-logs / HFS / webhooks / integrity-manifest improvements for free — the Web UI is a thin shell, the completeness lives in the underlying tool.
+- It is **operator-hosted**, so it moves the "who runs the export" responsibility back to the operator while keeping the output bundle subject-portable.
+- It consumes the **same library code** the CLI consumes (browser-isomorphic resource fetchers from v0.6.0) — no drift category between flavors. When the library ships a new resource fetcher, the webapp inherits it for free.
 
 **Operational guidance for implementers:**
 
-- If you need a self-serve DSAR for a non-technical subject population, the bluebutton repo is a production-ready scaffold — point a `service-info` URL at it and redeploy.
-- Confirm the underlying `pryv-account-backup` version is **≥ 0.5.0** so the full DSAR-completeness layer applies; the historical bluebutton 1.0.x release pinned 0.2.x.
-- The operator security note about `profile.mfa.recoveryCodes` applies a fortiori — the operator is now in the path of every download, so the post-delete cleanup route in bluebutton becomes load-bearing.
+- If you need a self-serve DSAR for a non-technical subject population, the webapp repo is a production-ready scaffold — fork, rebrand CSS custom properties, redeploy.
+- The operator security note about `profile.mfa.recoveryCodes` applies — the recovery codes ride verbatim in `profile_private.json`. Treat the downloaded ZIPs as password-reset-equivalent secrets; consider rotating recovery codes after disclosure.
+- For subjects whose disclosure includes attachments, HFS series, webhooks, or an integrity manifest, route them at the CLI flavor.
 
-## Per-resource symmetry (v2 deployments; subject backup at v0.5.0)
+### Historical tier (archived 2026-06-15) — `pryv/example-service-bluebutton`
+
+Operator-hosted Express service that wrapped `@pryv/account-backup` 1.0.x behind a Web UI. Last substantive release v1.2.0 on 2022-10-11. The public Pryv-operated instance at `https://bluebutton.pryv.me/` was dormant by 2026-06; the repo was archived on 2026-06-15 as part of the v0.6.0 ship and replaced by `pryv-account-backup-webapp`. Listed here for historical context — operators with existing bluebutton deployments should plan a migration to the new webapp.
+
+## Per-resource symmetry (v2 deployments; subject backup at v0.6.0)
 
 | Resource | Operator `bin/backup.js` | Subject `@pryv/account-backup` v0.5.0 | Notes |
 |---|---|---|---|

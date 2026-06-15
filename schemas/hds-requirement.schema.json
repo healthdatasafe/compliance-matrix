@@ -79,8 +79,12 @@
       "required": ["persona", "coverage"],
       "properties": {
         "persona": {
-          "enum": ["partner", "covered-entity", "business-associate", "individual"],
-          "description": "Who this obligation applies to."
+          "enum": [
+            "partner", "covered-entity", "business-associate", "individual",
+            "controller", "processor", "data-subject",
+            "service-organization", "user-entity", "subservice-organization"
+          ],
+          "description": "Who this obligation applies to. HIPAA: covered-entity/business-associate/individual. GDPR & Swiss nLPD: controller/processor/data-subject. SOC 2: service-organization/user-entity/subservice-organization. 'partner' = the generic organisation building on HDS."
         },
         "coverage": { "$ref": "#/$defs/coverage" },
         "overview": { "type": "string", "description": "What this persona must still do themselves." },

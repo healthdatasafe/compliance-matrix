@@ -1,0 +1,1688 @@
+id: gdpr
+title: General Data Protection Regulation
+short: GDPR
+type: regulation
+jurisdiction: EU + EEA (extraterritorial via Art. 3)
+version: Regulation (EU) 2016/679 (consolidated)
+version_date: "2016-04-27"
+canonical_url: https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:02016R0679-20160504
+matrix_language: EN
+layered_on_pryv: gdpr
+regions: [ch, us]
+
+changelog:
+  - date: "2026-06-15"
+    change: >
+      Initial draft of the HDS layer over the GDPR. All rows draft pending
+      review.
+
+requirements:
+
+  # ───── Chapter I — General Provisions ─────
+
+  - ref: Art.1
+    title: Subject matter and objectives
+    text: |
+      Rules on the protection of natural persons regarding the processing of
+      their personal data, alongside rules ensuring its free movement.
+    pryv_ref: Art.1
+    draft: true
+    hds:
+      coverage: documented
+      effort_saved: low
+      overview: |
+        As an operator running the open-pryv.io platform, HDS supplies the
+        technical substrate on which the per-article obligations below are
+        discharged: per-subject storage isolation, stream-scoped permissions,
+        and an audit chain. HDS-as-platform cannot by itself make a controller
+        compliant; the article-level rows describe the division of effort.
+      detail: |
+        HDS hosts each data subject in dedicated, non-commingled storage and
+        enforces consent technically at the API surface. The controller building
+        on HDS carries the substantive accountability for lawful, fair and
+        transparent processing. The free-movement objective is served by the
+        open API and canonical event-type schemas that avoid vendor lock-in.
+      regions: [ch, us]
+      evidence:
+        internal_docs:
+          - gdpr/policies/lawful-basis-and-consent
+    implementer:
+      - persona: controller
+        coverage: documented
+        overview: |
+          Run your own data-protection programme over the HDS substrate; the
+          per-article rows show what HDS carries and what stays with you.
+      - persona: data-subject
+        coverage: out-of-scope
+
+  - ref: Art.2
+    title: Material scope
+    text: |
+      Applies to processing of personal data by automated means, and to
+      non-automated processing of data forming part of a filing system.
+    pryv_ref: Art.2
+    draft: true
+    hds:
+      coverage: documented
+      effort_saved: low
+      overview: |
+        Every event stored on HDS and every API call against it is automated
+        processing within Article 2. HDS does not exempt any deployment from the
+        per-article obligations; non-automated paper records, if any, sit outside
+        the software boundary and remain the controller's concern.
+      detail: |
+        Because HDS is fully digital, the automated-processing branch always
+        applies. Whether a controller also keeps structured paper records (the
+        filing-system branch) is a separate process the controller manages
+        outside the platform.
+      regions: [ch, us]
+      evidence:
+        internal_docs:
+          - gdpr/policies/lawful-basis-and-consent
+    implementer:
+      - persona: controller
+        coverage: documented
+        overview: |
+          Confirm your processing is in scope (it generally is) and manage any
+          out-of-band paper records separately.
+      - persona: data-subject
+        coverage: out-of-scope
+
+  - ref: Art.3
+    title: Territorial scope
+    text: |
+      Applies to processing in the context of an EU establishment, or to
+      processing relating to data subjects in the Union.
+    pryv_ref: Art.3
+    draft: true
+    hds:
+      coverage: facilitated
+      effort_saved: medium
+      facilitation_mode: infrastructure
+      overview: |
+        HDS offers data residency in Switzerland (Exoscale) and the US (AWS), so
+        a controller can pin each subject's data to a chosen jurisdiction. The
+        Swiss option keeps EU/EEA-subject data under an adequacy regime; the US
+        option is an international transfer (see Art.44-49). Whether GDPR applies
+        is a function of establishment and subject location, not of the platform.
+      detail: |
+        HDS routes each subject to the CH or US region according to the
+        controller's policy and exposes the chosen region per user, so the
+        controller can attest "your data is stored in <region>". Even with
+        CH-only residency, a non-EU establishment offering services to EU
+        subjects is still pulled into GDPR under Art.3(2) — a determination the
+        controller makes.
+      regions: [ch, us]
+      evidence:
+        internal_docs:
+          - gdpr/policies/international-transfers
+          - hipaa/registers/hosting-provider-attestations
+    implementer:
+      - persona: controller
+        coverage: documented
+        overview: |
+          Determine whether GDPR applies to your processing and select the CH or
+          US residency option accordingly.
+      - persona: data-subject
+        coverage: out-of-scope
+
+  - ref: Art.4
+    title: Definitions
+    text: |
+      Defines key terms: personal data, processing, controller, processor,
+      consent, profiling, pseudonymisation and others.
+    pryv_ref: Art.4
+    draft: true
+    hds:
+      coverage: documented
+      effort_saved: medium
+      overview: |
+        HDS maps GDPR vocabulary onto concrete platform artefacts: personal data
+        is event content, the data subject is the account owner, consent is the
+        granted access plus clientData, processing is any audited API call. In
+        the usual SaaS arrangement HDS is the processor and the customer is the
+        controller; the role assignment is contractual.
+      detail: |
+        The controller/processor split is set in the data-processing agreement,
+        not by the software. HDS as processor acts on documented controller
+        instructions. The mapping of terms to primitives lets a controller point
+        an auditor at artefacts rather than abstractions.
+      regions: [ch, us]
+      evidence:
+        internal_docs:
+          - gdpr/policies/lawful-basis-and-consent
+    implementer:
+      - persona: controller
+        coverage: documented
+        overview: |
+          Assign the controller/processor roles in your DPA and apply the GDPR
+          definitions to your own processing description.
+      - persona: processor
+        coverage: documented
+        overview: |
+          Where you process on behalf of another controller, document your
+          processor role and the instructions you act on.
+        templates: [dpa]
+
+  # ───── Chapter II — Principles ─────
+
+  - ref: Art.5
+    title: Principles relating to processing of personal data
+    text: |
+      Lawfulness, fairness, transparency; purpose limitation; data minimisation;
+      accuracy; storage limitation; integrity and confidentiality;
+      accountability.
+    pryv_ref: Art.5
+    draft: true
+    hds:
+      coverage: facilitated
+      effort_saved: medium
+      facilitation_mode: primitive
+      overview: |
+        Several Art.5 principles are carried technically by the HDS platform:
+        purpose limitation via per-stream permissions, accountability via the
+        audit chain tied to the consent state, structural accuracy via
+        schema-validated writes. Lawfulness, fairness and transparency remain the
+        controller's. Storage limitation (automated retention) is a known gap —
+        HDS exposes no TTL/scheduler primitive.
+      detail: |
+        Purpose limitation and accountability are enforced at the API surface
+        and recorded in the audit log. Accuracy is enforced structurally at
+        ingest (JSON-Schema validation) and traceably on rectification (event
+        versioning); semantic accuracy stays with the controller's app. Data
+        minimisation is facilitated by stream design plus default-deny
+        permissions. Storage limitation has no built-in enforcement: automated
+        retention is operator/controller-owned and must be composed externally.
+      regions: [ch, us]
+      evidence:
+        internal_docs:
+          - gdpr/policies/data-retention
+          - hipaa/policies/minimum-necessary
+          - hipaa/policies/integrity
+    implementer:
+      - persona: controller
+        coverage: documented
+        overview: |
+          Establish lawful basis, notices and a retention schedule; HDS does not
+          set these for you. Automated retention deletion is your job to build.
+      - persona: data-subject
+        coverage: out-of-scope
+
+  - ref: Art.6
+    title: Lawfulness of processing
+    text: |
+      Processing is lawful only if at least one of six bases applies; further
+      processing for a new purpose needs a compatibility test or a fresh basis.
+    pryv_ref: Art.6
+    draft: true
+    hds:
+      coverage: facilitated
+      effort_saved: low
+      facilitation_mode: storage
+      overview: |
+        HDS does not impose or check the lawful basis. It provides the means to
+        record the chosen basis on the access clientData so it travels with the
+        technical grant and into the audit trail. Determining which Art.6 basis
+        applies, and assessing any purpose pivot under Art.6(4), is the
+        controller's responsibility.
+      detail: |
+        Recording the basis on the access yields a durable, versioned artefact
+        tying the basis to the scope it justifies. A purpose pivot can be handled
+        by minting a new access (fresh consent) or scoping an existing one, with
+        the version chain preserving the history; the compatibility judgement is
+        the controller's.
+      regions: [ch, us]
+      evidence:
+        internal_docs:
+          - gdpr/policies/lawful-basis-and-consent
+    implementer:
+      - persona: controller
+        coverage: documented
+        overview: |
+          Determine and document the lawful basis for each processing activity
+          and record it on the relevant accesses.
+      - persona: data-subject
+        coverage: out-of-scope
+
+  - ref: Art.7
+    title: Conditions for consent
+    text: |
+      Where processing relies on consent, the controller must demonstrate it;
+      the request must be intelligible and the consent withdrawable.
+    pryv_ref: Art.7
+    draft: true
+    hds:
+      coverage: facilitated
+      effort_saved: high
+      facilitation_mode: primitive
+      overview: |
+        HDS exposes the @pryv/cmc consent flow and access-grant primitive: the
+        access minted on grant is a versioned, immutable consent record binding
+        the granted scope to the consent text, and withdrawal is a single API
+        call. The intelligibility of the notice and the consent UX is the
+        controller's editorial responsibility.
+      detail: |
+        Demonstrability rests on the access version chain (permissions plus
+        clientData preserved per version) and, for cross-account flows, the
+        consent/* event sequence carried by the CMC plugin. Withdrawal is a full
+        revoke or a permission scope-down, both versioned and auditable. Granular
+        consent is expressed as separate per-purpose accesses.
+      regions: [ch, us]
+      evidence:
+        internal_docs:
+          - gdpr/policies/lawful-basis-and-consent
+    implementer:
+      - persona: controller
+        coverage: documented
+        overview: |
+          Write the consent UX and notice text; HDS preserves and versions the
+          record but does not author the request.
+      - persona: data-subject
+        coverage: facilitated
+        overview: |
+          Grant and withdraw consent through the access primitive at any time.
+
+  - ref: Art.9
+    title: Processing of special categories of personal data
+    text: |
+      Processing of special-category data (incl. health, genetic and biometric
+      data) is prohibited unless one of the Art.9(2) conditions applies.
+    pryv_ref: Art.9
+    draft: true
+    hds:
+      coverage: facilitated
+      effort_saved: medium
+      facilitation_mode: primitive
+      overview: |
+        Health is HDS's primary use-case. The platform is content-agnostic — no
+        server-side sensitivity flag — but as a vertically-integrated operator
+        HDS designs the stream tree and event-type catalogue so special-category
+        data lands in reserved subtrees with tightly scoped, default-deny
+        accesses. The Art.9(2) condition relied on is recorded on the access
+        clientData. The substantive condition determination stays with the
+        controller.
+      detail: |
+        Recommended layout reserves top-level subtrees per Art.9(1) category,
+        mints accesses listing only the subtrees they may touch, and records the
+        Art.9(2) lit-letter on the access. Per-stream (not per-field) permission
+        granularity means events mixing ordinary and special-category fields must
+        be split into distinct event-types.
+      regions: [ch, us]
+      evidence:
+        internal_docs:
+          - gdpr/policies/lawful-basis-and-consent
+          - hipaa/policies/access-control
+    implementer:
+      - persona: controller
+        coverage: documented
+        overview: |
+          Determine the Art.9(2) condition for each special-category processing
+          activity, design your streams accordingly, and record the basis.
+      - persona: data-subject
+        coverage: out-of-scope
+
+  - ref: Art.8
+    title: Conditions applicable to child's consent in relation to information society services
+    text: |
+      Where consent grounds a service offered directly to a child, processing is
+      lawful only at/above the applicable age; below it, a parental holder must
+      consent.
+    pryv_ref: Art.8
+    draft: true
+    hds:
+      coverage: facilitated
+      effort_saved: low
+      facilitation_mode: storage
+      overview: |
+        HDS neither knows nor validates a subject's age; the default account
+        schema is age-blind. Age and parental-authority verification happen in
+        the controller's registration/consent UX, and the resulting artefacts
+        can travel alongside the access via clientData conventions.
+      detail: |
+        Conventions let the controller record how age was verified and pointers
+        to parental-consent events (single- or multi-holder). The
+        parental-consent event format is not shipped by default; controllers
+        targeting paediatric use-cases author it themselves. Re-verification at
+        age-of-majority transitions is an external job the controller runs.
+      regions: [ch, us]
+      evidence:
+        internal_docs:
+          - gdpr/policies/lawful-basis-and-consent
+    implementer:
+      - persona: controller
+        coverage: documented
+        overview: |
+          Verify age and parental authority in your UX and record the artefacts;
+          HDS stores them but performs no age checks.
+      - persona: data-subject
+        coverage: out-of-scope
+
+  - ref: Art.10
+    title: Processing of personal data relating to criminal convictions and offences
+    text: |
+      Processing of criminal-conviction/offence data is allowed only under
+      official authority or where authorised by law with appropriate safeguards.
+    pryv_ref: Art.10
+    draft: true
+    hds:
+      coverage: facilitated
+      effort_saved: medium
+      facilitation_mode: primitive
+      overview: |
+        Same pattern as Art.9: a dedicated subtree, tightly scoped accesses, and
+        the Art.10 legal-basis citation recorded on the access clientData. HDS
+        has no role in deciding whether a given processing instance falls under
+        official authority — that is the controller's legal judgement.
+      detail: |
+        Where such data is processed, the controller designs an isolated stream
+        subtree and records the by-law basis on each access; the audit log then
+        captures every read and write under that access.
+      regions: [ch, us]
+      evidence:
+        internal_docs:
+          - hipaa/policies/access-control
+    implementer:
+      - persona: controller
+        coverage: documented
+        overview: |
+          Confirm your legal authority to process such data and record the basis;
+          isolate the data in a dedicated, tightly scoped subtree.
+      - persona: data-subject
+        coverage: out-of-scope
+
+  # ───── Chapter III — Rights of the data subject ─────
+
+  - ref: Art.12
+    title: Transparent information, communication and modalities
+    text: |
+      The controller must provide concise, transparent, intelligible information
+      and respond to data-subject requests within one month.
+    pryv_ref: Art.12
+    draft: true
+    hds:
+      coverage: facilitated
+      effort_saved: medium
+      facilitation_mode: storage
+      overview: |
+        HDS preserves the notice and consent text presented to the subject —
+        immutably, versioned, retrievable later — and the rights operations
+        (Art.15-22) execute in sub-second, so the one-month deadline is a process
+        target rather than a software limit. Conciseness and intelligibility of
+        the text are the controller's editorial responsibility.
+      detail: |
+        Information artefacts live in access clientData and/or consent events;
+        both are versioned, so the subject can be shown the same text originally
+        presented. The DSAR turnaround procedure HDS runs as operator is
+        available on request.
+      regions: [ch, us]
+      evidence:
+        internal_docs:
+          - gdpr/procedures/data-subject-rights
+    implementer:
+      - persona: controller
+        coverage: documented
+        overview: |
+          Write concise, intelligible notices and run a request-handling process
+          that meets the one-month deadline.
+      - persona: data-subject
+        coverage: facilitated
+        overview: |
+          Receive the preserved notice/consent text and exercise your rights
+          through the platform.
+
+  - ref: Art.13
+    title: Information to be provided where data are collected from the data subject
+    text: |
+      Controller identity, purposes, legal basis, recipients, retention and
+      rights must be provided at the time of collection.
+    pryv_ref: Art.13
+    draft: true
+    hds:
+      coverage: facilitated
+      effort_saved: medium
+      facilitation_mode: storage
+      overview: |
+        HDS provides two surfaces to carry the disclosures: deployment-wide
+        service info (controller identity, DPO contact, terms) returned to every
+        client app, and per-access clientData (purposes, basis, recipients,
+        retention, rights notice). HDS preserves them immutably; the controller
+        authors the content and surfaces it at collection time.
+      detail: |
+        The service-info fields propagate to consent UIs automatically; the
+        per-access convention fields carry the activity-specific disclosures with
+        a version chain. Whether the wording satisfies Art.13 is the controller's
+        responsibility.
+      regions: [ch, us]
+      evidence:
+        internal_docs:
+          - gdpr/policies/lawful-basis-and-consent
+    implementer:
+      - persona: controller
+        coverage: documented
+        overview: |
+          Author and present the Art.13 disclosures at collection time; record
+          them on the service-info and access surfaces.
+      - persona: data-subject
+        coverage: out-of-scope
+
+  - ref: Art.14
+    title: Information to be provided where data have not been obtained from the data subject
+    text: |
+      The same disclosures as Art.13 must be provided within a reasonable period
+      when data are obtained indirectly.
+    pryv_ref: Art.14
+    draft: true
+    hds:
+      coverage: facilitated
+      effort_saved: medium
+      facilitation_mode: storage
+      overview: |
+        When the controller ingests data from third parties, HDS lets the
+        disclosure artefact (incl. the source under Art.14(2)(f)) be recorded
+        alongside the data, the same way as for direct collection, and the audit
+        log proves when disclosure happened against the one-month/first-contact
+        deadlines.
+      detail: |
+        Provenance can be recorded on the event clientData or a dedicated stream;
+        combined with the disclosure-notice text on the access, the controller
+        has the full Art.14 artefact set retrievable per subject.
+      regions: [ch, us]
+      evidence:
+        internal_docs:
+          - gdpr/policies/lawful-basis-and-consent
+    implementer:
+      - persona: controller
+        coverage: documented
+        overview: |
+          Record the data source and present the Art.14 disclosures within the
+          required period.
+      - persona: data-subject
+        coverage: out-of-scope
+
+  - ref: Art.15
+    title: Right of access by the data subject
+    text: |
+      Right to obtain confirmation, access and a copy of personal data plus
+      supplementary information.
+    pryv_ref: Art.15
+    draft: true
+    hds:
+      coverage: implemented
+      effort_saved: high
+      overview: |
+        HDS is user-centric by construction: a subject holding their personal
+        token reads everything via the standard API — events, streams, accesses
+        with history, and the audit log. The pryv-account-backup tool bundles all
+        read-side resources into a downloadable export the subject runs with
+        their own credentials, operator-independent.
+      detail: |
+        All read-side resources are reachable: events, streams, accesses with
+        version chain, audit-as-events, webhooks, HF series and attachments. The
+        supplementary information is in the access clientData when the controller
+        recorded it there. HDS operates this substrate; the controller may wrap
+        it in a subject portal but needs no special export endpoint.
+      regions: [ch, us]
+      evidence:
+        internal_docs:
+          - gdpr/procedures/data-subject-rights
+    implementer:
+      - persona: controller
+        coverage: documented
+        overview: |
+          Run the request-intake process and, if desired, a subject portal; the
+          read mechanics are provided.
+      - persona: data-subject
+        coverage: facilitated
+        overview: |
+          Read or export your full data set directly via the API or the backup
+          tool.
+
+  - ref: Art.16
+    title: Right to rectification
+    text: |
+      Right to have inaccurate personal data rectified without undue delay.
+    pryv_ref: Art.16
+    draft: true
+    hds:
+      coverage: implemented
+      effort_saved: high
+      overview: |
+        HDS rectifies an event with a single update call that preserves the prior
+        value as a new version, so accuracy is corrected without losing the audit
+        trail. The updated payload is schema-validated, so a rectification cannot
+        introduce a structurally invalid value.
+      detail: |
+        The version chain is retrievable on request, and every update is in the
+        audited method set. Detection of inaccuracy is semantic and stays with
+        the controller's app; HDS guarantees structural validity at ingest.
+      regions: [ch, us]
+      evidence:
+        internal_docs:
+          - hipaa/policies/integrity
+          - gdpr/procedures/data-subject-rights
+    implementer:
+      - persona: controller
+        coverage: documented
+        overview: |
+          Detect inaccuracy and trigger the rectification; the update and
+          versioning mechanics are provided.
+      - persona: data-subject
+        coverage: facilitated
+        overview: |
+          Request rectification, which is applied while preserving the prior
+          value for traceability.
+
+  - ref: Art.17
+    title: Right to erasure ("right to be forgotten")
+    text: |
+      Right to obtain erasure without undue delay where one of the enumerated
+      conditions applies.
+    pryv_ref: Art.17
+    draft: true
+    hds:
+      coverage: configurable
+      effort_saved: medium
+      overview: |
+        Per-user erasure is a single API call that deletes the subject's live
+        data, attachments and audit rows. How far erasure extends into backups
+        depends on the storage engine and backup-rotation policy; HDS operates a
+        documented backup and rotation regime as operator. Scheduled/automatic
+        erasure under storage limitation is a known gap (no retention automation).
+      detail: |
+        Account deletion removes live events, attachments and audit rows
+        engine-agnostically. Backup residue differs by engine and is bounded by
+        the rotation policy. Erasure here is caller-triggered; automated
+        retention deletion must be composed externally by the controller. The
+        operator backup/erasure procedure is available on request.
+      regions: [ch, us]
+      evidence:
+        internal_docs:
+          - gdpr/procedures/data-subject-rights
+          - gdpr/policies/data-retention
+          - hipaa/procedures/data-backup-plan
+    implementer:
+      - persona: controller
+        coverage: documented
+        overview: |
+          Decide when an erasure obligation is triggered and invoke deletion;
+          define your own retention schedule, since automation is not provided.
+      - persona: data-subject
+        coverage: facilitated
+        overview: |
+          Request erasure of your account, applied across live data and audit
+          rows.
+
+  - ref: Art.18
+    title: Right to restriction of processing
+    text: |
+      Right to obtain restriction — data stored but not processed — in defined
+      circumstances.
+    pryv_ref: Art.18
+    draft: true
+    hds:
+      coverage: configurable
+      effort_saved: medium
+      overview: |
+        Restriction is achieved by mutating the access: scope its permissions
+        down or revoke it. Data continues to live in events and streams while the
+        access change stops processing, and the version chain proves when the
+        restriction took effect. There is no separate restriction flag — the
+        access mutation is the restriction primitive.
+      detail: |
+        The controller lowers the relevant access's permissions to none on the
+        affected streams (or deletes the access) and may record the restriction
+        reason on the access clientData for the Art.30 register.
+      regions: [ch, us]
+      evidence:
+        internal_docs:
+          - hipaa/policies/access-control
+          - gdpr/procedures/data-subject-rights
+    implementer:
+      - persona: controller
+        coverage: documented
+        overview: |
+          Apply restriction by scoping or revoking the relevant accesses and
+          record the reason.
+      - persona: data-subject
+        coverage: facilitated
+        overview: |
+          Request restriction, applied as an access scope-down that halts
+          processing while preserving the data.
+
+  - ref: Art.20
+    title: Right to data portability
+    text: |
+      Right to receive personal data in a structured, commonly used,
+      machine-readable format and to transmit it to another controller.
+    pryv_ref: Art.20
+    draft: true
+    hds:
+      coverage: implemented
+      effort_saved: high
+      overview: |
+        Reads return canonical JSON validated against the data-type schemas —
+        structured, commonly used and machine-readable — with attachments
+        downloadable and no proprietary lock-in. Another HDS/Pryv operator can
+        import the export via standard write APIs, and direct
+        controller-to-controller transmission is available via the CMC capability
+        flow.
+      detail: |
+        The export shape is the same JSON the subject sees via the API, so no
+        special endpoint is needed. For custom event-type catalogues, schema
+        alignment between transmitting and receiving operators is the
+        controller's responsibility when relying on direct transmission.
+      regions: [ch, us]
+      evidence:
+        internal_docs:
+          - gdpr/procedures/data-subject-rights
+    implementer:
+      - persona: controller
+        coverage: documented
+        overview: |
+          Optionally wrap the export in a download UI; ensure schema alignment
+          for any direct controller-to-controller transmission.
+      - persona: data-subject
+        coverage: facilitated
+        overview: |
+          Export your data in portable JSON and have it transmitted to another
+          controller.
+
+  - ref: Art.21
+    title: Right to object
+    text: |
+      Right to object to processing based on legitimate or public interest;
+      absolute right to object to direct marketing.
+    pryv_ref: Art.21
+    draft: true
+    hds:
+      coverage: facilitated
+      effort_saved: medium
+      facilitation_mode: primitive
+      overview: |
+        HDS performs no profiling or marketing itself. Where a controller's app
+        does, the objection mechanism is the same access revoke/scope-down as
+        consent withdrawal, and the objection (and any compelling-grounds
+        outcome) can be recorded on the access clientData. The legal distinction
+        between objection and withdrawal is semantic, not technical.
+      detail: |
+        For direct marketing the controller records the objection and narrows or
+        revokes the marketing access so subsequent runs find no scope. For
+        legitimate-interest objections the controller also runs a
+        compelling-grounds review and records the outcome on the access; all of
+        it is versioned and auditable.
+      regions: [ch, us]
+      evidence:
+        internal_docs:
+          - hipaa/policies/access-control
+          - gdpr/procedures/data-subject-rights
+    implementer:
+      - persona: controller
+        coverage: documented
+        overview: |
+          Run the compelling-grounds assessment where applicable and apply the
+          objection by revoking or narrowing the relevant access.
+      - persona: data-subject
+        coverage: facilitated
+        overview: |
+          Object to processing; the objection is applied through the access
+          primitive and recorded.
+
+  - ref: Art.19
+    title: Notification obligation regarding rectification / erasure / restriction
+    text: |
+      The controller must communicate any rectification, erasure or restriction
+      to each recipient, unless impossible or disproportionate.
+    pryv_ref: Art.19
+    draft: true
+    hds:
+      coverage: facilitated
+      effort_saved: low
+      facilitation_mode: evidence
+      overview: |
+        The recipients are derivable from HDS data — the accesses the controller
+        minted to third parties. When an Art.16-18 action affects data held by
+        those recipients, the controller iterates the active accesses and
+        notifies each holder; CMC-paired counterparties have a structured
+        notification channel.
+      detail: |
+        The set of recipients to notify is reconstructable from the active
+        accesses; the out-of-band notification to each, and the
+        impossibility/disproportionality judgement, are the controller's.
+      regions: [ch, us]
+      evidence:
+        internal_docs:
+          - gdpr/procedures/data-subject-rights
+    implementer:
+      - persona: controller
+        coverage: documented
+        overview: |
+          Identify the recipients from the active accesses and notify each of the
+          rectification, erasure or restriction.
+      - persona: data-subject
+        coverage: out-of-scope
+
+  - ref: Art.22
+    title: Automated individual decision-making, including profiling
+    text: |
+      Right not to be subject to a decision based solely on automated processing
+      producing legal or similarly significant effects, subject to exceptions.
+    pryv_ref: Art.22
+    draft: true
+    hds:
+      coverage: facilitated
+      effort_saved: low
+      facilitation_mode: evidence
+      overview: |
+        HDS runs no automated decisions — that is the controller's application
+        logic. Where Art.22 applies, the audit log proves which inputs were read,
+        the decision output can be stored as an event referencing those inputs
+        and the logic version, and the §2(c) consent basis lives on the access
+        clientData like any other consent record.
+      detail: |
+        The controller mints a dedicated access for the decision app, writes the
+        decision output with an input-audit reference and logic version, and uses
+        that trail to satisfy human-intervention requests. HDS supplies the
+        evidentiary substrate, not the decision.
+      regions: [ch, us]
+      evidence:
+        internal_docs:
+          - gdpr/procedures/data-subject-rights
+    implementer:
+      - persona: controller
+        coverage: documented
+        overview: |
+          Implement the safeguards (basis, human intervention) and record the
+          decision trail; the evidentiary primitives are provided.
+      - persona: data-subject
+        coverage: out-of-scope
+
+  # ───── Chapter IV — Controller / Processor ─────
+
+  - ref: Art.24
+    title: Responsibility of the controller
+    text: |
+      The controller must implement and be able to demonstrate appropriate
+      technical and organisational measures, proportionate to the risk.
+    pryv_ref: Art.24
+    draft: true
+    hds:
+      coverage: facilitated
+      effort_saved: low
+      facilitation_mode: evidence
+      overview: |
+        Art.24 is the umbrella accountability obligation. HDS contributes the
+        technical-measures substrate enumerated across this matrix and the means
+        to demonstrate it (audit log plus access version chain). The
+        organisational-measures programme is the controller's.
+      detail: |
+        HDS as processor supplies access control, transport encryption,
+        monitoring and the evidence layer, and offers a DPA documenting its own
+        measures. The controller assembles these into its own accountability
+        programme and carries the demonstrability burden at the organisational
+        level.
+      regions: [ch, us]
+      evidence:
+        internal_docs:
+          - hipaa/policies/access-control
+          - gdpr/registers/records-of-processing
+    implementer:
+      - persona: controller
+        coverage: documented
+        overview: |
+          Build and maintain your accountability programme, citing HDS technical
+          measures and your own organisational controls.
+      - persona: processor
+        coverage: documented
+        overview: |
+          Where you act as a processor, evidence your own measures and operate on
+          documented controller instructions.
+        templates: [dpa]
+
+  - ref: Art.26
+    title: Joint controllers
+    text: |
+      Where two or more controllers jointly determine purposes and means, they
+      must allocate their responsibilities in a transparent arrangement.
+    pryv_ref: Art.26
+    draft: true
+    hds:
+      coverage: facilitated
+      effort_saved: low
+      facilitation_mode: awareness
+      overview: |
+        HDS's cross-account sharing (CMC) is not joint controllership: it
+        requires the subject's validation, so each operator stays the sole
+        controller for their user and the lawful basis is the subject's consent,
+        not a controller-to-controller agreement. Real Art.26 fires only when two
+        controllers separately decide to jointly process data — outside the CMC
+        primitive.
+      detail: |
+        Where genuine joint controllership exists, the arrangement is the
+        controllers' own contract; HDS can carry a pointer to it and the essence
+        of the arrangement on the relevant access clientData, but no platform
+        primitive enforces the allocation.
+      regions: [ch, us]
+      evidence:
+        internal_docs:
+          - gdpr/registers/records-of-processing
+    implementer:
+      - persona: controller
+        coverage: documented
+        overview: |
+          If you are a joint controller, conclude the Art.26 arrangement and make
+          its essence available to subjects.
+      - persona: data-subject
+        coverage: out-of-scope
+
+  - ref: Art.27
+    title: Representative of controllers / processors not established in the Union
+    text: |
+      A controller or processor not established in the Union must, where Art.3(2)
+      applies, designate an EU representative in writing, subject to exemptions.
+    pryv_ref: Art.27
+    draft: true
+    hds:
+      coverage: out-of-scope
+      overview: |
+        Designating an EU representative is a contractual and regulatory
+        registration step with no software role. Where HDS itself processes for
+        EU subjects from a non-EU establishment, HDS makes its own designation;
+        the controller makes its own.
+      regions: [ch, us]
+    implementer:
+      - persona: controller
+        coverage: documented
+        overview: |
+          If Art.3(2) applies to you and no exemption holds, designate an EU
+          representative in writing.
+      - persona: data-subject
+        coverage: out-of-scope
+
+  - ref: Art.29
+    title: Processing under the authority of the controller or processor
+    text: |
+      A processor and anyone acting under its or the controller's authority must
+      process personal data only on the controller's instructions.
+    pryv_ref: Art.29
+    draft: true
+    hds:
+      coverage: facilitated
+      effort_saved: high
+      facilitation_mode: primitive
+      overview: |
+        "Only on instructions" is enforced operationally through the access
+        primitive: workforce, contractor and app accesses are scoped to specific
+        streams and levels per the controller's instructions, and the audit log
+        proves what was actually done. HDS as processor binds its own staff to
+        the same instruction-only discipline.
+      detail: |
+        Out-of-scope access attempts and unauthorised method calls surface in the
+        audit data, making instruction violations detectable. The substantive
+        instructions themselves come from the controller's DPA.
+      regions: [ch, us]
+      evidence:
+        internal_docs:
+          - hipaa/policies/access-control
+          - gdpr/registers/records-of-processing
+    implementer:
+      - persona: controller
+        coverage: documented
+        overview: |
+          Express your processing instructions as scoped accesses and review the
+          audit log for deviations.
+      - persona: processor
+        coverage: documented
+        overview: |
+          Process only on documented controller instructions and keep your staff
+          within their scoped accesses.
+        templates: [dpa]
+
+  - ref: Art.25
+    title: Data protection by design and by default
+    text: |
+      The controller must integrate data-protection principles into the design
+      and ensure privacy-protective default settings.
+    pryv_ref: Art.25
+    draft: true
+    hds:
+      coverage: facilitated
+      effort_saved: high
+      facilitation_mode: infrastructure
+      overview: |
+        The HDS architecture is privacy-by-design by founding pattern: per-user
+        storage isolation, default-deny stream-scoped permissions, separate
+        personal/app/shared access types, privileged data on system streams, and
+        audit-on by default. The controller's own defaults — token scopes,
+        retention period, opt-in UX — remain in its hands.
+      detail: |
+        Default-deny permissions, audit-by-construction, enforced transport
+        encryption and per-user residency pinning ship as platform defaults. The
+        controller still decides whether app tokens are minted with minimal
+        scope, whether notices default on, and how short the retention period is.
+      regions: [ch, us]
+      evidence:
+        internal_docs:
+          - hipaa/policies/access-control
+          - gdpr/policies/data-retention
+    implementer:
+      - persona: controller
+        coverage: documented
+        overview: |
+          Configure your defaults — minimal token scopes, opt-in notices, short
+          retention — on top of the platform's privacy-protective baseline.
+      - persona: data-subject
+        coverage: out-of-scope
+
+  - ref: Art.28
+    title: Processor
+    text: |
+      Processing on behalf of a controller must be governed by a contract setting
+      out subject matter, duration, nature, purpose, data types and the parties'
+      obligations.
+    pryv_ref: Art.28
+    draft: true
+    hds:
+      coverage: facilitated
+      effort_saved: medium
+      facilitation_mode: storage
+      overview: |
+        In the usual arrangement HDS is the Art.28 processor and offers a
+        data-processing agreement covering the §3 terms and a documented
+        subprocessor posture. HDS ships zero mandatory subprocessors; every
+        external integration (SMTP, SMS, observability) is opt-in and inventoried
+        with its data-flow. The substantive §1 "sufficient guarantees"
+        evaluation is the controller's.
+      detail: |
+        HDS maintains a subprocessor register and hosting-provider attestations
+        and routes deletion/return of data at end of provision via account
+        deletion and backup tooling. The audit log and access primitives carry
+        the documented controller instructions and the demonstrability evidence.
+        A DPA template is offered.
+      regions: [ch, us]
+      evidence:
+        internal_docs:
+          - hipaa/registers/subprocessor-register
+          - hipaa/registers/hosting-provider-attestations
+          - gdpr/registers/records-of-processing
+    implementer:
+      - persona: controller
+        coverage: documented
+        overview: |
+          Evaluate the processor's guarantees and conclude an Art.28 DPA before
+          processing begins.
+        templates: [dpa]
+      - persona: processor
+        coverage: documented
+        overview: |
+          Sign the DPA, maintain your subprocessor inventory and bind any
+          subprocessor on equivalent terms.
+        templates: [dpa, subprocessor]
+
+  - ref: Art.30
+    title: Records of processing activities
+    text: |
+      Each controller and processor must maintain a record of its processing
+      activities (purposes, categories, recipients, transfers, retention,
+      security).
+    pryv_ref: Art.30
+    draft: true
+    hds:
+      coverage: facilitated
+      effort_saved: medium
+      facilitation_mode: evidence
+      overview: |
+        The combination of access, clientData, audit, CMC and data-residency lets
+        much of the Art.30 register be derived per subject and per time window —
+        who, what, why, when, recipients, transfers, retention. A
+        platform-generated, complete register is a known gap; each operator keeps
+        its own. HDS maintains its own processor-side record.
+      detail: |
+        Register fields map onto platform sources: purpose to access clientData,
+        data categories to event class/format, recipients to counterparty
+        accesses, transfers to counterparty host plus chosen hosting, retention
+        to clientData and access expiry. The controller assembles and maintains
+        the formal register; HDS provides the derivable inputs and keeps its own.
+      regions: [ch, us]
+      evidence:
+        internal_docs:
+          - gdpr/registers/records-of-processing
+    implementer:
+      - persona: controller
+        coverage: documented
+        overview: |
+          Maintain your Art.30 register, drawing the technical fields from the
+          platform's derivable inputs.
+      - persona: processor
+        coverage: documented
+        overview: |
+          Keep your own processor-side record of the processing you perform for
+          each controller.
+        templates: [dpa]
+
+  - ref: Art.32
+    title: Security of processing
+    text: |
+      The controller and processor must implement appropriate technical and
+      organisational security measures: pseudonymisation, encryption, ongoing
+      CIA, restoration and regular testing.
+    pryv_ref: Art.32
+    draft: true
+    hds:
+      coverage: facilitated
+      effort_saved: high
+      facilitation_mode: infrastructure
+      overview: |
+        HDS implements transport encryption (TLS), technical access control and
+        per-user restore, and operates monitoring and alerting as operator.
+        Encryption at rest is a known gap at the application layer — it relies on
+        operator/infrastructure controls rather than a platform primitive.
+        Pseudonymisation and data residency are facilitated/configurable.
+        Organisational testing and incident procedures remain the controller's.
+      detail: |
+        Access control is enforced at every API call; transport is TLS; per-user
+        restore is available. At-rest encryption of event content is not provided
+        by the platform and is the standing gap noted in this matrix. HDS as
+        operator runs CI test matrices and a monitored, alert-wired production
+        environment; the controller runs its own organisational testing regime.
+      regions: [ch, us]
+      evidence:
+        internal_docs:
+          - hipaa/policies/encryption
+          - hipaa/policies/transmission-security
+          - hipaa/policies/access-control
+          - hipaa/risk/at-rest-encryption-gap
+    implementer:
+      - persona: controller
+        coverage: documented
+        overview: |
+          Assess the residual at-rest-encryption risk, run regular security
+          testing and document your incident procedures.
+      - persona: processor
+        coverage: documented
+        overview: |
+          Evidence your own security measures and the at-rest controls applied at
+          the infrastructure layer.
+        templates: [dpa]
+
+  - ref: Art.33
+    title: Notification of personal data breach to the supervisory authority
+    text: |
+      The controller must notify the supervisory authority within 72 hours of
+      becoming aware of a breach, unless it is unlikely to pose a risk.
+    pryv_ref: Art.33
+    draft: true
+    hds:
+      coverage: facilitated
+      effort_saved: medium
+      facilitation_mode: evidence
+      overview: |
+        The audit log helps scope a breach — which data, which subjects, by which
+        access — and HDS as operator runs the monitoring and incident-response
+        procedure that feeds the 72-hour decision. The notification itself, and
+        the risk-likelihood judgement, are the controller's. At-rest encryption,
+        a known gap, would otherwise narrow the "unsecured data" definition.
+      detail: |
+        Audit queries over the suspected window list the accesses that touched
+        the data and the streams read; the access version chain shows whether
+        processing was within scope. HDS runs detection and an operator-side
+        incident procedure; the controller owns the supervisory-authority
+        notification.
+      regions: [ch, us]
+      evidence:
+        internal_docs:
+          - gdpr/procedures/breach-notification-72h
+          - hipaa/procedures/security-incident-response
+    implementer:
+      - persona: controller
+        coverage: documented
+        overview: |
+          Run the 72-hour notification process and make the risk determination;
+          the scoping substrate is provided.
+      - persona: processor
+        coverage: documented
+        overview: |
+          Notify the controller without undue delay on becoming aware of a
+          breach.
+        templates: [dpa]
+
+  - ref: Art.34
+    title: Communication of a personal data breach to the data subject
+    text: |
+      Where a breach is likely to result in high risk, the controller must
+      communicate it to affected data subjects without undue delay.
+    pryv_ref: Art.34
+    draft: true
+    hds:
+      coverage: facilitated
+      effort_saved: low
+      facilitation_mode: evidence
+      overview: |
+        Identification of affected subjects is derivable from the audit log
+        filtered by the breached access and window. Delivery of the communication
+        is the controller's job, composed with its own messaging pipeline; HDS's
+        transactional mail is per-recipient, not a bulk channel. At-rest
+        encryption (a known gap) would otherwise scope the high-risk exemption.
+      detail: |
+        The affected-subject roster comes from audit queries; the controller's
+        CRM or mail provider renders and sends the Art.34 content per recipient,
+        and send-receipts can be captured back as compliance events. The Art.34(3)
+        exemptions are legal judgements the controller's counsel makes.
+      regions: [ch, us]
+      evidence:
+        internal_docs:
+          - gdpr/procedures/breach-notification-72h
+          - hipaa/procedures/security-incident-response
+    implementer:
+      - persona: controller
+        coverage: documented
+        overview: |
+          Derive the affected-subject roster, render and deliver the
+          communication, and assess the high-risk and exemption questions.
+      - persona: data-subject
+        coverage: out-of-scope
+
+  - ref: Art.35
+    title: Data protection impact assessment
+    text: |
+      Where processing is likely to result in a high risk, the controller must
+      carry out a data-protection impact assessment before processing.
+    pryv_ref: Art.35
+    draft: true
+    hds:
+      coverage: facilitated
+      effort_saved: low
+      facilitation_mode: evidence
+      overview: |
+        The DPIA is a written assessment the controller produces; HDS supplies
+        inputs — data-residency facts, audit/access descriptions of the
+        processing flow, system-stream isolation as the sensitive-data boundary,
+        and this matrix as the technical-measures inventory. A formal DPIA
+        process is a known gap that the controller must run itself.
+      detail: |
+        The prescribed Art.35(7) content maps onto platform inputs: a systematic
+        description from audit and access purposes, a necessity assessment from
+        the minimum-necessary stream design, and the measures inventory from the
+        Art.32 row. The risk assessment and the DPIA document itself are the
+        controller's.
+      regions: [ch, us]
+      evidence:
+        internal_docs:
+          - gdpr/procedures/dpia
+    implementer:
+      - persona: controller
+        coverage: documented
+        overview: |
+          Run the DPIA where required, using the platform's technical inputs and
+          this matrix's measures inventory.
+      - persona: data-subject
+        coverage: out-of-scope
+
+  - ref: Art.36
+    title: Prior consultation
+    text: |
+      The controller must consult the supervisory authority before processing
+      where a DPIA shows a high residual risk absent mitigation.
+    pryv_ref: Art.36
+    draft: true
+    hds:
+      coverage: out-of-scope
+      overview: |
+        Prior consultation is the controller's procedural interaction with a
+        supervisory authority and has no software role. HDS contributes the
+        technical evidence the authority may request via the DPIA inputs noted at
+        Art.35, but not the consultation itself.
+      regions: [ch, us]
+    implementer:
+      - persona: controller
+        coverage: documented
+        overview: |
+          Consult the supervisory authority where your DPIA indicates an
+          unmitigated high risk.
+      - persona: data-subject
+        coverage: out-of-scope
+
+  - ref: Art.37
+    title: Designation of the data protection officer
+    text: |
+      The controller and processor must designate a DPO in the cases listed,
+      including large-scale processing of special-category data.
+    pryv_ref: Art.37
+    draft: true
+    hds:
+      coverage: out-of-scope
+      overview: |
+        DPO designation is an organisational decision with no software role.
+        Healthcare deployments processing special-category data at scale will
+        commonly trigger the Art.37(1)(c) requirement; HDS makes its own
+        processor-side designation and the controller makes its own.
+      regions: [ch, us]
+    implementer:
+      - persona: controller
+        coverage: documented
+        overview: |
+          Determine whether a DPO is required for your processing and designate
+          one where it is.
+      - persona: processor
+        coverage: documented
+        overview: |
+          Designate your own DPO where the Art.37 triggers apply to your
+          processing.
+        templates: [dpa]
+
+  - ref: Art.38
+    title: Position of the data protection officer
+    text: |
+      The DPO must be involved properly and timely, resourced, independent, and
+      reachable by data subjects.
+    pryv_ref: Art.38
+    draft: true
+    hds:
+      coverage: facilitated
+      effort_saved: low
+      facilitation_mode: storage
+      overview: |
+        DPO independence and reporting structure are organisational arrangements
+        with no software role. The Art.38(4) data-subject contact point is
+        facilitated by the service-info support URL returned by every core, which
+        consent UIs already render — the controller publishes DPO contact details
+        there at no extra platform cost.
+      detail: |
+        HDS surfaces the support/contact URL platform-wide; the controller
+        populates it with DPO contact details. The DPO's resourcing,
+        independence and direct-reporting position remain organisational
+        arrangements the controller establishes.
+      regions: [ch, us]
+      evidence:
+        internal_docs:
+          - gdpr/procedures/dpia
+    implementer:
+      - persona: controller
+        coverage: documented
+        overview: |
+          Establish the DPO's independence and reporting line and publish the
+          DPO contact point.
+      - persona: data-subject
+        coverage: out-of-scope
+
+  - ref: Art.39
+    title: Tasks of the data protection officer
+    text: |
+      The DPO must, at minimum, inform and advise, monitor compliance, advise on
+      the DPIA, and cooperate with and be the contact point for the supervisory
+      authority.
+    pryv_ref: Art.39
+    draft: true
+    hds:
+      coverage: facilitated
+      effort_saved: low
+      facilitation_mode: evidence
+      overview: |
+        DPO duties are organisational. HDS contributes the data sources the DPO
+        uses to monitor compliance — the audit log, monitoring telemetry, and
+        this matrix's evidence trail — but does not replace the DPO. The contact
+        point is covered via the service-info convention.
+      detail: |
+        Audit-log access for a platform-wide compliance view is operator-mediated
+        (no built-in cross-account audit-reader tier); this matrix itself serves
+        as the structured artefact the DPO references for the platform's
+        contribution to each control.
+      regions: [ch, us]
+      evidence:
+        internal_docs:
+          - gdpr/registers/records-of-processing
+    implementer:
+      - persona: controller
+        coverage: documented
+        overview: |
+          Resource your DPO to perform these tasks using the platform's audit and
+          monitoring data and this matrix.
+      - persona: data-subject
+        coverage: out-of-scope
+
+  - ref: Art.40
+    title: Codes of conduct
+    text: |
+      Authorities and bodies are to encourage codes of conduct that help apply
+      the Regulation properly.
+    pryv_ref: Art.40
+    draft: true
+    hds:
+      coverage: facilitated
+      effort_saved: low
+      facilitation_mode: awareness
+      overview: |
+        Codes of conduct are sector-level instruments with no software role at
+        the drafting layer. Where a code applies to a controller's sector,
+        adherence counts among the Art.24/Art.32 appropriate measures, and the
+        audit log plus this matrix evidence the technical side of adherence.
+      detail: |
+        HDS does not draft or adopt codes on a controller's behalf; it supplies
+        the technical-control evidence a controller can cite when demonstrating
+        adherence to a code it has signed up to.
+      regions: [ch, us]
+      evidence:
+        internal_docs:
+          - gdpr/registers/records-of-processing
+    implementer:
+      - persona: controller
+        coverage: documented
+        overview: |
+          Adhere to any applicable sector code and cite the platform's technical
+          controls as part of that adherence.
+      - persona: data-subject
+        coverage: out-of-scope
+
+  - ref: Art.42
+    title: Certification
+    text: |
+      Authorities and bodies are to encourage data-protection certification
+      mechanisms, seals and marks.
+    pryv_ref: Art.42
+    draft: true
+    hds:
+      coverage: facilitated
+      effort_saved: low
+      facilitation_mode: awareness
+      overview: |
+        Certification is sector- and jurisdiction-specific. A controller pursuing
+        a GDPR certification scheme consumes this matrix as the technical-control
+        inventory; adjacent certifications (e.g. ISO 27701, and HDS hosting
+        certification) reinforce the evidence base.
+      detail: |
+        HDS does not itself confer a GDPR certification; it provides the
+        structured technical-control evidence a controller's certification body
+        will examine.
+      regions: [ch, us]
+      evidence:
+        internal_docs:
+          - gdpr/registers/records-of-processing
+    implementer:
+      - persona: controller
+        coverage: documented
+        overview: |
+          Pursue any applicable certification using this matrix as your
+          technical-control inventory.
+      - persona: data-subject
+        coverage: out-of-scope
+
+  - ref: Art.82
+    title: Right to compensation and liability
+    text: |
+      Anyone suffering material or non-material damage from an infringement is
+      entitled to compensation from the controller or processor.
+    pryv_ref: Art.82
+    draft: true
+    hds:
+      coverage: facilitated
+      effort_saved: low
+      facilitation_mode: evidence
+      overview: |
+        Liability and compensation are legal proceedings. HDS contributes defence
+        evidence — the audit log and access version chain support demonstrating
+        compliance or, where it failed, scoping the actual damage. The legal
+        outcome is fact-specific.
+      detail: |
+        The audit trail and version chain are the durable evidence a controller
+        or processor relies on in a liability dispute; HDS makes no determination
+        of fault or damage.
+      regions: [ch, us]
+      evidence:
+        internal_docs:
+          - gdpr/registers/records-of-processing
+    implementer:
+      - persona: controller
+        coverage: documented
+        overview: |
+          Rely on the audit and version evidence in any liability dispute; the
+          legal posture is yours.
+      - persona: processor
+        coverage: documented
+        overview: |
+          Maintain your own records to evidence compliance with your processor
+          obligations.
+        templates: [dpa]
+
+  - ref: Art.83
+    title: General conditions for imposing administrative fines
+    text: |
+      Supervisory authorities must ensure fines are effective, proportionate and
+      dissuasive, up to the prescribed ceilings.
+    pryv_ref: Art.83
+    draft: true
+    hds:
+      coverage: out-of-scope
+      overview: |
+        Fines are regulator-side; HDS has no role in their calculation or
+        imposition. The platform's data and this matrix help a controller argue
+        for mitigation under the Art.83(2) factors, such as the
+        technical/organisational measures implemented and the degree of
+        cooperation.
+      regions: [ch, us]
+    implementer:
+      - persona: controller
+        coverage: documented
+        overview: |
+          Use the platform's evidence to argue mitigation under the Art.83(2)
+          factors should a fine be considered.
+      - persona: data-subject
+        coverage: out-of-scope
+
+  # ───── Chapter V — Transfers of personal data to third countries ─────
+
+  - ref: Art.44
+    title: General principle for transfers
+    text: |
+      Any transfer to a third country or international organisation may take
+      place only if the Chapter V conditions are met.
+    pryv_ref: Art.44
+    draft: true
+    hds:
+      coverage: facilitated
+      effort_saved: medium
+      facilitation_mode: infrastructure
+      overview: |
+        HDS's data-residency option is the technical enforcement layer: binding a
+        subject to the Switzerland region keeps EU/EEA data under an adequacy
+        regime, so no Chapter-V analysis is needed. The US region is an
+        international transfer requiring an Art.45/46 mechanism (SCCs). Where
+        transfer is intentional, the recipient and legal basis are recorded on
+        the access clientData, making compliance auditable per transfer.
+      detail: |
+        Content and audit data stay pinned to the subject's region; a deliberate
+        cross-region move (e.g. choosing the US region, or a US counterparty
+        fetching from a CH core) is the transfer event. The controller records
+        the recipient and transfer basis on the access; the legal mechanism
+        itself is a controller/legal artefact.
+      regions: [ch, us]
+      evidence:
+        internal_docs:
+          - gdpr/policies/international-transfers
+          - hipaa/registers/hosting-provider-attestations
+    implementer:
+      - persona: controller
+        coverage: documented
+        overview: |
+          Choose residency to avoid or to deliberately ground transfers, and
+          record the basis for each intentional transfer.
+      - persona: data-subject
+        coverage: out-of-scope
+
+  - ref: Art.45
+    title: Transfers on the basis of an adequacy decision
+    text: |
+      A transfer may take place where the Commission has decided the third
+      country ensures an adequate level of protection.
+    pryv_ref: Art.45
+    draft: true
+    hds:
+      coverage: configurable
+      effort_saved: high
+      overview: |
+        HDS's Switzerland region rests on the EU adequacy decision for
+        Switzerland, so routing EU/EEA subjects there grounds the transfer (or
+        avoids one entirely). The per-user residency is exposed for auditor
+        questions. Tracking which countries currently hold adequacy is the
+        controller's regulatory responsibility.
+      detail: |
+        The controller selects the CH region for subjects whose transfer it wants
+        to ground on adequacy; the chosen hosting per user proves residency. The
+        US region is not an adequacy-based transfer for general EU data and needs
+        Art.46 safeguards instead.
+      regions: [ch, us]
+      evidence:
+        internal_docs:
+          - gdpr/policies/international-transfers
+          - hipaa/registers/hosting-provider-attestations
+    implementer:
+      - persona: controller
+        coverage: documented
+        overview: |
+          Route subjects to an adequacy-covered region and track the current
+          adequacy landscape.
+      - persona: data-subject
+        coverage: out-of-scope
+
+  - ref: Art.46
+    title: Transfers subject to appropriate safeguards
+    text: |
+      Absent an adequacy decision, a transfer requires appropriate safeguards
+      such as SCCs, BCRs or approved codes.
+    pryv_ref: Art.46
+    draft: true
+    hds:
+      coverage: facilitated
+      effort_saved: low
+      facilitation_mode: storage
+      overview: |
+        Choosing the US region (AWS) is a transfer that needs an Art.46
+        safeguard — typically standard contractual clauses. HDS records the
+        chosen mechanism on the transferring access clientData so the Art.30
+        transfers register is derivable, and offers a DPA into which the SCCs are
+        incorporated. The SCC/BCR documents themselves are controller/legal
+        artefacts.
+      detail: |
+        The transfer surfaces — access-bound counterparty fetches, the US-region
+        residency choice, and subprocessor outbound flows — each carry the
+        mechanism reference on the relevant artefact. HDS persists the references
+        with versioning and audit; the controller concludes the safeguard
+        instrument.
+      regions: [ch, us]
+      evidence:
+        internal_docs:
+          - gdpr/policies/international-transfers
+          - hipaa/registers/subprocessor-register
+    implementer:
+      - persona: controller
+        coverage: documented
+        overview: |
+          Conclude SCCs or another Art.46 safeguard for US-region or other
+          third-country transfers and record the mechanism.
+        templates: [dpa]
+      - persona: processor
+        coverage: documented
+        overview: |
+          Sign the SCC-bearing DPA and flow equivalent clauses down to any
+          subprocessor.
+        templates: [dpa, subprocessor]
+
+  - ref: Art.47
+    title: Binding corporate rules
+    text: |
+      A supervisory authority may approve binding corporate rules meeting the
+      prescribed content and safeguard requirements.
+    pryv_ref: Art.47
+    draft: true
+    hds:
+      coverage: out-of-scope
+      overview: |
+        BCRs are organisational rules approved through a formal supervisory
+        process, with no software contribution. Where BCRs are the chosen Art.46
+        safeguard, the controller records the BCR reference on the transferring
+        access; the BCR document is the controller's legal artefact.
+      regions: [ch, us]
+    implementer:
+      - persona: controller
+        coverage: documented
+        overview: |
+          If relying on BCRs, obtain approval and record the reference on the
+          transferring accesses.
+      - persona: data-subject
+        coverage: out-of-scope
+
+  - ref: Art.48
+    title: Transfers or disclosures not authorised by Union law
+    text: |
+      A third-country court or administrative order to transfer or disclose data
+      is recognised or enforceable only on the basis of an international
+      agreement.
+    pryv_ref: Art.48
+    draft: true
+    hds:
+      coverage: out-of-scope
+      overview: |
+        Resisting extraterritorial orders is a legal posture, not a software
+        control. Because the access primitive is the only path data leaves the
+        system, the audit log documents any forced disclosure after the fact; the
+        decision to comply or contest is the controller's counsel's.
+      regions: [ch, us]
+    implementer:
+      - persona: controller
+        coverage: documented
+        overview: |
+          Decide, with counsel, how to respond to any third-country order; the
+          audit log documents any disclosure made.
+      - persona: data-subject
+        coverage: out-of-scope
+
+  - ref: Art.49
+    title: Derogations for specific situations
+    text: |
+      Absent adequacy or safeguards, a transfer may rest on one of the enumerated
+      derogations, such as explicit consent or contract performance.
+    pryv_ref: Art.49
+    draft: true
+    hds:
+      coverage: facilitated
+      effort_saved: low
+      facilitation_mode: storage
+      overview: |
+        Each derogation requires per-instance recording. The HDS pattern mints a
+        purpose-specific access tagged with the derogation relied on, executes
+        the transfer, and revokes; the audit trail then anchors the rationale to
+        the specific data movement. Whether a derogation actually applies is the
+        controller's legal judgement.
+      detail: |
+        The derogation tag on the access plus the audit record give a defensible,
+        per-transfer artefact. HDS does not assess the derogation's availability.
+      regions: [ch, us]
+      evidence:
+        internal_docs:
+          - gdpr/policies/international-transfers
+    implementer:
+      - persona: controller
+        coverage: documented
+        overview: |
+          Establish that a derogation applies, record it per transfer, and limit
+          the transfer to that purpose.
+      - persona: data-subject
+        coverage: out-of-scope
+
+  - ref: Art.50
+    title: International cooperation for the protection of personal data
+    text: |
+      The Commission and authorities are to develop international cooperation
+      mechanisms for effective enforcement.
+    pryv_ref: Art.50
+    draft: true
+    hds:
+      coverage: out-of-scope
+      overview: |
+        Developing international-cooperation mechanisms is a regulator-level
+        activity with no software contribution and no implementer obligation
+        arising from this Article alone.
+      regions: [ch, us]
+    implementer:
+      - persona: controller
+        coverage: out-of-scope
+      - persona: data-subject
+        coverage: out-of-scope

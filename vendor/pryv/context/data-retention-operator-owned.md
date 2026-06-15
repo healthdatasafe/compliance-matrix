@@ -72,8 +72,8 @@ external retention job:
    in Q8 / `proposals/audit-on-user-delete.md`). Use for the
    "inactive user, full erasure" path.
 
-5. **Audit log as inactivity oracle** — `GET /audit/logs`
-   (engine-dependent: per-user SQLite by default,
+5. **Audit log as inactivity oracle** — `events.get` over the
+   `:_audit:` store (engine-dependent: per-user SQLite by default,
    PG `audit_events` table for the v2 default) gives the
    operator the "last-active timestamp" without requiring a
    separate `lastSeen` field on the account.
@@ -280,8 +280,9 @@ limitation under Art.5(1)(e)":
    storage-limitation argument across the full data lifecycle.
 
 If a regulator asks "show me last week's retention deletions":
-`GET /audit/logs from=<last-week> action=events.delete
-accessId=<retention-job-token>`.
+`events.get` with `fromTime=<last-week>` and a stream query selecting
+the `:_audit:action-events.delete` action under the retention job's
+`:_audit:access-<retention-job-token>` access.
 
 ## See also
 

@@ -204,7 +204,7 @@ requirements:
     pryv_primitives: [access, stream, event, audit, data-types, account-backup-tool]
     derives_from: [gdpr.Art.15, gdpr.Art.16, hipaa-privacy.164.524, ccpa.1798.100]
     functional_specs: [EVENT.BASE, STREAM.BASE]
-    tests: [AA01, EGSQ, U9HQ, PTU1]
+    tests: [AA01, EGSQ, UZEV, PTU1]
     overview: |
       Individual access is the same primitive surface as GDPR Art. 15 +
       HIPAA-Privacy § 164.524 + CCPA § 1798.100: subject holding a

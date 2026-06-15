@@ -286,7 +286,7 @@ requirements:
     draft: true
     pryv_primitives: [access, stream, event, audit, data-types, account-backup-tool]
     functional_specs: [EVENT.BASE, STREAM.BASE]
-    tests: [AA01, EGSQ, U9HQ]
+    tests: [AA01, EGSQ, UZEV]
     overview: |
       Your subject, holding a personal token, reads everything via the
       standard Pryv API — events, streams, accesses (with history),
@@ -656,7 +656,7 @@ requirements:
     draft: true
     pryv_primitives: [event, stream, data-types]
     derives_from: [hipaa-privacy.164.524]
-    tests: [EGSQ, U9HQ]
+    tests: [EGSQ, UZEV]
     overview: |
       The Pryv API delivers events in canonical JSON (data-types
       schemas) — "readily producible" in the §524(c) sense.

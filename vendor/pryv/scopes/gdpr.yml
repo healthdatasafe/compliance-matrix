@@ -205,7 +205,7 @@ requirements:
     draft: true
     pryv_primitives: [access, permissions, clientData, stream, audit]
     functional_specs: [EVENT.BASE, STREAM.BASE]
-    tests: [GLHP, U9HQ]
+    tests: [GLHP, UZEV]
     overview: |
       Several Art.5 principles are technically enforced for you by Pryv
       rather than left to policy: purpose limitation (per-stream
@@ -704,13 +704,7 @@ requirements:
     draft: true
     pryv_primitives: [access, stream, event, audit, account-backup-tool]
     functional_specs: [EVENT.BASE, STREAM.BASE]
-    tests: [AA01, EGSQ, U9HQ]
-    planned:
-      - kind: feature
-        summary: "Single-shot events fetch chunked by time-range for production-scale subjects"
-        proposal: proposals/account-backup-dsar-completeness.md
-        backlog: ACCOUNT-BACKUP-CHUNKED-EVENTS-FETCH
-        impact: low
+    tests: [AA01, EGSQ, UZEV]
     overview: |
       Your subject, holding a personal token, reads everything via the
       standard Pryv API — events, streams, accesses (with full history),
@@ -725,23 +719,26 @@ requirements:
         - `events.get` — all events
         - `streams.get` — all streams
         - `accesses.get ?includeHistory=true` — accesses + version chain
-        - `audit.getLogs` — audit log (`/audit/logs`)
+        - `events.get ?streams=[':_audit:*']` — audit log (the dedicated
+          `/audit/logs` route was removed 2026-06-15; audit is a regular
+          datastore mounted on the `:_audit:*` streams)
         - `webhooks.get` — webhook subscriptions
         - `GET /events/<id>/series` — HF data points per series-event
       Attachments downloadable via the events API.
 
-      `pryv-account-backup` v0.4.0 (shipped 2026-05-27, commits
-      `1a05482` + `30b1661` + `ea6ae6a`) covers: account, profiles,
-      streams, accesses, events (single-shot), attachments (opt-in),
-      audit log, HF series data points (`GET /events/<id>/series`),
-      webhooks, plus a per-file sha256 integrity manifest. The
-      Art.15(1)(c) disclosure-history elements are now in the raw
-      export by default. Restore-path round-trip handles series event
-      containers + HFS data points + multi-attachment events as well.
-      One follow-up remains in `proposals/account-backup-dsar-
-      completeness.md` (the "chunked-events fetch for production-scale
-      subjects" feature — separate concern, not in the DSAR-
-      completeness Phase C scope).
+      `pryv-account-backup` v0.6.0 (shipped 2026-06-15; preceded by
+      v0.4.0 2026-05-27 + v0.5.0 2026-06-13) covers, via its CLI flavour,
+      every read-side resource: account, profiles, app profiles,
+      streams, accesses (current + revoked/expired + opt-in per-access
+      version history), events (monthly-chunked initial + incremental
+      via `modifiedSince`), audit-as-events, HF series data points,
+      webhooks, attachments, plus a per-file sha256 integrity manifest.
+      The Art.15(1)(c) disclosure-history elements are in the raw export
+      by default. The DSAR-completeness work is fully shipped —
+      `proposals/account-backup-dsar-completeness.md` is `Status:
+      SHIPPED`, all chips discharged. (The browser-webapp flavour omits
+      attachments / HF series / webhooks / manifest — route subjects
+      needing those to the CLI.)
     technical: |
       Personal-token scope is the user's full namespace; no special
       endpoint. Implementers typically wrap this with a small subject-
@@ -1388,7 +1385,7 @@ requirements:
     draft: true
     pryv_primitives: [access, clientData, audit, CMC, data-residency]
     docs: [customer-resources/audit-setup.md, guides/audit-logs.md]
-    tests: [U9HQ, QXCH, AA01]
+    tests: [UZEV, TJ8S, AA01]
     planned:
       - kind: feature
         summary: "Chained / signed audit log makes the Article 30 register tamper-evident"
@@ -1524,9 +1521,9 @@ requirements:
             - **Lint + typecheck gates** (`just lint` + `just
               typecheck`) — neostandard with `{ semi: true }`,
               `noUnused*` strict.
-            - **Deploy-validation matrix** (Plan-28-era internal
-              artefact) — 8-row scenario matrix exercised on
-              every release.
+            - **Deploy-validation matrix** (an internal
+              release-validation artefact) — 8-row scenario matrix
+              exercised on every release.
             - **Conformance suite** (`lib-js` 168/169 baseline
               against deployed core) — runnable per-deployment
               for operator-side verification (sample-app

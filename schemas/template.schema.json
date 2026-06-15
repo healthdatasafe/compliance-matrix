@@ -18,7 +18,11 @@
       "default": "other"
     },
     "signer": {
-      "enum": ["partner", "covered-entity", "business-associate", "individual"],
+      "enum": [
+        "partner", "covered-entity", "business-associate", "individual",
+        "controller", "processor", "data-subject",
+        "service-organization", "user-entity", "subservice-organization"
+      ],
       "description": "The persona expected to sign / fill this template."
     },
     "counterparty": {

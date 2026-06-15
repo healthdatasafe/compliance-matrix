@@ -1,6 +1,9 @@
 # Build artifacts
 dist/
 
+# Parked scope fragments / work-in-progress (e.g. SOC 2 pending upstream completion)
+scopes/_frag/
+
 # Node
 node_modules/
 npm-debug.log*

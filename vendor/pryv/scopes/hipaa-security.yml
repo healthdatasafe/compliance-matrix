@@ -347,7 +347,7 @@ requirements:
     pryv_effort_saved: high
     draft: true
     pryv_primitives: [access, audit, system-streams]
-    tests: [AA01, U9HQ]
+    tests: [AA01, UZEV]
     overview: |
       Every Pryv account has a unique username + cuid; every access
       derived from it carries a unique access id (cuid) and version

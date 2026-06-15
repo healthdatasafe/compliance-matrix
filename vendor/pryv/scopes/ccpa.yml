@@ -28,7 +28,7 @@ requirements:
     pryv_primitives: [access, stream, event, audit, data-types]
     derives_from: [gdpr.Art.15]
     functional_specs: [EVENT.BASE, STREAM.BASE]
-    tests: [AA01, EGSQ, U9HQ]
+    tests: [AA01, EGSQ, UZEV]
     overview: |
       Same Pryv mechanism as GDPR Art. 15: the consumer holding a
       personal token reads events, streams, accesses, audit data via
@@ -90,7 +90,7 @@ requirements:
     pryv_primitives: [event, stream, data-types, account-backup-tool]
     derives_from: [gdpr.Art.15]
     functional_specs: [EVENT.BASE, STREAM.BASE]
-    tests: [EGSQ, U9HQ]
+    tests: [EGSQ, UZEV]
     overview: |
       Categories surface from the canonical event-type schemas
       (`event.type` = `<class>/<format>`); specific pieces are the

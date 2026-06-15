@@ -774,7 +774,7 @@ requirements:
     draft: true
     pryv_primitives: [access, system-streams, audit]
     derives_from: [iso-27001.A.5.15, hipaa-security.164.308(a)(4)(ii)(C)]
-    tests: [AA01, AA02, ACCP, U9HQ]
+    tests: [AA01, AA02, ACCP, UZEV]
     overview: |
       Pryv's account + access primitives implement the full identity
       lifecycle: create (registration), enable (login + access mint),

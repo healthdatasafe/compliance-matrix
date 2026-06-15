@@ -94,7 +94,7 @@ requirements:
     pryv_primitives: [access, stream, event, audit, data-types]
     derives_from: [gdpr.Art.12, gdpr.Art.15]
     functional_specs: [EVENT.BASE, STREAM.BASE]
-    tests: [AA01, EGSQ, U9HQ]
+    tests: [AA01, EGSQ, UZEV]
     overview: |
       Pryv ships the technical fulfilment of the PII-principal-rights
       obligations: the subject (PII principal) holding a personal
@@ -149,7 +149,7 @@ requirements:
     pryv_primitives: [access, clientData, audit, CMC, data-residency]
     derives_from: [gdpr.Art.30]
     docs: [customer-resources/audit-setup.md, guides/audit-logs.md]
-    tests: [U9HQ, QXCH, AA01]
+    tests: [UZEV, TJ8S, AA01]
     overview: |
       Same artefact set as GDPR Art. 30: access + clientData + audit +
       CMC + data-residency primitives constitute the records-of-
@@ -476,7 +476,7 @@ requirements:
     draft: true
     pryv_primitives: [access, event, stream, audit, data-types]
     derives_from: [iso-27701.A.7.3.1, gdpr.Art.15, gdpr.Art.16, gdpr.Art.17, gdpr.Art.20]
-    tests: [AA01, EGSQ, U9HQ, PTU1, USAD]
+    tests: [AA01, EGSQ, UZEV, PTU1, USAD]
     overview: |
       The standard Pryv API (events.get / events.update / streams.get
       / accesses.get / system.users.delete) gives the customer the

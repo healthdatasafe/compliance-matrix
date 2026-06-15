@@ -114,7 +114,7 @@ requirements:
     pryv_effort_saved: high
     draft: true
     pryv_primitives: [event, audit, backup-restore]
-    tests: [AT01, AT51, U9HQ]
+    tests: [AT01, AT51, UZEV]
     overview: |
       QMS records stored as Pryv events get legibility (canonical
       data-types schemas), retrievability (events.get with timestamp +
