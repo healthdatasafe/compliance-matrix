@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/healthdatasafe/compliance-matrix/schemas/hds-requirement.schema.json",
+  "title": "HDS Requirement",
+  "description": "A single mapped requirement in an HDS scope, expressed across the three-layer model: the Pryv platform layer (inherited, referenced), the HDS layer (authored), and the implementer layer (per-persona obligations).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["ref", "title", "hds"],
+  "properties": {
+    "ref": {
+      "type": "string",
+      "description": "Official identifier within the scope (e.g. '164.312(a)(2)(iv)').",
+      "pattern": "^[A-Za-z0-9._()\\-]+$"
+    },
+    "title": { "type": "string", "minLength": 1 },
+    "text": {
+      "type": "string",
+      "description": "Paraphrased requirement text. Do NOT redistribute copyrighted standards verbatim."
+    },
+    "text_url": { "type": "string", "format": "uri" },
+    "pryv_ref": {
+      "type": "string",
+      "description": "ref of the inherited platform-layer row in the layered_on_pryv scope (vendor/pryv). Optional — set when Pryv's matrix covers this requirement.",
+      "pattern": "^[A-Za-z0-9._()\\-]+$"
+    },
+    "draft": { "type": "boolean", "default": true },
+    "reviewed_by": { "type": ["string", "null"] },
+    "reviewed_at": { "type": ["string", "null"], "format": "date" },
+    "hds": { "$ref": "#/$defs/hdsLayer" },
+    "implementer": {
+      "type": "array",
+      "description": "What's still on the plate of whoever builds on HDS, one entry per persona.",
+      "items": { "$ref": "#/$defs/implementerObligation" }
+    }
+  },
+  "$defs": {
+    "coverage": {
+      "enum": ["implemented", "configurable", "facilitated", "documented", "out-of-scope"]
+    },
+    "hdsLayer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["coverage"],
+      "description": "What HDS-as-operator + the HDS app stack adds on top of the platform layer.",
+      "properties": {
+        "coverage": { "$ref": "#/$defs/coverage" },
+        "effort_saved": {
+          "enum": ["high", "medium", "low"],
+          "description": "How much of the requirement HDS carries for the implementer."
+        },
+        "facilitation_mode": {
+          "enum": ["primitive", "evidence", "storage", "infrastructure", "awareness", "operations"],
+          "description": "Only meaningful when coverage='facilitated'."
+        },
+        "overview": { "type": "string", "description": "2-3 sentence position. Audience: auditor / compliance officer." },
+        "detail": { "type": "string" },
+        "technical": { "type": "string" },
+        "regions": {
+          "type": "array",
+          "description": "Data-residency regions where this HDS claim holds. Omit if region-independent.",
+          "items": { "enum": ["ch", "us"] },
+          "uniqueItems": true
+        },
+        "evidence": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Proof for the HDS-layer claim. implemented/configurable require at least tests[] or ops[].",
+          "properties": {
+            "tests": { "type": "array", "items": { "type": "string" }, "uniqueItems": true, "description": "HDS test codes / suites." },
+            "docs": { "type": "array", "items": { "type": "string" }, "uniqueItems": true, "description": "Public doc paths/URLs." },
+            "ops": { "type": "array", "items": { "type": "string" }, "uniqueItems": true, "description": "Operational evidence: runbooks, monitoring conditions, deploy configs." },
+            "internal_docs": { "type": "array", "items": { "type": "string" }, "uniqueItems": true, "description": "IDs of documents in the private compliance-internal repo." }
+          }
+        }
+      }
+    },
+    "implementerObligation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["persona", "coverage"],
+      "properties": {
+        "persona": {
+          "enum": ["partner", "covered-entity", "business-associate", "individual"],
+          "description": "Who this obligation applies to."
+        },
+        "coverage": { "$ref": "#/$defs/coverage" },
+        "overview": { "type": "string", "description": "What this persona must still do themselves." },
+        "templates": {
+          "type": "array",
+          "description": "ids of agreement templates (templates/<id>) this persona must sign for this row.",
+          "items": { "type": "string" },
+          "uniqueItems": true
+        }
+      }
+    }
+  }
+}

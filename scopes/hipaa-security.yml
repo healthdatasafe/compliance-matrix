@@ -1,0 +1,102 @@
+id: hipaa-security
+title: HIPAA Security Rule
+short: HIPAA-Security
+type: regulation
+jurisdiction: US
+version: 45 CFR Part 164 Subpart C (as amended through the HITECH 2013 Omnibus Final Rule)
+version_date: "2013-01-25"
+canonical_url: https://www.ecfr.gov/current/title-45/subtitle-A/subchapter-C/part-164/subpart-C
+matrix_language: EN
+layered_on_pryv: hipaa-security
+regions: [us]
+
+changelog:
+  - date: "2026-06-15"
+    change: >
+      Plan 74 Phase 1 — two worked example rows to exercise the three-layer
+      schema, cross-refs and the templates subsystem. Marked draft; full HIPAA
+      authoring is Phase 2.
+
+requirements:
+
+  - ref: 164.308(a)(1)(ii)(D)
+    title: Information system activity review — Required
+    text: |
+      Implement procedures to regularly review records of information system
+      activity, such as audit logs, access reports, and security incident
+      tracking reports.
+    pryv_ref: 164.308(a)(1)(ii)(D)
+    draft: true
+    hds:
+      coverage: implemented
+      effort_saved: high
+      regions: [us, ch]
+      overview: |
+        On top of Pryv's per-user audit log, HDS operates the review substrate:
+        system-level activity is shipped to New Relic for both the US (AWS) and
+        CH (Exoscale) regions, with alert conditions covering crash, error-rate
+        and silence. The written review cadence remains the implementer's.
+      detail: |
+        Per-API-call audit records (Pryv layer) plus infrastructure telemetry
+        (HDS layer) give both subject-level and system-level activity review.
+        HDS's monitoring directive requires end-to-end alert wiring to
+        tech.newrelic@healthdatasafe.org before any component is "deployed".
+      technical: |
+        Audit: per-user SQLite (open-pryv.io audit component). System: New Relic
+        APM/Browser/synthetics per dev-deploy/config/apps.yml; conditions in the
+        hds-dev alert policy.
+      evidence:
+        ops:
+          - dev-deploy/monitoring/setup.mjs
+          - "newrelic:hds-dev alert policy (appName LIKE 'hds-%')"
+        internal_docs:
+          - hipaa/procedures/information-system-activity-review
+    implementer:
+      - persona: covered-entity
+        coverage: documented
+        overview: |
+          You define and document the review cadence and who performs it, and
+          retain the review records per your retention policy.
+      - persona: individual
+        coverage: out-of-scope
+
+  - ref: 164.314(a)(1)
+    title: Business associate contracts — Organizational requirement
+    text: |
+      A covered entity is not in compliance unless it has obtained satisfactory
+      assurances, via a written contract, that the business associate will
+      appropriately safeguard the ePHI it creates, receives, maintains, or
+      transmits on the covered entity's behalf.
+    pryv_ref: 164.314(a)(1)
+    draft: true
+    hds:
+      coverage: facilitated
+      effort_saved: medium
+      facilitation_mode: evidence
+      regions: [us, ch]
+      overview: |
+        HDS provides a Business Associate Agreement template and the technical
+        assurances (audit, access control, monitoring, regional residency) that
+        back it, and signs BAAs with its own subcontractors (e.g. AWS for the US
+        region). The contract itself is signed between the parties.
+      detail: |
+        When a partner acting as a Covered Entity (or upstream BA) processes
+        ePHI on HDS, HDS is their Business Associate. HDS offers the BAA template
+        (templates/baa) and flows obligations down to its subcontractors.
+      evidence:
+        internal_docs:
+          - hipaa/registers/baa-register
+    implementer:
+      - persona: covered-entity
+        coverage: documented
+        overview: |
+          Execute a BAA with HDS before sending any ePHI, and keep it on file.
+        templates: [baa]
+      - persona: business-associate
+        coverage: documented
+        overview: |
+          Execute a BAA with HDS and a back-to-back subcontractor agreement with
+          any of your own downstream processors.
+        templates: [baa]
+      - persona: individual
+        coverage: out-of-scope

@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/healthdatasafe/compliance-matrix/schemas/hds-scope.schema.json",
+  "title": "HDS Scope",
+  "description": "A regulation/standard mapped by the HDS matrix, layered on top of the corresponding Pryv platform scope.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "title", "type", "jurisdiction", "version", "version_date", "requirements"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Stable scope identifier in kebab-case (e.g. 'hipaa-security').",
+      "pattern": "^[a-z][a-z0-9-]*$"
+    },
+    "title": { "type": "string", "minLength": 1 },
+    "short": { "type": "string", "description": "Display short name (e.g. 'HIPAA-Security')." },
+    "type": {
+      "enum": ["regulation", "standard", "hosting-cert", "discipline"]
+    },
+    "jurisdiction": { "type": "string" },
+    "version": { "type": "string" },
+    "version_date": { "type": "string", "format": "date" },
+    "canonical_url": { "type": "string", "format": "uri" },
+    "matrix_language": { "type": "string", "default": "EN" },
+    "layered_on_pryv": {
+      "type": "string",
+      "description": "id of the Pryv scope (vendor/pryv/scopes/<id>.yml) this HDS scope layers on. Optional.",
+      "pattern": "^[a-z][a-z0-9-]*$"
+    },
+    "regions": {
+      "type": "array",
+      "description": "Data-residency regions in which this scope is offered (ch = Exoscale/Switzerland, us = AWS/USA).",
+      "items": { "enum": ["ch", "us"] },
+      "uniqueItems": true
+    },
+    "changelog": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["date", "change"],
+        "properties": {
+          "date": { "type": "string", "format": "date" },
+          "change": { "type": "string" }
+        }
+      }
+    },
+    "requirements": {
+      "type": "array",
+      "items": { "$ref": "https://github.com/healthdatasafe/compliance-matrix/schemas/hds-requirement.schema.json" }
+    }
+  }
+}

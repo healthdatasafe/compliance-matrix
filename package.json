@@ -11,7 +11,8 @@
     "validate": "node scripts/validate.js",
     "build": "node scripts/build.js",
     "build:all": "npm run validate && npm run build",
-    "sync:pryv": "echo \"sync-from-pryv not yet implemented (plan 74, Phase 1)\" && exit 1",
+    "preview": "node scripts/preview.js",
+    "sync:pryv": "node scripts/sync-from-pryv.js",
     "test": "echo \"no script tests yet\" && exit 0",
     "lint": "eslint scripts/",
     "lint:fix": "eslint scripts/ --fix"
