@@ -1,0 +1,1521 @@
+id: iso-27001
+title: ISO/IEC 27001 — Information Security Management Systems — Requirements
+short: ISO 27001
+type: standard
+jurisdiction: International (ISO/IEC)
+version: ISO/IEC 27001:2022
+version_date: "2022-10-25"
+canonical_url: https://www.iso.org/standard/27001
+matrix_language: EN
+curated: false
+
+changelog:
+  - date: "2026-05-19"
+    change: |
+      initial draft — 16 rows focused on Annex A technological controls
+      where Pryv-the-software contributes directly. Clauses 4-10
+      (organizational ISMS requirements) are largely QMS-side and stay
+      as framing rows. Source text is paywalled — references map by
+      clause + control ID only; requirement text is paraphrased.
+
+requirements:
+
+  # ───────────────────────────────────────────────────────────────
+  # Clauses 4-10 — ISMS programmatic requirements (mostly QMS-side)
+  # ───────────────────────────────────────────────────────────────
+
+  - ref: "4"
+    title: Clause 4 — Context of the organization
+    text: |
+      Organization shall determine external and internal issues relevant
+      to its purpose that affect its ability to achieve the intended
+      outcomes of the ISMS, and shall determine interested parties +
+      requirements + scope.
+    coverage: out-of-scope
+    draft: true
+    overview: |
+      Clause 4 is the organization's strategic ISMS-scoping exercise.
+      Pryv has no software role at this layer — when an organization
+      adopts Pryv, the matrix supports their Clause-6 risk assessment
+      by enumerating Pryv-side controls explicitly, but Clause 4 itself
+      sits at the operator/implementer level.
+
+  - ref: "6.1.2"
+    title: Clause 6.1.2 — Information security risk assessment
+    text: |
+      Organization shall define and apply an information security risk
+      assessment process that establishes and maintains criteria for
+      risk acceptance, identifies risks associated with the loss of
+      confidentiality, integrity and availability.
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: evidence
+    draft: true
+    pryv_primitives: [access, permissions, audit, encryption-at-rest-secrets, multi-core-mTLS, letsEncrypt-integration, backup-restore]
+    overview: |
+      The risk-assessment
+      methodology + the operator's specific findings are the
+      operator's artefact. Pryv contributes the inventory of
+      technical controls (this matrix, particularly Annex A.8 rows
+      below) — when the operator identifies a CIA risk, the matrix
+      surfaces which Pryv primitive addresses it (or does not), so
+      Annex A applicability is mechanical rather than judgemental.
+
+  # ───────────────────────────────────────────────────────────────
+  # Annex A.5 — Organizational controls (selected)
+  # ───────────────────────────────────────────────────────────────
+
+  - ref: A.5.15
+    title: A.5.15 — Access control
+    text: |
+      Rules to control physical and logical access to information and
+      other associated assets shall be established and implemented based
+      on business and information security requirements.
+    coverage: implemented
+    pryv_effort_saved: high
+    draft: true
+    pryv_primitives: [access, permissions, system-streams]
+    tests: [AA01, AA02, ACCP]
+    overview: |
+      Logical access control is enforced at the API surface by the
+      access + permissions primitives — every read/write request is
+      checked against the access's stream + level permissions. The
+      operator's access-control rule definition (who gets what) is
+      the policy half; technical enforcement is Pryv-side.
+
+  - ref: A.5.34
+    title: A.5.34 — Privacy and protection of personal information
+    text: |
+      Privacy and protection of personally identifiable information
+      shall be identified, documented and implemented in accordance
+      with applicable laws and contractual requirements.
+    coverage: facilitated
+    pryv_effort_saved: high
+    facilitation_mode: infrastructure
+    draft: true
+    pryv_primitives: [access, permissions, clientData, audit, system-streams]
+    derives_from: [gdpr.Art.25, gdpr.Art.32]
+    overview: |
+      Pryv's primitive set
+      carries privacy-by-design (see GDPR Art. 25) and the technical
+      security controls (see GDPR Art. 32). What's on the operator's
+      side: the identification of which laws apply, the documented
+      privacy commitments (notice texts, consent UX), and the
+      contractual side. Cross-scope link to the gdpr.* rows for the
+      detailed mapping.
+
+  # ───────────────────────────────────────────────────────────────
+  # Annex A.6 — People controls (selected)
+  # ───────────────────────────────────────────────────────────────
+
+  - ref: A.6.7
+    title: A.6.7 — Remote working
+    text: |
+      Security measures shall be implemented when personnel are working
+      remotely to protect information accessed, processed or stored
+      outside the organization's premises.
+    coverage: facilitated
+    pryv_effort_saved: medium
+    facilitation_mode: infrastructure
+    draft: true
+    pryv_primitives: [letsEncrypt-integration, MFA, access]
+    overview: |
+      Pryv's API is remote-
+      by-design — workforce access from off-premises traverses the
+      same TLS + access-token + MFA controls as any other access.
+      The operator's remote-working policy (devices, VPN, endpoint
+      hardening) sits on top of this; Pryv provides the secure
+      transport + auth substrate.
+
+  # ───────────────────────────────────────────────────────────────
+  # Annex A.8 — Technological controls (the Pryv-contribution surface)
+  # ───────────────────────────────────────────────────────────────
+
+  - ref: A.8.2
+    title: A.8.2 — Privileged access rights
+    text: |
+      Allocation and use of privileged access rights shall be restricted
+      and managed.
+    coverage: configurable
+    pryv_effort_saved: medium
+    draft: true
+    pryv_primitives: [access, system-streams]
+    config_keys: [auth.adminAccessKey]
+    tests: [LG20, GF33]
+    overview: |
+      Pryv's privileged-access surface is small and explicit: the
+      operator's `auth.adminAccessKey` is the root credential; system
+      streams (account, password, mfa) require an explicit grant in
+      `permissions[]`. Both surfaces are auditable. The operator's
+      custody process for the admin key is the policy-side control.
+
+  - ref: A.8.3
+    title: A.8.3 — Information access restriction
+    text: |
+      Access to information and other associated assets shall be
+      restricted in accordance with the established topic-specific
+      policy on access control.
+    coverage: implemented
+    pryv_effort_saved: high
+    draft: true
+    pryv_primitives: [access, permissions, stream]
+    tests: [AA01, AA02, ACCP]
+    overview: |
+      Per-stream permissions are the technical access-restriction
+      primitive. Stream design (which data lives where) is the
+      implementer's choice; permission scoping per access is
+      operationally enforced at every API call.
+
+  - ref: A.8.5
+    title: A.8.5 — Secure authentication
+    text: |
+      Secure authentication technologies and procedures shall be
+      implemented based on information access restrictions and the
+      topic-specific policy on access control.
+    coverage: implemented
+    pryv_effort_saved: high
+    draft: true
+    pryv_primitives: [access, MFA, system-streams]
+    config_keys: [services.mfa.mode]
+    tests: [MA01, MA02, MA03, MA04, MA05]
+    planned:
+      - kind: enhancement
+        summary: "Reference TOTP / WebAuthn plugins + AAL-tier mapping doc strengthen the A.8.5 evidence chain"
+        proposal: proposals/mfa-modern-methods.md
+        backlog: MFA-MODERN-METHODS
+        tracking_url: https://github.com/pryv/open-pryv.io/issues/78
+        impact: medium
+    overview: |
+      Token-based auth by default; multi-factor via `mfa.*` API methods
+      when `services.mfa.mode` is enabled. The MFA test series
+      (MA01-MA09) exercises activate / confirm / challenge / verify /
+      deactivate / recover. Authentication strength tier is the
+      operator's policy choice; technical primitives are shipped.
+
+  - ref: A.8.10
+    title: A.8.10 — Information deletion
+    text: |
+      Information stored in information systems, devices or in any
+      other storage media shall be deleted when no longer required.
+    coverage: configurable
+    pryv_effort_saved: medium
+    draft: true
+    pryv_primitives: [event, stream, backup-restore]
+    config_keys: [storages.userAccountStorage.engine, user-account.delete]
+    tests: [USAD]
+    overview: |
+      Per-user erasure: `system.users.delete` removes the user's data
+      from the live store. Engine-dependent backup behaviour (SQLite
+      per-user file vs PG row deletion + backup rotation)
+      determines whether erasure extends to backups — same notes as
+      GDPR Art. 17 + HIPAA-Security §164.310(d) media-controls. Event-
+      level and stream-level deletion live alongside for per-record
+      deletion needs.
+
+  - ref: A.8.13
+    title: A.8.13 — Information backup
+    text: |
+      Backup copies of information, software and systems shall be
+      maintained and regularly tested in accordance with the agreed
+      topic-specific policy on backup.
+    coverage: facilitated
+    pryv_effort_saved: medium
+    facilitation_mode: infrastructure
+    draft: true
+    pryv_primitives: [backup-restore, multi-core-mTLS]
+    overview: |
+      `bin/backup.js`
+      produces per-user backup files; multi-core cluster topology
+      gives in-line replication (rqlite Raft + mTLS). The operator's
+      backup policy (cadence, retention, offsite) is layered on top.
+      "Regularly tested" is the operator's drill. (Backup integration
+      tests at the [code] level are a coverage gap — backlog
+      candidate for the open-pryv.io test suite.)
+    detail: |
+      **Encryption of the backup archive is operator-side by
+      design.** `bin/backup.js` writes an unencrypted dump file;
+      the operator wraps it with their at-rest encryption layer
+      (LUKS / GPG / age / S3 SSE-KMS / Azure SSE / customer-
+      managed keys) at the storage boundary. Same pattern as the
+      bulk-event-data at-rest encryption posture (operator-side
+      infrastructure layer is the deliberate choice; see
+      `proposals/e2e-encryption.md`). A.8.13's "protected at the
+      same security level as the source data" expectation is met
+      by the operator's encryption pipeline, documented in the
+      backup-policy SOP.
+
+  - ref: A.8.15
+    title: A.8.15 — Logging
+    text: |
+      Logs that record activities, exceptions, faults and other
+      relevant events shall be produced, stored, protected and
+      analysed.
+    coverage: implemented
+    pryv_effort_saved: high
+    draft: true
+    pryv_primitives: [audit, audit-event-stream]
+    tests: [AT01, AT02, AT03, AT51, AT52, AT53, AT61, AT65]
+    planned:
+      - kind: feature
+        summary: "Chained / signed audit log adds the software-side tamper-resistance signal A.8.15 expects"
+        proposal: proposals/audit-log-chaining.md
+        backlog: AUDIT-LOG-CHAINING
+        tracking_url: https://github.com/pryv/open-pryv.io/issues/74
+        impact: low
+    overview: |
+      Per-user audit log captures every API method invocation; access
+      reference (accessId + accessSerial) ties each row to the
+      authenticated identity. Audit storage uses SQLite directly to
+      decouple log integrity from data-path engine issues. The
+      "analysed" element (review cadence, alerting thresholds) is the
+      operator's procedure.
+    detail: |
+      "Stored, protected" caveat — the audit log is append-only by
+      convention in the write path, but there is **no software-side
+      tamper-resistance signal** (no hash chain, no per-row
+      signature, no operator-signed checkpoint). Protection of the
+      log rests on the operator's filesystem hardening: immutable
+      mounts, append-only flags (`chattr +a`), file-integrity
+      monitoring (AIDE / Tripwire), out-of-band SIEM forwarding to
+      a WORM store.
+
+      Future direction: chained / signed audit log (per-row prev_hash
+      + periodic operator-signed checkpoints). Tracked under internal
+      backlog slug `AUDIT-LOG-CHAINING` and
+      `proposals/audit-log-chaining.md`. When shipped this row's
+      coverage stays Implemented but the cited primitives will
+      include `audit-chain`.
+
+      Separate audit property worth flagging to the A.8.15 auditor:
+      Pryv's audit log is data-minimal by construction — it captures
+      action + source + URL query + access ref + integrity hash, but
+      **never the request body**. The log itself therefore qualifies
+      as well-scoped under the "logs that record activities" framing
+      without storing the data being acted on. Caller-supplied search
+      values (`events.get` content-query conditions on the GET path)
+      do appear in the recorded URL query — see
+      `context/content-query-audit-semantics.md`. See
+      `docs/pryv-primitives.md` audit entry for the full capture
+      catalogue.
+
+      **Long-running deployment tiering**: for the "logs … stored,
+      protected, analysed" portion of A.8.15 at multi-year scales,
+      the audit log is exposed via the `@pryv/datastore`
+      abstraction. Operators write a custom `auditStorage` engine
+      plugin to tier hot recent rows + cold archived rows (e.g.,
+      S3 Object Lock, Glacier) behind the same `audit.getLogs`
+      API. No Pryv-shipped pruning primitive — pressure to prune
+      is operational, not regulatory (HIPAA-style retention floors
+      apply; there's no max-retention rule pushing destruction).
+      Full pattern at
+      `context/audit-archival-via-custom-datastore.md`.
+
+  - ref: A.8.16
+    title: A.8.16 — Monitoring activities
+    text: |
+      Networks, systems and applications shall be monitored for
+      anomalous behaviour and appropriate actions taken to evaluate
+      potential information security incidents.
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: evidence
+    draft: true
+    pryv_primitives: [observability-provider, audit]
+    overview: |
+      The pluggable observability
+      provider (New Relic adapter shipped) gives system-level
+      monitoring; audit logs give application-level activity.
+      Operator chooses provider + thresholds + escalation paths.
+      Anomaly-detection logic on the audit stream itself is a
+      potential extension.
+
+  - ref: A.8.20
+    title: A.8.20 — Networks security
+    text: |
+      Networks and network devices shall be secured, managed and
+      controlled to protect information in systems and applications.
+    coverage: implemented
+    pryv_effort_saved: high
+    draft: true
+    pryv_primitives: [letsEncrypt-integration, multi-core-mTLS]
+    tests: [ACMEINT, ACMEORCH, CERTUTILS, FORCERENEWIPC, BUNDLEENC]
+    overview: |
+      TLS 1.3 in transit (built-in ACME integration with auto-renewal +
+      cluster-replicated rotation); mTLS between cores in a multi-
+      core cluster with a private cluster CA. No plaintext path
+      shipped. Operator-side network controls (firewalls, network
+      segmentation) sit on top.
+
+  - ref: A.8.24
+    title: A.8.24 — Use of cryptography
+    text: |
+      Rules for the effective use of cryptography, including
+      cryptographic key management, shall be defined and implemented.
+    coverage: implemented
+    pryv_effort_saved: high
+    draft: true
+    pryv_primitives: [letsEncrypt-integration, encryption-at-rest-secrets, multi-core-mTLS]
+    config_keys: [letsEncrypt.atRestKey]
+    tests: [ACMEINT, ATRENC, BUNDLEENC]
+    planned:
+      - kind: feature
+        summary: "End-to-end encryption adds a customer-key flow (CMEK / BYOK) to the cryptography catalogue"
+        proposal: proposals/e2e-encryption.md
+        backlog: E2E-ENCRYPTION
+        tracking_url: https://github.com/pryv/open-pryv.io/issues/34
+        impact: low
+    overview: |
+      TLS 1.3 for transit, AES-256-GCM for at-rest operator secrets
+      (HKDF-derived per-key with purpose labels), AES-256-GCM
+      (scrypt-derived) for bootstrap bundle encryption. The operator's
+      cryptography policy (key custody, rotation cadence, algorithm
+      choice for engine-side at-rest encryption) is layered on top.
+
+  - ref: A.8.25
+    title: A.8.25 — Secure development lifecycle
+    text: |
+      Rules for the secure development of software and systems shall be
+      established and applied.
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: awareness
+    draft: true
+    pryv_primitives: [audit]
+    overview: |
+      Pryv's own SDLC is visible
+      (public commit history, tagged releases, CHANGELOG-v2 +
+      CHANGELOG-v2-back, multi-engine test matrix, dependency audit).
+      For the implementer, this transparency feeds supplier-
+      assessment artefacts. The implementer's own SDLC for their app
+      + integrations remains their ISMS artefact.
+
+  - ref: A.8.32
+    title: A.8.32 — Change management
+    text: |
+      Changes to information processing facilities and information
+      systems shall be subject to change-management procedures.
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: evidence
+    draft: true
+    pryv_primitives: [audit]
+    overview: |
+      Pryv-side change-management
+      evidence: tagged releases, Docker image SHA-pinning,
+      CHANGELOG-v2 + CHANGELOG-v2-back per release, release-notes
+      per Dokku deploy. The operator's change-management procedure
+      (approvals, deployment windows, rollback plans) sits on top.
+      The audit log gives the operational record of changes that
+      touched data.
+
+  - ref: A.8.34
+    title: A.8.34 — Protection of information systems during audit testing
+    text: |
+      Audit tests and other assurance activities involving assessment
+      of operational systems shall be planned and agreed between the
+      tester and appropriate management.
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: evidence
+    draft: true
+    pryv_primitives: [audit]
+    overview: |
+      Pen-tests, vulnerability
+      scans, internal audits — all may generate elevated activity on
+      the system. Pryv's audit log keeps the testing activity
+      attributable (any test access surfaces with its accessId +
+      accessSerial in the audit rows). The plan + agreement element
+      is the operator's procedure.
+
+  # ───────────────────────────────────────────────────────────────
+  # Additional A.5 organizational + A.8 technological gaps
+  # ───────────────────────────────────────────────────────────────
+
+  - ref: A.5.10
+    title: A.5.10 — Acceptable use of information and other associated assets
+    text: |
+      Rules for the acceptable use and procedures for handling
+      information + associated assets shall be identified, documented
+      and implemented.
+    coverage: out-of-scope
+    draft: true
+    overview: |
+      Acceptable-use policies are operator-side editorial artefacts
+      (workforce code-of-conduct, asset handling rules). Pryv has no
+      software role at the policy-content layer; the audit log
+      supports after-the-fact enforcement evidence but doesn't
+      author the rules.
+
+  - ref: A.5.12
+    title: A.5.12 — Classification of information
+    text: |
+      Information shall be classified according to the information
+      security needs of the organization based on confidentiality,
+      integrity, availability + relevant interested party requirements.
+    coverage: facilitated
+    pryv_effort_saved: medium
+    facilitation_mode: primitive
+    draft: true
+    pryv_primitives: [stream, system-streams, event, data-types]
+    overview: |
+      Pryv supports
+      classification by stream layout — dedicate subtrees per
+      classification tier (e.g., `confidential/`, `restricted/`,
+      `public/`) and gate them with distinct permission scopes.
+      System streams add a privileged-data tier independent of the
+      operator's classification scheme. The operator's classification
+      scheme itself (tier labels, criteria, owner) is the policy
+      artefact.
+
+  - ref: A.5.13
+    title: A.5.13 — Labelling of information
+    text: |
+      An appropriate set of procedures for information labelling shall
+      be developed and implemented in accordance with the information
+      classification scheme adopted by the organization.
+    coverage: facilitated
+    pryv_effort_saved: medium
+    facilitation_mode: storage
+    draft: true
+    pryv_primitives: [event, clientData, stream]
+    overview: |
+      Labels on event-level data
+      can ride on `event.clientData.classification` or on the parent
+      stream's `clientData`; the canonical event-type schema
+      (`data-types`) can be extended with a classification property
+      when machine-readable labelling is needed downstream. Stream-
+      level labels propagate to descendants by Pryv semantics.
+
+  - ref: A.5.23
+    title: A.5.23 — Information security for use of cloud services
+    text: |
+      Processes for acquisition, use, management and exit from cloud
+      services shall be established in accordance with the
+      organization's information security requirements.
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: infrastructure
+    draft: true
+    pryv_primitives: [data-residency, encryption-at-rest-secrets, backup-restore]
+    overview: |
+      When the Pryv operator
+      runs on a cloud provider (rather than on-premise), the cloud-
+      service security posture is the operator's contractual concern.
+      Pryv-side hooks that the operator's CSP-management process
+      should use: data-residency configuration locks subjects to
+      chosen regions; bootstrap bundle export gives a clean cloud-
+      exit path (re-issue the cluster onto new infrastructure);
+      operator-side at-rest encryption isolates the cloud provider
+      from plaintext.
+
+  - ref: A.6.3
+    title: A.6.3 — Information security awareness, education and training
+    text: |
+      Personnel and relevant interested parties shall receive
+      appropriate information security awareness, education and
+      training and regular updates of the organization's information
+      security policy + procedures.
+    coverage: out-of-scope
+    draft: true
+    overview: |
+      Training is an organizational programme. No software role at
+      the training-content / training-delivery layer; the audit log
+      lets you measure whether trained workforce actually applies
+      trained patterns (a defensible "training effectiveness"
+      artefact for the ISMS).
+
+  - ref: A.8.7
+    title: A.8.7 — Protection against malware
+    text: |
+      Protection against malware shall be implemented and supported by
+      appropriate user awareness.
+    coverage: out-of-scope
+    draft: true
+    overview: |
+      Anti-malware is a host / endpoint / network-layer control —
+      Pryv-the-software doesn't include AV or endpoint protection.
+      The operator's hosting environment carries this (HDS Activity 1+2
+      certified hosters typically inherit it from the CSP).
+
+  - ref: A.8.8
+    title: A.8.8 — Management of technical vulnerabilities
+    text: |
+      Information about technical vulnerabilities of information
+      systems in use shall be obtained, the organization's exposure
+      to such vulnerabilities shall be evaluated, and appropriate
+      measures taken.
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: evidence
+    draft: true
+    pryv_primitives: [observability-provider, audit]
+    overview: |
+      Pryv-side vulnerability
+      management is upstream — public dependency-audit (npm audit
+      pipeline, dependabot on open-pryv.io master), versioned
+      CHANGELOG announcing relevant fixes, reproducible Docker image
+      SHA. The operator's vulnerability-management cadence (when to
+      upgrade, how to verify) sits on top. Observability data feeds
+      incident-correlated vulnerability hunting.
+
+  - ref: A.8.9
+    title: A.8.9 — Configuration management
+    text: |
+      Configurations, including security configurations, of hardware,
+      software, services and networks shall be established, documented,
+      implemented, monitored and reviewed.
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: evidence
+    draft: true
+    pryv_primitives: [audit]
+    overview: |
+      Pryv configuration lives in
+      `default-config.yml` + `override-config.yml` + `host-config.yml`
+      (operator-side); a `config-validation` step on master start
+      fails fast on unresolved variables or missing required service
+      fields, giving a baseline "configuration is well-formed" check.
+      The operator's config-change procedure (versioning, approval,
+      deployment) sits on top. Audit log shows when config-driven
+      behaviour changed observably.
+
+  - ref: A.8.11
+    title: A.8.11 — Data masking
+    text: |
+      Data masking shall be used in accordance with the organization's
+      topic-specific policy on access control + other related topic-
+      specific policies, and business requirements, taking applicable
+      legislation into consideration.
+    coverage: facilitated
+    pryv_effort_saved: medium
+    facilitation_mode: primitive
+    draft: true
+    pryv_primitives: [stream, system-streams, event]
+    planned:
+      - kind: feature
+        summary: "auth.randomAlias masks the real username at the access layer (row could move F:Primitive → Configurable)"
+        proposal: proposals/aliases-as-pseudonymization-primitive.md
+        backlog: ALIASES
+        tracking_url: https://github.com/pryv/open-pryv.io/issues/38
+        impact: medium
+    overview: |
+      Pryv enforces masking by **projection**, not transformation:
+      stream-level isolation + permission-scoped access tokens hide
+      whole sub-trees from a given role. The "rewrite a value before
+      display" flavour of masking (e.g., `j***@example.com`) lives in
+      the calling application — by design.
+    detail: |
+      The boundary is recorded in
+      `context/data-masking-projection-vs-transformation.md`:
+        - Stream-tree split + narrow access tokens = Pryv's
+          projection-side contribution. Auditor-visible via the
+          access permissions matrix.
+        - Field-substring rewrites, hash-on-read, faker substitution,
+          per-role redaction = application layer. Not Pryv's job by
+          design (storage layer stays deterministic; "partially
+          redacted" is not an API response).
+        - Username-side pseudonymisation is the one transformation
+          Pryv would do natively when `randomAlias` ships
+          (`proposals/aliases-as-pseudonymization-primitive.md`).
+        - Static masking for non-prod environments + field-level
+          encryption at the schema layer are both implementer
+          concerns today; end-to-end encryption
+          (`proposals/e2e-encryption.md`) is the natural future
+          primitive for both.
+        - The audit log itself is data-minimal by construction —
+          captures action + access + integrity hash, never the
+          request body (see `docs/pryv-primitives.md` audit entry).
+
+  - ref: A.8.12
+    title: A.8.12 — Data leakage prevention
+    text: |
+      Data leakage prevention measures shall be applied to systems,
+      networks and any other devices that process, store or transmit
+      sensitive information.
+    coverage: facilitated
+    pryv_effort_saved: medium
+    facilitation_mode: primitive
+    draft: true
+    pryv_primitives: [access, permissions, audit, observability-provider]
+    overview: |
+      Pryv's primary leakage-
+      prevention surface is the permission model — an access only
+      reads / writes the streams its scope permits, so a misconfigured
+      app can't accidentally exfiltrate out-of-scope data. The audit
+      log surfaces anomalous access patterns post-facto. Network /
+      endpoint DLP (browser-side copy-paste protection, USB blocking,
+      etc.) is the operator's endpoint-management scope.
+
+  - ref: A.8.22
+    title: A.8.22 — Segregation of networks
+    text: |
+      Groups of information services, users and information systems
+      shall be segregated in the organization's networks.
+    coverage: facilitated
+    pryv_effort_saved: medium
+    facilitation_mode: infrastructure
+    draft: true
+    pryv_primitives: [multi-core-mTLS]
+    overview: |
+      Multi-core Pryv
+      clusters use mTLS over rqlite Raft for inter-core traffic, on
+      a cluster-private CA distinct from the Let's Encrypt user-
+      facing chain. This gives technical segregation between the
+      cluster-internal control plane and the user-facing data plane.
+      The operator's network segmentation (VPCs, security groups,
+      firewall rules) layers on top.
+
+  - ref: A.8.28
+    title: A.8.28 — Secure coding
+    text: |
+      Secure coding principles shall be applied to software development.
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: awareness
+    draft: true
+    overview: |
+      Pryv's own secure-coding
+      posture is visible in the public open-pryv.io repository —
+      coding standards (neostandard), linting enforced on PRs,
+      pre-commit hooks, dependency-audit pipeline. The implementer's
+      own application-layer secure-coding programme remains their
+      ISMS artefact, drawing on the public Pryv-side practice as
+      supplier evidence.
+
+  - ref: A.8.30
+    title: A.8.30 — Outsourced development
+    text: |
+      Organization shall direct, monitor and review activities related
+      to outsourced system development.
+    coverage: out-of-scope
+    draft: true
+    overview: |
+      Outsourced development is the operator's contractual / supplier-
+      management concern. When the operator's "supplier" is Pryv
+      (i.e., they consume open-pryv.io as a third-party platform),
+      this matrix + the CHANGELOGs + the public release process serve
+      as the supplier-monitoring artefact set the operator references.
+
+  - ref: A.8.31
+    title: A.8.31 — Separation of development, test and production environments
+    text: |
+      Development, testing and production environments shall be
+      separated and secured.
+    coverage: facilitated
+    pryv_effort_saved: medium
+    facilitation_mode: infrastructure
+    draft: true
+    pryv_primitives: [data-residency, multi-core-mTLS]
+    overview: |
+      Pryv supports
+      separate environments via independent core deployments (each
+      with its own bootstrap bundle + cluster CA); the data-residency
+      primitive prevents accidental cross-environment data flow at
+      the user-binding layer. Operator's environment-management
+      procedure (test data hygiene, promotion gates, deployment
+      automation) sits on top.
+
+  - ref: A.5.1
+    title: A.5.1 — Policies for information security
+    text: |
+      Information security policy + topic-specific policies shall be
+      defined, approved by management, published, communicated to and
+      acknowledged by relevant personnel + relevant interested parties,
+      reviewed at planned intervals.
+    coverage: out-of-scope
+    draft: true
+    overview: |
+      Information-security policy is the operator's organizational
+      artefact. Pryv has no role in drafting policy text. The audit
+      log + observability data give the operator the means to verify
+      policy effectiveness post-facto.
+
+  - ref: A.5.7
+    title: A.5.7 — Threat intelligence
+    text: |
+      Information relating to information security threats shall be
+      collected and analysed to produce threat intelligence.
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: evidence
+    draft: true
+    pryv_primitives: [observability-provider, audit]
+    planned:
+      - kind: enhancement
+        summary: "Published vulnerability disclosure program + GHSA advisory history becomes the substrate-vulnerability threat-intelligence feed for operators"
+        proposal: proposals/vulnerability-disclosure-program.md
+        backlog: VULNERABILITY-DISCLOSURE-PROGRAM
+        tracking_url: https://github.com/pryv/open-pryv.io/issues/84
+        impact: medium
+    overview: |
+      Pryv-side contribution to
+      threat intelligence: dependabot alerts on master (Q24
+      supply-chain backlog ships the broader CI gate + SBOM +
+      Trivy/Grype pipeline), CHANGELOG announcements of relevant
+      security fixes, observability data on anomalous request
+      patterns. Vulnerability-disclosure intake — today's
+      SECURITY.md directs reporters at the public issue tracker
+      (opposite of responsible-disclosure norms — backlog
+      `VULNERABILITY-DISCLOSURE-PROGRAM` ships the modern shape:
+      private GHSA flow + `security@` mailbox + PGP + scope +
+      SLA + safe harbor + published advisory history). Once
+      shipped, that VDP + GHSA log becomes the substrate-
+      vulnerability threat-intelligence feed downstream
+      operators subscribe to. The operator's own threat-intel
+      programme (threat-feed subscriptions, correlation logic)
+      sits on top.
+
+  - ref: A.5.16
+    title: A.5.16 — Identity management
+    text: |
+      The full life cycle of identities shall be managed.
+    coverage: implemented
+    pryv_effort_saved: high
+    draft: true
+    pryv_primitives: [access, system-streams, audit]
+    derives_from: [iso-27001.A.5.15, hipaa-security.164.308(a)(4)(ii)(C)]
+    tests: [AA01, AA02, ACCP, U9HQ]
+    overview: |
+      Pryv's account + access primitives implement the full identity
+      lifecycle: create (registration), enable (login + access mint),
+      modify (accesses.update, account.update), suspend (access
+      narrowing), terminate (accesses.delete + system.users.delete).
+      Audit log gives the per-stage evidence. The naming + assignment
+      policy is the operator's.
+    detail: |
+      For workforce / role-scale deployments, Pryv composes with an
+      external IdP / IGA system via two patterns documented in
+      `context/workforce-access-patterns.md` — (1) group access +
+      `callerId` audit suffix, (2) seed access + sub-access
+      derivation. **Roles + groups themselves are deliberately
+      outside Pryv;** the IdP is the source of truth for identity
+      lifecycle, and Pryv records the resulting access state +
+      per-individual audit trail.
+
+  - ref: A.5.17
+    title: A.5.17 — Authentication information
+    text: |
+      Allocation and management of authentication information shall be
+      controlled by a management process, including advising personnel
+      on appropriate handling.
+    coverage: facilitated
+    pryv_effort_saved: medium
+    facilitation_mode: infrastructure
+    draft: true
+    pryv_primitives: [system-streams, MFA, encryption-at-rest-secrets]
+    planned:
+      - kind: enhancement
+        summary: "Reference MFA plugins broaden the authentication-information catalogue"
+        proposal: proposals/mfa-modern-methods.md
+        backlog: MFA-MODERN-METHODS
+        tracking_url: https://github.com/pryv/open-pryv.io/issues/78
+        impact: low
+    overview: |
+      Pryv stores
+      credentials on a privileged system-stream (`:_system:password`
+      etc.); MFA secrets follow the same isolation. Operator's
+      secret-distribution + secret-rotation policy is the
+      organizational programme; Pryv provides the secure storage tier.
+
+  - ref: A.5.18
+    title: A.5.18 — Access rights
+    text: |
+      Access rights to information and other associated assets shall be
+      provisioned, reviewed, modified and removed in accordance with
+      the organization's topic-specific policy on, and rules for,
+      access control.
+    coverage: implemented
+    pryv_effort_saved: high
+    draft: true
+    pryv_primitives: [access, permissions, audit]
+    derives_from: [iso-27001.A.5.15, iso-27001.A.5.16, hipaa-security.164.308(a)(3)(ii)(C)]
+    tests: [AA01, AA02, ACCP]
+    overview: |
+      Same primitive surface as A.5.15 + A.5.16 — accesses.create /
+      .update / .delete cover the lifecycle stages; access version
+      history provides the review-evidence layer.
+
+  - ref: A.5.19
+    title: A.5.19 — Information security in supplier relationships
+    text: |
+      Processes and procedures shall be defined and implemented to
+      manage the information-security risks associated with the use of
+      supplier's products or services.
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: awareness
+    draft: true
+    pryv_primitives: [observability-provider]
+    overview: |
+      When the operator's
+      "supplier" is Pryv (i.e., open-pryv.io as a third-party
+      platform), the public release process + CHANGELOGs + this
+      compliance matrix serve as the supplier-monitoring artefact
+      set. The operator's supplier-management procedure (assessment
+      criteria, periodic review) sits on top.
+
+  - ref: A.5.20
+    title: A.5.20 — Addressing information security within supplier agreements
+    text: |
+      Relevant information-security requirements shall be established
+      and agreed with each supplier based on the type of supplier
+      relationship.
+    coverage: out-of-scope
+    draft: true
+    overview: |
+      Supplier agreements are contractual artefacts. No software role.
+      When the operator's contract with Pryv (open-pryv.io is BSD-
+      licensed open source) requires security commitments, those map
+      to public Pryv-side practices (release cadence, security-fix
+      backporting, etc.) but the contract itself is operator-side.
+
+  - ref: A.6.1
+    title: A.6.1 — Screening
+    text: |
+      Background-verification checks on all candidates to become
+      personnel shall be carried out prior to joining the organization
+      and on an ongoing basis taking into consideration applicable
+      laws, regulations and ethics.
+    coverage: out-of-scope
+    draft: true
+    overview: |
+      Personnel screening is an HR process. No software role.
+
+  - ref: A.6.4
+    title: A.6.4 — Disciplinary process
+    text: |
+      A formal and communicated disciplinary process shall be in place
+      to take actions against personnel and other relevant interested
+      parties who have committed an information-security policy
+      violation.
+    coverage: out-of-scope
+    draft: true
+    overview: |
+      Disciplinary process is HR-side. Pryv's audit log gives the
+      evidence pack the HR / legal team uses to substantiate an
+      allegation, but the process itself is organizational.
+
+  - ref: A.6.5
+    title: A.6.5 — Responsibilities after termination or change of employment
+    text: |
+      Information security responsibilities + duties that remain valid
+      after termination or change of employment shall be defined,
+      enforced and communicated to relevant personnel and other
+      interested parties.
+    coverage: facilitated
+    pryv_effort_saved: medium
+    facilitation_mode: primitive
+    draft: true
+    pryv_primitives: [access, audit]
+    derives_from: [iso-27001.A.5.16, iso-27001.A.5.18, hipaa-security.164.308(a)(3)(ii)(C)]
+    overview: |
+      Technical termination is
+      `accesses.delete` (full revoke) + audit-log timestamp. The
+      post-termination obligations (confidentiality, IP, NDA
+      enforcement window) are contractual.
+
+  - ref: A.8.1
+    title: A.8.1 — User end-point devices
+    text: |
+      Information stored on, processed by or accessible via user
+      end-point devices shall be protected.
+    coverage: out-of-scope
+    draft: true
+    overview: |
+      End-point device security (laptops, phones, tablets) is endpoint-
+      management scope. Pryv's API access from end-points is mediated
+      by access tokens + TLS, but the device itself isn't a Pryv
+      concern.
+
+  - ref: A.8.4
+    title: A.8.4 — Access to source code
+    text: |
+      Read + write access to source code, development tools and software
+      libraries shall be appropriately managed.
+    coverage: out-of-scope
+    draft: true
+    overview: |
+      Source-code access management is an operator IT concern (Git
+      access policies, CI/CD secrets, repository permissions). Pryv-
+      the-software's own source is public; the operator's app-side
+      source-code repo is theirs to manage.
+
+  - ref: A.8.6
+    title: A.8.6 — Capacity management
+    text: |
+      The use of resources shall be monitored + adjusted in line with
+      current + expected capacity requirements.
+    coverage: facilitated
+    pryv_effort_saved: medium
+    facilitation_mode: infrastructure
+    draft: true
+    pryv_primitives: [observability-provider, multi-core-mTLS]
+    overview: |
+      Pryv-side capacity
+      surfaces: per-core observability metrics (memory, CPU, latency,
+      request volume); horizontal scaling via adding cores to the
+      cluster (each handles its bound users + shared rqlite control
+      plane). Operator's capacity-planning cadence + provisioning
+      automation sit on top.
+
+  - ref: A.8.14
+    title: A.8.14 — Redundancy of information processing facilities
+    text: |
+      Information processing facilities shall be implemented with
+      redundancy sufficient to meet availability requirements.
+    coverage: facilitated
+    pryv_effort_saved: high
+    facilitation_mode: infrastructure
+    draft: true
+    pryv_primitives: [multi-core-mTLS, backup-restore, letsEncrypt-integration]
+    derives_from: [iso-27001.A.5.23, hipaa-security.164.308(a)(7)(ii)(B)]
+    overview: |
+      Multi-core HA + Raft
+      replication give in-line redundancy; backup-restore + cluster-
+      replicated TLS certs let a surviving core continue user-facing
+      operation when a peer fails. The availability target +
+      redundancy depth (cores per region) is operator policy.
+
+  - ref: A.8.17
+    title: A.8.17 — Clock synchronization
+    text: |
+      Clocks of information processing systems used by the organization
+      shall be synchronized to approved time sources.
+    coverage: out-of-scope
+    draft: true
+    planned:
+      - kind: feature
+        summary: "Bootstrap-join + pre-cert-load clock-skew detection (would shift row to F:Awareness|Low)"
+        proposal: proposals/clock-skew-cluster-checks.md
+        backlog: CLOCK-SKEW-CLUSTER-CHECKS
+        tracking_url: https://github.com/pryv/open-pryv.io/issues/77
+        impact: medium
+    overview: |
+      Clock sync is the host-OS concern (chronyd / ntpd); Pryv stores
+      whatever timestamp the host produces. The operator ensures every
+      host in the cluster runs a synchronized clock service.
+    detail: |
+      Pryv's architecture is **core-affine** — every user's data
+      operations resolve to one core (see
+      `context/core-affinity-architecture.md`). Cores never need to
+      agree on clock value or on cert validity with each other; the
+      dangerous failure modes are all intra-core (one core's own
+      clock vs its own loaded cert / its own audit-row timestamps).
+
+      **Pryv's existing contribution to skew detection**: every API
+      response carries `meta.serverTime` (Unix timestamp seconds;
+      `components/api-server/src/methods/helpers/setCommonMeta.ts`).
+      Webhook payloads include the same. Clients use this to detect
+      their own clock skew vs the server. Server-to-server skew
+      detection is not currently shipped — operators rely on host
+      NTP for that.
+
+      **Planned addition** (see
+      `proposals/clock-skew-cluster-checks.md`): two intra-core
+      checkpoints — bootstrap-join skew check (refuse to ack when
+      the joining core's clock differs from the issuer's
+      `serverTime` by more than `cluster.clockSkewThresholdSec`)
+      + pre-cert-load validity check (refuse to swap a rotated
+      cert whose `notBefore..notAfter` window doesn't contain the
+      local clock). After these ship the row moves from
+      `out-of-scope` to `F: Awareness | Low`.
+
+  - ref: A.8.18
+    title: A.8.18 — Use of privileged utility programs
+    text: |
+      The use of utility programs that can be capable of overriding
+      system and application controls shall be restricted and tightly
+      controlled.
+    coverage: facilitated
+    pryv_effort_saved: medium
+    facilitation_mode: primitive
+    draft: true
+    pryv_primitives: [system-streams, access, audit]
+    derives_from: [iso-27001.A.8.2, hipaa-security.164.312(a)(2)(ii)]
+    overview: |
+      Pryv-side privileged
+      utilities: the `bin/*` CLIs (`bootstrap.js`, `migrate.js`,
+      `dns-records.js`, `observability.js`, `backup.js`). Operator
+      restricts their execution to administrator accounts via host-OS
+      permissions + sudo policy. The `auth.adminAccessKey`-bearing
+      API surface is the runtime privilege channel; usage is
+      audit-logged.
+
+  - ref: A.8.19
+    title: A.8.19 — Installation of software on operational systems
+    text: |
+      Procedures and measures shall be implemented to securely manage
+      software installation on operational systems.
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: infrastructure
+    draft: true
+    pryv_primitives: [audit]
+    overview: |
+      Pryv ships as a single
+      Docker image with SHA-pinned tag; the installation channel is
+      reproducible. Operator's installation procedure (build
+      verification, signature checking, change-approval gate) sits
+      on top.
+
+  - ref: A.8.21
+    title: A.8.21 — Security of network services
+    text: |
+      Security mechanisms, service levels and service requirements of
+      network services shall be identified, implemented and monitored.
+    coverage: facilitated
+    pryv_effort_saved: medium
+    facilitation_mode: infrastructure
+    draft: true
+    pryv_primitives: [letsEncrypt-integration, multi-core-mTLS, observability-provider]
+    derives_from: [iso-27001.A.8.20]
+    overview: |
+      Pryv's external
+      network surface is the TLS-terminating HTTPS API + the embedded
+      DNS server (when multi-core enabled); both are monitored via
+      observability. Inter-core mTLS is the internal surface. The
+      operator's broader network-service portfolio (LB, WAF, VPN)
+      sits outside Pryv.
+    detail: |
+      **Rate limiting / DoS protection is deliberately operator-side**
+      (reverse proxy / WAF / API gateway). In-process throttling
+      inside Pryv was considered + rejected because (1) multi-core
+      load distribution makes per-core counters mis-fire and
+      (2) abuse signatures are operator-specific. Pryv contributes
+      the **detection layer** (audit log + observability metrics +
+      `accesses.delete` revocation); enforcement happens at the edge.
+      Full rationale + operator mitigation patterns + reference-
+      config backlog: `context/rate-limiting-and-dos-protection.md`
+      + internal backlog slug `RATE-LIMITING-RECIPES`.
+
+  - ref: A.8.26
+    title: A.8.26 — Application security requirements
+    text: |
+      Information security requirements shall be identified, specified
+      and approved when developing or acquiring applications.
+    coverage: facilitated
+    pryv_effort_saved: medium
+    facilitation_mode: awareness
+    draft: true
+    pryv_primitives: [audit]
+    derives_from: [iso-27001.A.8.25]
+    overview: |
+      For the operator running
+      Pryv as one of its applications, this compliance matrix IS the
+      catalogue of identified + specified + approved security
+      requirements Pryv satisfies. For the operator's own applications
+      built on Pryv, the requirements are their editorial work.
+
+  - ref: A.8.27
+    title: A.8.27 — Secure system architecture and engineering principles
+    text: |
+      Principles for engineering secure systems shall be established,
+      documented, maintained and applied to any information systems
+      development activities.
+    coverage: facilitated
+    pryv_effort_saved: high
+    facilitation_mode: infrastructure
+    draft: true
+    pryv_primitives: [access, permissions, system-streams, encryption-at-rest-secrets]
+    derives_from: [iso-27001.A.8.25, iso-27001.A.8.28]
+    overview: |
+      Pryv's architecture is
+      informed by secure-by-design principles (per-user isolation,
+      least-privilege permissions, encryption-by-default in transit,
+      system-stream privilege separation). The operator's own
+      engineering team applies the same principles to app-layer code.
+      Pryv-side architecture documentation lives in public
+      open-pryv.io README + this matrix.
+
+  - ref: A.8.29
+    title: A.8.29 — Security testing in development and acceptance
+    text: |
+      Security testing processes shall be defined and implemented in
+      the development life cycle.
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: evidence
+    draft: true
+    pryv_primitives: [audit]
+    overview: |
+      Pryv's CI runs the public
+      test matrix per commit (PG + SQLite modes; component-level +
+      integration tests).
+      Operator's own application-layer security testing (SAST, DAST,
+      pen-test before release) is layered on top.
+
+  - ref: A.8.33
+    title: A.8.33 — Test information
+    text: |
+      Test information shall be appropriately selected, protected and
+      managed.
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: infrastructure
+    draft: true
+    pryv_primitives: [data-residency, multi-core-mTLS]
+    derives_from: [iso-27001.A.8.31]
+    overview: |
+      When test environments
+      use real-or-derived PII, the same protections as production
+      apply. Pryv pattern: run test environments as separate Pryv
+      clusters (independent bootstrap bundles + cluster CAs); the
+      data-residency primitive prevents accidental cross-environment
+      data flow at the user-binding layer.
+
+  # ─── Annex A.7 physical (Pryv-software has limited footprint here) ───
+
+  - ref: A.7.1
+    title: A.7.1 — Physical security perimeters
+    text: |
+      Security perimeters shall be defined and used to protect areas
+      that contain information and other associated assets.
+    coverage: out-of-scope
+    draft: true
+    overview: |
+      Physical perimeters are facility scope. Out of Pryv's software
+      boundary; HDS Activity 1 hosters carry this control.
+
+  - ref: A.7.2
+    title: A.7.2 — Physical entry
+    text: |
+      Secure areas shall be protected by appropriate entry controls
+      and access points.
+    coverage: out-of-scope
+    draft: true
+    overview: |
+      Physical entry controls (badge readers, mantraps, etc.) are
+      facility-side.
+
+  - ref: A.7.4
+    title: A.7.4 — Physical security monitoring
+    text: |
+      Premises shall be continuously monitored for unauthorized
+      physical access.
+    coverage: out-of-scope
+    draft: true
+    overview: |
+      Physical monitoring (CCTV, intrusion detection) is facility-
+      side.
+
+  - ref: A.7.10
+    title: A.7.10 — Storage media
+    text: |
+      Storage media shall be managed through their life cycle of
+      acquisition, use, transportation and disposal in accordance with
+      the organization's classification scheme and handling
+      requirements.
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: infrastructure
+    draft: true
+    pryv_primitives: [backup-restore, encryption-at-rest-secrets]
+    derives_from: [hipaa-security.164.310(d)(1)]
+    overview: |
+      Storage-media handling
+      at the Pryv layer surfaces only for backup media —
+      `bin/backup.js` outputs go onto operator-managed media;
+      operator's encryption + transport + disposal procedure applies.
+
+  - ref: A.7.14
+    title: A.7.14 — Secure disposal or re-use of equipment
+    text: |
+      Items of equipment containing storage media shall be verified to
+      ensure that any sensitive data and licensed software has been
+      removed or securely overwritten prior to disposal or re-use.
+    coverage: out-of-scope
+    draft: true
+    derives_from: [iso-27001.A.7.10]
+    overview: |
+      Physical decommissioning of equipment is operator-side. When
+      decommissioned hardware carried a Pryv deployment, the operator's
+      data-destruction procedure handles the user-data directories +
+      database files; Pryv has no role at the host-OS hygiene layer.
+
+  # ─── Clauses 5-10 framing rows ───
+
+  - ref: "5"
+    title: Clause 5 — Leadership
+    text: |
+      Top management shall demonstrate leadership and commitment with
+      respect to the ISMS by ensuring policy + objectives are
+      established, integration of ISMS requirements into the
+      organization's processes, availability of resources, ownership
+      of communications, and oversight of management review.
+    coverage: out-of-scope
+    draft: true
+    overview: |
+      Leadership commitment is the operator's top-management activity.
+      No software role; Pryv-side artefacts (audit, observability,
+      this matrix) inform management-review meetings but don't
+      substitute for leadership decisions.
+
+  - ref: "9.1"
+    title: Clause 9.1 — Monitoring, measurement, analysis and evaluation
+    text: |
+      The organization shall determine what needs to be monitored and
+      measured; the methods for monitoring, measurement, analysis,
+      and evaluation to ensure valid results; when monitoring shall
+      be performed; who shall monitor; when results shall be analysed
+      and evaluated; and who shall analyse + evaluate the results.
+    coverage: facilitated
+    pryv_effort_saved: medium
+    facilitation_mode: evidence
+    draft: true
+    pryv_primitives: [audit, observability-provider]
+    overview: |
+      Pryv contributes the data:
+      audit log (control-effectiveness sampling), observability
+      metrics (operational + security KPIs). The monitoring programme
+      structure (what / when / who) is operator-side.
+
+  - ref: "9.2"
+    title: Clause 9.2 — Internal audit
+    text: |
+      The organization shall conduct internal audits at planned
+      intervals to provide information on whether the ISMS conforms
+      to the organization's own requirements + this document's
+      requirements and is effectively implemented + maintained.
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: evidence
+    draft: true
+    pryv_primitives: [audit]
+    overview: |
+      Internal-audit programme is
+      operator-side. Pryv-side artefacts that internal auditors
+      typically review: the audit log itself (control-effectiveness
+      sample), this compliance matrix (control inventory),
+      open-pryv.io release-process evidence (CHANGELOGs, tagged
+      releases, test matrix).
+
+  - ref: "10.1"
+    title: Clause 10.1 — Continual improvement
+    text: |
+      The organization shall continually improve the suitability,
+      adequacy and effectiveness of the ISMS.
+    coverage: out-of-scope
+    draft: true
+    overview: |
+      Continual improvement is a programmatic operator activity.
+      Pryv-side improvements arrive via upstream open-pryv.io releases
+      (which the operator integrates), but the organization's ISMS
+      improvement programme is theirs.
+
+  - ref: "10.2"
+    title: Clause 10.2 — Nonconformity and corrective action
+    text: |
+      When a nonconformity occurs, the organization shall react to
+      the nonconformity + take action to control + correct it;
+      evaluate the need for action to eliminate the causes; implement
+      action needed; review effectiveness; make changes to the ISMS
+      if necessary.
+    coverage: facilitated
+    pryv_effort_saved: medium
+    facilitation_mode: storage
+    draft: true
+    pryv_primitives: [event, stream, audit]
+    overview: |
+      CAPA records can ride on
+      Pryv events on a `compliance/capa/*` stream with attachments;
+      the audit chain provides tamper evidence. The CAPA workflow
+      itself (root-cause analysis, effectiveness verification,
+      ISMS-change decisions) is operator-side.
+
+  # ─── Additional A.5 organizational controls ───
+
+  - ref: A.5.2
+    title: A.5.2 — Information security roles and responsibilities
+    text: |
+      Information security roles and responsibilities shall be defined
+      and allocated according to the organization's needs.
+    coverage: out-of-scope
+    draft: true
+    overview: |
+      Role allocation is HR / organizational. No software role.
+
+  - ref: A.5.3
+    title: A.5.3 — Segregation of duties
+    text: |
+      Conflicting duties and conflicting areas of responsibility shall
+      be segregated.
+    coverage: facilitated
+    pryv_effort_saved: medium
+    facilitation_mode: primitive
+    draft: true
+    pryv_primitives: [access, permissions, system-streams]
+    overview: |
+      Pryv's permission model
+      supports segregation: distinct accesses with distinct
+      permissions per role; system streams isolate privileged data.
+      The role-definition + duty-conflict analysis is operator-side.
+
+  - ref: A.5.6
+    title: A.5.6 — Contact with special interest groups
+    text: |
+      The organization shall establish and maintain contact with
+      special interest groups, security forums and professional
+      associations.
+    coverage: out-of-scope
+    draft: true
+    overview: |
+      Industry-engagement programme is operator-side.
+
+  - ref: A.5.8
+    title: A.5.8 — Information security in project management
+    text: |
+      Information security shall be integrated into project management.
+    coverage: out-of-scope
+    draft: true
+    overview: |
+      Project-management methodology is operator-side. Pryv-side
+      project artefacts (this matrix, public open-pryv.io plans + GH
+      Projects board for new features) demonstrate ISMS integration
+      on the upstream side.
+
+  - ref: A.5.9
+    title: A.5.9 — Inventory of information and other associated assets
+    text: |
+      An inventory of information and other associated assets,
+      including owners, shall be developed and maintained.
+    coverage: facilitated
+    pryv_effort_saved: medium
+    facilitation_mode: primitive
+    draft: true
+    pryv_primitives: [stream, event, audit]
+    derives_from: [iso-27001.A.5.12]
+    overview: |
+      Pryv's stream + event
+      model gives a queryable inventory of all data assets stored in
+      the deployment (the data subject is implicitly the asset owner
+      under Art. 4 GDPR personhood). Operator's broader infrastructure
+      inventory (servers, databases, logs, code repositories) is
+      layered on top.
+
+  - ref: A.5.11
+    title: A.5.11 — Return of assets
+    text: |
+      Personnel + other interested parties shall return all the
+      organization's assets in their possession upon change or
+      termination of their employment, contract or agreement.
+    coverage: facilitated
+    pryv_effort_saved: medium
+    facilitation_mode: primitive
+    draft: true
+    pryv_primitives: [access, audit]
+    derives_from: [iso-27001.A.6.5, hipaa-security.164.308(a)(3)(ii)(C)]
+    overview: |
+      For the technical
+      "asset" of an access token, return = revocation
+      (`accesses.delete`). For physical / off-line assets, return is
+      operator-side. The audit log captures the technical-side
+      return.
+
+  - ref: A.5.21
+    title: A.5.21 — Managing information security in the ICT supply chain
+    text: |
+      Processes and procedures shall be defined and implemented to
+      manage the information-security risks associated with the ICT
+      products and services supply chain.
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: awareness
+    draft: true
+    pryv_primitives: [audit]
+    derives_from: [iso-27001.A.5.19, iso-27001.A.8.30]
+    planned:
+      - kind: feature
+        summary: "Three-phase supply-chain scanning pipeline (CI npm audit gate + SBOM via Syft + image scan via Grype + cosign signing); shifts row F:Awareness Low → F:Evidence Medium when shipped"
+        proposal: proposals/supply-chain-scanning-pipeline.md
+        backlog: SUPPLY-CHAIN-SCANNING-PIPELINE
+        tracking_url: https://github.com/pryv/open-pryv.io/issues/81
+        impact: medium
+    overview: |
+      Supply-chain risk at the Pryv layer today is **partial and
+      passive**: `package-lock.json` committed, CI uses
+      `npm install --ignore-scripts`, per-commit Docker SHA tag
+      pushed alongside the moving `:2.0.0-pre` tag, rqlite version
+      pinned via Dockerfile `ARG` (no checksum verification yet),
+      GitHub Dependabot security alerts surface CVEs via the repo's
+      Security tab (a 2026-04-30 sweep cleared 22 alerts → 0).
+      What's **not** in place: CI gate on `npm audit`,
+      SCA tool integration, container image scanning (Trivy /
+      Grype), base image digest pinning, SBOM emission (CycloneDX /
+      SPDX), image signing (cosign / SLSA attestation), rqlite
+      tarball `sha256sum -c`. See
+      `proposals/supply-chain-scanning-pipeline.md` for the
+      three-phase plan that closes the gap. The operator's broader
+      ICT supply-chain programme (vendor assessment, SLA reviews,
+      contract clauses) sits on top.
+
+  - ref: A.5.24
+    title: A.5.24 — Information security incident management planning and preparation
+    text: |
+      The organization shall plan and prepare for managing information
+      security incidents by defining, establishing and communicating
+      information security incident management processes, roles and
+      responsibilities.
+    coverage: facilitated
+    pryv_effort_saved: medium
+    facilitation_mode: evidence
+    draft: true
+    pryv_primitives: [audit, observability-provider, access]
+    derives_from: [hipaa-security.164.308(a)(6)(i), diga.A1.2.6]
+    planned:
+      - kind: feature
+        summary: "Chained audit log strengthens forensic evidence (row could shift F:Evidence|Med → F:Evidence|High)"
+        proposal: proposals/audit-log-chaining.md
+        backlog: AUDIT-LOG-CHAINING
+        tracking_url: https://github.com/pryv/open-pryv.io/issues/74
+        impact: medium
+      - kind: enhancement
+        summary: "Published vulnerability disclosure program supplies the externally-facing intake channel for substrate-vulnerability reports into the incident-management plan"
+        proposal: proposals/vulnerability-disclosure-program.md
+        backlog: VULNERABILITY-DISCLOSURE-PROGRAM
+        tracking_url: https://github.com/pryv/open-pryv.io/issues/84
+        impact: low
+    overview: |
+      Pryv contributes detection
+      + scoping data (audit + observability) + containment primitive
+      (accesses.delete) + substrate-vulnerability intake channel
+      (backlog `VULNERABILITY-DISCLOSURE-PROGRAM` modernises
+      today's bare SECURITY.md into a GHSA-based private flow
+      with SLA + scope + safe harbor). The incident-management
+      plan itself (roles, escalation, communications, lessons-
+      learned) is operator-side.
+
+  - ref: A.5.25
+    title: A.5.25 — Assessment and decision on information security events
+    text: |
+      The organization shall assess information security events and
+      decide if they are to be categorized as information security
+      incidents.
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: evidence
+    draft: true
+    pryv_primitives: [audit, observability-provider]
+    derives_from: [iso-27001.A.5.24]
+    overview: |
+      Event-vs-incident
+      classification is operator decision. Pryv-side data (audit row
+      patterns, observability anomalies) feeds the assessment but the
+      categorization rule is operator policy.
+
+  - ref: A.5.30
+    title: A.5.30 — ICT readiness for business continuity
+    text: |
+      ICT readiness shall be planned, implemented, maintained and
+      tested based on business continuity objectives and ICT
+      continuity requirements.
+    coverage: facilitated
+    pryv_effort_saved: medium
+    facilitation_mode: infrastructure
+    draft: true
+    pryv_primitives: [multi-core-mTLS, backup-restore, letsEncrypt-integration]
+    derives_from: [iso-27001.A.8.14, hipaa-security.164.308(a)(7)(ii)(B)]
+    overview: |
+      ICT-readiness Pryv
+      inheritance: multi-core HA + backup-restore + cluster-replicated
+      TLS certificates. The business-continuity objectives + testing
+      cadence are operator policy.

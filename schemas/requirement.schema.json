@@ -1,0 +1,176 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/pryv/compliance-matrix/schemas/requirement.schema.json",
+  "title": "Requirement",
+  "description": "A single mapped requirement inside a scope.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["ref", "title", "coverage"],
+  "properties": {
+    "ref": {
+      "type": "string",
+      "description": "Official identifier within the scope (e.g., 'Art.5', '164.312(a)(1)', 'A.8.24').",
+      "pattern": "^[A-Za-z0-9._()\\-]+$"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "text": {
+      "type": "string",
+      "description": "Paraphrased requirement text. Do NOT redistribute copyrighted standards verbatim."
+    },
+    "text_url": {
+      "type": "string",
+      "format": "uri",
+      "description": "Direct link to the canonical text of this requirement."
+    },
+    "coverage": {
+      "enum": ["implemented", "configurable", "facilitated", "documented", "out-of-scope"]
+    },
+    "pryv_effort_saved": {
+      "enum": ["high", "medium", "low"],
+      "description": "How much of the requirement Pryv carries (high = Pryv saves most implementer effort; low = small substrate; bulk on implementer). Required for every coverage tier except out-of-scope (which is zero by definition). See docs/facilitation-typology.md."
+    },
+    "facilitation_mode": {
+      "enum": ["primitive", "evidence", "storage", "infrastructure", "awareness"],
+      "description": "What kind of help Pryv provides for this facilitated requirement. Only meaningful when coverage='facilitated'. See docs/facilitation-typology.md."
+    },
+    "overview": {
+      "type": "string",
+      "description": "High-level position (2-3 sentences). Audience: auditor / compliance officer. Skimmable; states pryv's contribution without jargon."
+    },
+    "detail": {
+      "type": "string",
+      "description": "Functional explanation (medium length). Audience: compliance officer + technical lead. Why + how at the feature level; multi-aspect breakdowns, gotchas, configuration trade-offs."
+    },
+    "technical": {
+      "type": "string",
+      "description": "Implementation-level specifics. Audience: engineer. Code paths, primitive citations beyond pryv_primitives[], exact API methods, version constraints."
+    },
+    "draft": {
+      "type": "boolean",
+      "default": true,
+      "description": "True when authored but not yet user-reviewed."
+    },
+    "reviewed_by": {
+      "type": ["string", "null"]
+    },
+    "reviewed_at": {
+      "type": ["string", "null"],
+      "format": "date"
+    },
+    "functional_specs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "description": "Dotted ID from dev-site/src/_functional-specifications/requirements.yml (e.g., 'EVENT.BASE')."
+      },
+      "uniqueItems": true
+    },
+    "tests": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "description": "Test code as used in open-pryv.io test descriptions (e.g., 'EVTC').",
+        "pattern": "^[A-Z][A-Z0-9]+$"
+      },
+      "uniqueItems": true
+    },
+    "docs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "description": "Relative path into dev-site/src/ or compliance-matrix/docs/ (may include #anchor)."
+      },
+      "uniqueItems": true
+    },
+    "qms_docs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "description": "Relative path into compliance-matrix/qms/."
+      },
+      "uniqueItems": true
+    },
+    "config_keys": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "description": "Dotted config key in open-pryv.io (e.g., 'storages.engines.postgresql.database')."
+      },
+      "uniqueItems": true
+    },
+    "pryv_primitives": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "description": "Primitive identifier matching a heading in docs/pryv-primitives.md (e.g., 'access', 'permissions', 'audit', 'CMC')."
+      },
+      "uniqueItems": true
+    },
+    "sample_apps": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "description": "Sample app demonstrating the claim end-to-end (relative path under compliance-matrix/samples/<slug>/, or external URL). Use when tests + functional specs don't cover the user-experience evidence."
+      },
+      "uniqueItems": true
+    },
+    "planned": {
+      "type": "array",
+      "description": "Planned bug fixes or backlog features whose shipping would change this row's claim. WAB renders one chip per entry alongside the coverage/effort badges; index/scope pages surface a filter for rows with planned items. Multiple entries allowed (a row may depend on both a queued bug fix and a backlog feature).",
+      "uniqueItems": false,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["kind", "summary", "proposal"],
+        "properties": {
+          "kind": {
+            "enum": ["bug", "feature", "enhancement"],
+            "description": "bug = known defect already queued for fix (the row's current claim is partially incorrect); feature = backlog feature whose shipping would tighten / extend the claim; enhancement = smaller refinement (docs, ergonomics)."
+          },
+          "summary": {
+            "type": "string",
+            "minLength": 1,
+            "description": "One-line description of what's queued (rendered in the WAB chip tooltip)."
+          },
+          "proposal": {
+            "type": "string",
+            "description": "Relative path to the matrix-side proposal markdown under proposals/ (e.g., 'proposals/audit-on-user-delete.md')."
+          },
+          "backlog": {
+            "type": "string",
+            "description": "Slug of the upstream backlog file (e.g., 'AUDIT-ON-USER-DELETE'). Omit if the planned work has no upstream backlog yet."
+          },
+          "impact": {
+            "enum": ["high", "medium", "low"],
+            "description": "How much this row's claim shifts when shipped. high = coverage tier likely changes; medium = effort/facilitation upgrade; low = wording / evidence refinement."
+          },
+          "tracking_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "Optional external tracker (GitHub issue, project board) — supplements the in-tree backlog file."
+          },
+          "eta_release": {
+            "type": "string",
+            "description": "Optional target open-pryv.io release (e.g., '2.1.0')."
+          }
+        }
+      }
+    },
+    "applies_to_versions": {
+      "type": "string",
+      "description": "semver-range constraint of open-pryv.io versions this row describes (e.g., '>=2.0.0').",
+      "default": "*"
+    },
+    "derives_from": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "description": "Cross-scope reference (e.g., 'gdpr.Art.5') indicating this requirement inherits evidence from another scope's row."
+      },
+      "uniqueItems": true
+    }
+  }
+}

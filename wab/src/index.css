@@ -1,0 +1,67 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --radius: 0.5rem;
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  font-family: var(--font-sans);
+}
+
+/* Coverage status colors (used by CoverageBadge) */
+.cov-implemented   { background-color: #16a34a; color: white; }   /* green-600 */
+.cov-configurable  { background-color: #2563eb; color: white; }   /* blue-600 */
+.cov-facilitated   { background-color: #ca8a04; color: white; }   /* yellow-600 */
+.cov-documented    { background-color: #475569; color: white; }   /* slate-600 */
+.cov-out-of-scope  { background-color: #cbd5e1; color: #475569; } /* slate-300 */
+
+/* pryv_effort_saved standalone badges (used by hypothetical future
+   filter UIs). The combined RequirementBadge uses .effort-pill-* below. */
+.effort-high   { background-color: #0f766e; color: white; font-weight: 600; }       /* teal-700 */
+.effort-medium { background-color: #14b8a6; color: white; }                          /* teal-500 */
+.effort-low    { background-color: #ffffff; color: #0f766e; border: 1px solid #0f766e; } /* teal-700 outline */
+
+/* Right-side segment of the combined RequirementBadge.
+   Monochrome teal scale -- intensity encodes effort saved (dark = high,
+   light = low), like a fuel gauge. Keeps the loud coverage palette on
+   the left undisturbed; the right side reads as ordered without
+   competing for attention. Teal hue avoids clashing with green
+   (implemented) and blue (configurable). */
+.effort-pill-high    { background-color: #0f766e; color: white; }     /* teal-700 */
+.effort-pill-medium  { background-color: #5eead4; color: #134e4a; }   /* teal-300 on teal-900 */
+.effort-pill-low     { background-color: #ccfbf1; color: #134e4a; }   /* teal-100 on teal-900 */
+
+/* facilitation_mode: WHAT kind of help Pryv provides.
+   Distinct hue per mode; readable on white. */
+.fac-primitive       { background-color: #ecfccb; color: #365314; border: 1px solid #84cc16; } /* lime */
+.fac-evidence        { background-color: #f3e8ff; color: #6b21a8; border: 1px solid #a855f7; } /* violet */
+.fac-storage         { background-color: #cffafe; color: #155e75; border: 1px solid #06b6d4; } /* cyan */
+.fac-infrastructure  { background-color: #dbeafe; color: #1e3a8a; border: 1px solid #3b82f6; } /* blue */
+.fac-awareness       { background-color: #f1f5f9; color: #334155; border: 1px solid #94a3b8; } /* slate */
+
+.draft-badge {
+  background-color: #f59e0b;   /* amber-500 */
+  color: white;
+  font-size: 0.625rem;
+  padding: 0.125rem 0.375rem;
+  border-radius: 9999px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 700;
+}
+
+/* Planned-change chips — flag rows whose claim depends on a queued bug fix or
+   backlog feature. Hue = kind (bug = red, feature = indigo, enhancement = slate).
+   Impact tunes intensity at-a-glance. */
+.planned-bug          { background-color: #fee2e2; color: #991b1b; border: 1px solid #ef4444; }
+.planned-feature      { background-color: #e0e7ff; color: #3730a3; border: 1px solid #6366f1; }
+.planned-enhancement  { background-color: #f1f5f9; color: #334155; border: 1px solid #94a3b8; }
+
+.planned-impact-high   { font-weight: 700; }
+.planned-impact-medium { font-weight: 600; }
+.planned-impact-low    { font-weight: 500; opacity: 0.85; }

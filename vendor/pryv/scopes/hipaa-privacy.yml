@@ -1,0 +1,822 @@
+id: hipaa-privacy
+title: HIPAA Privacy Rule
+short: HIPAA-Privacy
+type: regulation
+jurisdiction: US
+version: 45 CFR Part 160 + Part 164 Subparts A + E (as amended through the HITECH 2013 Omnibus Final Rule)
+version_date: "2013-01-25"
+canonical_url: https://www.ecfr.gov/current/title-45/subtitle-A/subchapter-C/part-164/subpart-E
+matrix_language: EN
+curated: false
+
+changelog:
+  - date: "2026-05-19"
+    change: initial draft — section-level mapping. Most rows are facilitated / documented (Privacy Rule is largely organizational); rights of access / amendment / accounting are implemented thanks to the standard read API + audit log + event versioning.
+
+requirements:
+
+  # ───────────────────────────────────────────────────────────────
+  # §164.502 — Uses and disclosures of PHI: general rules
+  # ───────────────────────────────────────────────────────────────
+
+  - ref: "164.502"
+    title: Uses and disclosures of PHI — general rules
+    text: |
+      A covered entity may not use or disclose protected health
+      information, except as permitted or required by the Privacy Rule.
+    coverage: facilitated
+    pryv_effort_saved: medium
+    facilitation_mode: primitive
+    draft: true
+    pryv_primitives: [access, permissions, audit]
+    overview: |
+      Pryv's permission model
+      is the technical enforcement layer for Article 502: an app or
+      counterparty can only read or write streams its access permits.
+      The "permitted or required by the Privacy Rule" determination —
+      which use cases are TPO, when authorization is required, what
+      minimum-necessary means in your workflow — is your programmatic
+      decision; Pryv enforces whatever scope you grant.
+    detail: |
+      Workforce, apps, and counterparties act on PHI only by holding an
+      access whose `permissions[]` allows the specific stream + level.
+      Disclosures to third parties (via shared accesses or CMC capability
+      flows) inherit the same enforcement model. The audit log makes
+      every use / disclosure attributable to a specific access at a
+      specific time, which is the substrate for §164.528 accounting.
+
+  # ───────────────────────────────────────────────────────────────
+  # §164.506 — Uses and disclosures for treatment, payment, health-care operations
+  # ───────────────────────────────────────────────────────────────
+
+  - ref: "164.506"
+    title: Uses and disclosures for treatment, payment, healthcare operations (TPO)
+    text: |
+      Permits use and disclosure of PHI for the entity's own TPO, and
+      under defined conditions for another entity's TPO.
+    coverage: facilitated
+    pryv_effort_saved: medium
+    facilitation_mode: storage
+    draft: true
+    pryv_primitives: [access, permissions, clientData]
+    overview: |
+      TPO is the largest category
+      of permitted uses. Pryv lets you mint accesses tagged with the
+      TPO purpose in `clientData` (e.g., `purpose: "treatment"`); the
+      permission model enforces the scope. The TPO-vs-not
+      classification of any specific workflow is your programmatic
+      judgement; Pryv carries it forward into the audit trail.
+    detail: |
+      A common pattern: separate accesses per purpose (one
+      "treatment-app" access; one "billing-app" access; one
+      "ops-analytics" access) — each independently revocable and
+      auditable. `access.clientData.purpose` makes the
+      classification an artefact rather than a verbal claim.
+
+  # ───────────────────────────────────────────────────────────────
+  # §164.508 — Uses and disclosures requiring authorization
+  # ───────────────────────────────────────────────────────────────
+
+  - ref: "164.508"
+    title: Uses and disclosures requiring authorization
+    text: |
+      Uses and disclosures not otherwise permitted require a written
+      authorization from the individual that meets defined content
+      requirements.
+    coverage: implemented
+    pryv_effort_saved: high
+    draft: true
+    pryv_primitives: [access, clientData, CMC, event]
+    tests: [AA01, ACCP]
+    overview: |
+      The authorization Pryv mints when your subject grants an access IS
+      the §164.508 authorization record — versioned, immutable per
+      version, with the granted scope (permissions) and the authorization
+      text (clientData or a `consent/request-cmc` event) inseparable.
+      Withdrawal is a single API call. For cross-account / cross-entity
+      authorizations, the CMC plugin carries the negotiation state.
+    detail: |
+      Section 508(c) elements (description, identification, signature
+      equivalent, expiration, right to revoke, etc.) map naturally to
+      access + clientData fields:
+        - description of information disclosed → `permissions[]`
+        - description of authorized recipients → access type +
+          counterparty (CMC pair)
+        - signature equivalent → the act of granting the access through
+          the auth flow (auditable)
+        - expiration → `access.expires`
+        - right to revoke → `accesses.delete` + audit row at revocation
+        - re-disclosure statement → `clientData.redisclosure_notice`
+      Implementer responsibility: ensure the consent UX presents the
+      §508(c) elements at the grant moment.
+
+  # ───────────────────────────────────────────────────────────────
+  # §164.510 — Uses requiring opportunity to agree or object
+  # ───────────────────────────────────────────────────────────────
+
+  - ref: "164.510"
+    title: Uses and disclosures requiring opportunity to agree or object
+    text: |
+      Disclosures to family / friends or for facility-directory purposes
+      may proceed if the individual is given the opportunity to agree or
+      object, and the entity reasonably infers no objection.
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: storage
+    draft: true
+    pryv_primitives: [access, clientData, event]
+    overview: |
+      The opportunity-to-agree-or-
+      object construct is operational. Pryv lets you record the
+      offered choice and the individual's response as durable
+      artefacts (clientData on the relevant access, or a
+      `consent/notice-cmc` / custom event), so the §164.510
+      reasonable-inference becomes a record rather than recollection.
+
+  # ───────────────────────────────────────────────────────────────
+  # §164.512 — Uses without authorization (public interest)
+  # ───────────────────────────────────────────────────────────────
+
+  - ref: "164.512"
+    title: Uses and disclosures for which authorization or opportunity not required
+    text: |
+      Twelve categories of permitted disclosures without authorization
+      (public health, law enforcement, etc.), each with specific
+      conditions.
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: storage
+    draft: true
+    pryv_primitives: [access, clientData, audit]
+    overview: |
+      Section 512 disclosures are
+      operationally driven by the circumstances (subpoena, public-
+      health request, etc.). Pryv's contribution is durability: every
+      such disclosure must still go through an access, and the audit
+      log captures it. Recording the §512 category and rationale in
+      `access.clientData.legal_basis` makes the disclosure
+      justification recoverable later.
+    detail: |
+      Recommended pattern: mint a purpose-specific access per §512
+      invocation (`clientData.disclosure_category: "law_enforcement"`,
+      `clientData.statute: "..."` etc.), execute the disclosure, and
+      revoke the access. The audit trail then shows the full lifecycle
+      attached to the legal-basis claim.
+
+  # ───────────────────────────────────────────────────────────────
+  # §164.514 — Other requirements (de-identification + minimum necessary)
+  # ───────────────────────────────────────────────────────────────
+
+  - ref: 164.514(a)
+    title: De-identification of PHI
+    text: |
+      PHI that has been de-identified (Safe Harbor method or
+      Expert Determination) is no longer subject to the Privacy Rule.
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: storage
+    draft: true
+    pryv_primitives: [stream, event, data-types]
+    overview: |
+      Pryv stores whatever event
+      content you write; de-identification is a transformation you
+      perform on the data before storage (or before disclosure).
+      Custom event types + the per-stream design let you keep an
+      identified and a de-identified copy under separate permission
+      scopes, simplifying §514(a) workflows.
+    detail: |
+      A typical pattern: identified events on a `clinical/*` stream tree
+      with restricted access; a parallel `research/*` stream tree
+      holding de-identified projections, accessible to a broader analyst
+      group. The de-identification logic itself (e.g., Safe Harbor's
+      18-identifier list) is your application code; Pryv stores the
+      output.
+
+  - ref: 164.514(d)
+    title: Minimum necessary use, disclosure, and requests
+    text: |
+      Covered entity must make reasonable efforts to limit PHI to the
+      minimum necessary to accomplish the intended purpose.
+    coverage: implemented
+    pryv_effort_saved: high
+    draft: true
+    pryv_primitives: [access, permissions, stream]
+    tests: [AA01, ACCP]
+    overview: |
+      Per-stream permissions are the minimum-necessary primitive: each
+      access carries only the streams + levels needed for its purpose,
+      so by construction the holder cannot see more PHI than granted.
+      Your stream layout + permission-design choices determine the
+      granularity at which "minimum necessary" can be enforced
+      technically.
+    detail: |
+      Practical guidance:
+        - Design stream topology so distinct purposes live on distinct
+          subtrees (treatment / billing / research / ops).
+        - Mint per-purpose accesses with `permissions[]` pointing at the
+          smallest necessary subtree.
+        - Avoid blanket `*` permissions except for personal-token /
+          admin roles where unrestricted access is the stated need.
+
+  # ───────────────────────────────────────────────────────────────
+  # §164.520 — Notice of privacy practices
+  # ───────────────────────────────────────────────────────────────
+
+  - ref: "164.520"
+    title: Notice of privacy practices
+    text: |
+      Covered entity must provide a notice that adequately describes its
+      uses and disclosures of PHI and the individual's rights.
+    coverage: facilitated
+    pryv_effort_saved: medium
+    facilitation_mode: storage
+    draft: true
+    pryv_primitives: [access, clientData, app-web-auth3, event]
+    overview: |
+      The notice itself is your
+      editorial content. Pryv preserves the notice text shown to each
+      subject — typically on `access.clientData.privacy_notice` or as
+      a dedicated event — so the same words presented are recoverable
+      per subject per time. The customer-facing `app-web-auth3`
+      template is the surface where the notice typically appears.
+
+  # ───────────────────────────────────────────────────────────────
+  # §164.522 — Right to request restrictions / confidential communications
+  # ───────────────────────────────────────────────────────────────
+
+  - ref: "164.522"
+    title: Right to request restriction; confidential communications
+    text: |
+      Individual has the right to request restrictions on uses and
+      disclosures and to receive confidential communications by
+      alternative means or at alternative locations.
+    coverage: configurable
+    pryv_effort_saved: medium
+    draft: true
+    pryv_primitives: [access, permissions, clientData]
+    config_keys: [access.permissions]
+    tests: [AA02, ACCP]
+    overview: |
+      A granted restriction is a scope-down on the relevant access
+      (`accesses.update` to narrower permissions) or a revocation
+      (`accesses.delete`). The access-version chain proves what state
+      was in force before the restriction and from when it applies.
+      Confidential-communications choices (alternate address, phone)
+      live in `account.clientData` or a dedicated event.
+    detail: |
+      Note that §522(a)(1)(vi) (post-HITECH) made restrictions on
+      disclosures to a health plan for out-of-pocket-paid services
+      mandatory on request. The Pryv pattern is the same — mint /
+      narrow the access tied to the health-plan workflow — but you
+      must apply it without operational discretion when this specific
+      condition is met.
+
+  # ───────────────────────────────────────────────────────────────
+  # §164.524 — Right of access
+  # ───────────────────────────────────────────────────────────────
+
+  - ref: "164.524"
+    title: Right of access by the individual
+    text: |
+      Individual has a right of access to inspect and obtain a copy of
+      their PHI in a designated record set, in the form and format
+      requested if readily producible.
+    coverage: implemented
+    pryv_effort_saved: high
+    draft: true
+    pryv_primitives: [access, stream, event, audit, data-types, account-backup-tool]
+    functional_specs: [EVENT.BASE, STREAM.BASE]
+    tests: [AA01, EGSQ, U9HQ]
+    overview: |
+      Your subject, holding a personal token, reads everything via the
+      standard Pryv API — events, streams, accesses (with history),
+      audit records, attachments — in the canonical event-type schemas.
+      Wrap that in a subject-portal app and you have §164.524 covered
+      end-to-end. The 30-day response timeline is your process target,
+      not a software latency.
+    detail: |
+      Form-and-format: events return as canonical JSON validated against
+      `data-types` schemas — structured, machine-readable, and arbitrary
+      JSON-consumer-friendly. Attachments download in their stored
+      MIME-type. If a subject requests a specific format Pryv doesn't
+      natively produce (e.g., CDA C-CDA), your portal layer transforms.
+
+  # ───────────────────────────────────────────────────────────────
+  # §164.526 — Right to amend
+  # ───────────────────────────────────────────────────────────────
+
+  - ref: "164.526"
+    title: Right to amend
+    text: |
+      Individual has a right to have a covered entity amend PHI or a
+      record about the individual in a designated record set.
+    coverage: implemented
+    pryv_effort_saved: high
+    draft: true
+    pryv_primitives: [event]
+    functional_specs: [EVENT.BASE]
+    tests: [PTU1]
+    overview: |
+      `events.update` is the amendment primitive; event versioning
+      preserves the prior content so the amendment trail is auditable.
+      The §164.526 process (request → decision → action → notice) is
+      yours to run; the technical record-keeping is shipped.
+    detail: |
+      For denied amendments where the individual files a statement of
+      disagreement (§526(d)), store the statement as a separate event
+      on a designated-record-set stream linked back to the original
+      via `clientData.amends_event_id` — so the disagreement travels
+      with the data on subsequent disclosures.
+
+  # ───────────────────────────────────────────────────────────────
+  # §164.528 — Accounting of disclosures
+  # ───────────────────────────────────────────────────────────────
+
+  - ref: "164.528"
+    title: Accounting of disclosures
+    text: |
+      Individual has a right to receive an accounting of disclosures of
+      PHI made by the covered entity in the 6 years prior to the
+      request, with specified exceptions.
+    coverage: implemented
+    pryv_effort_saved: high
+    draft: true
+    pryv_primitives: [audit, access, clientData]
+    tests: [AT01, AT51, AT61, AT65]
+    overview: |
+      Pryv's audit log is the §164.528 substrate: every API method call
+      attributed to an access (with version) is recorded. Filtering by
+      access category — TPO accesses, §164.512 disclosures, etc. — lets
+      you derive the §164.528-eligible subset (which excludes TPO).
+      Six-year retention of the audit log is your operator-side
+      configuration.
+    detail: |
+      The accounting must include: date, recipient, brief description
+      of PHI disclosed, purpose. Each field has a Pryv source:
+        - date → audit row timestamp
+        - recipient → access holder (`access.id`) or counterparty (for
+          shared / CMC accesses)
+        - description → API method + URL query/path params recorded
+          in audit. **The audit log does NOT capture the request
+          body**, so the description is "what was disclosed" at the
+          API-shape level (e.g., `events.get` on a given stream),
+          not the per-event content — sufficient under §164.528 and
+          favourable for data minimisation (the audit row carries
+          no residual PHI when the underlying event is later erased).
+          See `docs/pryv-primitives.md` audit entry for the full
+          capture catalogue.
+        - purpose → `access.clientData.purpose` recorded at grant time
+      Pre-computing per-subject accounting reports periodically (and
+      storing them on a dedicated stream) is a useful operational
+      pattern for fast response to requests.
+
+  # ───────────────────────────────────────────────────────────────
+  # §164.530 — Administrative requirements (training, complaints, sanctions, mitigation)
+  # ───────────────────────────────────────────────────────────────
+
+  - ref: 164.530(a)
+    title: Privacy officer / contact person
+    text: |
+      Covered entity must designate a privacy official and a contact
+      person responsible for receiving complaints.
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: evidence
+    draft: true
+    pryv_primitives: [audit]
+    overview: |
+      Designation is organizational.
+      Pryv's contribution is indirect: the audit log gives the
+      privacy official a concrete artifact to review when investigating
+      complaints or auditing internal use.
+
+  - ref: 164.530(b)
+    title: Training
+    text: |
+      Covered entity must train all members of its workforce on its
+      privacy policies and procedures.
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: evidence
+    draft: true
+    pryv_primitives: [audit, observability-provider]
+    overview: |
+      Training itself is your
+      programme. Pryv's contribution to operationalizing it: the
+      audit log + observability data make training-effectiveness
+      measurable (e.g., does role X exercise access patterns matching
+      policy after training?). The training content + record-keeping
+      are yours.
+
+  - ref: 164.530(c)
+    title: Safeguards
+    text: |
+      Covered entity must have appropriate administrative, technical,
+      and physical safeguards to protect the privacy of PHI.
+    coverage: facilitated
+    pryv_effort_saved: medium
+    facilitation_mode: awareness
+    draft: true
+    pryv_primitives: [access, permissions, audit, letsEncrypt-integration, encryption-at-rest-secrets]
+    derives_from: [hipaa-security.164.308(a)(1)(i), hipaa-security.164.312(a)(1), hipaa-security.164.312(e)(1)]
+    overview: |
+      Section 530(c) is the
+      Privacy Rule's pointer to the Security Rule and to physical /
+      administrative safeguards. See the HIPAA-Security rows for the
+      technical safeguards Pryv contributes; §164.310 (Physical) for
+      the operator's hosting environment. Together those rows
+      constitute the §530(c) answer for this Pryv deployment.
+
+  - ref: 164.530(f)
+    title: Mitigation
+    text: |
+      Covered entity must mitigate, to the extent practicable, any
+      harmful effect of a use or disclosure in violation of its policies
+      or the Privacy Rule.
+    coverage: facilitated
+    pryv_effort_saved: medium
+    facilitation_mode: evidence
+    draft: true
+    pryv_primitives: [access, audit, backup-restore]
+    overview: |
+      Audit log + access version
+      chain let you scope what was disclosed to whom and when — the
+      first step in any mitigation. `bin/backup.js --restore` is
+      available if mitigation involves rolling back data state;
+      `accesses.delete` is the primitive to revoke access from the
+      offending counterparty.
+
+  - ref: 164.502(b)
+    title: Minimum necessary uses, disclosures, requests
+    text: |
+      Covered entity must make reasonable efforts to limit PHI to the
+      minimum necessary to accomplish the intended purpose, with
+      enumerated exceptions (treatment disclosures, disclosures to the
+      individual, authorized disclosures, required-by-law disclosures).
+    coverage: implemented
+    pryv_effort_saved: high
+    draft: true
+    pryv_primitives: [access, permissions, stream]
+    derives_from: [hipaa-privacy.164.514(d), gdpr.Art.5]
+    tests: [AA01, ACCP]
+    overview: |
+      Same primitive mapping as §164.514(d) minimum-necessary: per-
+      stream permissions are the technical control; the holder cannot
+      see more PHI than the granted scope permits. §502(b)(2)
+      exceptions are programmatic — the implementer leaves those
+      accesses unscoped per the exception's permission, and the audit
+      log records the broader access for accountability.
+
+  - ref: 164.502(e)(1)
+    title: Disclosures to business associates
+    text: |
+      Covered entity may disclose PHI to a business associate (BA) and
+      may allow a BA to create, receive, maintain, or transmit PHI on
+      its behalf only with satisfactory assurances (typically via a
+      written contract, the BAA) that the BA will appropriately
+      safeguard the information.
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: storage
+    draft: true
+    pryv_primitives: [access, clientData, CMC]
+    derives_from: [hipaa-security.164.314(a)(1), gdpr.Art.28]
+    overview: |
+      The technical disclosure is
+      mediated by the access primitive — mint a BA-specific access
+      with `clientData.role = "business_associate"` + `clientData.baa_id
+      = "<contract-ref>"`, scoped to the subjects / streams covered
+      by the BAA. Cross-platform BA arrangements (where the BA runs
+      their own Pryv) inherit the CMC capability pattern for cross-
+      account flow.
+
+  - ref: 164.530(d)
+    title: Complaints to the covered entity
+    text: |
+      Covered entity must provide a process for individuals to make
+      complaints concerning the entity's policies + procedures or its
+      compliance with the Privacy Rule; document complaints received
+      and disposition.
+    coverage: facilitated
+    pryv_effort_saved: medium
+    facilitation_mode: storage
+    draft: true
+    pryv_primitives: [event, stream, audit]
+    overview: |
+      A complaint-intake workflow
+      stores each complaint as an event on a designated
+      `complaints/*` stream with `clientData.disposition` tracking
+      outcome. The audit log captures the timestamp + actor on each
+      disposition update — making the §530(d)(2) documentation
+      requirement an automatic byproduct of normal record-keeping.
+
+  - ref: 164.530(e)
+    title: Sanctions
+    text: |
+      Covered entity must have and apply appropriate sanctions against
+      members of its workforce who fail to comply with the privacy
+      policies + procedures.
+    coverage: out-of-scope
+    draft: true
+    overview: |
+      Sanctions are an HR / disciplinary process. No software role at
+      the sanction-decision layer; the audit log gives the underlying
+      evidence ("did this person actually access X?") that HR
+      processes evaluate.
+
+  - ref: 164.530(g)
+    title: Refraining from intimidating + retaliatory acts
+    text: |
+      Covered entity may not intimidate, threaten, coerce, discriminate
+      against, or take other retaliatory action against any individual
+      for exercising any right under the Privacy Rule.
+    coverage: out-of-scope
+    draft: true
+    overview: |
+      Anti-retaliation is an organizational policy + culture commitment;
+      no software role.
+
+  - ref: 164.530(i)
+    title: Policies and procedures
+    text: |
+      Covered entity must implement policies and procedures with respect
+      to PHI that are designed to comply with the standards,
+      implementation specifications, and other requirements of this
+      Subpart E.
+    coverage: facilitated
+    pryv_effort_saved: medium
+    facilitation_mode: storage
+    draft: true
+    pryv_primitives: [event, stream, audit, backup-restore]
+    derives_from: [hipaa-security.164.316(a)]
+    overview: |
+      Same pattern as HIPAA-
+      Security §164.316(a): policies-as-data on a
+      `compliance/policies/*` stream get versioning + retention +
+      audit. The drafting + approval + review-cycle procedure is the
+      privacy officer's. Cross-link to §164.316(a) preserves the
+      Security Rule's parallel obligation.
+
+  - ref: 164.510(b)
+    title: Disclosures for involvement in care + for notification purposes
+    text: |
+      Covered entity may, in accordance with §510(b)(2) standards,
+      disclose to a family member, other relative, close personal
+      friend or other person identified by the individual, PHI directly
+      relevant to that person's involvement with the individual's care
+      or payment for care.
+    coverage: facilitated
+    pryv_effort_saved: medium
+    facilitation_mode: storage
+    draft: true
+    pryv_primitives: [access, clientData, event]
+    derives_from: [hipaa-privacy.164.510]
+    overview: |
+      The §510(b) "directly
+      relevant" determination + relationship verification are
+      clinical-workflow concerns. Pryv pattern: mint a time-bounded
+      access for the involved person with permissions narrowed to
+      "directly relevant" streams + `clientData.relationship`
+      capturing the §510(b)(1) basis (family member name, role,
+      individual's opportunity-to-object record).
+
+  - ref: "164.512(b)"
+    title: Uses + disclosures for public-health activities
+    text: |
+      Covered entity may disclose PHI for public-health activities to
+      public-health authorities authorized by law to collect or receive
+      such information, including reporting of disease, injury,
+      vital events, conduct of public-health surveillance.
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: storage
+    draft: true
+    pryv_primitives: [access, clientData, audit]
+    derives_from: [hipaa-privacy.164.512]
+    overview: |
+      Public-health-authority
+      recipient is recorded on the access's
+      `clientData.recipient_authority` + `clientData.statute` for the
+      §512(b) statutory basis. Audit log anchors the disclosure to a
+      specific timestamp + event range. The "authorized by law"
+      determination is the covered entity's legal judgement.
+
+  - ref: "164.512(f)"
+    title: Uses + disclosures for law enforcement purposes
+    text: |
+      Covered entity may disclose PHI for law-enforcement purposes
+      under specific conditions: court order / warrant, administrative
+      request, identification + location, victim of crime, decedent,
+      etc.
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: storage
+    draft: true
+    pryv_primitives: [access, clientData, audit]
+    derives_from: [hipaa-privacy.164.512]
+    overview: |
+      §512(f) categories drive
+      vocabulary for `clientData.law_enforcement_basis` (e.g.,
+      `"f_1_i_court_order"`, `"f_2_ii_subpoena"`, `"f_4_victim"`).
+      Per-instance disclosure access minted + revoked; audit log
+      preserves the chain. The decision of whether the request
+      qualifies under §512(f) is legal counsel's, not Pryv's.
+
+  - ref: 164.524(b)
+    title: Right of access — requests + responses
+    text: |
+      Covered entity may require individuals to make access requests
+      in writing (within reasonable limitations); must act on request
+      within 30 days (with one 30-day extension permitted with
+      written notice).
+    coverage: facilitated
+    pryv_effort_saved: medium
+    facilitation_mode: storage
+    draft: true
+    pryv_primitives: [access, event]
+    derives_from: [hipaa-privacy.164.524]
+    overview: |
+      Request-intake workflow
+      stores each request as an event on a designated
+      `access-requests/*` stream with `clientData.due_by` computed
+      from receipt timestamp. The 30/30-day operational cadence is
+      the covered entity's process; once the response is ready, the
+      individual exercises §524 directly via the standard Pryv API
+      (see the §164.524 parent row).
+
+  - ref: 164.524(c)
+    title: Right of access — provision of access
+    text: |
+      Covered entity must provide access in the form + format requested
+      if readily producible; in a readable hard-copy form or other
+      form as agreed; must provide a summary if the individual agrees
+      in advance + agrees to applicable fees.
+    coverage: implemented
+    pryv_effort_saved: high
+    draft: true
+    pryv_primitives: [event, stream, data-types]
+    derives_from: [hipaa-privacy.164.524]
+    tests: [EGSQ, U9HQ]
+    overview: |
+      The Pryv API delivers events in canonical JSON (data-types
+      schemas) — "readily producible" in the §524(c) sense.
+      Implementer's portal can transform to PDF / printed format
+      where requested. Summaries are application-layer constructions
+      from the same source events.
+
+  - ref: 164.502(g)
+    title: Personal representatives
+    text: |
+      Covered entity must treat a personal representative as the
+      individual with respect to uses + disclosures of PHI, subject to
+      enumerated exceptions (abuse / neglect concerns, endangerment).
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: storage
+    draft: true
+    pryv_primitives: [access, clientData]
+    derives_from: [hipaa-privacy.164.502]
+    overview: |
+      Pryv pattern: the personal
+      representative holds an `app` or `shared` access to the subject's
+      data with full scope (the effective "treat as individual"
+      technical permission). The access's
+      `clientData.representative_relationship` +
+      `clientData.legal_basis` capture the relationship; the
+      revocation-by-exception pattern is `accesses.update` to narrow
+      / `accesses.delete` to remove. The "abuse / neglect /
+      endangerment" determination is clinical / legal judgement.
+
+  - ref: "164.512(a)"
+    title: Uses + disclosures required by law
+    text: |
+      Covered entity may use or disclose PHI to the extent that such
+      use or disclosure is required by law and the use or disclosure
+      complies with and is limited to the relevant requirements of
+      such law.
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: storage
+    draft: true
+    pryv_primitives: [access, clientData, audit]
+    derives_from: [hipaa-privacy.164.512]
+    overview: |
+      "Required by law" disclosures
+      still ride on accesses; record the statutory basis in
+      `clientData.statute` so the audit chain ties the disclosure to
+      the legal authority. The compliance burden of the cited law is
+      separate.
+
+  - ref: 164.514(b)
+    title: De-identification — Implementation specifications
+    text: |
+      Two methods: (1) Expert determination that the risk is very small;
+      (2) Safe Harbor — removal of 18 enumerated identifiers + no
+      actual knowledge that residual information could re-identify.
+    coverage: out-of-scope
+    draft: true
+    derives_from: [hipaa-privacy.164.514(a)]
+    overview: |
+      Choice of method + execution are app-side. Pryv stores the
+      output of either method as ordinary events on the de-identified
+      streams.
+
+  - ref: 164.514(c)
+    title: De-identification — Re-identification
+    text: |
+      Covered entity may assign a code or other means of record
+      identification to allow information de-identified under §514(b)
+      to be re-identified by the covered entity, provided the code
+      is not derived from / related to information about the
+      individual + the entity does not use / disclose the code for
+      any other purpose.
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: storage
+    draft: true
+    pryv_primitives: [stream, system-streams, access, clientData]
+    derives_from: [hipaa-privacy.164.514(a)]
+    planned:
+      - kind: feature
+        summary: "auth.randomAlias IS the re-identification code (random by construction → satisfies §514(c)(1)(ii))"
+        proposal: proposals/aliases-as-pseudonymization-primitive.md
+        backlog: ALIASES
+        tracking_url: https://github.com/pryv/open-pryv.io/issues/38
+        impact: medium
+    overview: |
+      When re-identification is a
+      workflow requirement, the code-to-PHI mapping is a tightly
+      scoped resource: keep it on a dedicated `re-id-map/*` system-
+      stream-adjacent subtree with access permitted only to the
+      re-identification administrator role. The code generation
+      method (random / hash-of-non-PHI) must not encode PHI per
+      §514(c)(1)(ii) — that's an editorial requirement on the
+      implementer.
+
+  - ref: 164.528(b)
+    title: Accounting of disclosures — Implementation specifications
+    text: |
+      Accounting must include, for each disclosure: date, name of
+      entity / person who received PHI, brief description of PHI
+      disclosed, brief statement of the purpose or copy of written
+      request.
+    coverage: implemented
+    pryv_effort_saved: high
+    draft: true
+    pryv_primitives: [audit, access, clientData]
+    derives_from: [hipaa-privacy.164.528]
+    tests: [AT01, AT51, AT61, AT65]
+    overview: |
+      Each §528(b)(2) field has a Pryv source (date / name / PHI
+      description / purpose) — see the §164.528 parent row for the
+      mapping. The pre-computed accounting report pattern (storing
+      results on a dedicated stream) keeps the §528 response window
+      tractable.
+
+  - ref: "164.504(e)"
+    title: Organizational requirements — business associate contracts
+    text: |
+      Covered entity may permit a business associate to create, receive,
+      maintain, or transmit PHI on its behalf only with satisfactory
+      assurances via written contract meeting the BAA content
+      requirements of §164.504(e)(2).
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: storage
+    draft: true
+    pryv_primitives: [access, clientData, audit, CMC]
+    derives_from: [hipaa-security.164.314(a)(1), hipaa-privacy.164.502(e)(1), gdpr.Art.28]
+    overview: |
+      The §164.504(e) BAA content
+      is contractual. Pryv-side support for executing the contract
+      terms: BA access tagged with `clientData.baa_id` +
+      `clientData.role = "business_associate"`, scope narrowed to
+      subjects + streams covered by the BAA, audit-log accountability
+      for every action under the BA access.
+
+  - ref: "164.504(g)"
+    title: Organizational requirements — group health plans
+    text: |
+      Group health plan may disclose PHI to a plan sponsor only upon
+      receipt of certification that the plan documents have been
+      amended per §164.504(f) restrictions.
+    coverage: out-of-scope
+    draft: true
+    overview: |
+      Group-health-plan / plan-sponsor arrangements are organizational
+      / contractual. No software role.
+
+  - ref: 164.502(j)
+    title: Disclosures by whistleblowers + workforce member crime victims
+    text: |
+      Workforce member or business associate disclosure of PHI to a
+      regulatory authority / law enforcement / health oversight agency
+      is not a violation where the workforce member / BA believes in
+      good faith that the entity has engaged in unlawful conduct +
+      meets §502(j)(1) conditions.
+    coverage: out-of-scope
+    draft: true
+    overview: |
+      Whistleblower protections are legal framing. No software role;
+      the disclosing person's audit-trail evidence under their access
+      may be cited in subsequent proceedings.

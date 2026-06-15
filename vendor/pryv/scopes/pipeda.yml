@@ -1,0 +1,325 @@
+id: pipeda
+title: Personal Information Protection and Electronic Documents Act (Canada)
+short: PIPEDA
+type: regulation
+jurisdiction: Canada (federal — private sector)
+version: S.C. 2000, c. 5 (consolidated, incl. Digital Privacy Act 2015 amendments)
+version_date: "2001-01-01"
+canonical_url: https://laws-lois.justice.gc.ca/eng/acts/p-8.6/
+matrix_language: EN
+curated: false
+
+changelog:
+  - date: "2026-05-19"
+    change: |
+      initial draft — 13 rows: 10 Schedule-1 Fair Information Principles
+      + Division 1.1 mandatory breach notification (s.10.1) + individual-
+      access procedural provision (s.11) + framing. Reactivated from
+      Phase-A.2 deferred-list per user request on 2026-05-19; the
+      original deferral rationale ("low signal; consider if a customer
+      asks") was reversed when PIPEDA coverage was explicitly requested.
+      Heavy derives_from gdpr.* + ccpa.* + swiss-nlpd.* reflects the
+      shared OECD-FIPPs lineage.
+
+requirements:
+
+  - ref: Principle.4.1
+    title: Schedule 1 — Principle 1 — Accountability
+    text: |
+      Organization is responsible for personal information under its
+      control and shall designate an individual or individuals who are
+      accountable for compliance with the following principles.
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: evidence
+    draft: true
+    pryv_primitives: [audit, access, observability-provider]
+    derives_from: [gdpr.Art.24, gdpr.Art.37, iso-27701.A.7.2.1]
+    overview: |
+      Accountable-individual
+      designation is HR / organizational. Pryv contributes the
+      substrate the designated officer uses to demonstrate compliance:
+      audit log, observability, this matrix. Equips the role; doesn't
+      replace it.
+
+  - ref: Principle.4.2
+    title: Schedule 1 — Principle 2 — Identifying Purposes
+    text: |
+      Purposes for which personal information is collected shall be
+      identified by the organization at or before the time the
+      information is collected.
+    coverage: facilitated
+    pryv_effort_saved: medium
+    facilitation_mode: storage
+    draft: true
+    pryv_primitives: [access, clientData]
+    derives_from: [gdpr.Art.5, iso-27701.A.7.2.1]
+    overview: |
+      Per-access
+      `clientData.purpose` records the identified purpose at the moment
+      the access is minted (which is "at or before the time the
+      information is collected" for the access's scope). The purpose
+      vocabulary is editorial.
+
+  - ref: Principle.4.3
+    title: Schedule 1 — Principle 3 — Consent
+    text: |
+      Knowledge and consent of the individual are required for the
+      collection, use, or disclosure of personal information, except
+      where inappropriate.
+    coverage: implemented
+    pryv_effort_saved: high
+    draft: true
+    pryv_primitives: [access, permissions, clientData, CMC, event]
+    derives_from: [gdpr.Art.7, iso-27701.A.7.2.4, ccpa.1798.120]
+    tests: [AA01, AA02, ACCP]
+    overview: |
+      Pryv's access primitive IS the durable consent record —
+      versioned permissions + clientData (carrying the consent text +
+      knowledge-of-purpose disclosure) together prove what was
+      authorised. Withdrawal is `accesses.delete` or scope-down via
+      `accesses.update`; the version chain proves the timing. CMC
+      `consent/*` events handle cross-account flows.
+
+  - ref: Principle.4.4
+    title: Schedule 1 — Principle 4 — Limiting Collection
+    text: |
+      Collection of personal information shall be limited to that which
+      is necessary for the purposes identified by the organization.
+      Information shall be collected by fair and lawful means.
+    coverage: implemented
+    pryv_effort_saved: high
+    draft: true
+    pryv_primitives: [access, permissions, stream]
+    derives_from: [gdpr.Art.5, iso-27701.A.7.4.1, ccpa.1798.140]
+    tests: [AA01, ACCP]
+    overview: |
+      Per-stream permissions limit what each access can write —
+      data outside an access's scope cannot reach Pryv via that access.
+      Stream-topology design (separating purposes onto distinct
+      subtrees) gives the granularity for "necessary for the
+      identified purposes". The fairness + lawfulness of the
+      collection method is editorial.
+
+  - ref: Principle.4.5
+    title: Schedule 1 — Principle 5 — Limiting Use, Disclosure, and Retention
+    text: |
+      Personal information shall not be used or disclosed for purposes
+      other than those for which it was collected, except with the
+      consent of the individual or as required by law. Shall be
+      retained only as long as necessary for the fulfilment of those
+      purposes.
+    coverage: configurable
+    pryv_effort_saved: medium
+    draft: true
+    pryv_primitives: [access, permissions, event, stream, backup-restore]
+    derives_from: [gdpr.Art.5, gdpr.Art.17, ccpa.1798.105, iso-27701.A.7.4.5]
+    config_keys: [storages.userAccountStorage.engine, user-account.delete]
+    tests: [AA02, ACCP, USAD]
+    overview: |
+      Limit-use enforced by permissions; limit-disclosure enforced by
+      access scope to recipient. Retention has the same
+      configurable engine-dependent erasure mechanics noted under
+      GDPR Art. 17 + HIPAA-Security §164.310(d)(1): SQLite per-user
+      file deletion vs PG row deletion + backup rotation.
+      Automatic / scheduled retention enforcement is **operator-
+      owned** (Pryv ships no TTL primitive; the operator's external
+      retention job composes `events.get toTime=<cutoff>` +
+      `events.delete` + audit-log inactivity oracle —
+      `context/data-retention-operator-owned.md`).
+
+  - ref: Principle.4.6
+    title: Schedule 1 — Principle 6 — Accuracy
+    text: |
+      Personal information shall be as accurate, complete, and
+      up-to-date as is necessary for the purposes for which it is
+      to be used.
+    coverage: implemented
+    pryv_effort_saved: high
+    draft: true
+    pryv_primitives: [event]
+    derives_from: [gdpr.Art.5, gdpr.Art.16, iso-27701.A.7.4.3]
+    functional_specs: [EVENT.BASE]
+    tests: [PTU1]
+    overview: |
+      `events.update` rectifies events with version history preserved
+      (matching GDPR Art. 16). The "necessary for the purposes"
+      determination is editorial.
+
+  - ref: Principle.4.7
+    title: Schedule 1 — Principle 7 — Safeguards
+    text: |
+      Personal information shall be protected by security safeguards
+      appropriate to the sensitivity of the information.
+    coverage: facilitated
+    pryv_effort_saved: high
+    facilitation_mode: infrastructure
+    draft: true
+    pryv_primitives: [permissions, system-streams, letsEncrypt-integration, multi-core-mTLS, encryption-at-rest-secrets, MFA, backup-restore, audit]
+    derives_from: [gdpr.Art.32, hipaa-security.164.312(a)(1), iso-27001.A.8.20]
+    planned:
+      - kind: feature
+        summary: "End-to-end encryption reframes the safeguards posture for high-sensitivity health data"
+        proposal: proposals/e2e-encryption.md
+        backlog: E2E-ENCRYPTION
+        tracking_url: https://github.com/pryv/open-pryv.io/issues/34
+        impact: low
+    overview: |
+      Multi-aspect safeguards
+      inherited from the same primitive set as GDPR Art. 32 +
+      HIPAA-Security § 164.312 + ISO 27001 A.8. The "appropriate to
+      sensitivity" judgement (which subset to enable, how strictly to
+      scope) is the operator's.
+
+  - ref: Principle.4.8
+    title: Schedule 1 — Principle 8 — Openness
+    text: |
+      Organization shall make readily available to individuals specific
+      information about its policies and practices relating to the
+      management of personal information.
+    coverage: facilitated
+    pryv_effort_saved: medium
+    facilitation_mode: storage
+    draft: true
+    pryv_primitives: [access, clientData, app-web-auth3, event]
+    derives_from: [gdpr.Art.12, gdpr.Art.13, ccpa.1798.130]
+    overview: |
+      Policy + practice text lives
+      on `access.clientData.privacy_notice` or as `consent/notice`
+      events — durably + per-subject + per-time recoverable. The
+      `app-web-auth3` template is the customer-facing surface where
+      the policy typically appears. Drafting the text is editorial.
+
+  - ref: Principle.4.9
+    title: Schedule 1 — Principle 9 — Individual Access
+    text: |
+      Upon request, an individual shall be informed of the existence,
+      use, and disclosure of their personal information and shall be
+      given access to that information. An individual shall be able
+      to challenge the accuracy and completeness of the information
+      and have it amended as appropriate.
+    coverage: implemented
+    pryv_effort_saved: high
+    draft: true
+    pryv_primitives: [access, stream, event, audit, data-types, account-backup-tool]
+    derives_from: [gdpr.Art.15, gdpr.Art.16, hipaa-privacy.164.524, ccpa.1798.100]
+    functional_specs: [EVENT.BASE, STREAM.BASE]
+    tests: [AA01, EGSQ, U9HQ, PTU1]
+    overview: |
+      Individual access is the same primitive surface as GDPR Art. 15 +
+      HIPAA-Privacy § 164.524 + CCPA § 1798.100: subject holding a
+      personal token reads events, streams, accesses (with history),
+      audit data via the standard Pryv API. Challenge-and-amend uses
+      `events.update` for amendments + the disagreement-statement-as-
+      event pattern for denied amendments.
+
+  - ref: Principle.4.10
+    title: Schedule 1 — Principle 10 — Challenging Compliance
+    text: |
+      Individual shall be able to address a challenge concerning
+      compliance with the above principles to the designated
+      individual or individuals accountable for the organization's
+      compliance.
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: storage
+    draft: true
+    pryv_primitives: [event, stream, audit]
+    derives_from: [hipaa-privacy.164.530(d)]
+    overview: |
+      Complaint-intake workflow
+      stores each challenge as an event on a designated
+      `compliance/challenges/*` stream with disposition tracking. The
+      accountable-individual interaction + resolution workflow is
+      operator-side.
+
+  - ref: s.10.1
+    title: Division 1.1 — Mandatory breach reporting (Digital Privacy Act 2015)
+    text: |
+      Organization shall report to the Privacy Commissioner any breach
+      of security safeguards involving personal information under its
+      control if it is reasonable in the circumstances to believe that
+      the breach creates a real risk of significant harm (RROSH).
+      Shall also notify affected individuals + maintain records of
+      every breach for at least 24 months.
+    coverage: facilitated
+    pryv_effort_saved: medium
+    facilitation_mode: evidence
+    draft: true
+    pryv_primitives: [audit, encryption-at-rest-secrets, access, event]
+    derives_from: [gdpr.Art.33, gdpr.Art.34, hipaa-breach.164.402, hipaa-breach.164.404, swiss-nlpd.Art.24]
+    planned:
+      - kind: feature
+        summary: "Chained audit log improves RROSH evidence chain (scoping + non-repudiation)"
+        proposal: proposals/audit-log-chaining.md
+        backlog: AUDIT-LOG-CHAINING
+        tracking_url: https://github.com/pryv/open-pryv.io/issues/74
+        impact: low
+      - kind: feature
+        summary: "bin/breach-scope.js produces the RROSH-input artefact in a single CLI call (records affected, methods invoked, streams touched)"
+        proposal: proposals/breach-scope-tool.md
+        backlog: BREACH-SCOPE-TOOL
+        tracking_url: https://github.com/pryv/open-pryv.io/issues/76
+        impact: medium
+    overview: |
+      Same primitive set as the
+      parallel breach-notification regimes (GDPR Art. 33-34,
+      HIPAA-Breach §164.402-404, Swiss nLPD Art.24): audit log scopes
+      the breach (per-subject + per-stream + per-access); operator-side
+      at-rest encryption may bear on the RROSH determination
+      (HHS-equivalent safe-harbor reasoning, though RROSH is a
+      different test). The 24-month record-retention obligation rides
+      on Pryv events on a `compliance/breaches/*` stream.
+    detail: |
+      RROSH factors include sensitivity of the PI involved + probability
+      that the PI has been / will be misused — both informed by
+      Pryv-side data (audit row method + access reference + clientData
+      categorization). The decision itself + reporting + notification
+      content + delivery are the operator's; record-keeping rides on
+      Pryv.
+
+      **Notification delivery** (s.10.1 "notify affected individuals")
+      — voluntarily missing + operator-owned at the platform layer.
+      Pryv ships the identification primitive (audit log + Q17
+      BREACH-SCOPE-TOOL); operator composes delivery via their
+      existing CRM / mail / SMS pipeline. Per-recipient send-
+      receipts captured back as
+      `compliance/breach-notification/sent-cmc` events satisfy
+      the 24-month record-retention obligation on the same Pryv
+      event chain. Full pattern in
+      `context/breach-notification-delivery-operator-owned.md`.
+
+  - ref: s.11
+    title: Right to file a complaint with the Privacy Commissioner
+    text: |
+      Individual may file with the Commissioner a written complaint
+      against an organization for contravening a provision of Division
+      1 or for not following a recommendation set out in Schedule 1.
+    coverage: out-of-scope
+    draft: true
+    overview: |
+      Complaint-to-Commissioner is the individual's procedural right;
+      no software role on the Pryv side. The organization's response
+      file (the underlying evidence) draws on the audit log + this
+      matrix.
+
+  - ref: framing
+    title: PIPEDA + provincial regimes — applicability
+    text: |
+      PIPEDA applies federally; provincial private-sector privacy acts
+      (BC PIPA, AB PIPA, Quebec Law 25) may apply in place of PIPEDA
+      to organizations operating substantially within those provinces.
+      Implementer determines which regime applies + may face multiple.
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: awareness
+    draft: true
+    pryv_primitives: [data-residency]
+    overview: |
+      Applicability is a legal
+      determination, not a software control. Pryv-side support: the
+      data-residency primitive lets you bind Canadian subjects' data
+      to a Canadian hosting (per-province granularity if multiple
+      Canadian hostings are configured), which simplifies the
+      substantially-within-province analysis. Tracking the chosen
+      regime per-deployment is operator-side.

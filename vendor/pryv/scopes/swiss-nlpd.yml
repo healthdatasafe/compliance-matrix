@@ -1,0 +1,659 @@
+id: swiss-nlpd
+title: Swiss Federal Act on Data Protection (revised FADP / nLPD)
+short: Swiss nLPD
+type: regulation
+jurisdiction: Switzerland (extraterritorial via Art. 3 for processing affecting CH)
+version: SR 235.1 (revFADP / nLPD, in force 2023-09-01)
+version_date: "2023-09-01"
+canonical_url: https://www.fedlex.admin.ch/eli/cc/2022/491/en
+matrix_language: EN
+curated: false
+
+changelog:
+  - date: "2026-05-19"
+    change: initial draft — article-level mapping. Many articles parallel GDPR; derives_from gdpr.Art.X used where the Swiss provision tracks the EU regime, with overrides where Swiss specifics diverge (Art. 24 breach timeline, Art. 5 broader sensitive-data definition, Art. 22 DPIA numbering).
+
+requirements:
+
+  - ref: Art.5
+    title: Definitions
+    text: |
+      Defines key terms, including personal data, sensitive personal data,
+      processing, controller, processor. Sensitive personal data under
+      revFADP is broader than GDPR Art. 9 — includes social-assistance
+      measures and administrative or criminal proceedings + sanctions.
+    coverage: facilitated
+    pryv_effort_saved: medium
+    facilitation_mode: primitive
+    draft: true
+    pryv_primitives: [event, stream, system-streams, clientData]
+    derives_from: [gdpr.Art.4]
+    overview: |
+      The same primitive
+      mapping that handles GDPR Art. 4 carries here (event = personal
+      data, access = consent / authorization, etc.). The Swiss-
+      specific item is the broader "sensitive personal data"
+      category: implementer responsibility to design the stream
+      layout so social-assistance / administrative-proceeding data
+      sit on streams permissioned at the heightened-protection scope
+      you apply to it.
+    detail: |
+      Practical Pryv pattern: dedicate stream subtrees per sensitive-
+      data category (e.g., `health/`, `social-assistance/`,
+      `criminal-record/`), and grant accesses with `permissions[]`
+      restricted to the smallest necessary subtree. Sensitive-data
+      classification of a category is a written editorial decision —
+      Pryv carries the classification but doesn't assign it.
+
+  - ref: Art.6
+    title: Principles of processing
+    text: |
+      Processing must be lawful, in good faith and proportionate.
+      Personal data may only be collected for a specific purpose
+      recognisable to the data subject; data accuracy must be ensured;
+      data destroyed or anonymized when no longer needed.
+    coverage: implemented
+    pryv_effort_saved: high
+    draft: true
+    pryv_primitives: [access, permissions, clientData, audit]
+    derives_from: [gdpr.Art.5]
+    tests: [GLHP, U9HQ, AA01]
+    overview: |
+      Same Pryv contributions as GDPR Art. 5: permissions enforce
+      purpose-limitation technically; audit + access versioning give
+      the accountability artefact; events.update with version history
+      addresses accuracy. The Swiss-specific "recognisability" criterion
+      (purpose recognisable to the subject at collection) maps to the
+      consent UX layer, where the purpose written into
+      `access.clientData.purpose` should be the same purpose presented
+      to the subject.
+    detail: |
+      Storage limitation: see Art.17-equivalent (GDPR Art.17 erasure;
+      revFADP Art. 32 §2 lit c on data destruction when no longer
+      needed). The configurable erasure mechanics from
+      `gdpr.Art.17` apply equivalently.
+
+  - ref: Art.7
+    title: Data protection by design and by default
+    text: |
+      Controller must, from planning through implementation, ensure
+      processing operations comply with the Act through suitable
+      technical and organisational measures; default settings must be
+      privacy-protective.
+    coverage: facilitated
+    pryv_effort_saved: high
+    facilitation_mode: infrastructure
+    draft: true
+    pryv_primitives: [access, permissions, stream, system-streams]
+    derives_from: [gdpr.Art.25]
+    overview: |
+      Pryv's architecture is
+      designed to satisfy Art. 7's "from planning through
+      implementation" directive — per-user storage isolation, stream-
+      scoped permissions, separate personal/app/shared access types,
+      system streams for privileged data, audit-by-default. What
+      stays on the implementer is the per-deployment default
+      configuration (token scopes minted, retention chosen, notice
+      shown at registration).
+
+  - ref: Art.8
+    title: Data security
+    text: |
+      Controller and processor must ensure data security through
+      appropriate technical and organisational measures. Federal Council
+      may issue minimum requirements (Ordinance on Data Protection /
+      OPDP).
+    coverage: facilitated
+    pryv_effort_saved: high
+    facilitation_mode: infrastructure
+    draft: true
+    pryv_primitives: [permissions, system-streams, letsEncrypt-integration, multi-core-mTLS, encryption-at-rest-secrets, backup-restore, MFA, data-residency]
+    derives_from: [gdpr.Art.32]
+    overview: |
+      Pryv contributes the
+      same multi-aspect technical baseline as for GDPR Art. 32: TLS
+      in transit (letsEncrypt-integration); operator-side at-rest
+      encryption; AES-256-GCM for at-rest operator secrets; stream-
+      scoped permissions; MFA; multi-core HA via rqlite;
+      `bin/backup.js` restoration. The OPDP minimum-requirements
+      detailing remains the operator's compliance verification work.
+
+  - ref: Art.19
+    title: Information duty when collecting personal data
+    text: |
+      Controller must inform the data subject of any acquisition of
+      personal data (whether from the subject or from a third party);
+      information must include controller identity, processing purpose,
+      recipients, transfer abroad.
+    coverage: facilitated
+    pryv_effort_saved: medium
+    facilitation_mode: storage
+    draft: true
+    pryv_primitives: [access, clientData, app-web-auth3, event]
+    derives_from: [gdpr.Art.13, gdpr.Art.14]
+    overview: |
+      Same mapping as GDPR
+      Art. 13/14: notice text lives in
+      `access.clientData.privacy_notice` (or a dedicated `consent/*`
+      event when CMC is in play), preserved immutably. The customer-
+      facing `app-web-auth3` template is the surface where the notice
+      is typically shown. Pryv records what you presented;
+      presentation itself is your editorial responsibility.
+    detail: |
+      revFADP Art. 19 unifies the GDPR Art. 13 (direct collection) and
+      Art. 14 (indirect collection) into a single information duty.
+      The Pryv artefact set is the same — `access.clientData` +
+      provenance metadata on event.clientData when data didn't come
+      from the subject directly.
+
+  - ref: Art.21
+    title: Automated individual decisions
+    text: |
+      Controller must inform the data subject of any decision based
+      exclusively on automated processing that has legal effect or
+      significantly affects the subject; subject has the right to
+      express their view.
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: evidence
+    draft: true
+    pryv_primitives: [audit, event, access]
+    derives_from: [gdpr.Art.22]
+    overview: |
+      Automated decisioning is the
+      implementer's application logic, not Pryv's. What Pryv
+      contributes: the audit log lets you record when automated-
+      decision processing ran and on which input data, and `events`
+      are the carrier for the subject's expressed view (e.g., a
+      `decision/objection` event on a designated stream).
+
+  - ref: Art.22
+    title: Data protection impact assessment
+    text: |
+      Controller must carry out a data protection impact assessment in
+      advance for processing that may entail a high risk to the
+      personality or fundamental rights of the data subject.
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: evidence
+    draft: true
+    pryv_primitives: [audit, data-residency, access]
+    derives_from: [gdpr.Art.35]
+    overview: |
+      The DPIA itself is a written
+      assessment artefact that you (the controller) produce. Pryv
+      contributes to its inputs: the data-residency primitive tells
+      you where each subject's data lives; audit + access-version
+      data describe the processing-flow technical layer with concrete
+      artefacts; system-streams isolation gives a defensible "scope
+      of sensitive data" boundary. The legal-side methodology + the
+      writing of the assessment remain yours.
+
+  - ref: Art.24
+    title: Notification of data security breaches
+    text: |
+      Controller must notify the Federal Data Protection and Information
+      Commissioner (FDPIC) of a data security breach that is likely to
+      result in a high risk to the personality or fundamental rights of
+      the data subject as soon as possible. Notification to the affected
+      subject only when necessary for their protection or upon FDPIC
+      request.
+    coverage: facilitated
+    pryv_effort_saved: medium
+    facilitation_mode: evidence
+    draft: true
+    pryv_primitives: [audit, encryption-at-rest-secrets, access]
+    derives_from: [gdpr.Art.33]
+    planned:
+      - kind: feature
+        summary: "bin/breach-scope.js inherits from gdpr.Art.33 — same scoping artefact serves the FDPIC 'as soon as possible' regime"
+        proposal: proposals/breach-scope-tool.md
+        backlog: BREACH-SCOPE-TOOL
+        tracking_url: https://github.com/pryv/open-pryv.io/issues/76
+        impact: medium
+    overview: |
+      Same Pryv contribution as
+      GDPR Art. 33: audit data + access-version chain let you scope
+      the breach (which subjects, which streams, by which access).
+      The Swiss-specific point: revFADP Art. 24 says "as soon as
+      possible" rather than GDPR's 72-hour hard cap — but the FDPIC
+      2025-02-06 guideline still expects "immediately" for high-risk
+      breaches. Plan your incident-response cadence to match either
+      regime if you face both.
+    detail: |
+      The downstream subject-notification trigger differs from GDPR
+      (revFADP Art. 24 makes it more conditional). Your incident-
+      response decision matrix should encode: "high risk to subject?
+      → notify FDPIC immediately + assess whether subject notification
+      necessary for their protection". Pryv data feeds both the risk
+      assessment (audit scope of access) and the safe-harbor
+      determination (was the leaked artefact encrypted at rest?).
+
+  - ref: Art.25
+    title: Right to information (data subject access)
+    text: |
+      Any person may request information from the controller as to
+      whether personal data concerning them are being processed.
+      Controller must provide the information necessary to enable the
+      subject to assert their rights, including processing purpose,
+      categories, recipients, retention, source, automated decisions.
+    coverage: implemented
+    pryv_effort_saved: high
+    draft: true
+    pryv_primitives: [access, stream, event, audit, data-types, account-backup-tool]
+    derives_from: [gdpr.Art.15]
+    functional_specs: [EVENT.BASE, STREAM.BASE]
+    tests: [AA01, EGSQ, U9HQ]
+    overview: |
+      Same implementation as GDPR Art. 15: subject holding a personal
+      token reads everything via the standard Pryv API (events, streams,
+      accesses with history, audit, attachments) in the canonical
+      data-types JSON shape. revFADP Art. 25 §2 lists an extended
+      minimum-information set (purpose, categories, recipients,
+      retention, source, automated decisions) — same artefacts as
+      GDPR + a Swiss-specific "source" duty that maps to
+      `event.clientData.source` when data wasn't from the subject
+      directly.
+
+  - ref: Art.28
+    title: Right to data portability
+    text: |
+      Data subject has the right to receive personal data concerning
+      them, which the subject has communicated to the controller, in a
+      commonly used electronic format. Right to transmit to another
+      controller where feasible.
+    coverage: implemented
+    pryv_effort_saved: high
+    draft: true
+    pryv_primitives: [event, stream, data-types, CMC]
+    derives_from: [gdpr.Art.20]
+    functional_specs: [EVENT.BASE, STREAM.BASE]
+    tests: [EGSQ]
+    overview: |
+      Same implementation as GDPR Art. 20: `events.get` + `streams.get`
+      return canonical JSON validated against `data-types` schemas.
+      For controller-to-controller transmission (§2), the CMC capability-
+      access flow mints a URL the receiving controller can read; no
+      operational lift on the subject's side.
+
+  - ref: Art.31
+    title: Justification for processing sensitive personal data
+    text: |
+      Processing of sensitive personal data without consent requires an
+      overriding private or public interest. Specific grounds are
+      enumerated (medical care, social-assistance, statistics under
+      conditions, etc.).
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: storage
+    draft: true
+    pryv_primitives: [access, clientData, audit]
+    derives_from: [gdpr.Art.9]
+    overview: |
+      Same approach as GDPR Art. 9:
+      legal-ground determination is your programmatic decision; Pryv
+      preserves the cited ground per access in
+      `access.clientData.legal_ground` so the justification travels
+      with the technical authorization and lives in the audit trail.
+      The Swiss-specific enumeration (Art. 31 §2 list) drives the
+      vocabulary your implementer uses for the `legal_ground` values.
+
+  - ref: Art.32
+    title: Communicating personal data — general rules
+    text: |
+      Controller must take appropriate measures to ensure personal data
+      remain accurate; subject may request rectification, erasure, or
+      destruction of inaccurate personal data.
+    coverage: implemented
+    pryv_effort_saved: high
+    draft: true
+    pryv_primitives: [event, stream, backup-restore]
+    derives_from: [gdpr.Art.16, gdpr.Art.17]
+    config_keys: [storages.userAccountStorage.engine, user-account.delete]
+    tests: [PTU1, USAD]
+    overview: |
+      Rectification and erasure: same mapping as GDPR Art. 16 + 17.
+      `events.update` for rectification (with version preservation);
+      `system.users.delete` for erasure (with the same engine-dependent
+      backup semantics noted under GDPR Art. 17).
+
+  - ref: Art.34
+    title: Disclosure of personal data abroad
+    text: |
+      Personal data may be disclosed abroad only if the receiving
+      country guarantees adequate data protection or, in defined cases,
+      with appropriate safeguards (BCRs, standard contractual clauses,
+      Federal Council approval).
+    coverage: configurable
+    pryv_effort_saved: high
+    draft: true
+    pryv_primitives: [data-residency, CMC]
+    derives_from: [gdpr.Art.44, gdpr.Art.46]
+    config_keys: [auth.hostings]
+    tests: [BUNDLEENC, ACMEINT]
+    overview: |
+      The `data-residency` primitive is the technical control here:
+      bind each subject's data to a hosting whose jurisdiction matches
+      your transfer regime. For CH data, route subjects to a CH
+      hosting and Art. 34 is moot (no disclosure abroad). For
+      legitimate transfers (e.g., CH → EU with adequacy + appropriate
+      safeguards), the per-user `hosting` field exposes which
+      jurisdiction the data sits in, recoverable for audit.
+    detail: |
+      Cross-account / CMC disclosures across hostings inherit the
+      same control: the counterparty access's `apiEndpoint` reveals
+      which hosting (= jurisdiction) the receiving deployment lives
+      in; document the legal basis (adequacy decision, BCRs, etc.) on
+      the originating access's `clientData.cross_border_basis`.
+
+      **Residency guarantee level**: core-level, enforced by
+      architecture (see `context/core-affinity-architecture.md`).
+      Cores share no event / stream / audit data; the data plane is
+      core-affine + the client ↔ core path is direct over TLS with
+      no Pryv-shipped intermediary. A CH-assigned subject's data
+      lives exclusively on the CH core. The CMC-counterparty
+      pattern is the one runtime case where a cross-jurisdiction
+      read can happen (a foreign counterparty's client connects to
+      the CH `apiEndpoint`), and that's the moment the implementer
+      records the Art.34 legal basis on the access.
+
+  - ref: Art.35
+    title: Disclosure of personal data abroad — particular cases
+    text: |
+      Disclosure abroad without adequate protection requires one of
+      defined exceptions (subject consent, contract performance,
+      overriding interests, etc.).
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: storage
+    draft: true
+    pryv_primitives: [access, clientData, data-residency]
+    derives_from: [gdpr.Art.49]
+    overview: |
+      Exception-based transfers
+      require recording the legal basis. Pryv pattern: the access
+      authorising the disclosure carries the exception type in
+      `clientData.transfer_exception` (e.g., `"art_35_consent"`,
+      `"art_35_contract"`); the audit row at disclosure time anchors
+      the exception to the specific event(s) transferred.
+
+  - ref: Art.2
+    title: Material scope
+    text: |
+      revFADP applies to the processing of personal data concerning
+      natural persons by private persons and federal bodies. Does not
+      apply to natural persons processing personal data for purely
+      personal use, parliamentary proceedings, pending judicial /
+      administrative procedures.
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: awareness
+    draft: true
+    pryv_primitives: [access, event, audit]
+    derives_from: [gdpr.Art.2]
+    overview: |
+      Your Pryv deployment is
+      fully in scope as automated processing of personal data. The
+      "purely personal use" exception (§2 §1 lit a) doesn't reach a
+      hosted Pryv deployment where you act as operator / controller
+      for others.
+
+  - ref: Art.3
+    title: Territorial scope
+    text: |
+      revFADP applies to facts that have an effect in Switzerland,
+      even if initiated abroad.
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: infrastructure
+    draft: true
+    pryv_primitives: [data-residency]
+    derives_from: [gdpr.Art.3]
+    overview: |
+      Whether revFADP applies
+      depends on whether processing affects CH data subjects, not on
+      where infrastructure lives. Pryv's data-residency primitive lets
+      you bind subjects to CH hostings explicitly when CH jurisdiction
+      is the chosen regime — see Art. 34 for the cross-border transfer
+      side.
+
+  - ref: Art.16
+    title: Disclosure of personal data abroad — principles (cross-link)
+    text: |
+      Personal data may be disclosed abroad only where the Federal
+      Council has determined adequate protection or appropriate
+      safeguards are in place; see Art. 34 for the operative framework.
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: awareness
+    draft: true
+    pryv_primitives: [data-residency]
+    derives_from: [swiss-nlpd.Art.34, gdpr.Art.44]
+    overview: |
+      Framing row pointing at
+      Art. 34 for the operative Pryv mapping and at GDPR Chapter V
+      (Art. 44-50) for the parallel EU regime.
+
+  - ref: Art.30
+    title: Justification of breaches of privacy
+    text: |
+      Personal-data processing that breaches privacy is unlawful unless
+      justified by consent, overriding private or public interest, or
+      law.
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: storage
+    draft: true
+    pryv_primitives: [access, clientData]
+    derives_from: [gdpr.Art.6]
+    overview: |
+      Same pattern as GDPR Art. 6 —
+      justification basis is recorded on the access's
+      `clientData.legal_basis` (Swiss-specific vocabulary drawn from
+      Art. 30 §2 list). Determination of which basis applies is your
+      editorial / legal judgement.
+
+  - ref: Art.4
+    title: Federal Data Protection and Information Commissioner (FDPIC)
+    text: |
+      The FDPIC supervises the application of data-protection
+      legislation by federal bodies and private persons; advises
+      authorities and private persons; investigates breaches +
+      makes recommendations + orders.
+    coverage: out-of-scope
+    draft: true
+    overview: |
+      The FDPIC is a regulator; no software role. When an FDPIC
+      investigation involves a Pryv deployment, the audit log +
+      access-version chain are the evidence layer the controller
+      provides — but interaction with the FDPIC is the controller's
+      legal / regulatory process.
+
+  - ref: Art.23
+    title: Privacy by default
+    text: |
+      Controller shall, by default, ensure that personal-data processing
+      is limited to the minimum required to fulfil the purpose, in
+      particular through appropriate technical settings.
+    coverage: facilitated
+    pryv_effort_saved: medium
+    facilitation_mode: primitive
+    draft: true
+    pryv_primitives: [access, permissions, stream, system-streams]
+    derives_from: [gdpr.Art.25, swiss-nlpd.Art.7]
+    overview: |
+      Pryv defaults lean privacy-
+      protective by construction: smallest-permission default is
+      "none"; system streams isolate privileged data; per-user storage
+      isolates subjects. The operator's deployment-time choices
+      (token-scope defaults, retention policy, MFA-on) determine
+      whether the by-default posture is fully exercised.
+
+  - ref: Art.26
+    title: Restriction of the right to information
+    text: |
+      Right to information under Art. 25 may be restricted, refused or
+      deferred where a law so provides, where overriding interests of
+      a third party require it, or where the request is manifestly
+      unfounded.
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: storage
+    draft: true
+    pryv_primitives: [access, clientData, audit]
+    derives_from: [swiss-nlpd.Art.25, gdpr.Art.15]
+    overview: |
+      When a controller invokes
+      Art. 26 to restrict / refuse / defer a DSAR, the rationale is
+      recorded as a `dsar/restricted` event on a designated stream
+      with `clientData.art26_basis` capturing the §1 letter (a / b /
+      c). Audit log anchors the decision in time. Whether a given
+      restriction is justified is the controller's legal judgement.
+
+  - ref: Art.33
+    title: Cross-border international cooperation
+    text: |
+      Federal Council may conclude international treaties on the
+      cross-border exchange of personal data, including treaties on
+      mutual data-protection cooperation.
+    coverage: out-of-scope
+    draft: true
+    overview: |
+      Treaty-level activity. No software role; no implementer
+      obligation arises from this Article alone.
+
+  - ref: Art.9
+    title: Processing by a processor
+    text: |
+      Controller may entrust processing to a processor only if the
+      processor undertakes to process personal data only as instructed,
+      ensures equivalent data security, and obtains controller approval
+      for any sub-processor engagement.
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: storage
+    draft: true
+    pryv_primitives: [access, clientData, audit, encryption-at-rest-secrets]
+    derives_from: [gdpr.Art.28]
+    overview: |
+      Same pattern as GDPR Art. 28:
+      when the Pryv operator is a processor distinct from the
+      controller, the DPA + sub-processor list are the operator's
+      contractual artefacts. Pryv's audit log enforces "only as
+      instructed" demonstrability; the observability-provider
+      primitive is the sole built-in subprocessor candidate (default
+      disabled).
+
+  - ref: Art.12
+    title: Register of processing activities
+    text: |
+      Each controller + processor shall maintain a register of
+      processing activities (exceptions for SMEs whose processing
+      poses low risk). Register content parallels GDPR Art. 30.
+    coverage: implemented
+    pryv_effort_saved: high
+    draft: true
+    pryv_primitives: [access, clientData, audit, CMC, data-residency]
+    derives_from: [gdpr.Art.30]
+    docs: [customer-resources/audit-setup.md, guides/audit-logs.md]
+    tests: [U9HQ, QXCH, AA01]
+    overview: |
+      Same primitive-set mapping as GDPR Art. 30: access + clientData
+      + audit + CMC + data-residency form the technical register
+      substrate. Swiss-specific note: the SME exception (Ordinance on
+      Data Protection) drops register obligation for companies < 250
+      personnel processing low-risk data. The register substrate is
+      available regardless; whether it's required is operator-side
+      legal judgement.
+
+  - ref: Art.17
+    title: Exceptions to the duty to inform
+    text: |
+      Information duty under Art. 19 may be waived where the data
+      subject already has the information, the processing is
+      provided for by law, the controller is bound by professional
+      secrecy, or providing information would be disproportionate.
+    coverage: out-of-scope
+    draft: true
+    derives_from: [swiss-nlpd.Art.19]
+    overview: |
+      Exception-applicability is the controller's legal judgement; no
+      software role. Where the exception applies, the controller's
+      reasoning is documentable in `account.clientData.art17_basis`
+      for auditor questions.
+
+  - ref: Art.18
+    title: Information when collecting personal data — specific cases
+    text: |
+      In addition to Art. 19 baseline, controller shall provide
+      additional information when transferring abroad, when processing
+      involves automated decision-making, and in cases involving
+      sensitive personal data.
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: storage
+    draft: true
+    pryv_primitives: [access, clientData]
+    derives_from: [swiss-nlpd.Art.19, swiss-nlpd.Art.21, swiss-nlpd.Art.34]
+    overview: |
+      Additional disclosures are
+      stored alongside the baseline notice in
+      `access.clientData.privacy_notice` (or as additional
+      `consent/notice` events for clarity). The cross-border transfer
+      element ties to Art. 34; automated-decision element ties to
+      Art. 21.
+
+  - ref: Art.11
+    title: Codes of conduct
+    text: |
+      Professional, sector or trade associations may submit codes of
+      conduct to the FDPIC; the FDPIC takes a position on the code.
+    coverage: out-of-scope
+    draft: true
+    derives_from: [gdpr.Art.40]
+    overview: |
+      Sector-level instrument; see GDPR Art. 40 for parallel framing.
+      Adherence is recorded as one of the Art. 8 "appropriate
+      measures" indicators on the deployment.
+
+  - ref: Art.14
+    title: Representative in Switzerland
+    text: |
+      A controller established abroad whose processing concerns
+      persons in Switzerland on a large scale + regularly + with high
+      risk shall designate a representative in Switzerland.
+    coverage: out-of-scope
+    draft: true
+    overview: |
+      Representative designation is a contractual / regulatory
+      registration step for non-Swiss controllers; no software role.
+
+  - ref: Art.15
+    title: Duty of the processor to inform the controller
+    text: |
+      Processor shall inform the controller of all data security
+      breaches without delay; cooperate with the controller in
+      fulfilling obligations toward data subjects.
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: evidence
+    draft: true
+    pryv_primitives: [audit, CMC, observability-provider]
+    derives_from: [gdpr.Art.28, gdpr.Art.33]
+    overview: |
+      When Pryv operator acts as
+      processor, the breach-notification channel to the controller is
+      the operator's contractual commitment. Pryv's audit +
+      observability + access primitives give the operator the scoping
+      data needed for the notification; CMC's cross-platform messaging
+      is a structured channel when both sides run Pryv.
+
+  - ref: Art.29
+    title: Information from official registers
+    text: |
+      Anyone may obtain information from official registers on the
+      conditions provided for in special legislation.
+    coverage: out-of-scope
+    draft: true
+    overview: |
+      Public-register access is regulatory framing; no software role.

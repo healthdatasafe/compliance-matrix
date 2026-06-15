@@ -1,0 +1,272 @@
+id: iso-13485
+title: ISO 13485 — Medical devices — Quality Management Systems — Requirements for regulatory purposes
+short: ISO 13485
+type: standard
+jurisdiction: International (ISO)
+version: ISO 13485:2016 (Amd 1:2021)
+version_date: "2016-03-01"
+canonical_url: https://www.iso.org/standard/59752
+matrix_language: EN
+curated: true
+
+changelog:
+  - date: "2026-05-19"
+    change: |
+      initial draft — first curated scope. ISO 13485 is an organizational
+      QMS standard; only clauses where Pryv-the-software contributes
+      directly are authored. The bulk of the standard (organizational
+      processes, design controls, sterilization, production process
+      control, etc.) is enumerated in excluded_items[] with one-line
+      rationale per excluded clause — audit-traceability preserved.
+
+excluded_items:
+  - ref: "4.1.1"
+    reason: |
+      Top-management QMS scope + boundary definition — organizational.
+      Pryv has no software role at the scope-setting layer.
+  - ref: "4.1.3"
+    reason: |
+      QMS process documentation requirements (sequence, interactions,
+      criteria, methods) — organizational, drafted by the device
+      manufacturer.
+  - ref: "5"
+    reason: |
+      Management responsibility (commitment, customer focus, quality
+      policy, planning, responsibility + authority, communication,
+      management review) — entirely organizational.
+  - ref: "6"
+    reason: |
+      Resource management (provision, human resources, infrastructure,
+      work environment, contamination control) — physical / HR /
+      facility scope, outside Pryv's software boundary.
+  - ref: "7.4"
+    reason: |
+      Purchasing process (controls on suppliers + purchased product) —
+      organizational. Pryv may be a purchased component but the
+      manufacturer's purchasing controls are not Pryv-side.
+  - ref: "7.5"
+    reason: |
+      Production and service provision (control, cleanliness, installation
+      activities, servicing, particular requirements for sterile devices,
+      labelling, etc.) — physical / process scope.
+  - ref: "8.2.6"
+    reason: |
+      Monitoring and measurement of product (release activities, identity
+      check, status, records) — physical inspection scope.
+  - ref: "8.3"
+    reason: |
+      Control of nonconforming product — process scope; Pryv's audit log
+      may document data anomalies but the nonconforming-product control
+      itself is the manufacturer's CAPA process.
+
+requirements:
+
+  - ref: "4.1.6"
+    title: Validation of software applications used in the QMS
+    text: |
+      Organization shall document procedures for validation of the
+      application of computer software used in the quality management
+      system. Such software shall be validated prior to initial use,
+      after changes, as appropriate.
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: evidence
+    draft: true
+    pryv_primitives: [audit]
+    overview: |
+      When the manufacturer's QMS
+      uses Pryv as one of its computer applications (e.g., storing
+      CAPA records as events, design files as attachments, training
+      records as stream content), 4.1.6 requires validation evidence.
+      Pryv-side artefacts that feed validation: test matrix results,
+      audit log (proves the software's behaviour matches expectation
+      under real usage), CHANGELOG-v2 per release. The validation
+      methodology + acceptance criteria are the manufacturer's.
+
+  - ref: "4.2.4"
+    title: Control of documents
+    text: |
+      Documents required by the QMS shall be controlled — review,
+      approval, identification of changes, current revision status,
+      legibility, identification of external-origin documents,
+      prevention of obsolete-document misuse.
+    coverage: facilitated
+    pryv_effort_saved: medium
+    facilitation_mode: storage
+    draft: true
+    pryv_primitives: [event, stream, audit]
+    overview: |
+      Pryv as a document-control
+      surface: events on a designated `qms-docs/*` stream tree carry
+      the document content (or a reference to it); event versioning
+      preserves change history; audit log tracks who-accessed-what
+      for the "prevention of obsolete-document misuse" element. The
+      manufacturer's approval-workflow / review-cadence procedure
+      sits on top.
+
+  - ref: "4.2.5"
+    title: Control of records
+    text: |
+      Records shall be established and maintained to provide evidence of
+      conformity to requirements and effective operation of the QMS;
+      shall remain legible, readily identifiable + retrievable.
+    coverage: implemented
+    pryv_effort_saved: high
+    draft: true
+    pryv_primitives: [event, audit, backup-restore]
+    tests: [AT01, AT51, U9HQ]
+    overview: |
+      QMS records stored as Pryv events get legibility (canonical
+      data-types schemas), retrievability (events.get with timestamp +
+      stream filters), and durability (backup-restore + audit
+      attestation of changes). The manufacturer's retention period +
+      record-classification design are the policy half.
+
+  - ref: "7.3.7"
+    title: Design verification
+    text: |
+      Design and development verification shall be performed to ensure
+      design + development outputs have met the design + development
+      input requirements; records of verification + actions shall be
+      maintained.
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: storage
+    draft: true
+    pryv_primitives: [event, audit]
+    overview: |
+      When the device under
+      development uses Pryv as backend, the verification activity
+      ("output meets input") generates verification records — these
+      can be stored as Pryv events on a designated
+      `design-verification/*` stream with attachments for reports.
+      Audit log provides the timestamp + actor evidence the record
+      was actually produced when claimed.
+
+  - ref: "7.3.8"
+    title: Design validation
+    text: |
+      Design and development validation shall be performed to ensure
+      product is capable of meeting requirements for specified
+      application or intended use; records of validation + actions
+      shall be maintained.
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: storage
+    draft: true
+    pryv_primitives: [event, audit]
+    derives_from: [mdr.Art.61]
+    overview: |
+      Same Pryv contribution as
+      7.3.7 — validation records stored as events with attachments;
+      audit chain proves authenticity over time. Clinical validation
+      (the typical method for medical-device design validation)
+      cross-references the MDR Art. 61 clinical-evaluation row.
+
+  - ref: "8.2.1"
+    title: Customer feedback
+    text: |
+      Organization shall document procedures for feedback process,
+      including provision for collecting + monitoring information from
+      production + post-production phases; feedback shall be used to
+      identify input to risk management + maintain product requirements.
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: evidence
+    draft: true
+    pryv_primitives: [event, audit, observability-provider]
+    derives_from: [mdr.Art.83]
+    overview: |
+      Customer-feedback data
+      sources: events written from the device itself ("post-market
+      reports"), observability data ("how is the system performing
+      in the field"), audit data ("what activity patterns are users
+      showing"). Pryv hosts and audit-trails these data flows; the
+      manufacturer's feedback-processing procedure analyses them and
+      feeds back into design + risk management.
+
+  - ref: "8.5"
+    title: Improvement
+    text: |
+      Organization shall identify and implement any changes necessary
+      to ensure + maintain continued suitability + adequacy + effectiveness
+      of the QMS; corrective + preventive action shall be documented.
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: storage
+    draft: true
+    pryv_primitives: [event, audit]
+    overview: |
+      CAPA records stored as Pryv
+      events with attachments; audit chain provides the tamper-
+      evidence layer. The corrective + preventive action workflow
+      itself (root-cause analysis, effectiveness check, verification)
+      is the manufacturer's process. Pryv carries the records.
+
+  - ref: "7.3.10"
+    title: Design and development files
+    text: |
+      Organization shall maintain a design and development file for
+      each medical device type. The file shall include or reference
+      records generated to demonstrate conformity to the requirements
+      for design and development and records for design and development
+      changes.
+    coverage: facilitated
+    pryv_effort_saved: medium
+    facilitation_mode: storage
+    draft: true
+    pryv_primitives: [event, stream, audit, backup-restore]
+    derives_from: [iso-13485.4.2.5, mdr.Art.10]
+    overview: |
+      The design history file
+      (DHF in FDA QSR terms) is a curated set of records spanning a
+      device's design lifetime. Pryv supports it by storing each
+      design record as an event on a designated
+      `design-history/<device-id>/*` stream, with event versioning
+      for change traceability + audit log for tamper evidence +
+      backup-restore for retention. The curation methodology (what's
+      "in" the file vs ambient project history) is the manufacturer's
+      editorial decision.
+
+  - ref: "8.2.3"
+    title: Reporting to regulatory authorities
+    text: |
+      Where applicable regulatory requirements require notification of
+      complaints that meet specified reporting criteria of adverse
+      events or issuance of advisory notices, the organization shall
+      document such reporting.
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: evidence
+    draft: true
+    pryv_primitives: [event, audit, CMC]
+    derives_from: [mdr.Art.87]
+    overview: |
+      Adverse-event reporting
+      decisions + the actual reports are manufacturer-side (per MDR
+      Art. 87 timelines for EU; equivalent timelines for FDA / other
+      regulators). Pryv contribution: the events the report cites
+      live on Pryv with their original timestamps + access provenance
+      + audit trail; CMC plugin (if both parties run Pryv) supports
+      a structured manufacturer-to-authority handshake.
+
+  - ref: "8.4"
+    title: Analysis of data
+    text: |
+      Organization shall document procedures to determine, collect and
+      analyze appropriate data to demonstrate the suitability and
+      effectiveness of the QMS; analysis shall provide information
+      relating to feedback, conformity to product requirements,
+      characteristics + trends, suppliers, audits, service reports.
+    coverage: facilitated
+    pryv_effort_saved: medium
+    facilitation_mode: evidence
+    draft: true
+    pryv_primitives: [audit, event, observability-provider]
+    overview: |
+      Pryv supplies the data
+      sources: audit log (per-method usage patterns), events on
+      customer-feedback streams (per §8.2.1), observability metrics
+      (system trend data). The analysis methodology + the resulting
+      suitability-of-QMS conclusions are management-review artefacts
+      produced by the manufacturer.

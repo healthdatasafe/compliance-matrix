@@ -1,0 +1,428 @@
+id: ccpa
+title: California Consumer Privacy Act (as amended by CPRA)
+short: CCPA / CPRA
+type: regulation
+jurisdiction: US — California (extraterritorial via business-nexus thresholds)
+version: Cal. Civ. Code §§ 1798.100 - 1798.199.100 (CPRA amendments operative)
+version_date: "2023-01-01"
+canonical_url: https://leginfo.legislature.ca.gov/faces/codes_displayText.xhtml?division=3.&part=4.&lawCode=CIV&title=1.81.5
+matrix_language: EN
+curated: false
+
+changelog:
+  - date: "2026-05-19"
+    change: initial draft — section-level mapping. Heavy derives_from gdpr.Art.X where rights parallel; California-specific items (sale/sharing definition, opt-out of cross-context advertising, civil action statutory damages) get dedicated detail.
+
+requirements:
+
+  - ref: "1798.100"
+    title: Right to know what personal information is collected
+    text: |
+      Consumer has the right to request that a business that collects
+      personal information about the consumer disclose the categories,
+      sources, business / commercial purposes, and specific pieces
+      collected.
+    coverage: implemented
+    pryv_effort_saved: high
+    draft: true
+    pryv_primitives: [access, stream, event, audit, data-types]
+    derives_from: [gdpr.Art.15]
+    functional_specs: [EVENT.BASE, STREAM.BASE]
+    tests: [AA01, EGSQ, U9HQ]
+    overview: |
+      Same Pryv mechanism as GDPR Art. 15: the consumer holding a
+      personal token reads events, streams, accesses, audit data via
+      the standard API. Categories + sources are encoded in the event
+      class/format (data-types) and event.clientData.source.
+      Business / commercial purpose is encoded in
+      `access.clientData.purpose` per access.
+
+  - ref: "1798.105"
+    title: Right to delete personal information
+    text: |
+      Consumer has the right to request deletion of personal information
+      collected from the consumer; with statutory exceptions (Section
+      1798.105(d)).
+    coverage: configurable
+    pryv_effort_saved: medium
+    draft: true
+    pryv_primitives: [event, stream, backup-restore]
+    derives_from: [gdpr.Art.17]
+    config_keys: [storages.userAccountStorage.engine, user-account.delete]
+    tests: [USAD]
+    overview: |
+      Same primitive as GDPR Art. 17: `system.users.delete` is the
+      per-consumer erasure call. Backup-completeness of the deletion
+      depends on the chosen storage engine (SQLite per-user file vs
+      PG row deletion) — same notes as gdpr.Art.17 apply. The
+      §1798.105(d) statutory exceptions (warranty, security, legal
+      compliance, etc.) are your programmatic determination; if an
+      exception applies you suppress the deletion and document why.
+
+  - ref: "1798.106"
+    title: Right to correct inaccurate personal information
+    text: |
+      Consumer has the right to request that a business correct
+      inaccurate personal information.
+    coverage: implemented
+    pryv_effort_saved: high
+    draft: true
+    pryv_primitives: [event]
+    derives_from: [gdpr.Art.16]
+    functional_specs: [EVENT.BASE]
+    tests: [PTU1]
+    overview: |
+      `events.update` is the correction primitive; event versioning
+      preserves the prior (inaccurate) value for traceability. The
+      §1798.106 process (consumer request → reasonable efforts →
+      action) is yours to run; the technical correction + history is
+      shipped.
+
+  - ref: "1798.110"
+    title: Right to know — categories and specific pieces
+    text: |
+      Consumer has the right to request specific categories of personal
+      information and the specific pieces of personal information the
+      business has collected about the consumer.
+    coverage: implemented
+    pryv_effort_saved: high
+    draft: true
+    pryv_primitives: [event, stream, data-types, account-backup-tool]
+    derives_from: [gdpr.Art.15]
+    functional_specs: [EVENT.BASE, STREAM.BASE]
+    tests: [EGSQ, U9HQ]
+    overview: |
+      Categories surface from the canonical event-type schemas
+      (`event.type` = `<class>/<format>`); specific pieces are the
+      events themselves. A consumer-portal app wrapping
+      `events.get`+`streams.get` delivers both in one response.
+
+  - ref: "1798.115"
+    title: Right to know about sale or sharing
+    text: |
+      Consumer has the right to know whether personal information was
+      sold or shared, the categories sold or shared, and the categories
+      of third parties to whom it was sold or shared.
+    coverage: facilitated
+    pryv_effort_saved: medium
+    facilitation_mode: storage
+    draft: true
+    pryv_primitives: [access, clientData, audit, CMC]
+    overview: |
+      Every "sale" or "sharing"
+      you do — in CCPA's broad sense, which includes cross-context
+      behavioural advertising — happens through a Pryv access granted
+      to the recipient. The access's `clientData` can carry the
+      §1798.115 classification (sale vs share, category of third
+      party); audit records anchor the transaction in time. What's
+      not the software's job: deciding when a use qualifies as "sale"
+      or "sharing" under the CCPA definition (Civ. Code §1798.140(ad)
+      +(ah)) — that's a contractual / classification decision you
+      record on the access.
+    detail: |
+      Pattern: when minting an access for a counterparty:
+      `access.clientData = {`
+      `  type: "share",          // or "sale", per §1798.140`
+      `  third_party_category: "ad_partner",`
+      `  contract_id: "..."`
+      `}`
+      The consumer-side §1798.115 response then queries
+      `accesses.get ?includeHistory=true` filtered on
+      `clientData.type ∈ {sale, share}` and surfaces the third-party
+      categories.
+
+  - ref: "1798.120"
+    title: Right to opt out of sale or sharing
+    text: |
+      Consumer has the right, at any time, to direct a business that
+      sells or shares personal information about the consumer to third
+      parties not to do so.
+    coverage: configurable
+    pryv_effort_saved: medium
+    draft: true
+    pryv_primitives: [access, permissions, clientData, audit]
+    derives_from: [gdpr.Art.21]
+    config_keys: [access.permissions]
+    tests: [AA02, ACCP]
+    overview: |
+      Opt-out is implemented by revoking or narrowing the access
+      powering the sale/share — `accesses.delete` for full opt-out,
+      `accesses.update` for narrowing — both versioned and audit-
+      anchored. A `consent/opt-out-sale-cmc` event (or custom
+      `optout/*` event) gives the consumer-side artefact alongside
+      the technical effect.
+    detail: |
+      Honoring Global Privacy Control signals (which CPPA regulations
+      require treating as a §1798.120 opt-out request) is your
+      application-layer responsibility — detect the GPC header on the
+      consumer's browser session and trigger the access revoke flow
+      automatically. Pryv has no opinion on the signal source.
+
+  - ref: "1798.121"
+    title: Right to limit use of sensitive personal information
+    text: |
+      Consumer has the right to direct a business that collects
+      sensitive personal information to limit its use to what is
+      necessary to perform the services or provide the goods
+      reasonably expected (with statutory exceptions in CPPA
+      regulations).
+    coverage: configurable
+    pryv_effort_saved: medium
+    draft: true
+    pryv_primitives: [access, permissions, stream]
+    derives_from: [gdpr.Art.18]
+    config_keys: [access.permissions]
+    tests: [AA02, ACCP]
+    overview: |
+      The limit-use directive is operationalized by narrowing the
+      relevant accesses' `permissions[]` to the minimum-necessary
+      streams. The "reasonably expected use" classification is your
+      programmatic decision; the technical control is the access
+      mutation. Sensitive personal information (per §1798.140(ae))
+      can be segregated onto designated streams up front so the
+      narrowing operation is a known-shape transformation.
+
+  - ref: "1798.125"
+    title: Non-discrimination
+    text: |
+      Business shall not discriminate against a consumer because the
+      consumer exercised any rights under CCPA.
+    coverage: out-of-scope
+    draft: true
+    overview: |
+      Non-discrimination is a business-policy commitment — pricing,
+      service levels, marketing eligibility — not a software control.
+      Pryv has no role in pricing or product gating; if your app
+      enforces tier-based feature access, the non-discrimination
+      analysis happens at your app's pricing-policy layer.
+
+  - ref: "1798.130"
+    title: Notice and response procedures
+    text: |
+      Business must provide notice of categories of PI collected,
+      purposes, sources; respond to verifiable consumer requests within
+      45 days (one extension permitted, 90 day total max).
+    coverage: facilitated
+    pryv_effort_saved: medium
+    facilitation_mode: storage
+    draft: true
+    pryv_primitives: [access, clientData, app-web-auth3, event]
+    derives_from: [gdpr.Art.12]
+    overview: |
+      Notice text lives on
+      `access.clientData.privacy_notice` or on a dedicated
+      `consent/notice` event — preserved per consumer per time,
+      recoverable later. The 45-day response window is your
+      operational target. Pryv's read APIs respond in milliseconds,
+      so the rate-limit on the response is your fulfilment workflow,
+      not a software latency.
+
+  - ref: "1798.135"
+    title: Methods for opt-out
+    text: |
+      Business must provide a clear "Do Not Sell or Share My Personal
+      Information" link / mechanism; CPRA additionally requires
+      honoring opt-out preference signals (Global Privacy Control).
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: awareness
+    draft: true
+    pryv_primitives: [access, clientData]
+    overview: |
+      The opt-out UI surface is
+      your app — a CCPA-required link or an automated GPC-signal
+      handler. When the opt-out is exercised, the Pryv mechanism is
+      the access revoke / narrow flow from §1798.120. Implementer's
+      job: detect the opt-out, call the Pryv revoke flow, surface
+      confirmation.
+
+  - ref: "1798.140"
+    title: Definitions
+    text: |
+      Defines key terms including "personal information", "sensitive
+      personal information", "sale", "sharing", "service provider",
+      "third party".
+    coverage: facilitated
+    pryv_effort_saved: medium
+    facilitation_mode: awareness
+    draft: true
+    pryv_primitives: [event, stream, access, clientData, CMC]
+    overview: |
+      Pryv primitives map
+      cleanly to most CCPA-defined terms (event = personal-information
+      storage; access + permissions = the consent / authorization
+      layer; CMC = sharing across distinct operators). The
+      §1798.140(ae) sensitive-personal-information category drives
+      stream layout (segregate sensitive categories onto designated
+      subtrees for clean §1798.121 limit-use operation).
+    detail: |
+      Service-provider vs third-party (§1798.140(ag) vs (ai))
+      classification is contractual — record it on the access's
+      `clientData.role` so the consumer-side §1798.115 response
+      surfaces the right category.
+
+  - ref: "1798.150"
+    title: Civil action for breach
+    text: |
+      Consumer whose nonencrypted and nonredacted personal information
+      is subject to an unauthorized access, exfiltration, theft, or
+      disclosure as a result of failure to maintain reasonable security
+      may bring a civil action for statutory damages ($100-$750 per
+      consumer per incident or actual damages).
+    coverage: facilitated
+    pryv_effort_saved: medium
+    facilitation_mode: infrastructure
+    draft: true
+    pryv_primitives: [letsEncrypt-integration, encryption-at-rest-secrets, audit, access]
+    planned:
+      - kind: feature
+        summary: "End-to-end encryption narrows the §1798.150 nonencrypted-PI trigger zone further"
+        proposal: proposals/e2e-encryption.md
+        backlog: E2E-ENCRYPTION
+        tracking_url: https://github.com/pryv/open-pryv.io/issues/34
+        impact: low
+    overview: |
+      Two contributions:
+      (1) TLS-in-transit + operator-side at-rest encryption move ePHI
+      / personal-information out of the "nonencrypted and nonredacted"
+      trigger zone for §1798.150; (2) audit + access-version data are
+      the technical evidence layer when defending a "reasonable
+      security" claim. The "reasonable security" determination remains
+      a fact-specific legal question; Pryv provides the substrate.
+    detail: |
+      The §1798.150 trigger is narrow — encrypted-and-redacted PI
+      that leaks doesn't ground a statutory-damages claim. Pryv's
+      posture (TLS default + operator-side at-rest encryption + per-
+      access access-control + audit) substantially constrains the
+      surface where §1798.150 can attach. Encryption-at-rest is
+      operator-side (LUKS, PG TDE, etc.) for event content today;
+      Pryv-managed at-rest encryption covers platform secrets.
+
+  - ref: "1798.81.5"
+    title: Reasonable security procedures (Cal. Civ. Code §1798.81.5)
+    text: |
+      Business that owns, licenses, or maintains personal information
+      about a California resident shall implement and maintain
+      reasonable security procedures and practices appropriate to the
+      nature of the information, to protect the information from
+      unauthorized access, destruction, use, modification, or
+      disclosure.
+    coverage: facilitated
+    pryv_effort_saved: high
+    facilitation_mode: infrastructure
+    draft: true
+    pryv_primitives: [access, permissions, audit, letsEncrypt-integration, encryption-at-rest-secrets, MFA, backup-restore]
+    derives_from: [ccpa.1798.150, gdpr.Art.32]
+    overview: |
+      Statute predates CCPA
+      but provides the "reasonable security" basis the §1798.150 civil
+      action attaches to. Pryv's multi-aspect technical baseline (TLS,
+      mTLS, at-rest secrets, audit, MFA, backup-restore, permissions)
+      constitutes the software-layer "reasonable security" inventory.
+      The organizational-side reasonable-security programme is the
+      operator's.
+
+  - ref: 1798.130(a)(5)
+    title: Notice — content elements
+    text: |
+      Privacy-policy notice must include categories of PI collected,
+      categories of sources, business / commercial purposes, categories
+      of third parties with whom PI is shared, sale / sharing
+      practices, and consumer rights.
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: storage
+    draft: true
+    pryv_primitives: [access, clientData]
+    derives_from: [ccpa.1798.130]
+    overview: |
+      Notice content is editorial.
+      Pryv preserves the notice text per individual consumer (on
+      `account.clientData.privacy_notice` or a dedicated event), so
+      the precise wording shown at the moment a particular consumer
+      first interacted is recoverable later. Drafting the wording
+      remains the implementer's editorial work.
+
+  - ref: 1798.135(a)
+    title: Methods for opt-out — Do Not Sell / Share + Limit Use links
+    text: |
+      Business that sells or shares PI shall provide a clear and
+      conspicuous link titled "Do Not Sell or Share My Personal
+      Information" on its homepage. Business that uses sensitive PI for
+      purposes beyond those listed in §1798.121(a) shall provide an
+      additional link titled "Limit the Use of My Sensitive Personal
+      Information".
+    coverage: out-of-scope
+    draft: true
+    derives_from: [ccpa.1798.135, ccpa.1798.120]
+    overview: |
+      The UI link is part of the implementer's homepage; Pryv is the
+      backend the link's handler talks to (revoke / narrow the
+      relevant access). Surface itself is app-layer.
+
+  - ref: 1798.140(ad)
+    title: Definition — "Sale"
+    text: |
+      "Sale" / "Sell" includes selling, renting, releasing, disclosing,
+      disseminating, making available, transferring, or otherwise
+      communicating orally, in writing, or by electronic / other
+      means, a consumer's personal information by the business to
+      another business or a third party for monetary or other valuable
+      consideration.
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: storage
+    draft: true
+    pryv_primitives: [access, clientData]
+    derives_from: [ccpa.1798.140]
+    overview: |
+      Whether a given access
+      constitutes a "sale" under §1798.140(ad) is a classification the
+      implementer applies + records on the access's
+      `clientData.type = "sale"`. The consideration test (monetary or
+      valuable) is fact-specific and editorial; Pryv preserves
+      whatever classification you record.
+
+  - ref: 1798.140(ae)
+    title: Definition — "Sensitive personal information"
+    text: |
+      Enumerated categories: SSN, drivers license, account log-in
+      with password, precise geolocation, racial / ethnic origin,
+      religious / philosophical beliefs, union membership, contents
+      of mail / email / text messages not directed at the business,
+      genetic data, biometric identifier, health, sex life or
+      sexual orientation.
+    coverage: facilitated
+    pryv_effort_saved: medium
+    facilitation_mode: primitive
+    draft: true
+    pryv_primitives: [stream, system-streams, event]
+    derives_from: [ccpa.1798.121, gdpr.Art.9]
+    planned:
+      - kind: feature
+        summary: "auth.randomAlias enables an alias-only deployment pattern (don't store linkable identifiers alongside sensitive PI)"
+        proposal: proposals/aliases-as-pseudonymization-primitive.md
+        backlog: ALIASES
+        tracking_url: https://github.com/pryv/open-pryv.io/issues/38
+        impact: low
+    overview: |
+      Sensitive-PI enumeration
+      drives stream-layout design — dedicate subtrees per sensitive
+      category (`sensitive/health/`, `sensitive/precise-location/`,
+      etc.) for clean §1798.121 limit-use enforcement. The
+      classification of whether a specific event qualifies as
+      sensitive PI is editorial.
+
+  - ref: "1798.155"
+    title: Enforcement
+    text: |
+      California Privacy Protection Agency (CPPA) + California Attorney
+      General may bring civil actions for CCPA violations; statutory
+      penalties up to $2,500 per violation ($7,500 for intentional
+      violations + violations involving minors).
+    coverage: out-of-scope
+    draft: true
+    overview: |
+      Enforcement is regulator-side. No software role; Pryv's audit
+      log + access-version chain are the evidence pack the implementer
+      surfaces in response to inquiries.

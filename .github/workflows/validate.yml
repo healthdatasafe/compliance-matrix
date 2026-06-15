@@ -1,0 +1,45 @@
+name: validate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  validate-and-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Validate
+        run: npm run validate
+
+      - name: Build
+        run: npm run build
+
+      - name: Upload SQLite artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: compliance-sqlite
+          path: dist/compliance.sqlite
+          if-no-files-found: error
+
+# NOTE (plan 74): cross-reference resolution against HDS test suites / dev-site
+# (test codes, functional_specs, docs paths) is degraded to warnings until the
+# HDS scopes are authored (Phase 2). At that point this workflow will check out
+# the relevant HDS repos, mirroring how pryv/compliance-matrix checks out
+# open-pryv.io + dev-site.

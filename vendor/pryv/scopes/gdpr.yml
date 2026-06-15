@@ -1,0 +1,2085 @@
+id: gdpr
+title: General Data Protection Regulation
+short: GDPR
+type: regulation
+jurisdiction: EU + EEA (extraterritorial via Art. 3)
+version: Regulation (EU) 2016/679 (consolidated)
+version_date: "2016-04-27"
+canonical_url: https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:02016R0679-20160504
+matrix_language: EN
+curated: false
+
+changelog:
+  - date: "2026-05-19"
+    change: initial draft + pryv-primitives lens + overview/detail/technical split + implementer-perspective audit (Art.2/3/14/21 upgraded out-of-scope → facilitated; data-residency primitive added; Pryv/open-pryv.io naming separated)
+
+requirements:
+
+  # ───── Chapter I — General Provisions ─────
+
+  - ref: Art.1
+    title: Subject matter and objectives
+    text: |
+      Regulation lays down rules on the protection of natural persons with
+      regard to the processing of personal data and rules relating to the
+      free movement of personal data.
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: awareness
+    draft: true
+    pryv_primitives: [access, permissions, stream, audit, data-types, CMC]
+    overview: |
+      GDPR's purpose is to protect
+      natural persons in how their personal data is processed, while
+      keeping that data freely movable. Pryv is designed for exactly
+      that — your subjects own their data, technical controls enforce
+      the consent they granted, and the API is open so data can move
+      without lock-in. The per-article rows below describe how each
+      obligation maps to the primitives Pryv gives you.
+    detail: |
+      Protection of natural persons (re: processing of their personal data):
+        - Subject-centric storage — each of your users has dedicated
+          storage; you host but don't commingle subjects.
+        - Technical access control — permissions per stream are enforced
+          at the API surface; processing only happens within the scope
+          the subject granted.
+        - Versioned consent record — access + clientData + consent events
+          form a tamper-evident chain of what was authorised, when, with
+          which contract text.
+        - Accountability by construction — audit rows reference the
+          specific access version used at processing time.
+
+      Free movement of personal data:
+        - Open HTTP API — events / streams / accesses consumable without
+          vendor SDKs.
+        - Canonical event-type schemas — structured JSON with stable
+          class/format semantics; portable across deployments.
+        - Cross-platform sharing — independent Pryv operators can
+          exchange data + consent without shared trust, shared user
+          namespace, or federation auth.
+        - No vendor lock-in — you can move data + consent contracts
+          between operators using the same primitives an end-user would
+          use to read them.
+
+      A Pryv deployment cannot, on its own, make you GDPR-compliant —
+      but it gives you the technical substrate on which the per-article
+      obligations below can be discharged.
+    technical: |
+      Primitives carrying this row:
+        - `access` (versioned, immutable per version) — see
+          `context/access-versioning.md`
+        - `permissions` (per-stream, per-level — enforced in
+          `open-pryv.io/components/api-server/src/methods/`)
+        - `audit` (per-API-call rows tagged with `accessId` + `accessSerial`)
+        - `data-types` (canonical class/format schemas at
+          `https://raw.github.com/pryv/data-types/master/dist/event-types.json`)
+        - `CMC` plugin (`open-pryv.io/components/cmc/`, shipped 2.0.0-pre.3)
+
+  - ref: Art.2
+    title: Material scope
+    text: |
+      Applies to the processing of personal data wholly or partly by
+      automated means and to the processing other than by automated means
+      of personal data which form part of a filing system.
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: awareness
+    draft: true
+    pryv_primitives: [access, event, audit]
+    overview: |
+      Your Pryv deployment is
+      fully inside Article 2's material scope. Every event you store
+      and every API call your apps make is automated processing
+      covered by GDPR. Pryv does not exempt you from any per-article
+      obligation — it gives you the technical primitives that make
+      those obligations addressable (see Art.5+). Branch 2 (non-
+      automated processing inside a "filing system" — structured
+      paper records) doesn't surface at the Pryv layer; your own
+      paper records, if any, are outside the software boundary.
+    detail: |
+      GDPR Art.4(6) defines "filing system" as any structured set of
+      personal data accessible by specific criteria — alphabetised
+      customer cards, dated patient folders, indexed application forms.
+      Random unstructured paper or spoken-only data is not in scope.
+
+      Pryv is fully digital, so branch 1 always applies; branch 2 is moot.
+      If you also keep paper records as part of the same business process,
+      those fall under branch 2 but as a separate process you manage
+      outside Pryv.
+
+  - ref: Art.3
+    title: Territorial scope
+    text: |
+      Applies to processing in the context of an establishment in the
+      Union, or where processing relates to data subjects in the Union.
+    coverage: facilitated
+    pryv_effort_saved: medium
+    facilitation_mode: infrastructure
+    draft: true
+    pryv_primitives: [data-residency]
+    overview: |
+      Whether GDPR applies
+      to your Pryv deployment depends on where you're established and
+      where your data subjects are — not on the software. Pryv is
+      self-hosted, so you control data residency directly: the multi-
+      hosting feature lets you choose which jurisdiction each core
+      runs in, and either let end-users pick their hosting at
+      registration or auto-route them by your policy. If any of your
+      subjects are in the EU/EEA, GDPR applies to your deployment in
+      full.
+    detail: |
+      Pryv supports a single logical platform spanning multiple hostings
+      (different countries / cloud regions / on-premise). Two routing
+      policies you can apply:
+
+      - **End-user choice** — your registration UI presents the available
+        hostings (via `auth.hostings`); user picks. Useful for consumer
+        apps where subjects assert their own residency preference.
+      - **Operator / regulatory routing** — your app auto-routes based on
+        the subject's jurisdiction or contract terms (e.g., EU subjects →
+        EU hosting; French health data → HDS-certified French hosting).
+
+      The chosen hosting binds the user's data to that core permanently.
+      `system.users.get` exposes the per-user hosting so you can surface
+      it in the app ("your data is stored in <region>").
+
+      Note: even with EU-only hosting, if you have a non-EU establishment
+      offering services to EU subjects, Art.3(2) still pulls you into
+      GDPR.
+
+  - ref: Art.4
+    title: Definitions
+    text: |
+      Defines key terms: personal data, processing, controller, processor,
+      consent, profiling, pseudonymisation, etc.
+    coverage: facilitated
+    pryv_effort_saved: medium
+    facilitation_mode: awareness
+    draft: true
+    pryv_primitives: [access, permissions, stream, event, system-streams]
+    planned:
+      - kind: feature
+        summary: "auth.randomAlias names pseudonymisation as a primitive (Art.4(5) maps to a concrete switch)"
+        proposal: proposals/aliases-as-pseudonymization-primitive.md
+        backlog: ALIASES
+        tracking_url: https://github.com/pryv/open-pryv.io/issues/38
+        impact: medium
+    overview: |
+      Article 4 defines GDPR
+      vocabulary. Pryv's primitives map cleanly to most of these
+      terms — easier for you to point auditors at concrete artefacts
+      rather than abstract concepts.
+    detail: |
+      Approximate mapping of key GDPR terms to Pryv primitives:
+
+      | GDPR term | Pryv primitive |
+      |---|---|
+      | personal data | `event` content + attachments on a user's account |
+      | data subject | the user (account owner) |
+      | controller | typically you, the implementer |
+      | processor | the Pryv operator (when distinct from you) |
+      | recipient | a counterparty holding an `access` to the data |
+      | third party | another deployment / app accessing via shared/app `access` |
+      | consent | app/shared `access` with `permissions` + `clientData` carrying the contract (see Art.7) |
+      | processing | any API call on `events.*` / `streams.*` / `accesses.*` (audit-recorded) |
+      | filing system | N/A — Pryv is fully automated |
+      | personal data breach | event/audit anomaly + post-mortem (see Art.33) |
+      | pseudonymisation | system-streams + custom event-type design |
+      | profiling | application-side concern (out for Pryv) |
+      | restriction of processing | scope-down via `accesses.update` (see Art.18) |
+
+      The controller/processor distinction is contractual — you assign
+      the roles. Pryv lets you record the assignment explicitly in
+      `access.clientData` if you want it traceable.
+
+  # ───── Chapter II — Principles ─────
+
+  - ref: Art.5
+    title: Principles relating to processing of personal data
+    text: |
+      Lawfulness, fairness, transparency; purpose limitation; data
+      minimisation; accuracy; storage limitation; integrity and
+      confidentiality (security); accountability.
+    coverage: implemented
+    pryv_effort_saved: high
+    draft: true
+    pryv_primitives: [access, permissions, clientData, stream, audit]
+    functional_specs: [EVENT.BASE, STREAM.BASE]
+    tests: [GLHP, U9HQ]
+    overview: |
+      Several Art.5 principles are technically enforced for you by Pryv
+      rather than left to policy: purpose limitation (per-stream
+      permissions), accountability (audit chain to the consent state),
+      accuracy (event versioning). Lawfulness, fairness and transparency
+      stay on your shoulders — Pryv stores the notice/consent text you
+      present but doesn't generate it for you.
+    detail: |
+      Per-principle breakdown — what Pryv does for you, what you do:
+
+      - Lawfulness, fairness, transparency (§1(a)) — DOCUMENTED. You
+        write the notice and present it; Pryv carries the text in
+        `access.clientData` or a `consent/request-cmc` event so the
+        same text is recoverable later.
+      - Purpose limitation (§1(b)) — IMPLEMENTED. `permissions` per
+        stream technically restrict reads/writes to the granted scope;
+        an app cannot access streams outside its granted permissions.
+      - Data minimisation (§1(c)) — FACILITATED. Permissions + stream
+        design let apps see only what's in their scope; the rest is
+        invisible to them.
+      - Accuracy (§1(d)) — FACILITATED + IMPLEMENTER-OWNED.
+        Pryv enforces **structural** accuracy at ingest: every
+        `events.create` and `events.update` validates against the
+        declared event-type's JSON Schema (ajv-draft-04 via
+        `components/utils/src/jsonValidator.ts`), rejecting
+        out-of-shape or out-of-range payloads with HTTP 400.
+        Numerical bounds (`minimum`/`maximum`), string patterns,
+        and length limits are expressible per type — the HDS
+        data-model exemplar declares 28 `minimum`/23 `maximum`
+        constraints across health-data types. The built-in
+        catalogue uses bounds sparingly (operator opts into
+        strictness by extending via `service.eventTypes` URL,
+        Q14 pattern). **Semantic** accuracy — "is this medication
+        right for THIS patient?" — is out of scope by design;
+        the implementer's app layer carries the clinical /
+        domain context Pryv intentionally doesn't see.
+        `events.update` rectifies events (Art.16); event
+        versioning + `GET /events/:id?includeHistory=true`
+        preserves the prior value for traceability. Full split
+        in `context/data-accuracy-structural-vs-semantic.md`.
+      - Storage limitation (§1(e)) — VOLUNTARILY MISSING +
+        OPERATOR-OWNED at the retention-enforcement layer +
+        CONFIGURABLE at the erasure-mechanics layer. Pryv exposes
+        no TTL / auto-delete / scheduler primitive — automatic
+        retention is the operator's external job, composing
+        `events.get toTime=<cutoff>` + `events.delete` (two-stage)
+        + `streams.delete` + `auth.delete` + the audit log as
+        inactivity oracle. Every retention deletion is captured
+        by the audit log automatically (Q9 audit-by-construction).
+        Engine-dependent backup-tail considerations apply (see
+        Art.17). Full pattern + cron-job recipe + audit-trace
+        treatment + "why not built-in" rationale in
+        `context/data-retention-operator-owned.md`.
+      - Integrity & confidentiality (§1(f)) — covered separately at Art.32.
+      - Accountability (§2) — IMPLEMENTED. Every API call audited with
+        the access reference + version; access carries the consent state
+        at that version → end-to-end accountability chain you can point
+        auditors at.
+    technical: |
+      - Purpose limitation: enforcement in
+        `open-pryv.io/components/api-server/src/methods/` permission-checks.
+      - Accountability: audit row schema includes
+        `(accessId, accessSerial)`; access-version snapshot includes
+        `clientData` (consent state) — see `context/access-versioning.md`.
+
+  - ref: Art.6
+    title: Lawfulness of processing
+    text: |
+      Processing lawful only if at least one of six bases applies (consent,
+      contract, legal obligation, vital interests, public interest,
+      legitimate interests). §4 — further processing for a purpose other
+      than the original is lawful only if compatible per the five-factor
+      test OR a fresh lawful basis applies.
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: storage
+    draft: true
+    pryv_primitives: [access, clientData, audit, event]
+    overview: |
+      You decide which Art.6 basis
+      you're relying on for each processing activity. Pryv doesn't
+      impose or check the basis. You can record your chosen basis in
+      `access.clientData.lawful_basis` so it travels alongside the
+      technical authorization and lives in the audit trail — handy
+      when an auditor asks "under what basis was this access made?".
+      For Art.6(4) further processing (purpose pivot), Pryv exposes
+      four composable patterns + a clear decision rule for when the
+      purpose pivot demands fresh consent vs. an in-place update —
+      see detail.
+    detail: |
+      Recording the basis on the access gives you a durable, versioned
+      artefact tying the basis to the specific processing scope it
+      justifies. Determination of which basis applies remains your
+      responsibility — Pryv neither enforces nor refuses on the basis
+      claim.
+
+      **§4 — further processing (purpose pivot).** Four composable
+      patterns; choose per the compatibility-vs-fresh-consent
+      decision rule below.
+
+      **Pattern A — Mint a new access for the new purpose.** The
+      cleanest fit when the new purpose is **outside** the original
+      OR is not covered by a fresh override-by-law basis (Art.6(4)(a)
+      compatibility test fails). The subject sees a fresh auth flow;
+      `app-web-auth3` presents the new notice + new purpose explicitly;
+      the new access carries `clientData.purpose: <new>` +
+      `clientData.lawful_basis: <fresh>`. Old access keeps operating
+      for its original purpose (or is revoked separately if
+      withdrawn). This pattern is the **mandatory** path when the
+      compatibility test fails — fresh consent is required.
+
+      **Pattern B — Update existing access** (`accesses.update`).
+      Suitable when the purpose change is narrow / compatible (e.g.,
+      scope-down or compatible expansion). The pre-mutation
+      `permissions` + `clientData` snapshot into a history row
+      automatically (see `context/access-versioning.md`), preserving
+      the purpose-history chain end-to-end. The bumped `accessSerial`
+      threads through the audit log so post-pivot rows correctly
+      attribute to the new purpose state.
+
+      **Pattern C — Separate compatibility-assessment event.** When
+      the operator wants the Art.6(4) 5-factor analysis itself
+      recorded as a first-class artefact, write a
+      `compliance/compatibility-assessments/<id>` event on a
+      dedicated stream (operator-authored format via Q14 custom
+      catalogue) capturing the §6(4)(a)-(e) reasoning + the affected
+      data scope + the decision outcome. The relevant access(es)
+      then reference it via
+      `clientData.compatibility_assessment_event_id`. This pattern
+      composes with A or B (the assessment artefact justifies the
+      pattern choice).
+
+      **Pattern D — Sub-access derivation from an `app` access**
+      (`createdBy` mechanism, see `context/workforce-access-patterns.md`
+      Pattern 2). When the operator's app holds an `app`-type access
+      with broad scope, it can mint per-purpose **sub-accesses** —
+      each carrying its own narrower `permissions[]` +
+      `clientData.purpose` — and the audit log records each
+      sub-access's id independently, **feeding purpose-driven access
+      matching into the audit trail at query time** (`audit.get` →
+      group by `accessId` → distinct purposes touched). Especially
+      clean when the same app legitimately operates under multiple
+      compatible-purpose facets — each facet gets its own sub-access,
+      so per-purpose disclosure accounting (Art.30 / §164.528)
+      reconstructs from the audit log without operator-side
+      bookkeeping.
+
+      **Decision rule** (operator-side):
+
+      1. New purpose is **inside** the original purpose's scope (a
+         compatible refinement / narrowing) → **Pattern B** update
+         existing access. No fresh consent. Update notice if material.
+      2. New purpose is **alongside** the original (compatible
+         expansion, same app, multiple facets) → **Pattern D**
+         sub-access mint, OR **Pattern A** new access. No fresh
+         consent required if compatibility test passes;
+         transparency-notice update may be required under Art.13(3).
+      3. New purpose is **outside** the original AND not covered by
+         a fresh override-by-law basis (Art.6(1)(c)/(d)/(e)) →
+         **Pattern A** mint new access + force fresh consent. The
+         subject's positive opt-in is mandatory under Art.6(4) when
+         compatibility fails. App-web-auth3's grant flow IS the
+         re-prompt mechanism.
+      4. In **any** case where the 5-factor compatibility analysis
+         was non-trivial → **Pattern C** separate compatibility-
+         assessment event for audit-defensibility.
+
+      **Re-prompt surface (§4 fallback):** Pryv has no built-in
+      "notice changed → automatically re-prompt subject" workflow.
+      The operator's app layer triggers re-auth by minting a new
+      access (Pattern A) — `app-web-auth3` presents the updated
+      notice; the subject's positive consent IS the fresh-basis
+      capture. For revocation of the old access alongside the
+      new mint, `accesses.delete` is the standard path (Q19 / Q28
+      mechanism family).
+
+      **clientData convention extension** for §4 purpose pivots:
+      `compatibility_assessment_event_id` + `purpose_change_basis`
+      (`compatible_purpose` / `new_consent` / `new_legal_obligation`
+      / `new_legitimate_interest`) + `previous_purpose` (the pivot
+      record). See `context/client-data-conventions.md`.
+
+  - ref: Art.7
+    title: Conditions for consent
+    text: |
+      Where processing is based on consent, controller must be able to
+      demonstrate consent. Request must be in intelligible form,
+      withdrawable.
+    coverage: implemented
+    pryv_effort_saved: high
+    draft: true
+    pryv_primitives: [access, permissions, clientData, CMC, event]
+    docs: [guides/consent.md]
+    tests: [AA01, ACCP, USAD]
+    overview: |
+      The access Pryv mints when your user grants permission IS your
+      durable consent record — versioned permissions + clientData
+      together prove what was authorised, with what text, at what time.
+      Withdrawal is a single API call. For cross-account sharing, the
+      `consent/*` events carry the negotiation state transitions. Both
+      records are immutable per their primitive's semantics.
+    detail: |
+      Demonstrability (§1) — `accesses.get ?includeHistory=true` returns
+      the full version chain; each version preserves the `permissions`
+      granted and the `clientData` (which can carry the consent contract
+      text) at that point in time. For cross-account flows, the original
+      `consent/request-cmc` event on the requester's account holds the
+      localised consent text presented.
+
+      Withdrawal (§3) — `accesses.delete` (full revoke) or `accesses.update`
+      with narrower `permissions` (scope-down). Both bump the access
+      serial + snapshot the pre-mutation state. Cross-account:
+      `consent/revoke-cmc` triggers symmetric teardown on both sides
+      via the CMC plugin.
+
+      Intelligible form (§2) — you write the UX (app-web-auth3 template
+      is a starting point). Pryv enforces the technical contract; your
+      UI presents it.
+
+      Granular consent (§4) — different processing purposes can be
+      expressed as separate accesses with different permissions, each
+      independently withdrawable.
+    technical: |
+      - Snapshot semantics: `context/access-versioning.md` (full head
+        clone into history row per update).
+      - CMC consent state machine: `context/cmc-consent-primitives.md`
+        (8 `consent/*` formats on `data-types` master).
+      - `accesses.update` composite-id wire format requires `lib-js@3.1.0+`.
+
+  - ref: Art.9
+    title: Processing of special categories of personal data
+    text: |
+      Processing of special-category data (racial / ethnic origin,
+      political opinions, religious / philosophical beliefs, trade-union
+      membership, genetic data, biometric data uniquely identifying a
+      person, health data, sex life or sexual orientation) is prohibited
+      unless one of ten conditions in Art.9(2) applies.
+    coverage: facilitated
+    pryv_effort_saved: medium
+    facilitation_mode: primitive
+    draft: true
+    pryv_primitives: [stream, system-streams, access, clientData, permissions]
+    overview: |
+      Pryv is content-agnostic at the platform layer — no
+      `sensitivity:` flag on event-type schemas, no server-side hook
+      that refuses writes to "health" streams without a recorded
+      Art.9(2) basis. **Classification is voluntarily missing at the
+      platform.** But for **vertically-integrated operators** (you
+      run the core AND ship the clients AND design the stream tree
+      AND curate the event-type catalogue — typical for
+      health deployments), Pryv exposes enough composable primitives
+      that you build a strong Art.9 enforcement layer without
+      platform-imposed assumptions. The Art.9(2) condition relied on
+      lives in `access.clientData.special_category_basis` next to
+      the technical grant. Full operator-toolkit treatment +
+      two-deployment-topologies framing in
+      `context/special-categories-operator-facilitated.md`.
+    detail: |
+      Recommended stream-layout pattern for special-category-heavy
+      deployments:
+        - Reserve top-level subtrees per Art.9(1) category (`health/`,
+          `biometrics/`, `genetics/`, `political-opinions/`, etc.).
+        - Mint apps' / counterparties' accesses with explicit
+          `permissions[]` listing the subtree they may touch;
+          default-deny everything else.
+        - Record the Art.9(2) lit-letter in
+          `access.clientData.special_category_basis` ("(a) explicit
+          consent", "(h) preventive / occupational medicine", etc.).
+        - Audit log automatically captures every read / write under
+          the access.
+
+      **Operator-toolkit composition** (vertically-integrated
+      deployments — operator controls both ends):
+
+      1. **Stream-tree design** — operator's client code routes
+         sensitive writes exclusively to reserved subtrees;
+         Pryv enforces the per-stream permission boundary
+         (`AccessLogic`).
+      2. **clientData.special_category_basis** — Art.9(2) lit-letter
+         recorded on every access touching a sensitive subtree;
+         access-versioning preserves the basis over edits.
+      3. **Custom event-type catalogue annotations** — operator
+         extends `service.eventTypes` URL with
+         `x-art9-category` / `x-swiss-nlpd-sensitive` / etc. fields
+         the client code reads to gate writes; Pryv passes the
+         annotations through unchanged (Q14 / Q21 pattern).
+      4. **Custom dataStore (`@pryv/datastore`)** — sensitive
+         subtree owned by a dedicated store with stricter at-rest
+         encryption + access controls (Q16 pattern;
+         `context/audit-archival-via-custom-datastore.md`).
+      5. **Per-engine isolation** — sensitive tier on a separate
+         PostgreSQL instance / WAL / replicas (storage-engine plugins).
+      6. **`customExtensions.customAuthStepFn`** — operator-side
+         gate that demands the Art.9(2) basis claim at
+         access-grant time before minting the access.
+      7. **Audit log** — automatic capture of every read/write
+         under any access; audit-minimality (Q9: no request body)
+         is a feature for sensitive data, not a limitation.
+      8. **Backup tiering (Q15)** — operator wraps sensitive-tier
+         dumps with stricter encryption + retention than ordinary
+         tiers; `bin/backup.js` is the integration point.
+
+      The toolkit's reach varies by deployment topology — full
+      strength for vertically-integrated operators, partial for
+      open Pryv platforms hosting third-party apps the operator
+      doesn't author. The two-topology framing is canonical in
+      `context/special-categories-operator-facilitated.md`.
+
+      Caveat: Pryv's permission model is per-stream, not per-field
+      within an event. If an event mixes ordinary and
+      special-category fields, you must split it or design your
+      event types so the special-category subset is its own
+      event-type.
+
+  - ref: Art.8
+    title: Conditions applicable to child's consent in relation to information society services
+    text: |
+      Where Art. 6(1)(a) consent applies in relation to the offer of
+      information-society services directly to a child, processing
+      shall be lawful only where the child is at least 16 years old
+      (Member States may lower to no less than 13); below that age,
+      parental holder of responsibility must consent.
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: storage
+    draft: true
+    pryv_primitives: [access, clientData, event]
+    overview: |
+      Pryv neither knows nor validates a subject's age — age +
+      parental-authority verification happens at your app's
+      registration / consent UX. The platform is age-blind by
+      design (verified: default `custom.systemStreams.account`
+      ships only `email`; no `birthDate` / `dateOfBirth` /
+      `minor` field in the catalogue). Once verified, the
+      artefacts you keep travel alongside the access via the
+      `clientData` convention family (see
+      `context/client-data-conventions.md`).
+    detail: |
+      Convention (operator-side editorial discipline; no Pryv
+      enforcement):
+
+      - `account.clientData.age_verification_method` —
+        free-text or structured record of HOW age was verified
+        (self-declaration / ID upload / parental-attestation /
+        government-eID-flow). Travels with the account; reachable
+        via the system-stream account event.
+      - `clientData.parental_holder_consent_event_id` (singular,
+        single-holder case) or `clientData.
+        parental_holder_consent_event_ids` (array, dual /
+        multi-holder case — divorced parents, jurisdictions
+        requiring both biological parents, foster care, etc.) —
+        pointer(s) to the actual `consent/parental-*` event(s)
+        recording the parental consent text + the holder's
+        identity / verification trail.
+
+      **The `consent/parental-cmc` event format does NOT ship in
+      the built-in `data-types` catalogue.** Operators needing
+      this format author it themselves and publish via
+      `service.eventTypes` URL (the Q14 custom-catalogue
+      extension pattern). HDS-style data-model repos that target
+      paediatric / adolescent use-cases are the natural home for
+      this format. Backlog candidate: if a critical mass of
+      health deployments converges on a common shape, upstream
+      it into `data-types` proper.
+
+      **Re-verification on age-of-majority transitions** —
+      voluntarily missing at platform layer. Pryv has no
+      cron / scheduler primitive. Operator runs an external job
+      that watches `birthDate` (extended-account-field) +
+      access `created` timestamp + chosen jurisdiction's age of
+      majority (typically 16 EU / 13 US under COPPA / etc.) and
+      triggers a re-consent prompt at the crossing date.
+
+      **Multi-holder consent** — supported by the array form
+      above; the operator's app code at access-mint time
+      enforces "both parents must accept" (or whichever
+      jurisdiction-specific rule applies) before calling
+      `accesses.create`. Each parental-holder consent event
+      independently satisfies the access-history record;
+      revocation of any one of them is the operator's signal
+      to revoke or scope-down the access (per Q19 + Q28
+      mechanisms).
+
+  - ref: Art.10
+    title: Processing of personal data relating to criminal convictions and offences
+    text: |
+      Processing of personal data relating to criminal convictions /
+      offences shall be carried out only under control of official
+      authority or when authorised by Union / Member State law
+      providing appropriate safeguards.
+    coverage: facilitated
+    pryv_effort_saved: medium
+    facilitation_mode: primitive
+    draft: true
+    pryv_primitives: [stream, system-streams, access, clientData]
+    overview: |
+      Same pattern as Art. 9
+      special-category data: dedicate a `criminal-records/*` stream
+      subtree, scope every access tightly, record the Art. 10 legal-
+      basis-by-law citation in `access.clientData.art10_basis`. Pryv
+      has no role in deciding whether a given processing instance
+      falls under "official authority" — that's your legal judgement.
+
+  # ───── Chapter III — Rights of the data subject ─────
+
+  - ref: Art.12
+    title: Transparent information, communication and modalities
+    text: |
+      Controller shall provide concise, transparent, intelligible
+      information and respond to data subject requests within one month.
+    coverage: facilitated
+    pryv_effort_saved: medium
+    facilitation_mode: storage
+    draft: true
+    pryv_primitives: [access, clientData, event]
+    docs: [guides/consent.md, customer-resources/audit-setup.md]
+    overview: |
+      Pryv preserves whatever
+      notice / consent text you presented to the subject — immutably,
+      versioned, retrievable later. The response operations
+      (Art.15-22) execute in sub-second; the 1-month rule is your
+      process target, not a software limit.
+    detail: |
+      Information artefacts (notice, consent text, lawful-basis
+      explanation) can live in `access.clientData` and/or in
+      `consent/request-cmc` events. Both are immutable / versioned, so
+      the subject sees the same text that was originally presented —
+      addressing the "concise, transparent, intelligible" requirement
+      at the artefact level. Whether the artefact itself is concise +
+      intelligible is your editorial responsibility.
+
+  - ref: Art.13
+    title: Information to be provided where data are collected from the data subject
+    text: |
+      Identity of controller, purposes, legal basis, recipients,
+      retention, rights — must be provided at the time of collection.
+    coverage: facilitated
+    pryv_effort_saved: medium
+    facilitation_mode: storage
+    draft: true
+    pryv_primitives: [access, clientData, event]
+    docs: [guides/consent.md, guides/privacy-by-design.md]
+    overview: |
+      The information items split across two operator-controlled
+      surfaces:
+
+      - **Deployment-wide** (controller identity, DPO contact,
+        Terms of Service): the `serviceInfo` fields `home`,
+        `support`, `terms` — propagated to every client app via
+        `GET /service/info`; `app-web-auth3` renders them in its
+        consent UI by default. Full convention treatment in
+        `context/service-info-conventions.md`.
+      - **Per-access** (purposes, lawful basis, recipients,
+        retention, the specific rights notice): `access.clientData`
+        per the convention family in
+        `context/client-data-conventions.md` —
+        `lawful_basis`, `purpose`, `transfer_basis`, `retention`,
+        `consent`, `consent_event_id`, etc. (or a
+        `consent/request-cmc` event when using CMC). Pryv preserves
+        them immutably with version chain (`?includeHistory=true`);
+        your app surfaces them at the right moment.
+
+  - ref: Art.14
+    title: Information to be provided where data have not been obtained from the data subject
+    text: |
+      Same disclosures as Art.13, provided within reasonable period
+      (≤1 month, or at first communication / first disclosure if sooner).
+    coverage: facilitated
+    pryv_effort_saved: medium
+    facilitation_mode: storage
+    draft: true
+    pryv_primitives: [access, clientData, event, audit]
+    overview: |
+      When you ingest data into
+      Pryv from third parties (not directly from the subject), you
+      still owe the same disclosures as Art.13. Pryv lets you record
+      the disclosure artefact alongside the data, same as direct
+      collection (`access.clientData` or a `consent/*` event), and
+      the audit log proves when disclosure happened — useful when
+      the 1-month / first-contact deadlines come into question.
+    detail: |
+      Where the data came from (the source) is an Art.14(2)(f) disclosure
+      item — record it in `event.clientData.source` or in a dedicated
+      provenance stream. Together with the access carrying the
+      disclosure-notice text, you have the full Art.14 artefact set
+      retrievable per subject.
+
+  - ref: Art.15
+    title: Right of access by the data subject
+    text: |
+      Right to obtain confirmation, access, copy of personal data +
+      supplementary information (purposes, recipients, retention, rights,
+      source, automated decisions).
+    coverage: implemented
+    pryv_effort_saved: high
+    draft: true
+    pryv_primitives: [access, stream, event, audit, account-backup-tool]
+    functional_specs: [EVENT.BASE, STREAM.BASE]
+    tests: [AA01, EGSQ, U9HQ]
+    planned:
+      - kind: feature
+        summary: "Single-shot events fetch chunked by time-range for production-scale subjects"
+        proposal: proposals/account-backup-dsar-completeness.md
+        backlog: ACCOUNT-BACKUP-CHUNKED-EVENTS-FETCH
+        impact: low
+    overview: |
+      Your subject, holding a personal token, reads everything via the
+      standard Pryv API — events, streams, accesses (with full history),
+      audit records. The supplementary information (purposes, recipients)
+      is in `access.clientData` when you recorded it there. For
+      ready-made bundling, the `pryv-account-backup` npm tool walks the
+      subject's API endpoints and produces a downloadable folder —
+      operator-independent (the subject runs it with their own
+      credentials).
+    detail: |
+      Subject-side reads via standard endpoints (all reachable on v2):
+        - `events.get` — all events
+        - `streams.get` — all streams
+        - `accesses.get ?includeHistory=true` — accesses + version chain
+        - `audit.getLogs` — audit log (`/audit/logs`)
+        - `webhooks.get` — webhook subscriptions
+        - `GET /events/<id>/series` — HF data points per series-event
+      Attachments downloadable via the events API.
+
+      `pryv-account-backup` v0.4.0 (shipped 2026-05-27, commits
+      `1a05482` + `30b1661` + `ea6ae6a`) covers: account, profiles,
+      streams, accesses, events (single-shot), attachments (opt-in),
+      audit log, HF series data points (`GET /events/<id>/series`),
+      webhooks, plus a per-file sha256 integrity manifest. The
+      Art.15(1)(c) disclosure-history elements are now in the raw
+      export by default. Restore-path round-trip handles series event
+      containers + HFS data points + multi-attachment events as well.
+      One follow-up remains in `proposals/account-backup-dsar-
+      completeness.md` (the "chunked-events fetch for production-scale
+      subjects" feature — separate concern, not in the DSAR-
+      completeness Phase C scope).
+    technical: |
+      Personal-token scope is the user's full namespace; no special
+      endpoint. Implementers typically wrap this with a small subject-
+      portal app (see `samples/get-a-copy-of-my-data/` proposal in
+      `samples/README.md`). For ad-hoc DSARs the `pryv-account-backup`
+      tool is the no-code path. Coverage matrix +
+      operational-guidance-for-today live at
+      `context/account-backup-coverage.md`.
+
+  - ref: Art.16
+    title: Right to rectification
+    text: |
+      Right to have inaccurate personal data rectified without undue delay.
+    coverage: implemented
+    pryv_effort_saved: high
+    draft: true
+    pryv_primitives: [event, audit]
+    functional_specs: [EVENT.BASE]
+    tests: [PTU1]
+    overview: |
+      `events.update` rectifies an event; event versioning preserves the
+      prior (inaccurate) value for traceability — addressing the
+      Art.5(1)(d) accuracy principle without losing the audit trail.
+    detail: |
+      Rectification mechanics:
+
+      - **API**: `events.update` (PUT /events/:id) writes the new
+        value AND emits a new event version. The route validates
+        the updated payload through the same ajv-draft-04 pipeline
+        as `events.create` (`components/api-server/src/methods/
+        events.ts:564` middleware chain), so a "rectification"
+        that itself fails schema validation is rejected — you
+        can't replace one inaccurate value with another that
+        violates the type's structural constraints.
+      - **History retrieval**: `GET /events/:id?includeHistory=true`
+        returns the full version chain. The history is queried via
+        `mall.events.getHistory(userId, eventId)` (same file
+        line 185) and exposed at the implementer's API surface
+        when requested.
+      - **Audit trail**: every `events.update` call is in the
+        audited methods set (`components/audit/src/ApiMethods.ts`).
+        The audit log records method + access ref + timestamp;
+        per the audit-minimality posture (Q9), the request body
+        is NOT captured — the history chain on the event itself
+        is the durable record of the prior value, not the audit
+        log.
+      - **Detection of inaccuracy**: out of scope at the platform
+        layer. Pryv enforces structural validity at ingest (ajv
+        schema validation); semantic inaccuracy detection is the
+        implementer's app responsibility. See
+        `context/data-accuracy-structural-vs-semantic.md`.
+
+  - ref: Art.17
+    title: Right to erasure ("right to be forgotten")
+    text: |
+      Right to obtain erasure without undue delay where one of six
+      conditions applies (no longer necessary, withdrawn consent, no
+      legal basis, etc.).
+    coverage: configurable
+    pryv_effort_saved: medium
+    draft: true
+    pryv_primitives: [event, stream, backup-restore]
+    config_keys: [storages.userAccountStorage.engine, user-account.delete]
+    tests: [USAD]
+    overview: |
+      Per-user erasure is a single API call (`system.users.delete`).
+      Whether erasure extends to your backups depends on the storage
+      engine you chose — SQLite per-user folders are deletable from
+      filesystem backups; PostgreSQL requires a backup-rotation
+      policy to complete erasure.
+    detail: |
+      Per-engine behaviour for the live data:
+        - SQLite — each user is a separate file under the user-data
+          directory. File deletion removes the user from filesystem
+          backups (depending on your backup tool's per-file semantics).
+        - PostgreSQL — row-level erasure only. Backups are
+          DB-engine-level snapshots; per-user erasure within a backup
+          file requires either backup rotation (oldest pruned per
+          policy) or a backup-rewriting procedure you build yourself.
+
+      Event attachments follow your `storages.file.engine` choice
+      (filesystem / s3 / postgresql, the latter two since open-pryv.io
+      2.0.0-rc.2). Account deletion routes attachment removal through
+      the fileStorage interface, so live copies are erased on all
+      three engines. Backup residue differs per engine: filesystem
+      attachment directories follow your file-backup tool's semantics;
+      S3 buckets may retain deleted-object versions (disable
+      versioning or add a lifecycle rule if erasure must extend
+      there); PostgreSQL-stored attachments live in the same
+      `pg_dump` artefacts as user rows, so the backup-rotation policy
+      above covers them with no extra step.
+
+      Erasure here is **caller-triggered** — the subject (or operator
+      on their behalf) issues the DELETE call. The **scheduled /
+      automatic** erasure obligation under Art.5(1)(e) "storage
+      limitation" is operator-owned by design — see Art.5 detail +
+      `context/data-retention-operator-owned.md` for the retention-
+      job pattern that composes `events.delete` + `auth.delete` +
+      the audit log.
+
+      `bin/backup.js` supports per-user backup files alongside DB-engine
+      backups; using per-user backups improves erasure semantics
+      regardless of engine.
+
+      Audit-log erasure converges across engines (since 2026-05-27 —
+      open-pryv.io master `891090d` + `853e1cb`). `auth.delete` now
+      includes an explicit `deleteAuditDataStorage` middleware that
+      calls `auditStorage.deleteUser(userId)` regardless of the
+      configured audit engine. SQLite + PostgreSQL audit deployments
+      converge on the same end-state: zero audit rows for the deleted
+      subject. The `[USAD]` test suite asserts engine-agnostically via
+      `auditStorage.forUser(userId).countEvents() === 0`.
+
+      Operator setting `audit.onUserDelete` (shipped in `405b3a1`)
+      gates the behaviour:
+        - `erase` (default) — runs the audit erasure (GDPR Art.17 /
+          CCPA §1798.105 / PIPEDA Principle 4.5 default).
+        - `keep` — skips the wipe with an info-log. For HIPAA
+          §164.316(b)(2)(i) (6-year audit retention), MDR Art.10(8)
+          (10-year device-history retention), or any regime keeping the
+          audit under a separate lawful basis (GDPR Art.17(3)(b)). The
+          operator documents the retention in their DPIA.
+        - `pseudonymise` — REFUSED AT BOOT by `config/plugins/config-
+          validation.js`. Depends on the not-yet-shipped
+          `auth.randomAlias` primitive (`proposals/aliases-as-
+          pseudonymization-primitive.md`); will compose with it once
+          ALIASES ships, for audit-row PII null-out while preserving
+          forensic value.
+
+      SQLite-audit + `keep` mode known caveat: the parent
+      `deleteAuditData` filesystem-wipe step still runs after
+      `deleteAuditDataStorage` returns from `keep`, so the per-user
+      `.sqlite` audit file is removed regardless. PG-audit deployments
+      get `keep` semantics as designed (rows survive). Operators
+      wanting `keep` on SQLite need a PG audit migration or a follow-
+      up teaching `deleteAuditData` to skip when `mode === 'keep'`.
+    technical: |
+      Tested via `[USAD]`
+      (`open-pryv.io/components/api-server/test/deletion-seq.test.js` —
+      exercises the `user-account.delete` config-dependent path).
+      Pipeline source: `components/business/src/auth/deletion.ts`
+      (`deleteAuditData` step) + `components/api-server/src/methods/
+      auth/delete.ts` (middleware registration).
+
+  - ref: Art.18
+    title: Right to restriction of processing
+    text: |
+      Right to obtain restriction (data stored but not processed) in
+      defined circumstances.
+    coverage: configurable
+    pryv_effort_saved: medium
+    draft: true
+    pryv_primitives: [access, permissions]
+    config_keys: [access.permissions]
+    tests: [AA02, ACCP]
+    overview: |
+      Restriction is achieved by mutating the access — scope-down via
+      `accesses.update` (narrower permissions) or full revoke via
+      `accesses.delete`. Versioning preserves the pre-restriction state
+      so the change is auditable. No dedicated "restriction flag" — the
+      access mutation IS the restriction primitive.
+    detail: |
+      Article 18 envisions restriction as a temporary state where data
+      is stored but not processed. With Pryv:
+        - Data continues to live in events / streams (unchanged).
+        - Processing (= API access through an access token) is restricted
+          by lowering the relevant access's `permissions` to `none` on
+          affected streams or by deleting the access.
+        - The access-version chain proves when the restriction took
+          effect and what state was in force before.
+
+      You may also surface a restriction flag in
+      `access.clientData.restriction_reason` for record-keeping
+      (Art.30 register entry).
+
+  - ref: Art.20
+    title: Right to data portability
+    text: |
+      Right to receive personal data concerning subject in structured,
+      commonly used, machine-readable format; right to transmit to
+      another controller.
+    coverage: implemented
+    pryv_effort_saved: high
+    draft: true
+    pryv_primitives: [event, stream, data-types, account-backup-tool]
+    functional_specs: [EVENT.BASE, STREAM.BASE]
+    tests: [EGSQ]
+    overview: |
+      `events.get` + `streams.get` return canonical JSON validated against
+      the data-types schemas — structured, commonly used, machine-readable.
+      Attachments downloadable. No proprietary lock-in: another Pryv
+      operator can import the data into a new account via standard
+      write APIs.
+    detail: |
+      Export shape is the same JSON the data subject (or their delegated
+      app) would see at any time via the API. You can wrap this in a
+      "download my data" UI; the underlying primitive needs no special
+      export endpoint.
+
+      Direct controller-to-controller transmission (§2) is supported via
+      the CMC capability flow: a single-event-scoped capability access
+      mints a URL the receiving controller can read once.
+
+      **Portability of custom event types**: deployments using a
+      custom event-type catalogue (via `service.eventTypes`, see
+      `context/custom-event-type-catalogues.md`) export the same
+      canonical JSON shape for custom types as for upstream
+      `pryv/data-types` types — they're first-class in the
+      validation + serialisation pipeline. Receiving Pryv.io
+      deployments that ship the same catalogue (or a superset)
+      can import the events without loss. A receiving deployment
+      without the custom catalogue would reject unknown types at
+      write-time validation — the implementer ensures schema
+      alignment between transmitting + receiving operators when
+      relying on §2 controller-to-controller transmission.
+
+  - ref: Art.21
+    title: Right to object
+    text: |
+      Right to object to processing based on legitimate interests or
+      public interest; absolute right to object to direct marketing.
+    coverage: facilitated
+    pryv_effort_saved: medium
+    facilitation_mode: primitive
+    draft: true
+    pryv_primitives: [access, permissions, clientData, event]
+    overview: |
+      Pryv doesn't do profiling or marketing itself, but if your
+      app does either using Pryv-stored data, your subjects have
+      the right to object. **The mechanism is the same as Art.7(3)
+      withdrawal (Q19)** — `DELETE /accesses/:id` or
+      `accesses.update` to narrow permissions; Pryv's primitives
+      are basis-agnostic. The legal distinction between Art.21
+      objection (legitimate-interests / public-interest basis) and
+      Art.7(3) withdrawal (consent basis) is semantic, not
+      technical. Record the objection on the access's `clientData`
+      per the consolidated convention catalogue at
+      `context/client-data-conventions.md`.
+    detail: |
+      For direct marketing (absolute right per §2), the typical pattern is:
+        - Subject submits objection (via your app's UI).
+        - You record the objection event (e.g., a custom
+          `consent/object-marketing` event or a flag in
+          `account.clientData.marketing_objection`).
+        - You revoke or narrow the access used by the marketing process
+          → versioned, auditable.
+        - Subsequent marketing-process runs see the access is gone /
+          narrowed → no processing happens.
+
+      For Art.21(1) objections (legitimate interests / public interest),
+      same pattern; you also need a "compelling legitimate grounds"
+      review process before deciding to override the objection.
+      Record the operator-side review outcome on the access's
+      `clientData.objection_outcome` (one of `"honoured"`,
+      `"overridden_compelling_grounds"`, `"out_of_scope"`) plus
+      a free-text `clientData.objection_rationale` pointing at
+      the legal-basis document — both versioned + audit-traceable
+      via access-versioning (`context/access-versioning.md`).
+
+      For Art.21(5) transparency ("right to object presented
+      clearly and separately from any other information at the
+      time of the first communication") — same convention family
+      as Art.7 consent text: persist the notice on
+      `clientData.objection_notice` so the version chain proves
+      what the subject was told when the access was minted.
+      See `context/client-data-conventions.md` for the full
+      catalogue.
+
+  - ref: Art.19
+    title: Notification obligation regarding rectification / erasure / restriction
+    text: |
+      Controller shall communicate any rectification, erasure or
+      restriction of processing carried out per Art. 16-18 to each
+      recipient to whom the personal data have been disclosed, unless
+      impossible or disproportionate effort.
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: evidence
+    draft: true
+    pryv_primitives: [access, audit, CMC]
+    derives_from: [gdpr.Art.16, gdpr.Art.17, gdpr.Art.18]
+    overview: |
+      The recipients are derivable
+      from Pryv data — the accesses the controller has minted to
+      third parties. When you exercise an Art. 16-18 action that
+      affects events held by those recipients, iterate the active
+      accesses and notify each holder out-of-band. For CMC-paired
+      counterparties, the `consent/revoke-cmc` or a custom
+      `notification/rectification` event provides a structured
+      notification channel.
+
+  - ref: Art.22
+    title: Automated individual decision-making, including profiling
+    text: |
+      Data subject has the right not to be subject to a decision based
+      solely on automated processing (including profiling) which
+      produces legal effects concerning them or similarly significantly
+      affects them. Three exceptions in §2 (contract, EU/MS law, explicit
+      consent); §3 + §4 add safeguards (human intervention, special-
+      category restrictions).
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: evidence
+    draft: true
+    pryv_primitives: [audit, event, access, clientData]
+    overview: |
+      Pryv doesn't run automated
+      decisions — that's your application logic. What Pryv contributes
+      when Art.22 applies: (1) the audit log proves which inputs were
+      read for the decision; (2) the decision output can be written
+      as a Pryv event with the input reference + the decision logic
+      version captured in `clientData`, making "human intervention"
+      requests tractable (the subject can locate the specific decision
+      record); (3) the consent basis for §2(c) lives on the access's
+      clientData like every other consent record.
+    detail: |
+      Recommended pattern when you run Art.22 processing:
+        - Mint a dedicated access for the automated-decision app with
+          `clientData.processing_purpose = "automated_decision_making"`
+          + `clientData.art22_basis = "(a) contract" | "(b) law" | "(c) consent"`.
+        - Write the decision output as an event on a designated
+          `decisions/*` stream with `clientData.input_audit_ref` pointing
+          back to the audit-row range that fed it + `decision_logic_version`.
+        - When a subject requests human intervention, your portal looks
+          up that event and presents the trail to the human reviewer.
+
+  # ───── Chapter IV — Controller / Processor ─────
+
+  - ref: Art.24
+    title: Responsibility of the controller
+    text: |
+      Taking into account the nature, scope, context, purposes of
+      processing + risks for rights and freedoms of natural persons,
+      controller shall implement appropriate technical + organisational
+      measures to ensure and demonstrate processing is performed in
+      accordance with the Regulation.
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: evidence
+    draft: true
+    pryv_primitives: [access, permissions, audit, encryption-at-rest-secrets, letsEncrypt-integration, MFA, backup-restore]
+    derives_from: [gdpr.Art.5, gdpr.Art.25, gdpr.Art.32, gdpr.Art.30]
+    overview: |
+      Art. 24 is the umbrella
+      controller-accountability obligation that ties every other
+      Chapter-IV row together. Pryv contributes the technical-
+      measures substrate (this matrix enumerates it explicitly) +
+      the technical-measures demonstrability (audit log + access
+      version chain are the evidence layer). The organisational-
+      measures programme is yours.
+
+  - ref: Art.26
+    title: Joint controllers
+    text: |
+      Where two or more controllers jointly determine purposes and
+      means of processing, they are joint controllers. They shall, in
+      a transparent manner, determine their respective responsibilities
+      for compliance with the Regulation by means of an arrangement.
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: awareness
+    draft: true
+    pryv_primitives: [access, clientData, CMC]
+    overview: |
+      **CMC is NOT a joint-controller pattern by default.** Pryv's
+      CMC primitive requires **subject validation** — User A's
+      `consent/accept-cmc` event is what authorises any cross-account
+      data flow to User B's operator. Each operator remains the
+      **sole controller** for their respective user's data; the
+      lawful basis for B's processing of A's data is A's CMC
+      consent record (Art.6(1)(a)), not a controller-to-controller
+      agreement. This is controller-to-controller transmission
+      *via subject consent* (Art.20(2) lineage), not Art.26 joint
+      controllership. Real Art.26 fires only if Operator-X +
+      Operator-Y separately decide to jointly process a category
+      of subjects' data — outside the CMC primitive.
+    detail: |
+      **Art.26 test**: "two or more controllers JOINTLY determine
+      purposes and means". In a CMC share:
+        - The **purpose** is declared in A's
+          `consent/request-cmc` event (or accepted from B's
+          request) — A determines whether to consent.
+        - The **means** are A's access permissions + B's access
+          scope, both anchored to A's accept event.
+        - Neither operator decides on behalf of both;
+          subject A is the determiner.
+
+      So a CMC share does NOT trigger Art.26. It's covered by:
+        - **Art.6(1)(a)** (consent) — A's consent is the lawful
+          basis for B's operator to process A's data.
+        - **Art.20(2)** (data portability — transmit to another
+          controller) — the act of CMC delivery is "transmission
+          to another controller" with subject's consent.
+        - **Art.13/14** (transparency) — each operator carries
+          their own transparency obligation to their respective
+          user; A's operator informs A about who receives the
+          data; B's operator informs B about what data they
+          received + the lawful basis (A's consent).
+
+      **Where Art.26 actually applies**: when two operators run a
+      joint research programme, joint health platform, or
+      shared-purpose service where both decide on processing
+      independently of subjects' individual choices. In that
+      case, the arrangement IS the operator-side contract;
+      Pryv's contribution is `clientData.joint_controller_arrangement`
+      on the relevant accesses (point to the written agreement)
+      + the "essence" of the arrangement in
+      `clientData.privacy_notice` for Art.26(2). This is
+      operator-edited metadata, no Pryv primitive enforces it.
+
+      Full CMC-vs-Art.26 reasoning in
+      `context/cmc-consent-primitives.md`.
+
+  - ref: Art.27
+    title: Representative of controllers / processors not established in the Union
+    text: |
+      Where Art. 3(2) applies, controller or processor not established
+      in the Union shall designate in writing a representative in the
+      Union, except where processing is occasional, doesn't include
+      large-scale special-category data, etc.
+    coverage: out-of-scope
+    draft: true
+    overview: |
+      Representative designation is a contractual + regulatory
+      registration step. No software role.
+
+  - ref: Art.29
+    title: Processing under the authority of the controller or processor
+    text: |
+      Processor and any person acting under the authority of the
+      controller or processor, who has access to personal data, shall
+      not process those data except on instructions from the controller.
+    coverage: facilitated
+    pryv_effort_saved: high
+    facilitation_mode: primitive
+    draft: true
+    pryv_primitives: [access, permissions, audit]
+    derives_from: [gdpr.Art.28]
+    overview: |
+      "Only on instructions" is
+      enforced operationally through the access primitive — workforce
+      / contractor / app accesses are scoped to specific streams +
+      levels per the controller's instructions, and the audit log
+      proves what was actually done. Violations show as out-of-scope
+      access attempts or unauthorized method calls in the audit data.
+
+  - ref: Art.25
+    title: Data protection by design and by default
+    text: |
+      Controller shall implement technical + organisational measures
+      designed to integrate data-protection principles; default settings
+      shall be privacy-protective.
+    coverage: facilitated
+    pryv_effort_saved: high
+    facilitation_mode: infrastructure
+    draft: true
+    pryv_primitives: [access, permissions, stream, system-streams]
+    overview: |
+      Pryv's whole
+      architecture leans privacy-by-design — per-user storage
+      isolation, stream-scoped permissions, separate personal/app/
+      shared access types, privileged data on system streams. Your
+      defaults (token scopes, audit-on, retention) are the part still
+      in your hands.
+    detail: |
+      Pryv's architecture is privacy-by-design **by founding
+      pattern**, not retrofitted. Canonical treatment + the
+      12-default catalogue: `context/privacy-by-design-and-
+      default.md` (matrix-internal); customer-facing surface
+      [`pryv.github.io/guides/privacy-by-design.html`](https://pryv.github.io/guides/privacy-by-design.html).
+
+      **Architectural commitment (§1)** — the topology:
+      Data Governance + Access Control + Audit-per-Subject as
+      separate layers that every process traverses; not direct
+      personal-data access with after-the-fact audit (the PbD
+      anti-pattern). Process registry is self-documented via
+      `GET /accesses` + audit log (= the Art.30 records-of-
+      processing register, derivable on demand).
+
+      **Data-model commitment** — streams + events segregated
+      by data-subject AND context. Granular consent (each
+      access targets a specific stream subtree, not a wall of
+      tables); adapt data collection per subject without schema
+      migration. Substrate for Art.5(1)(c) minimisation +
+      Art.7 granular consent + Art.17 erasure + Art.20
+      portability.
+
+      **By-default catalogue (§2)** — 12 platform defaults that
+      satisfy "by default, only data necessary for each
+      specific purpose are processed":
+
+      1. **Default-deny on permissions** (empty `permissions: []`).
+      2. **Audit-on by default** (invariant, no opt-out).
+      3. **TLS enforced** (optional Let's Encrypt integration).
+      4. **Hosting region pinned per user** (Q12 architectural
+         residency).
+      5. **Stream-permission granularity** (Q22 — no "public"
+         tier exists).
+      6. **Data-minimal audit** (Q9 — never captures request
+         body).
+      7. **Schema validation at ingest** (Q21 — ajv-draft-04
+         rejects out-of-shape payloads by default).
+      8. **Zero mandatory subprocessors** (Q23 — every
+         integration opt-in).
+      9. **Audit-minimal logger** (Q23 — `inspectAndHide`
+         credential redaction invariant, `[BIH1-6]` tests).
+      10. **CMC requires explicit subject consent**
+          (`consent/accept-cmc` blocking).
+      11. **PlatformDB encrypted secrets** (LE + observability
+          patterns).
+      12. **Withdrawal API exists by default** (Q19 —
+          `DELETE /accesses/:id` always available).
+
+      **Still in your hands (Art.25 §2 — operator's
+      by-default settings)**:
+        - Are app tokens minted with the smallest possible scope?
+        - Is your subject's notice-of-collection on by default?
+        - Is data retention set to the shortest necessary period?
+        - Is your auth UI surface using the opt-in pattern
+          (privacy-by-default UX from the dev-site
+          reference) rather than the standard "by continuing
+          you agree" anti-pattern?
+
+      Privacy-enhancing technologies (PETs) catalogued in the
+      dev-site guide: pseudonymisation (partial — `ALIASES`
+      backlog upgrades), proxy re-encryption (`E2E-ENCRYPTION`
+      backlog + the github.com/perki/test-proxy-re-encrypt PoC),
+      homomorphic encryption + differential privacy + MPC
+      (out-of-scope at platform layer; implementer's enrichment
+      path).
+
+  - ref: Art.28
+    title: Processor
+    text: |
+      Where processing is to be carried out on behalf of a controller,
+      the controller shall use only processors providing sufficient
+      guarantees to implement appropriate technical + organisational
+      measures. Processing by a processor shall be governed by a
+      contract setting out subject matter, duration, nature + purpose,
+      type of data, obligations and rights of the controller.
+    coverage: facilitated
+    pryv_effort_saved: medium
+    facilitation_mode: storage
+    draft: true
+    pryv_primitives: [audit, access, clientData, encryption-at-rest-secrets, letsEncrypt-integration, observability-provider]
+    overview: |
+      When the Pryv operator and
+      the controller are distinct legal entities (typical SaaS
+      arrangement), the operator is the Art.28 processor. Pryv-the-
+      software provides the technical substrate the §1 "sufficient
+      guarantees" evaluation rests on (this matrix enumerates it);
+      the data-processing-agreement (DPA) under §3 is the operator's
+      contract. Audit log + access primitives carry "documented
+      controller instructions" (§3(a)) and the records that
+      demonstrate compliance (§3(h)).
+    detail: |
+      **Zero mandatory subprocessors.** Pryv-the-software ships with
+      no required third-party-service relationships. The default
+      deployment (operator's chosen cloud provider only — opaque to
+      Pryv) has no sub-processors from the platform's perspective.
+      Every external integration is opt-in through config.
+
+      **Opt-in integration inventory (§2 + §4 sub-processor list when
+      activated)** — see `context/subprocessor-posture-and-data-flow.md`
+      for code anchors + per-integration data-flow analysis:
+
+      | Config gate | Subprocessor | What flows out |
+      |---|---|---|
+      | `letsEncrypt.enabled: true` | LE (or any `letsEncrypt.directoryUrl` ACME CA) | hostnames only for ACME challenges; **no user data** |
+      | `services.email.smtp.*` | operator's SMTP relay | email + name + one-time tokens (templated bodies) — PII. **Pryv recommends per-core SMTP configuration** — the `services.email.smtp.*` config block is per-core, so an EU core routes mail through an EU SMTP relay independently of a US core's relay. Use this when residency is a hard requirement (e.g., EU subjects' password-reset emails never touching a US-jurisdiction relay) |
+      | `services.mfa.mode: enabled` + `sms.endpoints[*]` | operator's SMS provider | phone number + MFA code — PII |
+      | `observability.provider: <id>` | Operator's chosen APM vendor (New Relic ships as the first adapter; the façade is pluggable — Datadog, Honeycomb, OpenTelemetry, internal Prometheus pipelines, etc. all drop in via a custom adapter under `providers/<id>/`) | aggregated metrics + error traces; PII filter is provider-specific (NR adapter ships a strict attribute-exclude list — see Layer 3 below) |
+      | `service.eventTypes: https://...` | upstream catalogue host | **no personal data flows out** — fetch-only of JSON Schema fragments |
+
+      **Let's Encrypt posture (operator clarification)**: ships as a
+      **dev-platform facilitator** — the easy on-ramp for `*.pryv.me`-
+      style dev clusters. **Production deployments should treat CA
+      choice as an operator decision.** Keep LE if its compliance
+      posture matches yours, swap to a commercial CA / internal CA /
+      air-gapped issuance pipeline if not. The ACME orchestrator
+      reads `letsEncrypt.directoryUrl`, so any ACME-compatible CA
+      drops in without code changes.
+
+      **Data-flow guarantees that limit subprocessor exposure** —
+      three real layers, each tested:
+
+      1. **Audit-by-construction (Q9)** — audit captures method +
+         access ref + URL query (incl. content-query search values
+         on the GET path — see
+         `context/content-query-audit-semantics.md`) + integrity
+         hash; **never the request body**; `auth=` query-string
+         params stripped.
+         `components/audit/src/Audit.ts:151-166`.
+      2. **Logger sanitization** — every `logger.{info,warn,error,
+         debug}` call passes args through `inspectAndHide`
+         (`components/boiler/src/logging.ts:253-298`): object keys
+         `password`/`passwordHash`/`newPassword` → `'(hidden
+         password)'`; string regex `auth=c[a-z0-9-]*` → `'auth=
+         (hidden)'`; serialised JSON password fields →
+         `'$1=(hidden)'`. Tested by `[BIH1]`-`[BIH6]` in
+         `components/api-server/test/boiler-inspectAndHide.test.js`
+         + `system-seq.test.js:533`. Honest scope: redacts
+         credentials, not PII broadly — emails / usernames / event
+         payloads only leak if a caller explicitly logs them.
+      3. **Observability PII filters** (when observability opt-in,
+         provider-specific) — the shipped New Relic adapter's
+         hard-coded attribute exclude list at
+         `components/business/src/observability/providers/newrelic/
+         newrelic.ts:39-49`: strips `request.headers.{authorization,
+         cookie,proxy-authorization,set-cookie*,x-*}` + `request.
+         body`; `record_sql: 'off'`; `allow_all_headers: false`.
+         The façade contract itself is pluggable — a custom
+         adapter (Datadog, Honeycomb, OpenTelemetry, internal
+         Prometheus, etc.) implements PII filtering through its
+         vendor's mechanism. **Operators writing custom adapters
+         own the PII-filter equivalence** — review every custom
+         adapter for its own PII-exposure surface.
+
+      **§3(g) deletion / return of personal data at the end of
+      provision** — `bin/backup.js` + `system.users.delete` cover
+      both directions.
+
+      **§3(h) auditability** — the operator demonstrates compliance
+      partly via Pryv's audit log + this compliance matrix
+      (evidence-backed assertion structure).
+
+      **Future: machine-readable subprocessor inventory** — the
+      planned `GET /system/admin/config/effective` admin route
+      (`CONFIG-EFFECTIVE-EXPOSURE` per `UPDATE-TRIGGERS.md`) will
+      expose the merged effective config per core as a single JSON
+      artefact the operator's DPA register + Art.30
+      records-of-processing pipeline can consume directly. Until
+      then, the operator reads `override-config.yml` + per-host
+      overlays + identifies non-default integrations by hand.
+
+  - ref: Art.30
+    title: Records of processing activities
+    text: |
+      Each controller + processor shall maintain a record of processing
+      activities under its responsibility (purposes, categories,
+      recipients, transfers, retention, security).
+    coverage: implemented
+    pryv_effort_saved: high
+    draft: true
+    pryv_primitives: [access, clientData, audit, CMC, data-residency]
+    docs: [customer-resources/audit-setup.md, guides/audit-logs.md]
+    tests: [U9HQ, QXCH, AA01]
+    planned:
+      - kind: feature
+        summary: "Chained / signed audit log makes the Article 30 register tamper-evident"
+        proposal: proposals/audit-log-chaining.md
+        backlog: AUDIT-LOG-CHAINING
+        tracking_url: https://github.com/pryv/open-pryv.io/issues/74
+        impact: low
+    overview: |
+      The combination of access + clientData + audit + (cross-account)
+      CMC + data-residency IS your Article 30 register: who, what, why,
+      when, recipients, transfers, retention — all derivable per-subject
+      and per-time-window from primitives Pryv records continuously.
+    detail: |
+      Register field → Pryv data source:
+
+      | Article 30 field | Pryv source |
+      |---|---|
+      | Controller / processor identity | your operator metadata + audit user identity |
+      | Purpose | `access.clientData.purpose` (by convention) |
+      | Categories of data subjects | derived from user-account metadata |
+      | Categories of personal data | event `class/format` from data-types |
+      | Categories of recipients | counterparty `access` (CMC pair) |
+      | Transfers to third countries | CMC counterparty `apiEndpoint` host + chosen hosting |
+      | Retention | `access.clientData.retention` + `access.expires` |
+      | Security measures | covered in Art.32 |
+
+      Audit row → access ref (with serial) → consent state at that moment.
+      Recoverable per data-subject + per-time-window + per-purpose.
+    technical: |
+      Audit data lives in per-user SQLite
+      (`open-pryv.io/components/audit/`); `audit.get` API method exposes
+      it with access-time + method + access reference. The audit row
+      content is data-minimal by construction — it carries action +
+      source (transport + ip) + URL query + access ref + integrity
+      hash, never the request body. So the Article 30 register
+      derived from audit doesn't itself raise Art.5(1)(c) data-
+      minimisation concerns + survives Art.17 erasure of the
+      underlying events with no residual personal data attached to
+      the audit rows themselves (only opaque method names + access
+      ids remain). One caveat: content-query search values submitted
+      over HTTP GET are part of the recorded URL query and survive
+      erasure of the matching events — they are the caller's request,
+      not the subject's data. See
+      `context/content-query-audit-semantics.md`.
+
+  - ref: Art.32
+    title: Security of processing
+    text: |
+      Controller + processor shall implement appropriate technical +
+      organisational measures: pseudonymisation, encryption, ongoing
+      CIA, restoration, regular testing.
+    coverage: facilitated
+    pryv_effort_saved: high
+    facilitation_mode: infrastructure
+    draft: true
+    pryv_primitives: [permissions, system-streams, letsEncrypt-integration, multi-core-mTLS, encryption-at-rest-secrets, backup-restore, MFA, data-residency]
+    planned:
+      - kind: feature
+        summary: "End-to-end encryption shifts encryption from Configurable infrastructure to a Pryv-managed primitive"
+        proposal: proposals/e2e-encryption.md
+        backlog: E2E-ENCRYPTION
+        tracking_url: https://github.com/pryv/open-pryv.io/issues/34
+        impact: low
+      - kind: feature
+        summary: "auth.randomAlias would name pseudonymisation as a switch-on primitive at Art.32 §1(a)"
+        proposal: proposals/aliases-as-pseudonymization-primitive.md
+        backlog: ALIASES
+        tracking_url: https://github.com/pryv/open-pryv.io/issues/38
+        impact: medium
+      - kind: feature
+        summary: "Three-phase supply-chain scanning pipeline strengthens the §1(b)/(c) ongoing-CIA + integrity axis with concrete SCA + SBOM + signed-image evidence"
+        proposal: proposals/supply-chain-scanning-pipeline.md
+        backlog: SUPPLY-CHAIN-SCANNING-PIPELINE
+        tracking_url: https://github.com/pryv/open-pryv.io/issues/81
+        impact: low
+      - kind: feature
+        summary: "PlatformDB at-rest encryption strengthens §1(a) encryption evidence at the cluster-replicated identification + routing layer"
+        proposal: proposals/platformdb-at-rest-encryption.md
+        backlog: PLATFORMDB-AT-REST-ENCRYPTION
+        tracking_url: https://github.com/pryv/open-pryv.io/issues/79
+        impact: medium
+      - kind: feature
+        summary: "PlatformDB HMAC-pseudonymisation gives §1(a) pseudonymisation evidence at the PlatformDB layer; reduces cross-border PII exposure in multi-region clusters"
+        proposal: proposals/platformdb-pii-hashing.md
+        backlog: PLATFORMDB-PII-HASHING
+        tracking_url: https://github.com/pryv/open-pryv.io/issues/80
+        impact: medium
+      - kind: enhancement
+        summary: "Published vulnerability disclosure program (security mailbox + PGP + GHSA + scope + SLA + safe harbor) strengthens §1(d) testing/effectiveness evidence; modernises today's bare SECURITY.md"
+        proposal: proposals/vulnerability-disclosure-program.md
+        backlog: VULNERABILITY-DISCLOSURE-PROGRAM
+        tracking_url: https://github.com/pryv/open-pryv.io/issues/84
+        impact: medium
+    overview: |
+      Multi-aspect article —
+      Pryv implements several aspects for you (access control,
+      encryption-in-transit, restoration) and provides configurable
+      controls for others (encryption-at-rest, pseudonymisation, data
+      residency). Organizational measures (regular testing, incident
+      response procedures) stay in your court.
+    detail: |
+      Per-aspect:
+        - Encryption in transit: IMPLEMENTED — TLS 1.3 via built-in
+          Let's Encrypt integration; mTLS between cores in a cluster.
+        - Encryption at rest: CONFIGURABLE — you enable operator
+          filesystem encryption (out-of-band) + AES-256-GCM for at-rest
+          operator secrets in PlatformDB. Event attachments inherit the
+          at-rest controls of your `storages.file.engine` choice:
+          filesystem encryption, S3 server-side encryption (SSE), or —
+          with attachments stored in PostgreSQL — the same DB-level
+          encryption that covers user rows.
+        - Pseudonymisation: FACILITATED — system streams + custom
+          event-type design; pseudonyms live in `clientData` or
+          dedicated streams.
+        - Access control: IMPLEMENTED — `permissions` enforce stream-
+          level scope at every API call (technical control, not policy).
+        - Authentication strength: IMPLEMENTED — `mfa.*` API methods,
+          opt-in per `services.mfa.mode`.
+        - Data residency: CONFIGURABLE — multi-hosting puts data where
+          your subjects (or your policy) require, bounding exposure
+          surface.
+        - Ability to ensure ongoing CIA (§1(b)): FACILITATED — multi-core
+          HA via rqlite cluster, health-checks, audit log.
+        - Restoration (§1(c)): IMPLEMENTED — `bin/backup.js --restore`
+          per-user.
+        - Regular testing (§1(d)): FILLED BY EXISTING PRIMITIVES +
+          PARTIALLY MISSING on the vulnerability-intake side.
+          **Existing evidence (citable today)**:
+            - **Multi-engine CI test matrix** — ~2351 tests on
+              PostgreSQL and SQLite (matched baseline),
+              ~175 test files across `components/*/test/`; runs
+              on every commit + every PR.
+            - **Lint + typecheck gates** (`just lint` + `just
+              typecheck`) — neostandard with `{ semi: true }`,
+              `noUnused*` strict.
+            - **Deploy-validation matrix** (Plan-28-era internal
+              artefact) — 8-row scenario matrix exercised on
+              every release.
+            - **Conformance suite** (`lib-js` 168/169 baseline
+              against deployed core) — runnable per-deployment
+              for operator-side verification (sample-app
+              proposal queued to package this as a customer-
+              facing "verify your deployment" runbook).
+            - **Supply-chain pipeline** (Q24 backlog) —
+              once shipped, adds SBOM + signed images + CI gate
+              on `npm audit` + Trivy/Grype scan.
+          **Partial gap (queued)**: the vulnerability-intake
+          program. Today's `SECURITY.md` directs reporters at
+          the **public** issue tracker — opposite of responsible
+          disclosure norms. Backlog
+          `VULNERABILITY-DISCLOSURE-PROGRAM` ships the modern
+          shape (private channel via GitHub Security Advisories +
+          `security@` mailbox + PGP + scope + SLA + safe harbor
+          + advisory history) so operator can cite Pryv's VDP +
+          GHSA log as part of their Art.32(1)(d) evidence file.
+
+  - ref: Art.33
+    title: Notification of personal data breach to the supervisory authority
+    text: |
+      Controller shall notify supervisory authority within 72 hours of
+      becoming aware of a breach (unless unlikely to result in risk).
+    coverage: facilitated
+    pryv_effort_saved: medium
+    facilitation_mode: evidence
+    draft: true
+    pryv_primitives: [audit, encryption-at-rest-secrets]
+    docs: [customer-resources/audit-setup.md]
+    planned:
+      - kind: feature
+        summary: "bin/breach-scope.js — emits §33(1)(b-d) scoping report from audit + access-version data for a compromised accessId"
+        proposal: proposals/breach-scope-tool.md
+        backlog: BREACH-SCOPE-TOOL
+        tracking_url: https://github.com/pryv/open-pryv.io/issues/76
+        impact: medium
+    overview: |
+      Pryv's audit log helps you
+      determine the scope of a breach (which data, which users, by
+      which access). Encryption-at-rest may scope the "unsecured
+      personal data" definition relevant to the notification decision.
+      The 72-hour process itself is yours to run.
+    detail: |
+      Breach detection + scoping is software-assisted:
+        - `audit.get` over the suspected time window → list of access
+          tokens that touched the data + which streams were read.
+        - access version chain → consent state at the moment of access
+          (was processing within authorised scope?).
+        - encryption-at-rest → if the leaked artefact is encrypted
+          operator backup, the data may qualify as "secured" and
+          notification may not be required per Art.33 §1.
+      Detection-of-breach itself depends on monitoring + log review you
+      run around the audit data.
+
+  - ref: Art.34
+    title: Communication of a personal data breach to the data subject
+    text: |
+      Where breach likely to result in high risk, controller shall
+      communicate to data subjects without undue delay.
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: evidence
+    draft: true
+    pryv_primitives: [audit, access, encryption-at-rest-secrets, event, system-streams]
+    docs: [customer-resources/audit-setup.md]
+    overview: |
+      Two-surface split. **Identification** is filled by the audit
+      log + the Q17 BREACH-SCOPE-TOOL backlog (per-subject roster
+      derivable from the breached access's read/write history);
+      **delivery** is voluntarily missing + operator-owned (Pryv's
+      mail surface is transactional per-recipient, not bulk-send;
+      operators compose with their existing CRM / SMS / push
+      pipeline). The audit-trace bridge that lands per-recipient
+      send-receipts inside Pryv's event chain (satisfying
+      §164.414-equivalent burden-of-proof) uses an operator-
+      authored `compliance/breach-notification/sent-cmc` event
+      pattern. Full treatment in
+      `context/breach-notification-delivery-operator-owned.md`.
+      Encryption-at-rest may scope the high-risk determination
+      (Art.34 §3(a) exemption).
+    detail: |
+      **Identification surface** — derive the affected-subject
+      list from `audit.get` filtered by (`breachedAccessId`,
+      time window). Q17 BREACH-SCOPE-TOOL packages this into
+      `bin/breach-scope.js` + adds the §164.404(c) content
+      elements (`recordCount` + `affectedStreamIds[]`) via
+      audit-row schema extensions. Once that ships,
+      identification is single-command + audit-defensible.
+
+      **Delivery surface** — operator-owned by design. Pryv's
+      transactional mail (`mail.send` / `email-templates`) is
+      designed for welcome / password-reset / MFA-code emails,
+      not bulk breach broadcasts. Operators compose:
+        - Identification → `affected.json` roster from
+          BREACH-SCOPE-TOOL.
+        - Operator's CRM / mail provider (SendGrid / Mailgun /
+          AWS SES / Mandrill) renders Art.34 §2 content
+          elements per recipient + sends with retries +
+          rate-limiting.
+        - Send-receipts captured back into Pryv as
+          `compliance/breach-notification/sent-cmc` events
+          (recipient.userId + email_hash + channel +
+          provider.message_id + notice_version + time) on a
+          dedicated compliance system stream — these become
+          the §164.414-equivalent burden-of-proof artefact.
+        - Operator's incident-response record on
+          `compliance/incidents/<id>/*` cross-references the
+          affected.json input + the per-recipient send-receipt
+          event tree.
+
+      **Why voluntarily missing**: most regulated-market
+      operators already run a CRM / mail / SMS pipeline with
+      established rate-limiting + retry + send-receipt tracking
+      + legal-comms escalation; a Pryv-shipped breach-comm
+      would be redundant. Operators without one need legal/
+      comms expertise to use Art.34 §2 content + timing well
+      anyway — beyond what a platform-side template can pre-
+      fab. The Art.34 §3 exemptions (encryption-renders-
+      unintelligible / subsequent-measures-eliminate-high-risk
+      / disproportionate-effort) are legal judgements operator-
+      counsel makes.
+
+      **Multi-jurisdiction nuance** — subjects in different
+      jurisdictions face different timing regimes (GDPR "undue
+      delay" / HIPAA ≤60d / PIPEDA "as soon as feasible" /
+      California ≤45d / Swiss nLPD Art.24 conditional).
+      Operator's runbook derives per-subject timing from
+      `clientData.jurisdiction` on the account.
+
+  - ref: Art.35
+    title: Data protection impact assessment
+    text: |
+      Where processing is likely to result in a high risk to the rights
+      and freedoms of natural persons, the controller shall, prior to
+      the processing, carry out a data protection impact assessment.
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: evidence
+    draft: true
+    pryv_primitives: [audit, data-residency, access, system-streams]
+    overview: |
+      The DPIA is a written
+      assessment artefact — Pryv has no role in producing it. What
+      Pryv supplies as inputs: data-residency primitive lets you
+      state where each subject's data lives; audit + access-version
+      primitives describe the processing-flow technical layer
+      concretely; system-streams isolation gives a defensible "scope
+      of sensitive data" boundary; this matrix itself enumerates the
+      technical-organisational-measures (Art.35 §7(d)) for the
+      deployment.
+    detail: |
+      §7 prescribed content → Pryv-side artefacts feeding each item:
+        - (a) systematic description of processing → audit-log
+          method/path coverage + access purposes from clientData.
+        - (b) necessity / proportionality assessment → the
+          minimum-necessary stream + permission design (cross-link to
+          Art.5 §1(c)).
+        - (c) risk assessment → operator-side artefact; this matrix
+          contributes the technical-control inventory.
+        - (d) measures envisaged to address the risks → see the
+          Art.32 row of this matrix + cross-scope ISO 27001 A.8
+          control rows.
+
+  - ref: Art.36
+    title: Prior consultation
+    text: |
+      Controller shall consult the supervisory authority prior to
+      processing where the DPIA under Art. 35 indicates the processing
+      would result in a high risk in the absence of measures taken by
+      the controller to mitigate the risk.
+    coverage: out-of-scope
+    draft: true
+    overview: |
+      Prior consultation is the controller's procedural interaction
+      with a supervisory authority. No software role; the DPIA
+      artefact under Art. 35 carries the technical evidence the
+      authority may request — Pryv contributes inputs there but not
+      to the consultation itself.
+
+  - ref: Art.37
+    title: Designation of the data protection officer
+    text: |
+      Controller and processor shall designate a DPO where (a) processing
+      is by a public authority, (b) core activities require regular and
+      systematic monitoring on a large scale, or (c) core activities
+      consist of large-scale processing of special categories or
+      criminal-conviction data.
+    coverage: out-of-scope
+    draft: true
+    overview: |
+      DPO designation is an HR / organizational decision. No software
+      role. Where the deployment processes Art. 9 special-category or
+      Art. 10 criminal data on a large scale (likely for healthcare
+      Pryv deployments), the Art. 37(1)(c) trigger applies and a DPO
+      designation is required.
+
+  - ref: Art.38
+    title: Position of the data protection officer
+    text: |
+      DPO shall be involved properly + in a timely manner in all issues
+      relating to protection of personal data; given necessary resources;
+      shall directly report to the highest management level; shall not
+      receive any instructions regarding exercise of those tasks;
+      cannot be dismissed or penalised for performing tasks.
+      Data subjects may contact the DPO with regard to all issues
+      related to processing (§4).
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: storage
+    draft: true
+    pryv_primitives: []
+    overview: |
+      DPO independence + reporting structure (§1-§3) is an
+      organizational arrangement — no software role. **§4 DPO
+      contact-point for data subjects IS facilitated** by the
+      existing `serviceInfo.support` URL (returned by
+      `GET /service/info` on every core). Operators publish DPO
+      contact details on the page that `support` points at — the
+      same surface that `app-web-auth3` already renders in its
+      consent UI. Zero extra platform code required. Full
+      convention treatment in
+      `context/service-info-conventions.md`.
+
+  - ref: Art.39
+    title: Tasks of the data protection officer
+    text: |
+      DPO shall have, at minimum: informing + advising the controller +
+      processor + employees; monitoring compliance; providing advice on
+      the DPIA + monitoring its performance; cooperating with the
+      supervisory authority; acting as contact point for the
+      supervisory authority.
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: evidence
+    draft: true
+    pryv_primitives: [audit, observability-provider]
+    overview: |
+      DPO duties are organizational. Pryv contributes the data
+      sources the DPO uses for "monitoring compliance" — the
+      audit log, observability metrics, this matrix's evidence
+      trail. The DPO contact-point obligation per Art.38(4) is
+      covered separately via the `serviceInfo.support` URL
+      convention (see `context/service-info-conventions.md`).
+      Pryv equips the DPO; it doesn't replace them.
+    detail: |
+      Practical DPO-monitoring patterns:
+
+      - **Audit-log access** for the DPO is currently bound to
+        per-user-scoped permissions; no built-in "cross-account
+        audit reader" personal-token tier exists. Operators
+        granting DPOs platform-wide audit visibility typically
+        use `auth.adminAccessKey` style admin auth, OR run a
+        side-process that exports audit events into the DPO's
+        observability / SIEM stack (Q23 observability-provider
+        primitive — pluggable façade).
+      - **Compliance matrix as evidence trail**: this
+        compliance-matrix repository itself is the structured
+        artefact the DPO references for "what does the platform
+        contribute to each regulatory control?" — see how
+        scopes / requirements / pryv_primitives / planned chips
+        / context notes interlink for the auditable claim graph.
+      - **DPIA / breach-scope tooling** the DPO consumes when
+        active: future admin-panel surfaces (the
+        `CONFIG-EFFECTIVE-EXPOSURE` effective-config endpoint for
+        DPIA Section (d); `BREACH-SCOPE-TOOL` backlog for the
+        breach scoping artefact).
+
+  - ref: Art.40
+    title: Codes of conduct
+    text: |
+      Member States, supervisory authorities, the Board and the
+      Commission shall encourage the drawing up of codes of conduct
+      intended to contribute to the proper application of the
+      Regulation.
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: awareness
+    draft: true
+    pryv_primitives: [audit, access]
+    overview: |
+      Codes of conduct are sector-
+      level instruments (drafted by associations of controllers /
+      processors, approved by competent supervisory authority). No
+      software role at the code-drafting layer. When a code applies
+      to your sector, adherence is recorded as one of the Art. 24 /
+      Art. 32 "appropriate measures"; the audit log + this matrix
+      demonstrate the technical-control side of code adherence.
+
+  - ref: Art.42
+    title: Certification
+    text: |
+      Member States, supervisory authorities, the Board and the
+      Commission shall encourage the establishment of data-protection
+      certification mechanisms, seals and marks.
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: awareness
+    draft: true
+    pryv_primitives: [audit, access]
+    derives_from: [iso-27701.5]
+    overview: |
+      Certification (e.g.,
+      EuroPrivacy seal, GDPR-certified processor schemes) is sector-
+      and jurisdiction-specific. Pryv operators pursuing certification
+      consume this matrix as the technical-control inventory. ISO
+      27701 + (where applicable) HDS are adjacent certifications
+      already represented in this matrix.
+
+  - ref: Art.82
+    title: Right to compensation and liability
+    text: |
+      Any person who has suffered material or non-material damage as a
+      result of an infringement of the Regulation shall have the right
+      to receive compensation from the controller or processor for the
+      damage suffered.
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: evidence
+    draft: true
+    pryv_primitives: [audit, access]
+    overview: |
+      Liability + compensation are
+      legal proceedings. Pryv contributes defense evidence: the audit
+      log + access-version chain support the controller / processor
+      in demonstrating compliance with the relevant obligations (or,
+      where compliance failed, in scoping the actual damage). The
+      legal outcome is fact-specific.
+
+  - ref: Art.83
+    title: General conditions for imposing administrative fines
+    text: |
+      Each supervisory authority shall ensure that the imposition of
+      administrative fines is in each case effective, proportionate
+      and dissuasive. Fines up to €20 million or 4% of total worldwide
+      annual turnover, whichever is higher.
+    coverage: out-of-scope
+    draft: true
+    overview: |
+      Fines are regulator-side. Pryv has no role in fine calculation
+      or imposition. Pryv-side data + this matrix help the controller
+      argue for mitigation under Art. 83(2) factors (degree of
+      cooperation, technical + organisational measures implemented,
+      etc.).
+
+  # ───── Chapter V — Transfers of personal data to third countries ─────
+
+  - ref: Art.44
+    title: General principle for transfers
+    text: |
+      Any transfer of personal data which are undergoing processing or
+      are intended for processing after transfer to a third country or
+      international organisation shall take place only if the controller
+      and processor comply with the conditions in Chapter V.
+    coverage: facilitated
+    pryv_effort_saved: medium
+    facilitation_mode: infrastructure
+    draft: true
+    pryv_primitives: [data-residency, CMC, access]
+    overview: |
+      The Art.44 framework
+      is operational — every Art.45-49 path is conditional. Pryv's
+      data-residency primitive is the technical enforcement layer:
+      when you bind a subject's data to a hosting inside the EU/EEA,
+      no Chapter-V analysis is needed (no transfer happens). When
+      transfer is intentional, the CMC capability flow records the
+      recipient hosting + the legal basis on the originating access's
+      clientData — making Chapter V compliance auditable per transfer
+      rather than per system.
+    detail: |
+      The residency guarantee is **two-tiered**:
+
+      **Tier 2 — Content + audit layer (residency-pinned).**
+      Cores share no event / stream / audit / attachment / access-
+      metadata data with each other. A subject assigned to an EU
+      core has ALL their Tier-2 data exclusively on that EU
+      core's storage. "Transfer" would require a deliberate
+      operator backup-restore between cores (not a runtime
+      primitive). See `context/core-affinity-architecture.md`.
+
+      **Tier 1 — Identification + routing layer (cluster-
+      replicated).** PlatformDB rows (`user-core/<username>`,
+      `user-unique-fields/email`, `dns/<subdomain>`,
+      `access-state/`, `cluster_kv/*` — see
+      `context/cross-border-platformdb-implications.md` for the
+      verified keyspace inventory) replicate cluster-wide via
+      rqlite Raft. In a multi-region cluster, this **is** a
+      continuous cross-border transfer of personal data — an
+      Art.46 mechanism (SCCs / BCRs / etc.) is legally required
+      even though Tier-2 stays put. Mitigation options (filed as
+      backlog): at-rest encryption of PlatformDB
+      (`PLATFORMDB-AT-REST-ENCRYPTION`), HMAC-pseudonymisation
+      of PII at the PlatformDB layer (`PLATFORMDB-PII-HASHING`),
+      tokenisation with per-region mapping table (option C —
+      brainstorm-tier, not yet backlogged).
+
+      **CMC counterparty nuance**: when an EU subject's stream is
+      shared with a US-based counterparty via CMC, the US client
+      connects directly to the EU core's `apiEndpoint`. The EU
+      Tier-2 data does not replicate to the US core — it's
+      fetched on-demand. From the EU subject's Art.44 perspective
+      this fetch IS a transfer (data crosses borders to reach the
+      reader), so the operator records the recipient + lawful
+      basis on the access's `clientData.transfer_basis` per
+      `context/transfer-basis-convention.md`. The data-at-rest
+      residency is preserved (no Tier-2 copy in the US); only
+      the access path + Tier-1 routing-state crosses.
+
+  - ref: Art.45
+    title: Transfers on the basis of an adequacy decision
+    text: |
+      A transfer may take place where the European Commission has
+      decided that the third country (or a territory / specified sector
+      within it) ensures an adequate level of protection.
+    coverage: configurable
+    pryv_effort_saved: high
+    draft: true
+    pryv_primitives: [data-residency, CMC]
+    config_keys: [auth.hostings]
+    tests: [REGC, RC01, RC03]
+    overview: |
+      Configure your `auth.hostings` to declare only hostings that match
+      adequate-protection regimes; route subjects to them as per your
+      transfer policy. The per-user `hosting` exposed via
+      `system.users.get` proves residency for auditor questions.
+      Maintenance of which countries currently hold adequacy (EU-US
+      DPF, Switzerland, UK, etc.) is operator-side regulatory tracking.
+
+  - ref: Art.46
+    title: Transfers subject to appropriate safeguards
+    text: |
+      In the absence of an adequacy decision, a controller or processor
+      may transfer personal data to a third country only if appropriate
+      safeguards are provided (BCRs, SCCs, approved codes / certifications,
+      ad-hoc clauses authorised by supervisory authority, etc.).
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: storage
+    draft: true
+    pryv_primitives: [access, clientData, data-residency]
+    overview: |
+      Pryv-side artefact: record the §2 mechanism on the
+      transferring access's `clientData.transfer_basis` (structured
+      object per `context/transfer-basis-convention.md` — same
+      pattern as `clientData.lawful_basis` from Art.6 + `clientData.
+      special_category_basis` from Art.9). The Art.30(1)(e)
+      transfers register is then derivable in a single `jq` query
+      against `GET /accesses`. The SCCs / BCRs / approved-code
+      documents themselves remain operator/legal artefacts; Pryv
+      persists the references + the metadata travels with the
+      access version chain.
+    detail: |
+      Three cross-border surfaces in a typical Pryv deployment:
+
+      1. **Access-bound transfers** (CMC counterparty fetches,
+         third-party-app reads across jurisdictions). Convention:
+         `access.clientData.transfer_basis` per
+         `context/transfer-basis-convention.md`. Existing
+         primitives carry persistence + versioning + audit trail
+         for free (zero Pryv code change).
+
+      2. **Multi-region cluster replication** (Tier 1 of the
+         two-tier residency model — PlatformDB rows for usernames,
+         emails, DNS subdomains, user-core mappings). See
+         `context/cross-border-platformdb-implications.md` for
+         the verified keyspace inventory + the A/B/C mitigation
+         options (at-rest encryption / PII hashing / tokenisation).
+         The strongest compliance posture combines an Art.46
+         mechanism (SCCs, BCRs, etc.) WITH at-rest encryption
+         (`PLATFORMDB-AT-REST-ENCRYPTION` backlog) AND
+         PII pseudonymisation at the PlatformDB layer
+         (`PLATFORMDB-PII-HASHING` backlog).
+
+      3. **Subprocessor outbound** (SMTP / SMS / observability
+         vendors). See `context/subprocessor-posture-and-data-
+         flow.md`. **Pryv recommends configuring per-core SMTP
+         endpoints** so the relay can match the core's region /
+         country when residency is a hard requirement — the
+         `services.email.smtp.*` config is per-core, so an EU
+         core routes mail through an EU SMTP relay independently
+         of a US core's relay. Same pattern applies to SMS
+         endpoints.
+
+      For the §2 mechanism field convention:
+      `mechanism: "art.46.2.c"` for SCCs, `"art.46.2.a"` for
+      legally-binding-instrument-between-public-authorities,
+      `"art.46.2.f"` for approved certification, etc. Or
+      `"art.45"` with an `adequacy_decision` field if relying on
+      an adequacy decision. Full field reference in the
+      convention note.
+
+  - ref: Art.47
+    title: Binding corporate rules
+    text: |
+      Competent supervisory authority shall approve binding corporate
+      rules (BCRs) provided they meet specified content + safeguarding
+      requirements.
+    coverage: out-of-scope
+    draft: true
+    overview: |
+      BCRs are organizational rules approved by a supervisory authority
+      after a formal process. No software contribution — when BCRs are
+      the chosen Art.46 safeguard, the operator records the BCR
+      reference on the transferring access's clientData (per Art.46
+      pattern); the BCR document itself is the operator's legal
+      artefact.
+
+  - ref: Art.48
+    title: Transfers or disclosures not authorised by Union law
+    text: |
+      Any judgment of a court / tribunal and any decision of an
+      administrative authority of a third country requiring a controller
+      or processor to transfer or disclose personal data may only be
+      recognised or enforceable if based on an international agreement.
+    coverage: out-of-scope
+    draft: true
+    overview: |
+      Resistance to extraterritorial subpoenas is a legal posture, not a
+      software control. Pryv's audit log will record any forced
+      disclosure executed under the access primitive (which is the only
+      way data leaves the system), making the disclosure documentable
+      after the fact. The decision of whether to comply / contest is
+      legal counsel's, not Pryv's.
+
+  - ref: Art.49
+    title: Derogations for specific situations
+    text: |
+      In the absence of an adequacy decision or appropriate safeguards,
+      a transfer may take place only on the basis of one of nine
+      enumerated derogations (explicit consent, contract performance,
+      important public interest, vital interests, legal claims, register
+      access, etc.).
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: storage
+    draft: true
+    pryv_primitives: [access, clientData, audit]
+    overview: |
+      Each Art.49 derogation
+      requires per-instance recording. Pryv pattern: mint a purpose-
+      specific access per derogation invocation with
+      `clientData.transfer_derogation = "art_49_1_a_consent"` etc.;
+      execute the transfer; revoke. The audit trail then anchors the
+      derogation rationale to the specific data movement.
+
+  - ref: Art.50
+    title: International cooperation for the protection of personal data
+    text: |
+      Commission and supervisory authorities shall take appropriate
+      steps to develop international cooperation mechanisms for the
+      effective enforcement of personal-data protection legislation.
+    coverage: out-of-scope
+    draft: true
+    overview: |
+      International-cooperation development is a regulator-level
+      activity. No software contribution; no implementer obligation
+      arises from this Article alone.

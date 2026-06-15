@@ -1,0 +1,500 @@
+id: diga
+title: Digital Healthcare Act (DVG) + DiGA Ordinance (DiGAV)
+short: DiGA
+type: regulation
+jurisdiction: Germany
+version: DiGAV (Digitale-Gesundheitsanwendungen-Verordnung) — current consolidated text
+version_date: "2020-04-21"
+canonical_url: https://www.gesetze-im-internet.de/digav/index.html
+matrix_language: EN
+curated: false
+layered_on: [gdpr, mdr]
+
+changelog:
+  - date: "2026-05-19"
+    change: initial draft — 12 rows covering DiGAV §§ 4-14 (application/listing procedure) + selected Annex 1 quality-criteria items (data protection, info security, interoperability). DiGA is an app-side regulation; Pryv contributes as the backend layer that addresses several DiGAV criteria by construction.
+
+requirements:
+
+  - ref: "4"
+    title: § 4 — Data protection and information security
+    text: |
+      The digital health application must demonstrate compliance with
+      requirements on data protection (per GDPR + Bundesdatenschutzgesetz)
+      and information security (per current state of the art, including
+      BSI guidelines).
+    coverage: facilitated
+    pryv_effort_saved: high
+    facilitation_mode: infrastructure
+    draft: true
+    pryv_primitives: [access, permissions, audit, letsEncrypt-integration, encryption-at-rest-secrets, MFA, data-residency, system-streams, backup-restore]
+    derives_from: [gdpr.Art.5, gdpr.Art.25, gdpr.Art.32]
+    overview: |
+      The data-protection
+      half of § 4 derives directly from the GDPR coverage already
+      authored (see GDPR Art. 5, Art. 25 by-design, Art. 32 security
+      of processing). The information-security half aligns with the
+      BSI TR-03161 + BSI C5 baseline; Pryv's primitives (TLS-default
+      + AES-256-GCM secrets at rest + audit by default + multi-core
+      mTLS + MFA + data-residency) carry most of the manufacturer's
+      "state of the art" claim without additional software work.
+    detail: |
+      For BfArM review, expect to provide:
+        - Data-protection concept (Datenschutzkonzept) — reuse the
+          GDPR rows from this matrix as evidence per concept item.
+        - Information-security concept (BSI TR-03161-aligned) —
+          Pryv's Annex 1 row mappings (below) feed this.
+        - Penetration test certificate within 1 year of submission
+          for the backend (Pryv) + app sides. Required at listing.
+
+  - ref: "5"
+    title: § 5 — Interoperability
+    text: |
+      The digital health application must support interoperable data
+      exchange with other systems, in particular electronic patient
+      records (ePA / TI), based on the semantic and technical standards
+      named in the BfArM interoperability annex.
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: infrastructure
+    draft: true
+    pryv_primitives: [event, data-types, stream]
+    overview: |
+      Pryv's data-types
+      schemas (canonical `class/format` JSON Schema) give you a
+      stable in-platform data model that you can map to FHIR R4 (the
+      standard BfArM expects). The FHIR-mapping layer is app-side or
+      implemented as a Pryv data-type extension — not shipped today.
+      See `proposals/fhir-data-type-mapping.md` if filed, or treat as
+      a per-app integration concern.
+    detail: |
+      BfArM lists specific HL7 FHIR profiles (KBV / gematik) the device
+      must consume / produce for ePA interoperability. Pryv's event +
+      stream model is structurally adequate (events carry typed
+      content; streams provide hierarchical categorization) but the
+      mapping is an app-layer transformation today.
+
+  - ref: "6"
+    title: § 6 — Robustness
+    text: |
+      The digital health application must be robust against failure,
+      interruption and manipulation, with appropriate processes to
+      address security incidents.
+    coverage: facilitated
+    pryv_effort_saved: medium
+    facilitation_mode: infrastructure
+    draft: true
+    pryv_primitives: [multi-core-mTLS, backup-restore, audit, observability-provider, letsEncrypt-integration]
+    overview: |
+      Pryv contributes the
+      operational baseline: multi-core HA with Raft replication;
+      cluster-CA mTLS between cores; encrypted bootstrap bundles;
+      daily-renewed TLS certs; backup + restore; audit-log for
+      forensic review. The manufacturer's incident-response procedure
+      (detection, escalation, communication) sits on top of this and
+      is the regulatory artefact BfArM reviews.
+
+  - ref: "7"
+    title: § 7 — Consumer protection
+    text: |
+      Information must be provided to users in a manner that is
+      comprehensible to laypersons; pricing, intended use, contra-
+      indications, supported devices + operating systems, data
+      categories collected, and other minimum elements must be
+      disclosed in advance.
+    coverage: facilitated
+    pryv_effort_saved: medium
+    facilitation_mode: storage
+    draft: true
+    pryv_primitives: [access, clientData, app-web-auth3, event]
+    derives_from: [gdpr.Art.13]
+    overview: |
+      Same artefact set as GDPR
+      Art. 13 (notice at collection): Pryv stores the text shown to
+      the user — durably, versioned, per subject — typically on
+      `access.clientData.privacy_notice` or in a `consent/notice`
+      event. Drafting the actual text in "lay-comprehensible"
+      language is the manufacturer's editorial work, not Pryv's.
+
+  - ref: "8"
+    title: § 8 — Patient safety
+    text: |
+      The digital health application must, in its intended use, not
+      pose unacceptable risks to patient safety. Medical-device
+      classification + conformity assessment per MDR remain the
+      manufacturer's process.
+    coverage: out-of-scope
+    draft: true
+    derives_from: [mdr.Art.51, mdr.Art.52]
+    overview: |
+      Patient-safety classification is the manufacturer's regulatory
+      task per MDR — Pryv has no software role at this layer.
+      Derives_from points at the MDR Art. 51 (classification) + Art. 52
+      (conformity) rows where Pryv is similarly out-of-scope.
+
+  - ref: "14"
+    title: § 14 — Positive supply effects (Nutzennachweis)
+    text: |
+      The manufacturer must demonstrate positive supply effects —
+      medical benefit and/or patient-relevant structural and procedural
+      improvements — through a comparative study (typically RCT) or,
+      under specified conditions, real-world evidence.
+    coverage: out-of-scope
+    draft: true
+    overview: |
+      Clinical evidence is the manufacturer's regulatory work. Pryv is
+      not in scope at the trial design / statistical analysis layer.
+      For the data-collection substrate during the study, Pryv events
+      + audit log are an option — but the regulatory burden of § 14
+      sits entirely on the manufacturer's clinical team.
+
+  - ref: A1.1.1
+    title: Annex 1.1 — Data protection — legal basis declared per processing
+    text: |
+      For each processing purpose, the manufacturer must declare the
+      Art. 6 + (if applicable) Art. 9 GDPR legal basis used.
+    coverage: facilitated
+    pryv_effort_saved: medium
+    facilitation_mode: storage
+    draft: true
+    pryv_primitives: [access, clientData]
+    derives_from: [gdpr.Art.6, gdpr.Art.9]
+    overview: |
+      Pryv pattern:
+      `access.clientData.legal_basis` captures the Art. 6 basis per
+      access; for sensitive data,
+      `clientData.special_category_basis` captures the Art. 9
+      paragraph. Both travel with the access into the audit log so
+      the declaration is auditable per processing instance, not just
+      per system.
+
+  - ref: A1.1.7
+    title: Annex 1.1 — Data minimisation
+    text: |
+      Only data necessary for the intended use shall be processed; data
+      must be deleted as soon as the purpose is fulfilled.
+    coverage: implemented
+    pryv_effort_saved: high
+    draft: true
+    pryv_primitives: [permissions, stream]
+    derives_from: [gdpr.Art.5]
+    tests: [AA01, ACCP]
+    overview: |
+      Per-stream permissions are the technical minimisation primitive:
+      each access carries only the streams + levels needed; the holder
+      cannot see more than granted. Deletion-when-purpose-fulfilled is
+      the manufacturer's retention policy, executed via
+      `system.users.delete` (full erasure) or event/stream-level
+      deletion (partial).
+
+  - ref: A1.2.1
+    title: Annex 1.2 — Information security — TLS at all interfaces
+    text: |
+      All communication interfaces of the digital health application
+      shall employ Transport Layer Security at current state of the art.
+    coverage: implemented
+    pryv_effort_saved: high
+    draft: true
+    pryv_primitives: [letsEncrypt-integration, multi-core-mTLS]
+    derives_from: [gdpr.Art.32]
+    tests: [ACMEINT, ACMEORCH, CERTUTILS, FORCERENEWIPC]
+    overview: |
+      Pryv's built-in ACME integration ships TLS 1.3 default-on with
+      automated renewal + cluster-replicated rotation; inter-core
+      traffic runs over mTLS with a cluster-private CA. There is no
+      plaintext shipped path. BfArM's "current state of the art"
+      requirement is met by current cipher-suite defaults.
+
+  - ref: A1.2.7
+    title: Annex 1.2 — Penetration test within 12 months
+    text: |
+      A penetration test performed by an independent third party within
+      12 months before listing application is required; findings of
+      "critical" severity must be remediated; "high" findings must have
+      a mitigation plan.
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: infrastructure
+    draft: true
+    pryv_primitives: [audit]
+    overview: |
+      Pryv supports the
+      manufacturer's pentest by providing a reproducible deployment
+      artefact (Docker image), a structured audit log for
+      verification, and documentation of the security surface. The
+      test commissioning + remediation cycle is the manufacturer's.
+      For repeat customers, Pryv-side findings already remediated
+      upstream reduce repeat test scope.
+
+  - ref: A1.3.1
+    title: Annex 1.3 — Interoperability — FHIR R4 export of treatment-relevant data
+    text: |
+      The digital health application must export treatment-relevant
+      data using HL7 FHIR R4 profiles approved in the BfArM
+      interoperability annex.
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: infrastructure
+    draft: true
+    pryv_primitives: [event, data-types, stream]
+    derives_from: [diga.5]
+    overview: |
+      Same status as § 5:
+      Pryv's event model is structurally adequate; the FHIR-mapping
+      transformation is app-side today. A
+      "compliance-matrix/proposals/fhir-data-type-mapping.md" entry
+      tracks the potential Pryv-side mapping primitive for cleaner
+      downstream coverage.
+    detail: |
+      The implementer's natural extension path is a **FHIR-flavoured
+      custom event-type catalogue** — a sibling data-model repo
+      that defines Pryv event types mapping 1-to-1 (or 1-to-many)
+      to BfArM-approved FHIR resources, published via the standard
+      `service.eventTypes` extension model (see
+      `context/custom-event-type-catalogues.md`). The mapping
+      transformation (Pryv event ↔ FHIR Bundle) still runs
+      app-side, but the schemas being mapped are first-class
+      Pryv types validated by the same z-schema pipeline as the
+      legacy catalogue.
+
+  - ref: A1.6.1
+    title: Annex 1.6 — Patient safety — usability tested with target group
+    text: |
+      Usability of the digital health application shall be tested
+      against the intended user group prior to listing application;
+      results documented.
+    coverage: out-of-scope
+    draft: true
+    overview: |
+      Usability testing is the manufacturer's process (UX research +
+      protocols + documentation). Pryv has no software role at the
+      usability layer.
+
+  - ref: A1.1.5
+    title: Annex 1.1 — Data subject rights at the BfArM-specified level
+    text: |
+      Mechanisms must be provided to allow data subjects to exercise
+      their rights under GDPR Art. 15-22 directly within the digital
+      health application or via a clearly named contact.
+    coverage: implemented
+    pryv_effort_saved: high
+    draft: true
+    pryv_primitives: [access, event, stream, audit]
+    derives_from: [gdpr.Art.15, gdpr.Art.16, gdpr.Art.17, gdpr.Art.20]
+    tests: [AA01, EGSQ, U9HQ, PTU1, USAD]
+    overview: |
+      The personal-token Pryv API gives the data subject direct access
+      to events, streams, accesses, audit data. Implementer wraps it
+      in a UI section ("Your data + your rights") inside the DiGA app;
+      no separate portal needed. Each GDPR Art. 15-22 right has a
+      single API call behind it.
+
+  - ref: A1.2.4
+    title: Annex 1.2 — Authentication of users and devices
+    text: |
+      Strong authentication of users (and where applicable devices)
+      must be implemented; passwords alone are not sufficient when
+      sensitive health data is processed.
+    coverage: implemented
+    pryv_effort_saved: high
+    draft: true
+    pryv_primitives: [access, MFA, system-streams]
+    derives_from: [hipaa-security.164.312(d), iso-27001.A.8.5]
+    config_keys: [services.mfa.mode]
+    tests: [MA01, MA02, MA03, MA04, MA05]
+    planned:
+      - kind: enhancement
+        summary: "Reference WebAuthn plugin meets the BfArM 'strong authentication for sensitive health data' bar without SMS-OTP weakness"
+        proposal: proposals/mfa-modern-methods.md
+        backlog: MFA-MODERN-METHODS
+        tracking_url: https://github.com/pryv/open-pryv.io/issues/78
+        impact: medium
+    overview: |
+      MFA via the `mfa.*` API methods (`services.mfa.mode` enables it);
+      personal-token + access-token model gives separation of user
+      identity from app identity. The BfArM "strong authentication
+      where sensitive health data is processed" bar maps to MFA on by
+      default for DiGA-listed apps.
+
+  - ref: A1.2.10
+    title: Annex 1.2 — Logging of security-relevant events
+    text: |
+      Security-relevant events must be logged with sufficient detail
+      to support incident investigation and audit; logs must be
+      protected against tampering.
+    coverage: implemented
+    pryv_effort_saved: high
+    draft: true
+    pryv_primitives: [audit, audit-event-stream]
+    derives_from: [iso-27001.A.8.15, hipaa-security.164.312(b)]
+    tests: [AT01, AT02, AT51, AT61, AT65]
+    overview: |
+      Per-user audit log records every API method invocation; storage
+      is SQLite directly (decoupled from data-path engine) so log
+      integrity is independent of primary engine state. The
+      audit-event-stream optional channel additionally emits audit
+      records into the subject's own streams when surface-side
+      visibility is required.
+
+  - ref: A1.3.6
+    title: Annex 1.3 — Use of established healthcare data standards
+    text: |
+      Where established standards exist for the data domain (FHIR R4,
+      LOINC, SNOMED CT, ICD-10, etc.), the application shall use them
+      to encode treatment-relevant data.
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: storage
+    draft: true
+    pryv_primitives: [event, data-types, stream]
+    overview: |
+      Pryv stores whatever event
+      content the application writes. For LOINC / SNOMED / ICD-10
+      codings, the implementer encodes the code system + value as
+      event content fields (typically `event.content.code` +
+      `event.content.codeSystem`) per the `data-types` schema chosen.
+      The semantic-standard choice is app-side; Pryv preserves it.
+
+  - ref: A1.4.3
+    title: Annex 1.4 — Availability and continuity
+    text: |
+      The digital health application must be designed to be available
+      to users during its specified use periods, with documented
+      procedures for handling unavailability.
+    coverage: facilitated
+    pryv_effort_saved: medium
+    facilitation_mode: infrastructure
+    draft: true
+    pryv_primitives: [multi-core-mTLS, letsEncrypt-integration, backup-restore, observability-provider]
+    derives_from: [iso-27001.A.5.23, mdr.A1.17]
+    overview: |
+      Pryv-side availability:
+      multi-core HA (cluster topology + Raft replication); TLS
+      auto-renewal preventing cert-expiry outages; backup-restore for
+      catastrophic recovery; observability gives uptime metrics. The
+      application-layer continuity procedures (offline mode,
+      degraded-service messaging, support channels) are
+      manufacturer-side.
+
+  - ref: A1.5.1
+    title: Annex 1.5 — Consumer protection — clear pricing + contractual conditions
+    text: |
+      The implementer shall provide users with clear information on
+      pricing model + contractual conditions (subscription duration,
+      cancellation terms, renewal mechanics) in advance.
+    coverage: out-of-scope
+    draft: true
+    overview: |
+      Pricing + contract terms are editorial / commercial. No software
+      role; Pryv stores whatever notice text you present (per A1.1
+      data-protection notices pattern) but doesn't generate it.
+
+  - ref: A1.5.4
+    title: Annex 1.5 — Consumer protection — barrier-free access (accessibility)
+    text: |
+      The digital health application shall meet relevant accessibility
+      requirements (WCAG 2.1 AA equivalent or higher, per BfArM
+      interpretation), supporting users with disabilities.
+    coverage: out-of-scope
+    draft: true
+    overview: |
+      Accessibility is an app-layer UX concern. Pryv is a backend; the
+      app's HTML / WAI-ARIA / contrast / keyboard-navigation posture
+      is the manufacturer's frontend implementation.
+
+  - ref: A1.5.7
+    title: Annex 1.5 — Consumer protection — clear language + age-appropriate UI
+    text: |
+      User-facing text shall be in clear, plain language; for
+      applications targeting children or adolescents, the UI shall be
+      age-appropriate.
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: storage
+    draft: true
+    pryv_primitives: [access, clientData, event]
+    derives_from: [gdpr.Art.8]
+    overview: |
+      Plain-language text + age-
+      appropriate UI are app-layer responsibilities. Pryv contributes
+      the artefact storage: when different content variants are
+      served to different age cohorts,
+      `access.clientData.target_audience` records the variant served,
+      and `account.clientData.age_verification_method` (per GDPR
+      Art.8) ties the variant to the verified age. Composition of
+      the text is editorial.
+
+  - ref: A1.6.5
+    title: Annex 1.6 — Patient safety — alarm / escalation logic when applicable
+    text: |
+      Where the digital health application generates alarms or
+      escalation messages (urgent clinical signal, abnormal value
+      crossing a threshold), the logic shall be documented + validated;
+      escalation paths shall be tested + reliable.
+    coverage: out-of-scope
+    draft: true
+    overview: |
+      Clinical-alarm logic is the manufacturer's software responsibility
+      (and falls under MDR Art.61 clinical evaluation + Annex I §17.4
+      verification). Pryv stores the alarm events; the logic that
+      produces them is app-side.
+
+  - ref: A1.2.2
+    title: Annex 1.2 — Documentation of architecture + components
+    text: |
+      Manufacturer shall document the application's architecture
+      including all components, their role + interactions, and the
+      security boundary of each.
+    coverage: facilitated
+    pryv_effort_saved: medium
+    facilitation_mode: awareness
+    draft: true
+    pryv_primitives: [audit]
+    derives_from: [iso-27001.A.8.27]
+    overview: |
+      Pryv's architecture is
+      publicly documented (open-pryv.io README, AGENTS.md,
+      component-level READMEs) — the BfArM-required architecture
+      document references Pryv as a sub-system. The app-layer
+      architecture (services, libraries, network topology) is the
+      manufacturer's documentation.
+
+  - ref: A1.2.3
+    title: Annex 1.2 — Hardening + secure configuration
+    text: |
+      The technical platform shall be hardened per current best
+      practices; configuration shall minimize attack surface
+      (disabled services, restricted ports, least-privilege defaults).
+    coverage: facilitated
+    pryv_effort_saved: high
+    facilitation_mode: infrastructure
+    draft: true
+    pryv_primitives: [letsEncrypt-integration, multi-core-mTLS, system-streams, encryption-at-rest-secrets]
+    derives_from: [iso-27001.A.8.9]
+    overview: |
+      Pryv ships secure-by-
+      default (TLS on, mTLS between cores, no anonymous access path,
+      system-streams isolating privileged data, at-rest secret
+      encryption). Operator-side hardening (host OS, firewall,
+      OS-level least-privilege) layers on top per their hardening
+      guide.
+
+  - ref: A1.2.6
+    title: Annex 1.2 — Incident response capability
+    text: |
+      Manufacturer shall have documented incident-response procedures,
+      with detection + escalation + containment + recovery + post-
+      mortem phases defined.
+    coverage: facilitated
+    pryv_effort_saved: medium
+    facilitation_mode: evidence
+    draft: true
+    pryv_primitives: [audit, observability-provider, access]
+    derives_from: [hipaa-security.164.308(a)(6)(i), iso-27001.A.5.23]
+    overview: |
+      Pryv contributes detection
+      (observability anomalies, audit-log patterns) + containment
+      (accesses.delete revokes implicated tokens) + recovery
+      (backup-restore + multi-core HA) + post-mortem (audit-log
+      forensic trail). The manufacturer's IR runbook ties these
+      primitives together with people + decisions.
