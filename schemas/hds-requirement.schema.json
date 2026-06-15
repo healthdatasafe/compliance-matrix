@@ -64,12 +64,11 @@
         "evidence": {
           "type": "object",
           "additionalProperties": false,
-          "description": "Proof for the HDS-layer claim. implemented/configurable require at least tests[] or ops[].",
+          "description": "Proof for the HDS-layer claim. THIS REPO IS PUBLIC: cite only public material or internal document CODES (never operational/infra detail). implemented/configurable require at least one of docs[], internal_docs[] or tests[].",
           "properties": {
-            "tests": { "type": "array", "items": { "type": "string" }, "uniqueItems": true, "description": "HDS test codes / suites." },
-            "docs": { "type": "array", "items": { "type": "string" }, "uniqueItems": true, "description": "Public doc paths/URLs." },
-            "ops": { "type": "array", "items": { "type": "string" }, "uniqueItems": true, "description": "Operational evidence: runbooks, monitoring conditions, deploy configs." },
-            "internal_docs": { "type": "array", "items": { "type": "string" }, "uniqueItems": true, "description": "IDs of documents in the private compliance-internal repo." }
+            "tests": { "type": "array", "items": { "type": "string" }, "uniqueItems": true, "description": "Public (open-source) test codes only, e.g. from open-pryv.io." },
+            "docs": { "type": "array", "items": { "type": "string" }, "uniqueItems": true, "description": "PUBLIC documentation only — public URLs or paths in public repos (e.g. dev-site, this repo's docs/)." },
+            "internal_docs": { "type": "array", "items": { "type": "string" }, "uniqueItems": true, "description": "CODES of documents held privately in compliance-internal (e.g. 'hipaa/policies/security-management-process'). The code is public; the content is released only on request under NDA / signed BAA / audit engagement." }
           }
         }
       }

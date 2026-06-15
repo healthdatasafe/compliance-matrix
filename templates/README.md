@@ -8,7 +8,7 @@ its **intended signer/persona**.
 > ⚠️ **Not legal advice.** Templates are starting points to review with qualified
 > counsel before use.
 
-Planned set (authored in plan 74, Phase 3 — HIPAA first):
+Current set (HIPAA first; all draft, review with counsel before use):
 
 | Template | Direction / signer | Purpose |
 |----------|--------------------|---------|

@@ -9,13 +9,13 @@ box). HDS layers its own (HDS + implementer) rows on top.
 - **Do not edit by hand.** Changes here would be overwritten by the next sync.
 - **Refresh:** `npm run sync:pryv` (re-fetches the upstream tip, updates the
   snapshot, and reports which rows changed so the corresponding HDS rows can be
-  revisited). *Not yet implemented — plan 74, Phase 1.*
+  revisited). Use `npm run sync:pryv -- --check` for a report-only dry run.
 
 ## Why vendored (not a submodule / live fetch)
 
-Decided in plan 74 (OD1): a vendored snapshot is reproducible, diffable in PRs,
-and needs no network in CI. The pinned commit records exactly which version of
-the platform layer the HDS matrix was built against.
+A vendored snapshot is reproducible, diffable in PRs, and needs no network in CI.
+The pinned commit records exactly which version of the platform layer the HDS
+matrix was built against.
 
 ## Proposing changes upstream
 

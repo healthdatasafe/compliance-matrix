@@ -38,8 +38,6 @@ jobs:
           path: dist/compliance.sqlite
           if-no-files-found: error
 
-# NOTE (plan 74): cross-reference resolution against HDS test suites / dev-site
-# (test codes, functional_specs, docs paths) is degraded to warnings until the
-# HDS scopes are authored (Phase 2). At that point this workflow will check out
-# the relevant HDS repos, mirroring how pryv/compliance-matrix checks out
-# open-pryv.io + dev-site.
+# NOTE: public-facing evidence is validated structurally here. Internal evidence
+# is referenced by code only (released on request), so there is no cross-repo
+# checkout step.

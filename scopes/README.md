@@ -7,9 +7,9 @@ Each file carries the **HDS layer** and **implementer layer** for that scope, an
 references the corresponding **Pryv platform layer** rows in `../vendor/pryv/`
 (via `layered_on` / `derives_from`).
 
-> Empty for now. HIPAA scopes are authored in plan 74, Phase 2. The schema
-> extension that formalises the per-layer coverage + persona tagging lands in
-> Phase 1 (`../schemas/`).
+Current scopes: `hipaa-security.yml`, `hipaa-privacy.yml`, `hipaa-breach.yml`
+(all draft pending review). SOC 2 / GDPR / ISO follow as added files.
 
-See [`../docs/how-to-add-a-scope.md`](../docs/how-to-add-a-scope.md) and
-[`../schemas/`](../schemas/) for the row format.
+See [`../schemas/hds-scope.schema.json`](../schemas/hds-scope.schema.json) and
+[`../schemas/hds-requirement.schema.json`](../schemas/hds-requirement.schema.json)
+for the row format.

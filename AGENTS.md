@@ -60,6 +60,6 @@ npm run sync:pryv     # refresh vendor/pryv snapshot (Phase 1 — not yet implem
 
 ## Status
 
-Bootstrapped under HDS **plan 74** (`compliance-bootstrap`). HIPAA content,
-templates, the Pryv-sync script, and the HDS-specific schema layering are being
-authored across that plan's phases.
+HIPAA (Security, Privacy, Breach) is in draft across all three layers, with the
+Pryv-sync script and agreement templates in place. Other scopes (SOC 2, GDPR,
+ISO) are planned as added data. All rows are `draft` pending review.

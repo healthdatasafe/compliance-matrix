@@ -45,10 +45,9 @@ for (const f of await hdsScopeFiles()) {
     const hds = r.hds || {};
     const ev = hds.evidence || {};
     const evList = [
-      ...(ev.tests || []).map((x) => `test: ${x}`),
-      ...(ev.ops || []).map((x) => `ops: ${x}`),
-      ...(ev.docs || []).map((x) => `doc: ${x}`),
-      ...(ev.internal_docs || []).map((x) => `internal: ${x}`),
+      ...(ev.tests || []).map((x) => `test: ${esc(x)}`),
+      ...(ev.docs || []).map((x) => `doc: ${esc(x)}`),
+      ...(ev.internal_docs || []).map((x) => `<span class="lock">🔒 ${esc(x)}</span> <span class="onreq">available on request</span>`),
     ];
     body += `<article class="req">
       <h3><code>${esc(r.ref)}</code> ${esc(r.title)} ${r.draft !== false ? '<span class="draft">draft</span>' : ''}</h3>
@@ -61,7 +60,7 @@ for (const f of await hdsScopeFiles()) {
         <div class="layer hds">
           <div class="lh">HDS ${badge(hds.coverage)} ${regions(hds.regions)}</div>
           <p>${esc(hds.overview)}</p>
-          ${evList.length ? `<ul class="ev">${evList.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>` : ''}
+          ${evList.length ? `<ul class="ev">${evList.map((x) => `<li>${x}</li>`).join('')}</ul>` : ''}
         </div>
         <div class="layer impl">
           <div class="lh">Implementer</div>
@@ -120,9 +119,11 @@ main{max-width:80rem;margin:1.5rem auto;padding:0 1.5rem}
 .rg{display:inline-block;background:var(--ink);color:#fff;font-size:.6rem;font-weight:700;padding:.05rem .35rem;border-radius:.25rem;margin-left:.2rem}
 .tpl{font-size:.78rem;margin-left:.4rem;text-decoration:none;color:#1d4ed8}
 .covers code{margin-right:.3rem}.muted{color:var(--muted)}
+.lock{font-weight:600;color:#374151}.onreq{font-size:.7rem;color:#a16207;background:#fef9c3;padding:.02rem .35rem;border-radius:999px}
 </style></head><body>
 <header><h1>HDS compliance-matrix — preview</h1>
-<p>Three-layer model: Pryv platform → HDS → implementer (per persona). Plan 74 Phase 1 — draft worked example.</p></header>
+<p>Three-layer model: Pryv platform → HDS → implementer (per persona). Draft.
+Internal evidence is shown by code only — the document itself is released on request under NDA / signed BAA / audit engagement.</p></header>
 <main>${body}${tpls}</main></body></html>`;
 
 const DIST = path.join(ROOT, 'dist');

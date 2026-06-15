@@ -111,7 +111,7 @@ const buildAll = db.transaction(() => {
       });
       nReq++; if (r.draft !== false) nDraft++;
       const ev = hds.evidence || {};
-      for (const [kind, key] of [['test', 'tests'], ['doc', 'docs'], ['ops', 'ops'], ['internal_doc', 'internal_docs']]) {
+      for (const [kind, key] of [['test', 'tests'], ['doc', 'docs'], ['internal_doc', 'internal_docs']]) {
         for (const v of ev[key] || []) { insEv.run(s.id, r.ref, kind, v); nEv++; }
       }
       for (const ob of r.implementer || []) {

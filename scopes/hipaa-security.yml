@@ -13,90 +13,1724 @@ regions: [us]
 changelog:
   - date: "2026-06-15"
     change: >
-      Plan 74 Phase 1 — two worked example rows to exercise the three-layer
-      schema, cross-refs and the templates subsystem. Marked draft; full HIPAA
-      authoring is Phase 2.
+      Initial draft of the HDS layer over the HIPAA Security Rule
+      (Administrative, Physical, Technical, Organizational, and Policies &
+      Documentation safeguards). All rows draft pending review.
 
 requirements:
 
-  - ref: 164.308(a)(1)(ii)(D)
-    title: Information system activity review — Required
-    text: |
-      Implement procedures to regularly review records of information system
-      activity, such as audit logs, access reports, and security incident
-      tracking reports.
-    pryv_ref: 164.308(a)(1)(ii)(D)
-    draft: true
-    hds:
-      coverage: implemented
-      effort_saved: high
-      regions: [us, ch]
+- ref: 164.308(a)(1)(i)
+  title: Security management process — standard
+  text: |
+    Implement policies and procedures to prevent, detect, contain, and correct
+    security violations.
+  pryv_ref: 164.308(a)(1)(i)
+  draft: true
+  hds:
+    coverage: documented
+    effort_saved: medium
+    overview: |
+      As an operator HDS runs its own security-management programme over the
+      open-pryv.io platform, covering the four required specifications below
+      (risk analysis, risk management, sanction policy, activity review). The
+      umbrella programme is documented internally and made available on request;
+      a partner running their own ePHI workload still maintains their own.
+    detail: |
+      HDS inherits the platform substrate (per-user audit log, system-level
+      observability) that several specifications draw on, and wraps it in a
+      written, maintained programme that is reviewed periodically. The four
+      child specifications each carry their own row where the contribution is
+      more concrete. For a partner acting as Covered Entity or upstream BA, this
+      is a programme they must run themselves; HDS supplies the technical
+      raw material and its own programme as evidence of operator diligence.
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - hipaa/policies/security-management-process
+  implementer:
+    - persona: covered-entity
+      coverage: documented
       overview: |
-        On top of Pryv's per-user audit log, HDS operates the review substrate:
-        system-level activity is shipped to New Relic for both the US (AWS) and
-        CH (Exoscale) regions, with alert conditions covering crash, error-rate
-        and silence. The written review cadence remains the implementer's.
-      detail: |
-        Per-API-call audit records (Pryv layer) plus infrastructure telemetry
-        (HDS layer) give both subject-level and system-level activity review.
-        HDS's monitoring directive requires end-to-end alert wiring to
-        tech.newrelic@healthdatasafe.org before any component is "deployed".
-      technical: |
-        Audit: per-user SQLite (open-pryv.io audit component). System: New Relic
-        APM/Browser/synthetics per dev-deploy/config/apps.yml; conditions in the
-        hds-dev alert policy.
-      evidence:
-        ops:
-          - dev-deploy/monitoring/setup.mjs
-          - "newrelic:hds-dev alert policy (appName LIKE 'hds-%')"
-        internal_docs:
-          - hipaa/procedures/information-system-activity-review
-    implementer:
-      - persona: covered-entity
-        coverage: documented
-        overview: |
-          You define and document the review cadence and who performs it, and
-          retain the review records per your retention policy.
-      - persona: individual
-        coverage: out-of-scope
+        Define, document and maintain your own security-management programme;
+        you may reference HDS's technical safeguards as inputs.
+    - persona: business-associate
+      coverage: documented
+      overview: |
+        Run your own security-management programme covering the ePHI you
+        process, citing HDS substrate where it carries part of the control.
+    - persona: individual
+      coverage: out-of-scope
 
-  - ref: 164.314(a)(1)
-    title: Business associate contracts — Organizational requirement
-    text: |
-      A covered entity is not in compliance unless it has obtained satisfactory
-      assurances, via a written contract, that the business associate will
-      appropriately safeguard the ePHI it creates, receives, maintains, or
-      transmits on the covered entity's behalf.
-    pryv_ref: 164.314(a)(1)
-    draft: true
-    hds:
-      coverage: facilitated
-      effort_saved: medium
-      facilitation_mode: evidence
-      regions: [us, ch]
+- ref: 164.308(a)(1)(ii)(D)
+  title: Information system activity review — Required
+  text: |
+    Implement procedures to regularly review records of information system
+    activity, such as audit logs, access reports, and security incident
+    tracking reports.
+  pryv_ref: 164.308(a)(1)(ii)(D)
+  draft: true
+  hds:
+    coverage: implemented
+    effort_saved: high
+    overview: |
+      On top of the platform's per-user audit log, HDS operates the review
+      substrate: system-level activity is collected and monitored across both
+      US and Switzerland data-residency options, with alerting on crash,
+      error-rate and silence conditions. The written review cadence remains the
+      implementer's responsibility.
+    detail: |
+      Per-API-call audit records (platform layer) plus infrastructure telemetry
+      (HDS layer) together give both subject-level and system-level activity
+      review. HDS operates the alerting chain end to end as a matter of policy
+      before any component is treated as in production, so silent failures are
+      caught. The documented review procedure HDS runs as operator is available
+      on request.
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - hipaa/procedures/information-system-activity-review
+  implementer:
+    - persona: covered-entity
+      coverage: documented
       overview: |
-        HDS provides a Business Associate Agreement template and the technical
-        assurances (audit, access control, monitoring, regional residency) that
-        back it, and signs BAAs with its own subcontractors (e.g. AWS for the US
-        region). The contract itself is signed between the parties.
-      detail: |
-        When a partner acting as a Covered Entity (or upstream BA) processes
-        ePHI on HDS, HDS is their Business Associate. HDS offers the BAA template
-        (templates/baa) and flows obligations down to its subcontractors.
-      evidence:
-        internal_docs:
-          - hipaa/registers/baa-register
-    implementer:
-      - persona: covered-entity
-        coverage: documented
-        overview: |
-          Execute a BAA with HDS before sending any ePHI, and keep it on file.
-        templates: [baa]
-      - persona: business-associate
-        coverage: documented
-        overview: |
-          Execute a BAA with HDS and a back-to-back subcontractor agreement with
-          any of your own downstream processors.
-        templates: [baa]
-      - persona: individual
-        coverage: out-of-scope
+        Define and document your review cadence and who performs it, and retain
+        the review records per your retention policy.
+    - persona: business-associate
+      coverage: documented
+      overview: |
+        Establish your own periodic review of activity records for the ePHI you
+        process, drawing on the audit and monitoring substrate HDS exposes.
+    - persona: individual
+      coverage: out-of-scope
+
+- ref: 164.308(a)(2)
+  title: Assigned security responsibility — standard
+  text: |
+    Identify the security official who is responsible for developing and
+    implementing the policies and procedures required by this subpart.
+  pryv_ref: 164.308(a)(2)
+  draft: true
+  hds:
+    coverage: documented
+    effort_saved: low
+    overview: |
+      HDS designates a named security official accountable for its security
+      programme over the platform; the designation is recorded internally and
+      disclosed on request. Each partner must designate their own official for
+      their own programme.
+    detail: |
+      This is an organisational designation, not a software control. HDS holds
+      the designation as an operator artefact; the assigned official draws on
+      the audit log, monitoring and this matrix as operational substrate. A
+      partner running ePHI on HDS names their own security official.
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - hipaa/policies/assigned-security-responsibility
+  implementer:
+    - persona: covered-entity
+      coverage: documented
+      overview: |
+        Designate and document your own security official.
+    - persona: business-associate
+      coverage: documented
+      overview: |
+        Designate and document your own security official.
+    - persona: individual
+      coverage: out-of-scope
+
+- ref: 164.308(a)(3)(ii)(C)
+  title: Termination procedures — Addressable
+  text: |
+    Implement procedures for terminating access to ePHI when employment ends or
+    a workforce member's role changes.
+  pryv_ref: 164.308(a)(3)(ii)(C)
+  draft: true
+  hds:
+    coverage: implemented
+    effort_saved: high
+    overview: |
+      Workforce access to ePHI is mediated by platform access tokens with
+      granular per-stream permissions. Termination is a single revocation that
+      takes effect immediately, and the audit log records the termination
+      instant; role changes narrow permissions without losing the version
+      history of the change.
+    detail: |
+      HDS operates the access-token model so that ending or changing a
+      workforce member's access is an immediate, audited operation rather than
+      a manual clean-up across systems. Full revocation removes the token;
+      narrowing reduces permissions while preserving the access identity and its
+      history. HDS documents the termination procedure it follows for its own
+      workforce; partners apply the same primitives to their own staff.
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - hipaa/procedures/access-termination
+  implementer:
+    - persona: covered-entity
+      coverage: documented
+      overview: |
+        Document your termination workflow and tie it to revocation of the
+        access tokens your workforce holds.
+    - persona: business-associate
+      coverage: documented
+      overview: |
+        Document your termination workflow for staff who handle the ePHI you
+        process on HDS.
+    - persona: individual
+      coverage: out-of-scope
+
+- ref: 164.308(a)(4)(ii)(B)
+  title: Access authorization — Addressable
+  text: |
+    Implement policies and procedures for granting access to ePHI through a
+    workstation, transaction, program, process, or other mechanism.
+  pryv_ref: 164.308(a)(4)(ii)(B)
+  draft: true
+  hds:
+    coverage: implemented
+    effort_saved: high
+    overview: |
+      Granting access to ePHI on HDS means minting an access token with explicit
+      per-stream permissions, enforced at every API call. The authorization
+      rationale can travel alongside the grant itself, so the "why" stays with
+      the "what".
+    detail: |
+      Access grants carry the streams and levels the grantee may exercise, plus
+      free-form metadata such as workforce role, granting administrator and
+      business reason. HDS operates this as the authoritative authorization
+      mechanism for ePHI; there is no trust-based bypass path. HDS documents its
+      own authorization policy and partners apply the same primitive.
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - hipaa/policies/access-authorization
+  implementer:
+    - persona: covered-entity
+      coverage: documented
+      overview: |
+        Document who may authorise access and on what basis, and capture the
+        rationale alongside each grant.
+    - persona: business-associate
+      coverage: documented
+      overview: |
+        Document your authorization policy for access to the ePHI you process.
+    - persona: individual
+      coverage: out-of-scope
+
+- ref: 164.308(a)(4)(ii)(C)
+  title: Access establishment and modification — Addressable
+  text: |
+    Implement policies and procedures to establish, document, review, and modify
+    a user's right of access, based on the entity's access authorization
+    policies.
+  pryv_ref: 164.308(a)(4)(ii)(C)
+  draft: true
+  hds:
+    coverage: implemented
+    effort_saved: high
+    overview: |
+      The access lifecycle (create, read, review, update, revoke) is first-class
+      on the platform HDS operates. Every modification snapshots the prior
+      version into history and is recorded in the audit log, giving the
+      documented review trail this specification expects.
+    detail: |
+      HDS operates establishment, review and modification of access rights as
+      audited operations: grants can be enumerated with their full version
+      chain, narrowed or revoked, with each step timestamped and attributed to
+      the acting administrator. HDS documents its own establishment-and-review
+      cadence; partners apply the same primitives.
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - hipaa/procedures/access-review
+  implementer:
+    - persona: covered-entity
+      coverage: documented
+      overview: |
+        Document your establishment-and-modification workflow and your periodic
+        access-review cadence.
+    - persona: business-associate
+      coverage: documented
+      overview: |
+        Document how you establish, review and modify access to the ePHI you
+        process on HDS.
+    - persona: individual
+      coverage: out-of-scope
+
+- ref: 164.308(a)(5)(ii)(A)
+  title: Security reminders — Addressable
+  text: |
+    Implement periodic security updates and reminders for the workforce.
+  pryv_ref: 164.308(a)(5)(ii)(A)
+  draft: true
+  hds:
+    coverage: facilitated
+    effort_saved: low
+    facilitation_mode: awareness
+    overview: |
+      Security-reminder cadence and content are an organisational awareness
+      control with no software role. HDS runs reminders for its own workforce
+      and documents the programme; the artefact is available on request but
+      training delivery itself is not yet formalised as a verified programme.
+    detail: |
+      HDS treats security reminders as part of its workforce-awareness
+      programme, an operator artefact rather than a platform feature. The
+      written programme is cited as an internal document. Formal,
+      verified security-awareness training is a known gap being matured; each
+      partner runs its own reminder programme for its own workforce.
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - hipaa/policies/security-awareness-reminders
+  implementer:
+    - persona: covered-entity
+      coverage: documented
+      overview: |
+        Run and document your own periodic security reminders for your
+        workforce.
+    - persona: business-associate
+      coverage: documented
+      overview: |
+        Run and document your own security reminders for staff handling ePHI.
+    - persona: individual
+      coverage: out-of-scope
+
+- ref: 164.308(a)(5)(ii)(B)
+  title: Protection from malicious software — Addressable
+  text: |
+    Implement procedures for guarding against, detecting, and reporting
+    malicious software.
+  pryv_ref: 164.308(a)(5)(ii)(B)
+  draft: true
+  hds:
+    coverage: facilitated
+    effort_saved: low
+    facilitation_mode: infrastructure
+    overview: |
+      Anti-malware is a host, endpoint and network-layer control rather than a
+      platform feature. HDS operates malware protection and patching at the
+      hosting layer for the environments it runs, documented internally; the
+      partner's own endpoints remain the partner's responsibility.
+    detail: |
+      HDS's hosting environment carries malware-protection controls as part of
+      operator-side infrastructure hardening, described privately and cited as
+      an internal document. The platform software itself includes no antivirus.
+      Partners must protect their own workstations and any infrastructure they
+      operate outside HDS.
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - hipaa/policies/malware-protection
+  implementer:
+    - persona: covered-entity
+      coverage: documented
+      overview: |
+        Operate and document anti-malware controls on your own endpoints and
+        infrastructure.
+    - persona: business-associate
+      coverage: documented
+      overview: |
+        Operate and document anti-malware controls on infrastructure you run
+        outside HDS.
+    - persona: individual
+      coverage: out-of-scope
+
+- ref: 164.308(a)(5)(ii)(C)
+  title: Log-in monitoring — Addressable
+  text: |
+    Implement procedures for monitoring log-in attempts and reporting
+    discrepancies.
+  pryv_ref: 164.308(a)(5)(ii)(C)
+  draft: true
+  hds:
+    coverage: facilitated
+    effort_saved: medium
+    facilitation_mode: evidence
+    overview: |
+      Authentication and login-failure events are captured in the per-user
+      audit log, and HDS's operational monitoring aggregates rate and anomaly
+      signals across both data-residency options. Discrepancy-reporting
+      thresholds and the response cadence are operator-side procedure.
+    detail: |
+      HDS surfaces login and authentication-failure events through the audit log
+      and layers monitoring on top to detect anomalous rates. The platform does
+      not by itself lock accounts after N failures; HDS operates additional
+      rate-limiting and alerting at the infrastructure boundary, documented
+      privately. Partners tune their own discrepancy thresholds.
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - hipaa/procedures/login-monitoring
+  implementer:
+    - persona: covered-entity
+      coverage: documented
+      overview: |
+        Define and document your discrepancy thresholds and the response when a
+        threshold is crossed.
+    - persona: business-associate
+      coverage: documented
+      overview: |
+        Define and document login-monitoring thresholds for the ePHI workload
+        you operate.
+    - persona: individual
+      coverage: out-of-scope
+
+- ref: 164.308(a)(5)(ii)(D)
+  title: Password management — Addressable
+  text: |
+    Implement procedures for creating, changing, and safeguarding passwords.
+  pryv_ref: 164.308(a)(5)(ii)(D)
+  draft: true
+  hds:
+    coverage: implemented
+    effort_saved: medium
+    overview: |
+      The platform stores credentials on a privileged, separately controlled
+      namespace, and HDS configures password rules and offers a second
+      authentication factor on top. HDS operates and documents the resulting
+      password-management posture.
+    detail: |
+      Credentials live apart from ordinary content data; password complexity
+      and rotation rules are operator-configured and multi-factor
+      authentication strengthens the login beyond a password alone (see the
+      person-or-entity-authentication standard). HDS documents the configuration
+      it runs; partners may layer their own additional rules.
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - hipaa/procedures/password-management
+  implementer:
+    - persona: covered-entity
+      coverage: documented
+      overview: |
+        Document your password policy and whether you require the second factor
+        for your workforce.
+    - persona: business-associate
+      coverage: documented
+      overview: |
+        Document password-management procedures for staff handling ePHI.
+    - persona: individual
+      coverage: out-of-scope
+
+- ref: 164.308(a)(6)(i)
+  title: Security incident procedures — standard
+  text: |
+    Implement policies and procedures to address security incidents.
+  pryv_ref: 164.308(a)(6)(i)
+  draft: true
+  hds:
+    coverage: documented
+    effort_saved: medium
+    overview: |
+      HDS runs an incident-response programme as operator: the audit log and
+      operational monitoring provide detection and scoping data, and access
+      tokens provide the containment mechanism (revoke or narrow the implicated
+      access). The written incident procedure is held internally and shared on
+      request.
+    detail: |
+      Detection draws on per-user audit records (who accessed what) and
+      system-level anomaly signals; containment uses immediate token revocation
+      or scope reduction. HDS documents its incident-handling and notification
+      flow, which feeds the breach-reporting obligations a partner carries under
+      their BAA. Partners run their own incident programme for their workload.
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - hipaa/procedures/security-incident-response
+  implementer:
+    - persona: covered-entity
+      coverage: documented
+      overview: |
+        Run and document your own incident-response procedures.
+    - persona: business-associate
+      coverage: documented
+      overview: |
+        Run and document your own incident procedures and report incidents to
+        the covered entity per your BAA.
+      templates: [baa]
+    - persona: individual
+      coverage: out-of-scope
+
+- ref: 164.308(a)(7)(ii)(A)
+  title: Data backup plan — Required
+  text: |
+    Establish and implement procedures to create and maintain retrievable exact
+    copies of ePHI.
+  pryv_ref: 164.308(a)(7)(ii)(A)
+  draft: true
+  hds:
+    coverage: facilitated
+    effort_saved: high
+    facilitation_mode: storage
+    overview: |
+      The platform produces per-user backup files (events, streams, accesses,
+      attachments) with a matching restore path, so the backup unit matches the
+      natural ePHI unit. HDS operates a backup schedule on top; automated,
+      regularly verified backups are still being formalised, so this is
+      facilitated rather than fully implemented.
+    detail: |
+      HDS runs the backup primitive on a schedule and documents the plan
+      (frequency, location, encryption-at-rest applied at the storage boundary).
+      Verified, automatically tested backups are a known gap being matured; the
+      backup plan as it stands is cited as an internal document. Partners
+      operating their own deployments define their own schedule.
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - hipaa/procedures/data-backup-plan
+  implementer:
+    - persona: covered-entity
+      coverage: documented
+      overview: |
+        Document your backup schedule, storage location and retention, and
+        confirm restorability.
+    - persona: business-associate
+      coverage: documented
+      overview: |
+        Document the backup plan for the ePHI you process on HDS.
+    - persona: individual
+      coverage: out-of-scope
+
+- ref: 164.308(a)(7)(ii)(B)
+  title: Disaster recovery plan — Required
+  text: |
+    Establish, and implement as needed, procedures to restore any loss of data.
+  pryv_ref: 164.308(a)(7)(ii)(B)
+  draft: true
+  hds:
+    coverage: documented
+    effort_saved: medium
+    overview: |
+      HDS combines cold restore from per-user backups with hot redundancy from a
+      replicated multi-core platform topology, composed to a recovery objective
+      HDS documents internally. The written disaster-recovery plan is available
+      on request.
+    detail: |
+      Recovery rests on two layers: restore from backup as the canonical path,
+      and live replication across cores so a single-region failure does not lose
+      live data. HDS documents the recovery objectives and runbook it operates;
+      contingency-plan testing is tracked separately (see the testing-and-
+      revision specification, a known gap). Partners running their own
+      deployments document their own plan.
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - hipaa/procedures/disaster-recovery-plan
+  implementer:
+    - persona: covered-entity
+      coverage: documented
+      overview: |
+        Document your recovery objectives and the steps to restore data after a
+        loss event.
+    - persona: business-associate
+      coverage: documented
+      overview: |
+        Document the disaster-recovery procedures for your ePHI workload.
+    - persona: individual
+      coverage: out-of-scope
+
+- ref: 164.308(a)(7)(ii)(C)
+  title: Emergency mode operation plan — Required
+  text: |
+    Establish, and implement as needed, procedures to enable continuation of
+    critical business processes for protection of ePHI while operating in
+    emergency mode.
+  pryv_ref: 164.308(a)(7)(ii)(C)
+  draft: true
+  hds:
+    coverage: documented
+    effort_saved: medium
+    overview: |
+      The platform's high-availability primitives (replicated multi-core cluster
+      with mutually authenticated inter-core traffic) support continued
+      operation when a single facility fails. HDS documents which processes are
+      critical and the emergency-mode runbook it operates.
+    detail: |
+      HDS treats emergency-mode operation as a documented runbook layered on the
+      platform's HA topology and backup-restore path. The definition of critical
+      business processes and the emergency procedures are operator artefacts,
+      cited internally. Partners define their own emergency-mode plan for their
+      workload.
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - hipaa/procedures/emergency-mode-operation
+  implementer:
+    - persona: covered-entity
+      coverage: documented
+      overview: |
+        Define your critical processes and document the emergency-mode runbook.
+    - persona: business-associate
+      coverage: documented
+      overview: |
+        Document emergency-mode procedures for the ePHI you process.
+    - persona: individual
+      coverage: out-of-scope
+
+- ref: 164.308(a)(7)(ii)(D)
+  title: Testing and revision procedures — Addressable
+  text: |
+    Implement procedures for periodic testing and revision of contingency plans.
+  pryv_ref: 164.308(a)(7)(ii)(D)
+  draft: true
+  hds:
+    coverage: documented
+    effort_saved: low
+    overview: |
+      Contingency-plan testing is an operational drill whose restore phase
+      exercises the platform's backup-restore path. HDS is formalising a regular
+      test-and-revise cadence; the procedure is documented internally and
+      regular verified execution remains a known gap.
+    detail: |
+      The testing programme itself is an operator activity rather than a
+      platform feature, though restore drills run against the platform's backup
+      primitive. HDS documents the intended cadence and revision process and is
+      maturing verified, scheduled execution. Partners run and document their
+      own contingency-plan tests.
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - hipaa/procedures/contingency-plan-testing
+  implementer:
+    - persona: covered-entity
+      coverage: documented
+      overview: |
+        Schedule, run and document periodic tests of your contingency plans and
+        revise them based on results.
+    - persona: business-associate
+      coverage: documented
+      overview: |
+        Test and revise your contingency plans periodically and keep the
+        records.
+    - persona: individual
+      coverage: out-of-scope
+
+- ref: 164.308(a)(8)
+  title: Evaluation — standard
+  text: |
+    Perform periodic technical and nontechnical evaluation, in response to
+    environmental or operational changes, to confirm that security policies and
+    procedures continue to meet the requirements of this subpart.
+  pryv_ref: 164.308(a)(8)
+  draft: true
+  hds:
+    coverage: documented
+    effort_saved: low
+    overview: |
+      HDS performs a periodic evaluation of its security programme, drawing on
+      the audit log, operational monitoring, this matrix as a control inventory,
+      and the platform's test results as control-effectiveness evidence. The
+      evaluation write-up is held internally and shared on request.
+    detail: |
+      Inputs to the evaluation include audit-log samples, operational-stability
+      data, this layered matrix as the inventory of controls to assess against,
+      and the platform's automated test suite as ongoing effectiveness evidence.
+      HDS documents the cadence and findings; a partner runs its own periodic
+      evaluation for its own programme.
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - hipaa/procedures/periodic-evaluation
+  implementer:
+    - persona: covered-entity
+      coverage: documented
+      overview: |
+        Perform and document your own periodic technical and nontechnical
+        evaluation.
+    - persona: business-associate
+      coverage: documented
+      overview: |
+        Perform and document a periodic evaluation of the safeguards over the
+        ePHI you process.
+    - persona: individual
+      coverage: out-of-scope
+# ───────────────────────────────────────────────────────────────
+# §164.310 — Physical Safeguards
+# ───────────────────────────────────────────────────────────────
+
+- ref: "164.310"
+  title: Physical Safeguards — standard (framing)
+  text: |
+    Implement policies and procedures to limit physical access to electronic
+    information systems and the facilities in which they are housed, while
+    ensuring that properly authorized access is allowed.
+  pryv_ref: "164.310"
+  draft: true
+  hds:
+    coverage: facilitated
+    effort_saved: medium
+    facilitation_mode: infrastructure
+    regions: [us, ch]
+    overview: |
+      Physical safeguards are properties of the hosting environment, not of the
+      open-pryv.io software. HDS carries this layer by selecting certified hosting
+      providers (EU/Switzerland and US data-residency options) and documenting the
+      facility-control attestations it relies on, so an implementer inherits a
+      vetted physical posture rather than sourcing it themselves.
+    detail: |
+      For each specification under §164.310 (facility access controls, workstation
+      use, workstation security, device and media controls), the underlying
+      controls are physical and operational. HDS's position: HDS chooses and
+      documents the hosting environment per region, binds a deployment to that
+      region's data residency, and holds the provider attestations on file. The
+      facility-control hardware itself remains the certified provider's; HDS's
+      contribution is selection, documentation and the residency guarantee.
+    evidence:
+      internal_docs:
+        - hipaa/policies/physical-safeguards
+        - hipaa/registers/hosting-provider-attestations
+  implementer:
+    - persona: covered-entity
+      coverage: documented
+      overview: |
+        Rely on the HDS-selected hosting region for the server-side facility
+        controls; you remain responsible for the physical security of your own
+        offices, endpoints and any workforce devices that access ePHI.
+    - persona: business-associate
+      coverage: documented
+      overview: |
+        Inherit the HDS hosting-region facility posture and document it in your own
+        physical-safeguards programme; cover your own premises and devices.
+    - persona: individual
+      coverage: out-of-scope
+
+- ref: "164.310(a)(1)"
+  title: Facility access controls — standard
+  text: |
+    Implement policies and procedures to limit physical access to electronic
+    information systems and the facilities housing them, while ensuring properly
+    authorized access is allowed.
+  pryv_ref: "164.310(a)(1)"
+  draft: true
+  hds:
+    coverage: facilitated
+    effort_saved: medium
+    facilitation_mode: infrastructure
+    regions: [us, ch]
+    overview: |
+      Facility access control at the server tier is delivered by the certified
+      hosting provider for the chosen region. HDS selects providers whose
+      data-centre access controls (badged entry, escort policies, access logging)
+      are independently attested, and documents which attestation backs each region.
+    detail: |
+      HDS does not operate its own data centres; it deploys open-pryv.io onto
+      certified infrastructure in the EU/Switzerland and US regions. The
+      facility-access-control specification is satisfied at the server tier by the
+      provider's attested controls, which HDS records in its hosting-provider
+      register. The implementer's own facilities (offices where workforce members
+      access ePHI) remain their responsibility.
+    evidence:
+      internal_docs:
+        - hipaa/registers/hosting-provider-attestations
+        - hipaa/policies/physical-safeguards
+  implementer:
+    - persona: covered-entity
+      coverage: documented
+      overview: |
+        Inherit the server-tier facility controls from the HDS hosting region;
+        implement and document facility access controls for your own premises.
+    - persona: business-associate
+      coverage: documented
+      overview: |
+        Same as covered entity — server tier inherited, your own facilities are
+        yours to control and document.
+    - persona: individual
+      coverage: out-of-scope
+
+- ref: "164.310(b)"
+  title: Workstation use — standard
+  text: |
+    Implement policies and procedures specifying the proper functions to be
+    performed, how they are to be performed, and the physical attributes of the
+    surroundings of any workstation or class of workstation that can access ePHI.
+  pryv_ref: "164.310(b)"
+  draft: true
+  hds:
+    coverage: documented
+    effort_saved: low
+    regions: [us, ch]
+    overview: |
+      Workstation use is a workforce and endpoint-management control that sits with
+      the entity operating the workstations, not with the HDS platform. HDS
+      documents the assumption that ePHI access happens only through authenticated,
+      access-token-scoped sessions, which bounds what any single workstation can do.
+    detail: |
+      open-pryv.io enforces that every workstation reaching ePHI does so through an
+      authenticated session carrying a scoped access token, so a workstation can
+      only exercise the permissions its token grants. The physical-surroundings and
+      proper-function obligations of the workstation-use standard remain
+      organizational. HDS records this boundary so implementers can scope their own
+      workstation-use policy to the residual physical/operational concerns.
+    evidence:
+      internal_docs:
+        - hipaa/policies/physical-safeguards
+  implementer:
+    - persona: covered-entity
+      coverage: documented
+      overview: |
+        Define and document workstation-use rules for the devices your workforce
+        uses to access ePHI through the HDS-hosted application.
+    - persona: business-associate
+      coverage: documented
+      overview: |
+        Same — your workforce workstation-use policy is yours to author.
+    - persona: individual
+      coverage: out-of-scope
+
+- ref: "164.310(c)"
+  title: Workstation security — standard
+  text: |
+    Implement physical safeguards for all workstations that access ePHI, to
+    restrict access to authorized users.
+  pryv_ref: "164.310(c)"
+  draft: true
+  hds:
+    coverage: documented
+    effort_saved: low
+    regions: [us, ch]
+    overview: |
+      Physical workstation security (screen locks, device controls, premises) is
+      endpoint-management scope owned by the entity operating the workstation. HDS
+      documents the compensating platform control: a lost or unattended workstation
+      cannot exceed the permissions of its access token, and the token can be
+      revoked centrally.
+    detail: |
+      The physical safeguards the standard calls for — restricting who can be at a
+      workstation that reaches ePHI — are facility and endpoint controls outside the
+      HDS platform. HDS's compensating contribution is that workforce access is
+      mediated by revocable, per-stream access tokens with session/token expiry, so
+      the blast radius of a compromised workstation is bounded and recoverable. HDS
+      documents this so implementers can right-size their physical workstation
+      controls.
+    evidence:
+      internal_docs:
+        - hipaa/policies/physical-safeguards
+  implementer:
+    - persona: covered-entity
+      coverage: documented
+      overview: |
+        Implement physical workstation safeguards (screen locks, restricted siting,
+        device management) for endpoints accessing ePHI; revoke HDS access tokens on
+        device loss.
+    - persona: business-associate
+      coverage: documented
+      overview: |
+        Same physical-workstation obligations apply to your own endpoints.
+    - persona: individual
+      coverage: out-of-scope
+
+- ref: "164.310(d)(1)"
+  title: Device and media controls — standard
+  text: |
+    Implement policies and procedures governing the receipt and removal of
+    hardware and electronic media containing ePHI into and out of a facility, and
+    the movement of these items within the facility.
+  pryv_ref: "164.310(d)(1)"
+  draft: true
+  hds:
+    coverage: facilitated
+    effort_saved: medium
+    facilitation_mode: infrastructure
+    regions: [us, ch]
+    overview: |
+      Media disposal and re-use at the server tier are handled by the certified
+      hosting provider's media-sanitisation controls, which HDS selects and
+      documents. For per-subject ePHI movement, the platform's per-user export unit
+      is the natural medium so a single subject's data can be transferred or
+      archived discretely.
+    detail: |
+      The server-tier device-and-media-controls obligation (secure disposal,
+      media re-use, sanitisation) is satisfied by the hosting provider's attested
+      controls, recorded in the HDS hosting-provider register. At the application
+      tier, open-pryv.io's per-user data model means an individual subject's ePHI
+      can be exported and moved as a discrete unit. Note: platform at-rest
+      encryption of bulk event data is not yet shipped, so media leaving the
+      production environment must be encrypted by the implementer's own at-rest
+      layer before transport — HDS documents this boundary explicitly.
+    technical: |
+      Per-user data isolation makes per-subject export the unit of media movement;
+      operator-side at-rest encryption is applied at the storage/transport boundary
+      (platform-managed at-rest encryption of event data is not yet available).
+    evidence:
+      internal_docs:
+        - hipaa/registers/hosting-provider-attestations
+        - hipaa/procedures/media-controls
+  implementer:
+    - persona: covered-entity
+      coverage: documented
+      overview: |
+        Inherit server-tier media sanitisation from the hosting provider; apply your
+        own at-rest encryption to any per-subject export you move off the platform,
+        and document the movement.
+    - persona: business-associate
+      coverage: documented
+      overview: |
+        Same — server-tier inherited, your own media-handling and at-rest encryption
+        of exports is your responsibility.
+    - persona: individual
+      coverage: out-of-scope
+
+# ───────────────────────────────────────────────────────────────
+# §164.312 — Technical Safeguards
+# ───────────────────────────────────────────────────────────────
+
+- ref: 164.312(a)(1)
+  title: Access control — standard
+  text: |
+    Implement technical policies and procedures for electronic information
+    systems holding ePHI so that access is allowed only to persons or software
+    programs granted access rights under §164.308(a)(4).
+  pryv_ref: 164.312(a)(1)
+  draft: true
+  hds:
+    coverage: implemented
+    effort_saved: high
+    regions: [us, ch]
+    overview: |
+      HDS deploys open-pryv.io with per-user data isolation and per-stream access
+      tokens enforced at every API call: a token can read or write only the streams
+      its permissions list, at the level granted, with no trust-based bypass path.
+      Access control is therefore a technical property of the API surface that HDS
+      operates, not a downstream policy layer.
+    detail: |
+      Each subject's data is isolated per user, and access by any person or program
+      is mediated by an access token carrying explicit per-stream, per-level
+      permissions. Enforcement happens at the API boundary on every request, and
+      privileged namespaces (account, credentials) are separately controlled. HDS
+      operates this stack and documents its access-control policy; the implementer
+      configures which grants their application mints.
+    technical: |
+      Per-user data isolation; per-stream access tokens with granular permissions
+      enforced at every API call.
+    evidence:
+      internal_docs:
+        - hipaa/policies/access-control
+  implementer:
+    - persona: covered-entity
+      coverage: documented
+      overview: |
+        Configure your application's use of HDS access tokens to grant least-
+        privilege per-stream access, and document your access-authorization rules.
+    - persona: business-associate
+      coverage: documented
+      overview: |
+        Same — model your grants as least-privilege per-stream access tokens and
+        document the authorization scheme.
+    - persona: individual
+      coverage: out-of-scope
+
+- ref: 164.312(a)(2)(i)
+  title: Unique user identification — Required
+  text: |
+    Assign a unique name and/or number for identifying and tracking user
+    identity.
+  pryv_ref: 164.312(a)(2)(i)
+  draft: true
+  hds:
+    coverage: implemented
+    effort_saved: high
+    regions: [us, ch]
+    overview: |
+      Every account in the HDS-operated platform has a unique identifier, and every
+      access token derived from it carries a unique id and version. The per-user
+      audit log cites that access identity on every recorded action, so each tracked
+      operation ties back to a unique identity.
+    detail: |
+      Unique identification is intrinsic to the platform: accounts and the access
+      tokens minted from them each carry unique identifiers, and the audit record
+      for every API call references the acting access identity. This gives the
+      requirement's "identify and track" obligation a technical anchor that HDS
+      operates by default. The implementer maps their workforce/role model onto
+      these identities.
+    technical: |
+      Unique account and access-token identifiers; per-user audit log references the
+      acting access identity on every action.
+    evidence:
+      internal_docs:
+        - hipaa/policies/access-control
+  implementer:
+    - persona: covered-entity
+      coverage: documented
+      overview: |
+        Map each workforce member or program to a distinct identity/access token and
+        document the mapping; avoid shared credentials.
+    - persona: business-associate
+      coverage: documented
+      overview: |
+        Same — one identity per actor, documented.
+    - persona: individual
+      coverage: out-of-scope
+
+- ref: 164.312(a)(2)(ii)
+  title: Emergency access procedure — Required
+  text: |
+    Establish (and implement as needed) procedures for obtaining necessary ePHI
+    during an emergency.
+  pryv_ref: 164.312(a)(2)(ii)
+  draft: true
+  hds:
+    coverage: configurable
+    effort_saved: medium
+    regions: [us, ch]
+    overview: |
+      The platform provides an operator-held administrative access mechanism that
+      can serve as a break-glass path to ePHI during an emergency, and every action
+      taken under it is captured by the per-user audit log. HDS documents the
+      custody controls; the implementer defines when the procedure may be invoked
+      and the review that follows.
+    detail: |
+      Emergency access is supported by an operator-held privileged access capability
+      treated as a custody-controlled credential. Because every call made under it
+      is audited like any other, post-emergency review is concrete and the
+      break-glass event is reconstructable. HDS configures and safeguards the
+      mechanism; the implementer authors the emergency-access procedure (triggers,
+      authorisers, mandatory after-action review) on top of it.
+    technical: |
+      Operator-held privileged access capability under custody controls; all
+      actions captured in the per-user audit log.
+    evidence:
+      internal_docs:
+        - hipaa/procedures/emergency-access
+  implementer:
+    - persona: covered-entity
+      coverage: configurable
+      overview: |
+        Define and document your emergency-access procedure — who may invoke
+        break-glass access, under what conditions, and the mandatory audit review
+        afterward.
+    - persona: business-associate
+      coverage: configurable
+      overview: |
+        Same — author and document your own emergency-access procedure over the
+        platform mechanism.
+    - persona: individual
+      coverage: out-of-scope
+
+- ref: 164.312(a)(2)(iii)
+  title: Automatic logoff — Addressable
+  text: |
+    Implement electronic procedures that terminate an electronic session after a
+    predetermined time of inactivity.
+  pryv_ref: 164.312(a)(2)(iii)
+  draft: true
+  hds:
+    coverage: configurable
+    effort_saved: high
+    regions: [us, ch]
+    overview: |
+      The platform enforces automatic session and token expiry: interactive session
+      lifetime and per-grant access-token expiry can both be bounded, so a session
+      or token becomes inert automatically once its window passes. HDS operates the
+      mechanism; the implementer sets the timeouts appropriate to its workflow.
+    detail: |
+      HIPAA's automatic-logoff specification is workstation-centric in origin; in an
+      HDS-mediated workflow the analogous control is the validity window of the
+      session and access token. The platform supports a bounded interactive session
+      lifetime for workforce sessions and a per-grant token expiry for app-driven
+      processes, covering both shapes. HDS documents the configured defaults; the
+      implementer tunes them and documents the rationale for the chosen inactivity
+      window (the "Addressable" path).
+    technical: |
+      Configurable interactive session lifetime plus per-access-token expiry;
+      sessions/tokens become inert automatically once the window elapses.
+    evidence:
+      internal_docs:
+        - hipaa/policies/access-control
+  implementer:
+    - persona: covered-entity
+      coverage: configurable
+      overview: |
+        Set session and access-token expiry windows appropriate to your workflow and
+        document the inactivity-timeout decision.
+    - persona: business-associate
+      coverage: configurable
+      overview: |
+        Same — configure and document timeout windows for your application's
+        sessions and tokens.
+    - persona: individual
+      coverage: out-of-scope
+
+- ref: 164.312(a)(2)(iv)
+  title: Encryption and decryption — Addressable
+  text: |
+    Implement a mechanism to encrypt and decrypt ePHI.
+  pryv_ref: 164.312(a)(2)(iv)
+  draft: true
+  hds:
+    coverage: facilitated
+    effort_saved: low
+    facilitation_mode: infrastructure
+    regions: [us, ch]
+    overview: |
+      TLS protects ePHI in transit by default, but platform-managed at-rest
+      encryption of bulk event data is not yet shipped. HDS therefore facilitates
+      this requirement at the infrastructure layer — applying provider-side at-rest
+      encryption (volume/storage encryption) in the chosen hosting region — and
+      documents the gap honestly rather than claiming it as implemented.
+    detail: |
+      This is a known gap and is stated plainly: the platform does not yet encrypt
+      event content with a platform-managed key. HDS covers at-rest protection at
+      the infrastructure layer using the hosting provider's storage/volume
+      encryption in each region, and TLS covers the transmission half (see
+      §164.312(e)). HDS documents the at-rest posture and the boundary it does not
+      yet cover so implementers can assess residual risk and apply additional
+      at-rest controls where their risk analysis requires.
+    technical: |
+      TLS for ePHI in transit; provider-side at-rest storage/volume encryption at
+      the infrastructure layer. Platform-managed at-rest encryption of event data is
+      not yet available.
+    evidence:
+      internal_docs:
+        - hipaa/policies/encryption
+        - hipaa/risk/at-rest-encryption-gap
+  implementer:
+    - persona: covered-entity
+      coverage: configurable
+      overview: |
+        Assess the at-rest encryption gap in your own risk analysis; apply
+        additional at-rest controls (e.g. application-side encryption of sensitive
+        fields) where warranted, and document the addressable decision.
+    - persona: business-associate
+      coverage: configurable
+      overview: |
+        Same — evaluate and, where needed, supplement at-rest encryption, and
+        document the decision.
+    - persona: individual
+      coverage: out-of-scope
+
+- ref: 164.312(b)
+  title: Audit controls — standard
+  text: |
+    Implement hardware, software, and/or procedural mechanisms that record and
+    examine activity in information systems containing or using ePHI.
+  pryv_ref: 164.312(b)
+  draft: true
+  hds:
+    coverage: implemented
+    effort_saved: high
+    regions: [us, ch]
+    overview: |
+      The HDS-operated platform records every API call in a per-user audit log —
+      timestamp, acting access identity, method, and success/error — and exposes it
+      for examination. The audit record is data-minimal by construction (request
+      bodies are not stored), so reviewing activity does not create a second copy of
+      ePHI.
+    detail: |
+      Audit controls are a native, always-on property of the platform: each API
+      invocation against a subject's data produces an audit record scoped to that
+      subject. The log captures who did what, when, and via which access, and is
+      retrievable for routine review and incident investigation. HDS operates and
+      retains this substrate; the implementer defines the written review cadence
+      (see §164.308(a)(1)(ii)(D)) and who performs it.
+    technical: |
+      Per-user audit log capturing timestamp, access identity, method and
+      success/error for every API call; data-minimal by construction.
+    evidence:
+      internal_docs:
+        - hipaa/policies/audit-controls
+        - hipaa/procedures/information-system-activity-review
+  implementer:
+    - persona: covered-entity
+      coverage: documented
+      overview: |
+        Define and document your audit-review cadence and who performs it; retain
+        the review records per your retention policy.
+    - persona: business-associate
+      coverage: documented
+      overview: |
+        Same — own the written review procedure over the platform-provided log.
+    - persona: individual
+      coverage: out-of-scope
+
+- ref: 164.312(c)(1)
+  title: Integrity — standard
+  text: |
+    Implement policies and procedures to protect ePHI from improper alteration or
+    destruction.
+  pryv_ref: 164.312(c)(1)
+  draft: true
+  hds:
+    coverage: facilitated
+    effort_saved: medium
+    facilitation_mode: primitive
+    regions: [us, ch]
+    overview: |
+      Integrity is layered in the HDS-operated platform: writes are gated by
+      per-stream permissions, updates preserve the prior value through versioning,
+      the audit log pins who-changed-what-when, and operational backups provide a
+      recovery path if a destruction event must be reversed. The overall integrity
+      programme remains the implementer's; the technical substrate is HDS-operated.
+    detail: |
+      Improper alteration is constrained because only tokens with write permission
+      on a stream can modify it, and modifications are versioned so the prior state
+      is retained. Improper destruction is mitigated by per-user export/backup as a
+      recovery path. The audit log ties every change to an authenticated access
+      identity. HDS operates these primitives and documents its integrity policy;
+      the implementer owns the surrounding procedural obligation.
+    technical: |
+      Write authorization gated by per-stream permissions; event versioning
+      retains prior values; per-user audit log; per-user backup/restore recovery
+      path.
+    evidence:
+      internal_docs:
+        - hipaa/policies/integrity
+  implementer:
+    - persona: covered-entity
+      coverage: documented
+      overview: |
+        Author your integrity policy — change-control, who may alter records, and
+        how destruction is prevented and recovered — over the platform substrate.
+    - persona: business-associate
+      coverage: documented
+      overview: |
+        Same — document your integrity-protection procedures.
+    - persona: individual
+      coverage: out-of-scope
+
+- ref: 164.312(c)(2)
+  title: Mechanism to authenticate ePHI — Addressable
+  text: |
+    Implement electronic mechanisms to corroborate that ePHI has not been altered
+    or destroyed in an unauthorized manner.
+  pryv_ref: 164.312(c)(2)
+  draft: true
+  hds:
+    coverage: facilitated
+    effort_saved: low
+    facilitation_mode: evidence
+    regions: [us, ch]
+    overview: |
+      Event versioning retains prior content on every update, so "is this the
+      original?" is answerable by comparison against the history, and the audit
+      record anchors each change to an authenticated access identity. Tamper
+      detection beyond this — e.g. cryptographic content hashing under an
+      implementer-held key — remains on the implementer or an extension.
+    detail: |
+      The platform corroborates that ePHI has not been altered improperly through
+      two evidence sources HDS operates: the version history of each record, and the
+      audit attribution of every change to an authenticated actor. This satisfies
+      the addressable specification's evidentiary intent for most deployments. HDS
+      documents the boundary; where an implementer's risk analysis demands stronger
+      tamper-proofing, they layer in content-integrity verification themselves.
+    technical: |
+      Event version history for original-vs-current comparison; per-user audit log
+      attributing each change to an authenticated access identity.
+    evidence:
+      internal_docs:
+        - hipaa/policies/integrity
+  implementer:
+    - persona: covered-entity
+      coverage: configurable
+      overview: |
+        Decide, per your risk analysis, whether the platform's versioning + audit
+        evidence suffices or whether to add content-integrity verification, and
+        document the addressable decision.
+    - persona: business-associate
+      coverage: configurable
+      overview: |
+        Same — assess and document the integrity-corroboration approach.
+    - persona: individual
+      coverage: out-of-scope
+
+- ref: 164.312(d)
+  title: Person or entity authentication — standard
+  text: |
+    Implement procedures to verify that a person or entity seeking access to ePHI
+    is the one claimed.
+  pryv_ref: 164.312(d)
+  draft: true
+  hds:
+    coverage: implemented
+    effort_saved: high
+    regions: [us, ch]
+    overview: |
+      Authentication in the HDS-operated platform is mediated by the access-token
+      primitive: the bearer of a valid token has been authenticated. Authentication
+      strength is layered — credentials by default, with multi-factor authentication
+      available — and recovery paths preserve account ownership when a factor is
+      lost.
+    detail: |
+      Every request reaching ePHI must present a valid access token, so the platform
+      verifies the requester before any access is granted. HDS operates this stack
+      and can require multi-factor authentication where the implementer's risk
+      profile calls for it; the achievable assurance level depends on which factor
+      method is configured. HDS documents the authentication policy in effect; the
+      implementer decides whether to require MFA universally or per-role.
+    technical: |
+      Access-token authentication on every request; configurable multi-factor
+      authentication; account-recovery paths.
+    evidence:
+      internal_docs:
+        - hipaa/policies/authentication
+  implementer:
+    - persona: covered-entity
+      coverage: documented
+      overview: |
+        Decide and document your authentication strength (e.g. whether MFA is
+        required, and for which roles or operations).
+    - persona: business-associate
+      coverage: documented
+      overview: |
+        Same — set and document your authentication policy over the platform.
+    - persona: individual
+      coverage: out-of-scope
+
+- ref: 164.312(e)(1)
+  title: Transmission security — standard
+  text: |
+    Implement technical security measures to guard against unauthorized access to
+    ePHI being transmitted over an electronic communications network.
+  pryv_ref: 164.312(e)(1)
+  draft: true
+  hds:
+    coverage: implemented
+    effort_saved: high
+    regions: [us, ch]
+    overview: |
+      All API traffic to the HDS-operated platform is carried over TLS by default;
+      there is no plaintext path served. Transmission security is therefore a
+      technical property of every connection rather than an optional add-on, in both
+      the US and Switzerland regions.
+    detail: |
+      ePHI in transit between clients and the platform is protected by TLS, which
+      provides confidentiality and integrity over the connection. HDS operates the
+      certificate lifecycle and serves only encrypted endpoints. The implementer's
+      obligation is to ensure that its own onward transmission paths (any proxy or
+      integration hop it controls) preserve the same protection.
+    technical: |
+      TLS for all API transmission; no plaintext endpoint served.
+    evidence:
+      internal_docs:
+        - hipaa/policies/transmission-security
+  implementer:
+    - persona: covered-entity
+      coverage: documented
+      overview: |
+        Ensure your client and any onward integration hops you control transmit
+        ePHI only over TLS; document the transmission-security boundary.
+    - persona: business-associate
+      coverage: documented
+      overview: |
+        Same — preserve TLS across any transmission path you operate.
+    - persona: individual
+      coverage: out-of-scope
+
+- ref: 164.312(e)(2)(i)
+  title: Integrity controls — Addressable
+  text: |
+    Implement security measures to ensure that electronically transmitted ePHI is
+    not improperly modified without detection until disposed of.
+  pryv_ref: 164.312(e)(2)(i)
+  draft: true
+  hds:
+    coverage: implemented
+    effort_saved: high
+    regions: [us, ch]
+    overview: |
+      TLS provides cryptographic integrity on every byte in transit, so
+      modification of ePHI on the connection to the HDS-operated platform is
+      cryptographically detectable. End-to-end integrity across any additional hops
+      depends on the implementer's chain preserving the same property.
+    detail: |
+      The transmission-integrity specification is met on the platform connection by
+      the authenticated-encryption guarantees of TLS: in-transit tampering breaks
+      the connection's integrity check. HDS operates this for all served endpoints.
+      Where an implementer routes ePHI through intermediate hops it controls, it must
+      ensure those hops do not terminate and re-emit traffic in a way that loses the
+      integrity guarantee.
+    technical: |
+      TLS authenticated-encryption provides in-transit integrity detection on every
+      connection.
+    evidence:
+      internal_docs:
+        - hipaa/policies/transmission-security
+  implementer:
+    - persona: covered-entity
+      coverage: documented
+      overview: |
+        Preserve transmission integrity across any hops you operate, and document
+        the addressable decision.
+    - persona: business-associate
+      coverage: documented
+      overview: |
+        Same — maintain integrity guarantees across your own transmission chain.
+    - persona: individual
+      coverage: out-of-scope
+
+- ref: 164.312(e)(2)(ii)
+  title: Encryption — Addressable (transmission)
+  text: |
+    Implement a mechanism to encrypt ePHI whenever deemed appropriate.
+  pryv_ref: 164.312(e)(2)(ii)
+  draft: true
+  hds:
+    coverage: implemented
+    effort_saved: high
+    regions: [us, ch]
+    overview: |
+      Encryption of ePHI in transit is default-on: the HDS-operated platform serves
+      only TLS-encrypted endpoints, so the "whenever deemed appropriate" judgement
+      is resolved to "always" for transmission. This row covers transmission only;
+      at-rest encryption is addressed under §164.312(a)(2)(iv).
+    detail: |
+      For ePHI in transit, HDS's default is to encrypt every connection via TLS,
+      satisfying the addressable transmission-encryption specification without
+      requiring an implementer decision to enable it. HDS operates the certificate
+      lifecycle. The implementer documents that transmission encryption is in force
+      and, separately, assesses at-rest encryption under §164.312(a)(2)(iv), where
+      the platform gap is noted.
+    technical: |
+      TLS encryption default-on for all ePHI transmission; certificate lifecycle
+      operated by HDS.
+    evidence:
+      internal_docs:
+        - hipaa/policies/transmission-security
+        - hipaa/policies/encryption
+  implementer:
+    - persona: covered-entity
+      coverage: documented
+      overview: |
+        Document that transmission encryption is in force; separately address
+        at-rest encryption per §164.312(a)(2)(iv).
+    - persona: business-associate
+      coverage: documented
+      overview: |
+        Same — record the transmission-encryption posture and address at-rest
+        separately.
+    - persona: individual
+      coverage: out-of-scope
+- ref: 164.314(a)(1)
+  title: Business associate contracts — Organizational requirement
+  text: |
+    A covered entity is not in compliance unless it has obtained satisfactory
+    assurances, via a written contract, that the business associate will
+    appropriately safeguard the ePHI it creates, receives, maintains, or
+    transmits on the covered entity's behalf.
+  pryv_ref: 164.314(a)(1)
+  draft: true
+  hds:
+    coverage: facilitated
+    effort_saved: medium
+    facilitation_mode: evidence
+    regions: [us, ch]
+    overview: |
+      HDS provides a Business Associate Agreement template and the technical
+      assurances (audit, access control, monitoring, regional residency) that
+      back it, and signs BAAs with its own subcontractors. The contract itself
+      is executed between the parties.
+    detail: |
+      When a partner acting as a Covered Entity or upstream Business Associate
+      processes ePHI on HDS, HDS is their Business Associate. HDS offers the BAA
+      template (templates/baa), supplies the technical-safeguards evidence the
+      contract relies on, and flows obligations down to its own subcontractors
+      via back-to-back agreements tracked in the BAA register.
+    evidence:
+      internal_docs:
+        - hipaa/registers/baa-register
+  implementer:
+    - persona: covered-entity
+      coverage: documented
+      overview: |
+        Execute a BAA with HDS before sending any ePHI, and keep it on file.
+      templates: [baa]
+    - persona: business-associate
+      coverage: documented
+      overview: |
+        Execute a BAA with HDS and back-to-back agreements with any of your own
+        downstream processors.
+      templates: [baa, subcontractor]
+    - persona: individual
+      coverage: out-of-scope
+
+- ref: 164.314(a)(2)(i)(A)
+  title: Business associate contract — implement reasonable and appropriate safeguards
+  text: |
+    The business associate contract must require the business associate to
+    implement administrative, physical, and technical safeguards that reasonably
+    and appropriately protect the confidentiality, integrity, and availability
+    of the ePHI it handles on the covered entity's behalf.
+  pryv_ref: 164.314(a)(2)(i)(A)
+  draft: true
+  hds:
+    coverage: facilitated
+    effort_saved: high
+    facilitation_mode: evidence
+    regions: [us, ch]
+    overview: |
+      The safeguards HDS commits to in its BAA are the same technical and
+      administrative controls enumerated across the §164.308, §164.310 and
+      §164.312 rows of this matrix. The BAA cites that programme so the
+      implementer can populate its safeguards exhibit by reference.
+    detail: |
+      Rather than restating safeguards in prose, HDS's BAA points to the
+      implemented and configurable controls already documented in this matrix —
+      access control, audit logging, encryption, monitoring and regional
+      residency. This gives the contractual "reasonable and appropriate
+      safeguards" clause a concrete, auditable backing.
+    evidence:
+      internal_docs:
+        - hipaa/registers/baa-register
+  implementer:
+    - persona: covered-entity
+      coverage: documented
+      overview: |
+        Confirm that the BAA's safeguards clause reflects the controls you rely
+        on, and retain the safeguards exhibit with the executed contract.
+      templates: [baa]
+    - persona: business-associate
+      coverage: documented
+      overview: |
+        Ensure the safeguards you commit to your covered entity are matched by
+        the controls you and your downstream processors actually operate.
+      templates: [baa, subcontractor]
+    - persona: individual
+      coverage: out-of-scope
+
+- ref: 164.314(a)(2)(i)(C)
+  title: Business associate contract — report security incidents
+  text: |
+    The business associate contract must require the business associate to
+    report to the covered entity any security incident of which it becomes
+    aware, including breaches of unsecured ePHI.
+  pryv_ref: 164.314(a)(2)(i)(C)
+  draft: true
+  hds:
+    coverage: facilitated
+    effort_saved: medium
+    facilitation_mode: evidence
+    regions: [us, ch]
+    overview: |
+      HDS's BAA commits HDS to notifying the implementer of security incidents
+      affecting their ePHI, and HDS's monitoring and incident-response programme
+      supplies the detection and forensic evidence behind that obligation.
+    detail: |
+      Detection rests on the audit log (Pryv layer) plus HDS's infrastructure
+      monitoring with end-to-end alert wiring. When an incident is detected, the
+      BAA's notification clause defines the channel and timing for reporting to
+      the implementer; HDS's incident-response procedure governs how that report
+      is produced and what evidence it carries.
+    evidence:
+      internal_docs:
+        - hipaa/procedures/security-incident-response
+        - hipaa/registers/baa-register
+  implementer:
+    - persona: covered-entity
+      coverage: documented
+      overview: |
+        Ensure your BAA with HDS specifies the incident-report channel and
+        timing, and integrate HDS reports into your own breach-assessment
+        procedure.
+      templates: [baa]
+    - persona: business-associate
+      coverage: documented
+      overview: |
+        Flow the incident-report obligation through to your covered entity and
+        down to your subcontractors.
+      templates: [baa, subcontractor]
+    - persona: individual
+      coverage: out-of-scope
+
+- ref: 164.314(a)(2)(ii)(B)
+  title: Business associate contract — extend safeguards to subcontractors
+  text: |
+    Where applicable, the business associate must ensure that any subcontractors
+    that create, receive, maintain, or transmit ePHI on its behalf agree, via a
+    written contract, to comply with the applicable Security Rule requirements.
+  pryv_ref: 164.314(a)(2)(ii)(B)
+  draft: true
+  hds:
+    coverage: facilitated
+    effort_saved: medium
+    facilitation_mode: evidence
+    regions: [us, ch]
+    overview: |
+      Acting as a Business Associate, HDS executes back-to-back agreements with
+      each subcontractor that may touch ePHI and tracks them in its BAA register.
+      HDS also provides the implementer a subcontractor agreement template to
+      flow the same obligations down their own chain.
+    detail: |
+      HDS maintains a current list of its ePHI-relevant subprocessors and holds a
+      written contract with each that flows down the applicable Security Rule
+      obligations. The subprocessor list is made available to implementers so
+      they can satisfy their own §164.314(a)(2)(ii)(B) due diligence.
+    evidence:
+      internal_docs:
+        - hipaa/registers/baa-register
+        - hipaa/registers/subprocessor-register
+  implementer:
+    - persona: covered-entity
+      coverage: documented
+      overview: |
+        Review HDS's subprocessor list as part of your vendor due diligence.
+      templates: [baa]
+    - persona: business-associate
+      coverage: documented
+      overview: |
+        Execute written agreements with each of your own downstream
+        subcontractors that handle ePHI, flowing the Security Rule obligations
+        through.
+      templates: [subcontractor, subprocessor]
+    - persona: individual
+      coverage: out-of-scope
+
+- ref: 164.316(a)
+  title: Policies and procedures — standard
+  text: |
+    Implement reasonable and appropriate policies and procedures to comply with
+    the standards, implementation specifications, and other requirements of the
+    Security Rule.
+  pryv_ref: 164.316(a)
+  draft: true
+  hds:
+    coverage: documented
+    effort_saved: medium
+    regions: [us, ch]
+    overview: |
+      HDS maintains its own written information-security policy set covering the
+      Security Rule safeguards for the systems it operates. This governs HDS's
+      role as operator and Business Associate; the implementer keeps its own
+      policy programme for the parts it controls.
+    detail: |
+      HDS's security policies and procedures are owned by its security function
+      and reviewed on a defined cadence. They are referenced throughout this
+      matrix as the administrative backing for the technical controls. The
+      implementer cannot inherit these policies for its own organisation, but can
+      cite HDS's programme where HDS operates the underlying system.
+    evidence:
+      internal_docs:
+        - hipaa/policies/information-security-policy
+  implementer:
+    - persona: covered-entity
+      coverage: documented
+      overview: |
+        Maintain your own reasonable and appropriate policies and procedures for
+        the parts of the system and workflow you control.
+    - persona: business-associate
+      coverage: documented
+      overview: |
+        Maintain your own Security Rule policy set covering your handling of
+        ePHI.
+    - persona: individual
+      coverage: out-of-scope
+
+- ref: 164.316(b)(1)
+  title: Documentation — Required
+  text: |
+    Maintain the policies and procedures implemented to comply with the Security
+    Rule in written or electronic form, and maintain a written or electronic
+    record of any action, activity, or assessment the subpart requires to be
+    documented.
+  pryv_ref: 164.316(b)(1)
+  draft: true
+  hds:
+    coverage: documented
+    effort_saved: medium
+    regions: [us, ch]
+    overview: |
+      HDS keeps its security policies, procedures, registers and assessment
+      outputs in durable written form under a documentation-management policy.
+      Required activity records are retained alongside the audit trail of the
+      systems HDS operates.
+    detail: |
+      HDS's documentation-and-retention policy defines what is documented, where
+      it is held, and how versions are preserved. Operational records (activity
+      reviews, assessments, incident reports) are retained as written artefacts;
+      the per-user audit log (Pryv layer) supplies the automatic operational
+      record. The implementer keeps the equivalent documentation for its own
+      programme.
+    evidence:
+      internal_docs:
+        - hipaa/policies/documentation-and-retention
+  implementer:
+    - persona: covered-entity
+      coverage: documented
+      overview: |
+        Keep your own policies, procedures and required activity records in
+        written or electronic form.
+    - persona: business-associate
+      coverage: documented
+      overview: |
+        Maintain written documentation of your Security Rule compliance and the
+        activities the subpart requires you to record.
+    - persona: individual
+      coverage: out-of-scope
+
+- ref: 164.316(b)(2)(i)
+  title: Documentation — time limit — Required
+  text: |
+    Retain the documentation required by §164.316(b)(1) for six years from the
+    date of its creation or the date when it last was in effect, whichever is
+    later.
+  pryv_ref: 164.316(b)(2)(i)
+  draft: true
+  hds:
+    coverage: documented
+    effort_saved: medium
+    regions: [us, ch]
+    overview: |
+      HDS retains its security documentation and required records for at least
+      six years under its documentation-and-retention policy, treating six years
+      as a regulatory floor rather than a destruction deadline.
+    detail: |
+      The six-year minimum applies to HDS's own policies, procedures and
+      assessment records for the systems it operates. Retention beyond the
+      minimum, and any pruning, follow HDS's documented retention schedule. For
+      subject-level data and audit records, retention is configured per the
+      implementer's lawful basis and contractual instructions; the implementer
+      retains its own documentation independently.
+    evidence:
+      internal_docs:
+        - hipaa/policies/documentation-and-retention
+  implementer:
+    - persona: covered-entity
+      coverage: documented
+      overview: |
+        Retain your own Security Rule documentation for at least six years from
+        creation or last-effective date.
+    - persona: business-associate
+      coverage: documented
+      overview: |
+        Apply the six-year minimum retention to your own policies, procedures
+        and required records.
+    - persona: individual
+      coverage: out-of-scope
+
+- ref: 164.316(b)(2)(iii)
+  title: Documentation — updates — Required
+  text: |
+    Review documentation periodically, and update it as needed in response to
+    environmental or operational changes affecting the security of the ePHI.
+  pryv_ref: 164.316(b)(2)(iii)
+  draft: true
+  hds:
+    coverage: documented
+    effort_saved: medium
+    regions: [us, ch]
+    overview: |
+      HDS reviews its security documentation on a defined periodic cadence and
+      updates it in response to changes in its environment or operations. Review
+      dates and changes are tracked so the documentation's currency is
+      demonstrable.
+    detail: |
+      HDS's documentation-and-retention policy sets the review cadence and the
+      triggers (infrastructure change, new threat, incident, regulatory change)
+      that prompt an out-of-cycle update. Each policy and register carries its
+      review history. The implementer runs its own review cycle for the
+      documentation it owns.
+    evidence:
+      internal_docs:
+        - hipaa/policies/documentation-and-retention
+  implementer:
+    - persona: covered-entity
+      coverage: documented
+      overview: |
+        Review and update your own documentation periodically and in response to
+        operational or environmental changes.
+    - persona: business-associate
+      coverage: documented
+      overview: |
+        Keep your Security Rule documentation current through periodic and
+        event-driven reviews.
+    - persona: individual
+      coverage: out-of-scope

@@ -129,8 +129,8 @@ for (const { scope, file } of hdsScopes) {
     const hds = r.hds || {};
     if (['implemented', 'configurable'].includes(hds.coverage)) {
       const ev = hds.evidence || {};
-      const hasProof = (ev.tests && ev.tests.length) || (ev.ops && ev.ops.length);
-      if (!hasProof) e(`${cell}: hds.coverage=${hds.coverage} requires evidence.tests[] or evidence.ops[]`);
+      const hasProof = (ev.docs && ev.docs.length) || (ev.internal_docs && ev.internal_docs.length) || (ev.tests && ev.tests.length);
+      if (!hasProof) e(`${cell}: hds.coverage=${hds.coverage} requires evidence.docs[], evidence.internal_docs[] or evidence.tests[]`);
     }
     if (hds.coverage === 'facilitated' && !hds.facilitation_mode) {
       w(`${cell}: hds.coverage=facilitated but facilitation_mode is unset`);

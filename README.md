@@ -21,7 +21,7 @@ is read across three layers:
 | Layer | Source | What it tells you |
 |-------|--------|-------------------|
 | **Pryv platform** | inherited from [`pryv/compliance-matrix`](https://github.com/pryv/compliance-matrix) (see [`vendor/pryv/`](vendor/pryv/)) | what the open-pryv.io software does out of the box / configurable |
-| **HDS** | authored here | what HDS-as-operator + the HDS app stack adds: bridges, hds-webapp, hds-lib-js, data-model, hosting/Dokku, New Relic monitoring, backups, key management |
+| **HDS** | authored here | what HDS-as-operator + the HDS app stack adds: the apps and libraries (hds-webapp, hds-lib-js, data-model, bridges), hosting & data-residency, monitoring, backups, key management |
 | **Implementer** | authored here | what *you* must still do — tagged by persona (**partner / Covered Entity / Business Associate** vs. **individual user**) — and the agreement(s) to sign |
 
 Coverage taxonomy (reused from Pryv) per layer: `implemented · configurable ·
@@ -45,7 +45,7 @@ references/      (under vendor/pryv) canonical regulation sources
 schemas/, docs/ Methodology: coverage taxonomy, effort axis, glossary, how-to
 scripts/        build.js (YAML → dist/compliance.sqlite), validate.js (CI gate)
 wab/            The web app to browse the matrix (React + Vite) — inherited from
-                Pryv, HDS adaptation tracked in plan 74 Phase 5
+                Pryv; HDS adaptation pending
 dist/           Build output (gitignored): compliance.sqlite + wab build
 ```
 
@@ -70,4 +70,4 @@ ecosystem's single tracker).
 
 ---
 
-Bootstrapped under HDS plan 74 (`compliance-bootstrap`).
+Maintained by Health Data Safe.

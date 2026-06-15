@@ -1,0 +1,555 @@
+id: hipaa-breach
+title: HIPAA Breach Notification Rule
+short: HIPAA-Breach
+type: regulation
+jurisdiction: US
+version: 45 CFR Part 164 Subpart D (HITECH 2013 Omnibus Final Rule)
+version_date: "2013-01-25"
+canonical_url: https://www.ecfr.gov/current/title-45/subtitle-A/subchapter-C/part-164/subpart-D
+matrix_language: EN
+layered_on_pryv: hipaa-breach
+regions: [us]
+
+changelog:
+  - date: "2026-06-15"
+    change: >
+      Initial draft of the HDS layer over the HIPAA Breach Notification Rule. All
+      rows draft pending review.
+
+requirements:
+
+  - ref: "164.400"
+    title: Applicability
+    text: |
+      Subpart D applies to covered entities, business associates, subcontractors
+      and affiliated entities with respect to unsecured protected health
+      information.
+    pryv_ref: "164.400"
+    draft: true
+    hds:
+      coverage: facilitated
+      effort_saved: low
+      facilitation_mode: infrastructure
+      regions: [us, ch]
+      overview: |
+        Subpart D only reaches PHI that is "unsecured" — PHI not rendered unusable
+        per HHS guidance. HDS narrows that surface by enforcing TLS in transit by
+        default; at-rest content encryption for ePHI is not yet shipped, so the
+        unsecured-PHI scope is currently wider at rest than in transit.
+      detail: |
+        As a business associate, HDS is squarely within Subpart D's reach. The
+        practical effect of this row is to set the boundary that the encryption
+        and risk-assessment rows below refine: what counts as unsecured PHI in an
+        HDS deployment is governed by the transit/at-rest posture described under
+        164.402(2), which today leaves at-rest ePHI inside the unsecured category.
+      evidence:
+        internal_docs:
+          - hipaa/risk/at-rest-encryption-gap
+    implementer:
+      - persona: covered-entity
+        coverage: documented
+        overview: |
+          Determine which of your data flows on HDS fall inside the unsecured-PHI
+          scope and document that determination in your breach-readiness records.
+      - persona: business-associate
+        coverage: documented
+        overview: |
+          Confirm with HDS, in your BAA, which protections apply to your data and
+          which obligations flow down to your own subcontractors.
+        templates: [baa]
+      - persona: individual
+        coverage: out-of-scope
+
+  - ref: "164.402"
+    title: Definitions — breach and unsecured PHI
+    text: |
+      Defines "breach" (an impermissible acquisition, access, use or disclosure of
+      PHI under Subpart E, assessed against four risk factors) and "unsecured PHI"
+      (PHI not rendered unusable per HHS guidance).
+    pryv_ref: "164.402"
+    draft: true
+    hds:
+      coverage: facilitated
+      effort_saved: medium
+      facilitation_mode: evidence
+      regions: [us, ch]
+      overview: |
+        HDS supplies the technical substrate that lets an implementer apply the
+        §164.402 definitions to a concrete incident: the per-user audit log shows
+        what was accessed, and the access-scoping model shows what a given token
+        could reach. Whether an access was "permitted under Subpart E" becomes a
+        property that can be checked against recorded scope rather than narrated
+        after the fact.
+      detail: |
+        The two limbs of §164.402 are refined in the dedicated rows below:
+        164.402(1) covers the four-factor risk assessment, for which the audit log
+        and access-version chain are the structured inputs, and 164.402(2) covers
+        the unsecured-PHI safe harbor, where HDS is honest that at-rest content
+        encryption is not yet shipped. The definitional analysis itself — deciding
+        whether a given event meets the breach definition — remains the
+        implementer's, supported by HDS evidence.
+      evidence:
+        internal_docs:
+          - hipaa/procedures/breach-risk-assessment
+          - hipaa/risk/at-rest-encryption-gap
+    implementer:
+      - persona: covered-entity
+        coverage: documented
+        overview: |
+          Apply the breach and unsecured-PHI definitions to each incident and
+          record the determination, drawing on HDS-supplied audit evidence.
+      - persona: business-associate
+        coverage: documented
+        overview: |
+          Run the same definitional analysis for incidents in your custody and
+          preserve the supporting evidence.
+      - persona: individual
+        coverage: out-of-scope
+
+  - ref: 164.402(1)
+    title: Definition of "breach" — four-factor risk assessment
+    text: |
+      An impermissible use or disclosure of PHI is presumed to be a breach unless
+      a low probability of compromise is shown via a four-factor risk assessment:
+      (i) the nature and extent of the PHI involved, (ii) the unauthorized person
+      involved, (iii) whether the PHI was actually acquired or viewed, and (iv) the
+      extent to which the risk has been mitigated.
+    pryv_ref: 164.402(1)
+    draft: true
+    hds:
+      coverage: facilitated
+      effort_saved: high
+      facilitation_mode: evidence
+      regions: [us, ch]
+      overview: |
+        Each of the four risk-assessment factors maps onto data HDS already
+        retains. The per-user audit log and the access-version chain answer "what
+        PHI, by which credential, actually acquired or merely accessed, and was the
+        access revoked or scoped down" — the structured inputs to the assessment.
+      detail: |
+        Factor mapping: (i) nature and extent of PHI — audit records identify the
+        API methods and the streams/event types touched; (ii) unauthorized person
+        — each audit record carries the access identity behind the call; (iii)
+        acquired vs. merely viewed — the method-level distinction (read vs.
+        attachment download, success vs. denied) is recorded; (iv) mitigation
+        extent — the access-version history shows revocation and scope-down
+        timestamps relative to the incident. The analytical write-up that weighs
+        these factors and reaches the low-probability conclusion is the
+        implementer's artefact; HDS supplies and preserves the inputs.
+      evidence:
+        internal_docs:
+          - hipaa/procedures/breach-risk-assessment
+    implementer:
+      - persona: covered-entity
+        coverage: documented
+        overview: |
+          Perform and document the four-factor risk assessment for each
+          impermissible use or disclosure, using the HDS-supplied audit inputs.
+      - persona: business-associate
+        coverage: documented
+        overview: |
+          Conduct the same assessment for incidents you discover and share the
+          result with the covered entity.
+      - persona: individual
+        coverage: out-of-scope
+
+  - ref: 164.402(2)
+    title: Definition of "unsecured PHI" — encryption safe harbor
+    text: |
+      "Unsecured PHI" is PHI not rendered unusable, unreadable or indecipherable to
+      unauthorized persons through a technology or methodology specified in HHS
+      guidance (NIST SP 800-111 for at-rest encryption, the FIPS-validated
+      in-transit standards, and NIST SP 800-88 for destruction).
+    pryv_ref: 164.402(2)
+    draft: true
+    hds:
+      coverage: facilitated
+      effort_saved: low
+      facilitation_mode: infrastructure
+      regions: [us, ch]
+      overview: |
+        The safe harbor exempts properly secured PHI from breach notification. HDS
+        enforces TLS in transit, which places the in-transit half of the data path
+        inside the safe harbor. Platform at-rest encryption for ePHI content is NOT
+        YET SHIPPED, so the safe harbor does not currently apply to PHI at rest and
+        a disclosure of at-rest content can still be a reportable breach.
+      detail: |
+        This is an honest-gap row. In-transit protection (TLS) aligns with the
+        FIPS-validated standards referenced by HHS guidance, so leaked data in
+        flight is generally outside the unsecured-PHI definition. At rest, HDS does
+        not yet provide NIST SP 800-111-equivalent content encryption for ePHI;
+        until that ships, at-rest ePHI remains unsecured PHI for the purposes of
+        this rule and any compromise must be assessed as a potential breach. The
+        gap, its compensating controls and the remediation plan are tracked in the
+        cited internal record.
+      evidence:
+        internal_docs:
+          - hipaa/risk/at-rest-encryption-gap
+    implementer:
+      - persona: covered-entity
+        coverage: documented
+        overview: |
+          Do not rely on the at-rest safe harbor on HDS today; document the gap in
+          your risk analysis and treat at-rest exposures as potentially reportable.
+      - persona: business-associate
+        coverage: documented
+        overview: |
+          Account for the at-rest encryption gap in your own risk posture and in
+          assurances you give upstream.
+      - persona: individual
+        coverage: out-of-scope
+
+  - ref: "164.404"
+    title: Notification to individuals
+    text: |
+      Following discovery of a breach of unsecured PHI, the covered entity must
+      notify each affected individual without unreasonable delay and no later than
+      60 calendar days after discovery.
+    pryv_ref: "164.404"
+    draft: true
+    hds:
+      coverage: documented
+      effort_saved: low
+      regions: [us, ch]
+      overview: |
+        Individual notification is owned by the covered entity, not by HDS. HDS
+        supports it by supplying audit evidence to identify the affected
+        individuals, but composing and delivering the notices is the covered
+        entity's operational responsibility.
+      detail: |
+        HDS is not a bulk-notification system. The contribution is identification:
+        filtering the audit log by the implicated credential and time window yields
+        the distinct set of affected subjects, with evidence. Producing the roster
+        and the per-recipient delivery sit with the covered entity, who carries
+        this duty.
+      evidence:
+        internal_docs:
+          - hipaa/procedures/breach-notification
+    implementer:
+      - persona: covered-entity
+        coverage: documented
+        overview: |
+          Notify each affected individual within the 60-day window and retain proof
+          of the notifications.
+      - persona: business-associate
+        coverage: documented
+        overview: |
+          If your BAA delegates individual notification to you, perform it;
+          otherwise provide the covered entity the information it needs to notify.
+        templates: [baa]
+      - persona: individual
+        coverage: out-of-scope
+
+  - ref: 164.404(b)
+    title: Timeliness of notification
+    text: |
+      The required individual notification must be provided without unreasonable
+      delay and in no case later than 60 calendar days after discovery of a breach.
+    pryv_ref: 164.404(b)
+    draft: true
+    hds:
+      coverage: facilitated
+      effort_saved: low
+      facilitation_mode: evidence
+      regions: [us, ch]
+      overview: |
+        The 60-day clock is an operational cadence owned by the covered entity. HDS
+        shortens the data-gathering portion of that window: the audit log and
+        access-version chain answer "what was accessed, by whom, when" quickly, so
+        the timeline is dominated by editorial and decision work rather than
+        investigation.
+      detail: |
+        Discovery and scoping are typically the slowest steps before notices can be
+        drafted. By making the access history queryable, HDS compresses scoping so
+        that meeting the 60-day deadline becomes a matter of process discipline.
+        Acting on the evidence within the window — and recording when discovery
+        occurred — remains the implementer's responsibility.
+      evidence:
+        internal_docs:
+          - hipaa/procedures/breach-notification
+    implementer:
+      - persona: covered-entity
+        coverage: documented
+        overview: |
+          Track the discovery date and complete notification within 60 days,
+          documenting the timeline.
+      - persona: business-associate
+        coverage: documented
+        overview: |
+          Surface discovery to the covered entity promptly so its 60-day clock is
+          not eroded by your delay.
+      - persona: individual
+        coverage: out-of-scope
+
+  - ref: 164.404(c)
+    title: Content of notification
+    text: |
+      The individual notification must describe what happened (including the dates
+      of breach and discovery), the types of PHI involved, steps individuals should
+      take, what the entity is doing in response, and contact procedures.
+    pryv_ref: 164.404(c)
+    draft: true
+    hds:
+      coverage: facilitated
+      effort_saved: low
+      facilitation_mode: evidence
+      regions: [us, ch]
+      overview: |
+        The wording of a notice is the covered entity's editorial artefact. HDS
+        contributes to one content element — the description of the PHI involved —
+        which is derivable from the audit-log scoping performed for the risk
+        assessment. The remaining elements are operational and authored by the
+        covered entity.
+      detail: |
+        The "types of PHI involved" element can be derived from the streams and
+        event types touched, as recorded in the audit data used under 164.402(1).
+        The dates-of-breach-and-discovery, the steps individuals should take, the
+        entity's response, and the contact procedures are not data HDS holds; they
+        are composed by the covered entity. HDS therefore facilitates the
+        evidence-derivable element and documents the rest.
+      evidence:
+        internal_docs:
+          - hipaa/procedures/breach-notification
+    implementer:
+      - persona: covered-entity
+        coverage: documented
+        overview: |
+          Author each notice with all required content elements; use HDS audit
+          output to populate the PHI-involved description.
+      - persona: business-associate
+        coverage: documented
+        overview: |
+          Provide the covered entity the factual elements (PHI involved, dates) it
+          needs to compose the notice.
+      - persona: individual
+        coverage: out-of-scope
+
+  - ref: 164.404(d)
+    title: Methods of individual notification
+    text: |
+      Notice must be by first-class mail (or email where the individual has agreed),
+      with telephone or other urgent contact where imminent misuse is possible, and
+      substitute notice (web posting or media) where contact information is
+      insufficient or out of date.
+    pryv_ref: 164.404(d)
+    draft: true
+    hds:
+      coverage: out-of-scope
+      effort_saved: low
+      regions: [us, ch]
+      overview: |
+        Choosing and executing the notification method is operational; HDS is not a
+        mailer and plays no role in delivering notices. Where the implementer
+        records each delivery attempt as an event, the HDS audit chain can evidence
+        that the attempt occurred, but the delivery itself is out of scope for HDS.
+      detail: |
+        First-class mail, email, telephone, and substitute notice are all
+        organizational channels the covered entity operates with its own
+        communications stack. HDS neither selects nor sends. Its only adjacent
+        contribution is preserving an audit record if the implementer chooses to
+        log delivery attempts as events.
+    implementer:
+      - persona: covered-entity
+        coverage: documented
+        overview: |
+          Select compliant notification methods, deliver the notices, and retain
+          delivery records including any substitute-notice steps.
+      - persona: individual
+        coverage: out-of-scope
+
+  - ref: "164.406"
+    title: Notification to media
+    text: |
+      A breach affecting more than 500 residents of a State or jurisdiction
+      requires notification to prominent media outlets serving that area.
+    pryv_ref: "164.406"
+    draft: true
+    hds:
+      coverage: documented
+      effort_saved: low
+      regions: [us, ch]
+      overview: |
+        Media notification is an organizational and communications procedure owned
+        by the covered entity. HDS provides no software contribution; the
+        500-resident threshold can be derived from the affected-subject list
+        produced under 164.404, but the notification itself is operational.
+      detail: |
+        Determining whether the 500-resident threshold is met for a given State or
+        jurisdiction draws on the per-subject roster that HDS audit evidence helps
+        assemble. Identifying and notifying prominent media outlets is entirely the
+        covered entity's process.
+      evidence:
+        internal_docs:
+          - hipaa/procedures/breach-notification
+    implementer:
+      - persona: covered-entity
+        coverage: documented
+        overview: |
+          Where the threshold is met, notify prominent media in the affected
+          jurisdiction and retain the records.
+      - persona: individual
+        coverage: out-of-scope
+
+  - ref: "164.408"
+    title: Notification to the Secretary
+    text: |
+      The covered entity must notify the Secretary of HHS following discovery of a
+      breach of unsecured PHI; timing and method depend on whether 500 or more
+      individuals are affected.
+    pryv_ref: "164.408"
+    draft: true
+    hds:
+      coverage: documented
+      effort_saved: low
+      regions: [us, ch]
+      overview: |
+        Submission to the Secretary via the HHS portal is procedural and owned by
+        the covered entity. HDS audit and access-version data inform the content
+        (subjects affected, dates, contributing cause), but the submission itself
+        is operational.
+      detail: |
+        For breaches of 500 or more individuals the notice is contemporaneous with
+        individual notification; smaller breaches are logged and submitted
+        annually. In both cases the factual inputs can be drawn from HDS evidence,
+        while the act of submitting and tracking the report sits with the covered
+        entity.
+      evidence:
+        internal_docs:
+          - hipaa/procedures/breach-notification
+    implementer:
+      - persona: covered-entity
+        coverage: documented
+        overview: |
+          File the required HHS notification on the applicable schedule and keep the
+          submission records.
+      - persona: individual
+        coverage: out-of-scope
+
+  - ref: "164.410"
+    title: Notification by a business associate
+    text: |
+      A business associate must notify the covered entity of a breach of unsecured
+      PHI without unreasonable delay and no later than 60 days after discovery,
+      including the identities of affected individuals where known.
+    pryv_ref: "164.410"
+    draft: true
+    hds:
+      coverage: facilitated
+      effort_saved: medium
+      facilitation_mode: operations
+      regions: [us, ch]
+      overview: |
+        This is HDS's core breach duty. As a business associate, HDS notifies the
+        covered entity without unreasonable delay (and within 60 days) on discovery
+        of a breach, following a documented procedure. The audit log lets HDS
+        gather the required content — affected subjects and timing — quickly.
+      detail: |
+        HDS maintains an internal breach-notification procedure that defines
+        discovery, escalation, content assembly and the upstream notification to
+        affected covered entities, with the 60-day ceiling. The per-user audit log
+        is the data source for the "identities of affected individuals" element and
+        for the timing evidence backing "without unreasonable delay". When an
+        implementer is itself a business associate to a covered entity and stores
+        PHI on HDS, the same procedure and evidence support its own upstream
+        notification chain.
+      evidence:
+        internal_docs:
+          - hipaa/procedures/breach-notification
+    implementer:
+      - persona: covered-entity
+        coverage: documented
+        overview: |
+          On receipt of an HDS breach notice, run your own §164.404/406/408
+          notification obligations.
+      - persona: business-associate
+        coverage: documented
+        overview: |
+          Notify the covered entity (or upstream BA) you serve within the 60-day
+          window, using the BAA terms and your own breach procedure.
+        templates: [baa]
+      - persona: individual
+        coverage: out-of-scope
+
+  - ref: "164.412"
+    title: Law enforcement delay
+    text: |
+      Notification may be delayed when a law-enforcement official states that it
+      would impede a criminal investigation or cause damage to national security,
+      for the period specified (with a 30-day cap for oral statements).
+    pryv_ref: "164.412"
+    draft: true
+    hds:
+      coverage: documented
+      effort_saved: low
+      regions: [us, ch]
+      overview: |
+        Invoking a law-enforcement delay is procedural and depends on receipt of an
+        official statement. HDS has no software role beyond preserving the audit log
+        across the delay period, which happens by default; the decision and its
+        documentation are the implementer's.
+      detail: |
+        Whether the statement is oral (subject to a 30-day cap) or written (bounded
+        by the official's stated period), the implementer must record it and pause
+        the affected notifications accordingly. HDS retention keeps the underlying
+        evidence intact for the duration so notification can proceed once the delay
+        lapses.
+      evidence:
+        internal_docs:
+          - hipaa/procedures/breach-notification
+    implementer:
+      - persona: covered-entity
+        coverage: documented
+        overview: |
+          Document any law-enforcement delay request and the resumption of
+          notification once the stated period ends.
+      - persona: business-associate
+        coverage: documented
+        overview: |
+          Honor and record any law-enforcement delay communicated to you and inform
+          the covered entity.
+      - persona: individual
+        coverage: out-of-scope
+
+  - ref: "164.414"
+    title: Administrative requirements and burden of proof
+    text: |
+      The covered entity or business associate must maintain documentation
+      sufficient to demonstrate that all required notifications were made, or that
+      an impermissible use or disclosure did not constitute a reportable breach.
+    pryv_ref: "164.414"
+    draft: true
+    hds:
+      coverage: facilitated
+      effort_saved: medium
+      facilitation_mode: evidence
+      regions: [us, ch]
+      overview: |
+        The burden of proof is met with evidence. HDS's per-user audit log and
+        access-version chain are the technical evidence layer — a precise record of
+        what was accessed, by which credential, and when — that backs both "we
+        notified" and "this was not a reportable breach" determinations.
+      detail: |
+        The audit and access history give an implementer the factual spine for the
+        §164.414 demonstration: it can show the scope of any incident and the basis
+        for a no-breach conclusion. The organizational records that sit on top of
+        that data — incident-response files, notification records, and the
+        documented rationale for any decision not to notify — are the implementer's
+        to maintain. HDS also retains its own breach-procedure execution records as
+        evidence of its §164.410 performance.
+      evidence:
+        internal_docs:
+          - hipaa/registers/breach-log
+          - hipaa/procedures/breach-notification
+    implementer:
+      - persona: covered-entity
+        coverage: documented
+        overview: |
+          Maintain the documentation that demonstrates notification or a justified
+          no-breach determination, retaining it for the required period.
+      - persona: business-associate
+        coverage: documented
+        overview: |
+          Keep records demonstrating your own notifications and risk assessments to
+          meet the burden of proof.
+      - persona: individual
+        coverage: out-of-scope
