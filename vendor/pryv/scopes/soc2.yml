@@ -1063,6 +1063,18 @@ requirements:
       (a scheduled sweep calling events/streams delete). The retention
       policy itself is yours; treat the absence of auto-expiry as an
       operator responsibility when you attest P4.2.
+    detail: |
+      This is **voluntarily missing + operator-owned** by design — the
+      same classification as GDPR Art.5(1)(e) storage limitation. Pryv
+      stays retention-policy-neutral: no TTL / auto-delete / scheduler
+      primitive ships, so automatic disposal is the operator's external
+      scheduled job composing existing primitives (`events.get
+      toTime=<cutoff>` + two-stage `events.delete` + `streams.delete` +
+      `auth.delete`, with the audit log as the inactivity oracle).
+      `clientData.retention` is advisory metadata, not an enforcement
+      hook; every retention deletion is itself audit-logged. Full
+      rationale + the recommended operator retention-job pattern in
+      `context/data-retention-operator-owned.md`.
 
   - ref: P4.3
     title: P4.3 — Disposal of personal information

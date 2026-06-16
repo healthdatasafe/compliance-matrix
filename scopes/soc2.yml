@@ -1,0 +1,2693 @@
+id: soc2
+title: SOC 2 — AICPA Trust Services Criteria (Security, Availability, Confidentiality, Processing Integrity, Privacy)
+short: SOC 2
+type: standard
+jurisdiction: United States (AICPA)
+version: Trust Services Criteria (2017), with revised points of focus (2022)
+version_date: "2022-01-01"
+canonical_url: https://www.aicpa-cima.com/resources/landing/trust-services-criteria
+matrix_language: EN
+layered_on_pryv: soc2
+regions: [us, ch]
+
+changelog:
+  - date: "2026-06-15"
+    change: >
+      Initial draft of the HDS layer over the SOC 2 Trust Services Criteria
+      (Common Criteria + Availability, Confidentiality, Processing Integrity,
+      Privacy). All rows draft pending review.
+
+requirements:
+
+- ref: CC1.1
+  title: CC1.1 — Commitment to integrity and ethical values
+  text: |
+    The service organization demonstrates a commitment to integrity and ethical
+    values as a foundation for its system of internal control.
+  pryv_ref: CC1.1
+  draft: true
+  hds:
+    coverage: documented
+    effort_saved: low
+    overview: |
+      Integrity and ethical values are a matter of organizational culture, not
+      software. HDS maintains a written code of conduct and information-security
+      policy that set the ethical baseline for its own workforce operating the
+      platform; the service organization building on HDS sets and documents its
+      own. The platform contributes only after the fact: the per-user audit log
+      can evidence whether workforce behaviour matched the stated values.
+    detail: |
+      HDS holds this as an operator governance artefact rather than a platform
+      feature. Its commitment to integrity is expressed in a documented code of
+      conduct and the umbrella information-security policy referenced throughout
+      this matrix; both are reviewed periodically. A partner attesting under SOC 2
+      cannot inherit HDS's culture controls — they author their own — but may cite
+      the audit log as the substrate that holds individuals accountable to whatever
+      ethical baseline they set.
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - hipaa/policies/information-security-policy
+  implementer:
+    - persona: service-organization
+      coverage: documented
+      overview: |
+        Establish and document your own code of conduct and ethical-values
+        baseline; this is a management and culture obligation HDS cannot carry for
+        you.
+    - persona: user-entity
+      coverage: out-of-scope
+    - persona: subservice-organization
+      coverage: documented
+      overview: |
+        Maintain your own integrity and ethics programme for the workforce that
+        operates any downstream service.
+
+- ref: CC1.2
+  title: CC1.2 — Board independence and oversight
+  text: |
+    The board of directors operates independently of management and oversees the
+    development and performance of internal control.
+  pryv_ref: CC1.2
+  draft: true
+  hds:
+    coverage: documented
+    effort_saved: low
+    overview: |
+      Board governance and oversight are organizational structures with no software
+      role. HDS documents its own governance and oversight arrangements internally;
+      the service organization documents its own board's independence and oversight
+      function. This matrix and the audit log can feed the oversight pack a board
+      reviews, but the oversight function itself is a governance obligation.
+    detail: |
+      HDS treats board-level oversight as an operator governance artefact, held
+      privately and available on request. Where HDS operates the platform, this
+      matrix doubles as a control inventory the partner's own board can review, and
+      the audit log supplies control-operation evidence. The independence and
+      oversight obligation cannot be inherited; each attesting organization carries
+      its own.
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - soc2/policies/governance-and-oversight
+  implementer:
+    - persona: service-organization
+      coverage: documented
+      overview: |
+        Document your own board's independence and its oversight of internal
+        control; a governance obligation outside the platform.
+    - persona: user-entity
+      coverage: out-of-scope
+    - persona: subservice-organization
+      coverage: documented
+      overview: |
+        Document the equivalent oversight arrangements for your own organization.
+
+- ref: CC1.3
+  title: CC1.3 — Management structures, reporting lines, and authorities
+  text: |
+    Management, with board oversight, establishes structures, reporting lines, and
+    appropriate authorities and responsibilities in pursuit of the entity's
+    objectives.
+  pryv_ref: CC1.3
+  draft: true
+  hds:
+    coverage: documented
+    effort_saved: low
+    overview: |
+      Organizational structure and authority assignment are management artefacts.
+      HDS documents the reporting lines and authorities for its own platform
+      operation, including the named security official accountable for the
+      programme. The platform enforces the technical half of "appropriate
+      authorities" once they are decided (least-privilege access, see CC6.3), but
+      the structure design itself is management work.
+    detail: |
+      HDS holds its own management structure, reporting lines and authority
+      assignments as documented operator artefacts. The technical realisation of
+      authority — who may exercise which permissions — is carried by the
+      access-token model and recorded in the audit log; the design of the
+      reporting lines and the assignment of responsibilities are governance
+      decisions each attesting organization makes for itself.
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - hipaa/policies/access-control
+        - soc2/policies/governance-and-oversight
+  implementer:
+    - persona: service-organization
+      coverage: documented
+      overview: |
+        Define and document your own reporting lines and authority assignments;
+        map the resulting authorities onto least-privilege access grants.
+    - persona: user-entity
+      coverage: out-of-scope
+    - persona: subservice-organization
+      coverage: documented
+      overview: |
+        Document your own management structure and authorities for the service you
+        operate downstream.
+
+- ref: CC1.4
+  title: CC1.4 — Commitment to competence
+  text: |
+    The entity demonstrates a commitment to attract, develop, and retain competent
+    individuals in alignment with its objectives.
+  pryv_ref: CC1.4
+  draft: true
+  hds:
+    coverage: documented
+    effort_saved: low
+    overview: |
+      Hiring, training and retention of competent staff is an HR programme with no
+      software role. HDS runs and documents its own competence programme for the
+      workforce operating the platform; formal, verified security-awareness
+      training is a known gap being matured. The service organization runs its own.
+    detail: |
+      HDS treats workforce competence as an operator governance artefact. Its
+      documented programme covers role-relevant skills for staff operating the
+      platform. The platform makes no contribution at this layer. HDS is honest
+      that formal verified training delivery is still being formalised; a partner
+      attesting under SOC 2 maintains its own competence programme.
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - soc2/policies/workforce-competence
+  implementer:
+    - persona: service-organization
+      coverage: documented
+      overview: |
+        Run and document your own hiring, training and competence programme; HDS
+        cannot carry this for you.
+    - persona: user-entity
+      coverage: out-of-scope
+    - persona: subservice-organization
+      coverage: documented
+      overview: |
+        Maintain a competence programme for your own downstream workforce.
+
+- ref: CC1.5
+  title: CC1.5 — Accountability for internal control responsibilities
+  text: |
+    The entity holds individuals accountable for their internal control
+    responsibilities in pursuit of its objectives.
+  pryv_ref: CC1.5
+  draft: true
+  hds:
+    coverage: facilitated
+    effort_saved: medium
+    facilitation_mode: evidence
+    overview: |
+      The platform HDS operates supplies the technical accountability substrate:
+      every API call is attributable to a specific access identity in the per-user
+      audit log, so "who did what, when" is recoverable when an individual must be
+      held to account. HDS layers its own sanction and accountability policy on
+      top and documents it; defining responsibilities and the consequence process
+      is each organization's management activity.
+    detail: |
+      Accountability has two halves. The evidence half is platform-native — the
+      audit log attributes each action to an access identity, giving an objective
+      record against which responsibilities can be enforced. The policy half (which
+      responsibilities, what consequences) is governance; HDS documents the
+      accountability and sanction policy it operates for its own workforce. A
+      partner inherits the audit substrate but authors its own accountability
+      framework.
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - hipaa/policies/audit-controls
+        - soc2/policies/accountability-and-sanctions
+  implementer:
+    - persona: service-organization
+      coverage: documented
+      overview: |
+        Define the internal-control responsibilities and the consequence process;
+        use the per-user audit log as the accountability evidence trail.
+    - persona: user-entity
+      coverage: out-of-scope
+    - persona: subservice-organization
+      coverage: documented
+      overview: |
+        Hold your own workforce accountable using the audit substrate and your own
+        sanction policy.
+
+- ref: CC2.1
+  title: CC2.1 — Quality information to support internal control
+  text: |
+    The entity obtains or generates and uses relevant, quality information to
+    support the functioning of internal control.
+  pryv_ref: CC2.1
+  draft: true
+  hds:
+    coverage: facilitated
+    effort_saved: medium
+    facilitation_mode: evidence
+    overview: |
+      The platform produces two streams of control-relevant information that HDS
+      operates: the per-user audit log (application-level activity, attributable to
+      an access identity) and operational monitoring (security and operational
+      KPIs across both data-residency options). What to monitor and how to act on
+      it is each organization's programme; HDS supplies the quality data and runs
+      its own monitoring over the platform.
+    detail: |
+      Quality information for internal control comes from the audit log and HDS's
+      operational monitoring, which is wired end to end with alerting before any
+      component is treated as in production. HDS documents the monitoring it
+      operates. A partner consumes the same substrate to feed its own
+      control-monitoring process and defines its own thresholds and review cadence.
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - hipaa/policies/audit-controls
+        - soc2/procedures/control-monitoring
+  implementer:
+    - persona: service-organization
+      coverage: documented
+      overview: |
+        Define what control-relevant information you collect and how you act on it,
+        drawing on the audit log and monitoring substrate HDS exposes.
+    - persona: user-entity
+      coverage: out-of-scope
+    - persona: subservice-organization
+      coverage: documented
+      overview: |
+        Operate your own monitoring and information-quality process over the
+        substrate you run downstream.
+
+- ref: CC2.2
+  title: CC2.2 — Internal communication of objectives and responsibilities
+  text: |
+    The entity internally communicates information, including objectives and
+    responsibilities for internal control, needed to support its functioning.
+  pryv_ref: CC2.2
+  draft: true
+  hds:
+    coverage: documented
+    effort_saved: low
+    overview: |
+      Internal communication of objectives is a management activity with no
+      software role at the communication-content layer. HDS documents how it
+      communicates security objectives and responsibilities to its own workforce;
+      the service organization runs its own internal-communication programme.
+    detail: |
+      HDS holds this as an operator governance artefact: its information-security
+      policy and internal communication channels convey control responsibilities
+      to staff. The platform contributes nothing at the content layer. Each
+      attesting organization authors and operates its own internal communication
+      of objectives and responsibilities.
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - hipaa/policies/information-security-policy
+  implementer:
+    - persona: service-organization
+      coverage: documented
+      overview: |
+        Communicate internal-control objectives and responsibilities to your own
+        workforce; a management obligation outside the platform.
+    - persona: user-entity
+      coverage: out-of-scope
+    - persona: subservice-organization
+      coverage: documented
+      overview: |
+        Communicate the equivalent objectives and responsibilities to your own
+        downstream workforce.
+
+- ref: CC2.3
+  title: CC2.3 — External communication on internal control matters
+  text: |
+    The entity communicates with external parties about matters affecting the
+    functioning of internal control.
+  pryv_ref: CC2.3
+  draft: true
+  hds:
+    coverage: facilitated
+    effort_saved: low
+    facilitation_mode: awareness
+    overview: |
+      For the slice of external communication that concerns the platform itself,
+      the public release process is the channel: tagged releases and published
+      change notes communicate what changed in the substrate. HDS layers its own
+      external-communication programme (customer, subprocessor and auditor
+      communications) on top and documents it. The service organization runs its
+      own.
+    detail: |
+      External communication about internal control has a platform half and an
+      operator half. The platform half rides on the public open-source release
+      process. The operator half — how HDS communicates security and incident
+      matters to its customers and subprocessors — is documented as an operator
+      artefact and backed by the subprocessor register. A partner attesting under
+      SOC 2 authors its own external-communication programme.
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - hipaa/policies/information-security-policy
+        - hipaa/registers/subprocessor-register
+  implementer:
+    - persona: service-organization
+      coverage: documented
+      overview: |
+        Author your own external communications about internal control to
+        customers, subprocessors, regulators and auditors.
+    - persona: user-entity
+      coverage: out-of-scope
+    - persona: subservice-organization
+      coverage: documented
+      overview: |
+        Communicate control matters to the parties you serve and to your own
+        upstream service organization.
+
+- ref: CC3.1
+  title: CC3.1 — Objectives specified with sufficient clarity
+  text: |
+    The entity specifies objectives with enough clarity to enable the
+    identification and assessment of risks relating to them.
+  pryv_ref: CC3.1
+  draft: true
+  hds:
+    coverage: documented
+    effort_saved: low
+    overview: |
+      Objective-setting is a management exercise; the platform has no role in
+      authoring objectives. HDS documents the security and availability objectives
+      it sets for its own platform operation. This matrix supports the downstream
+      risk-to-control mapping once an organization's objectives exist.
+    detail: |
+      HDS holds its own service objectives (confidentiality, integrity,
+      availability targets for the operated platform) as documented operator
+      artefacts that anchor its risk assessment. A partner cannot inherit these —
+      it specifies its own objectives — but can use this matrix to map identified
+      risks onto the platform controls that address them.
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - soc2/policies/system-description
+  implementer:
+    - persona: service-organization
+      coverage: documented
+      overview: |
+        Specify and document your own service objectives with enough clarity to
+        drive your risk assessment.
+    - persona: user-entity
+      coverage: out-of-scope
+    - persona: subservice-organization
+      coverage: documented
+      overview: |
+        Specify your own objectives for the service you operate downstream.
+
+- ref: CC3.2
+  title: CC3.2 — Identification and analysis of risk
+  text: |
+    The entity identifies risks to the achievement of its objectives across the
+    entity and analyzes them as a basis for deciding how they should be managed.
+  pryv_ref: CC3.2
+  draft: true
+  hds:
+    coverage: documented
+    effort_saved: medium
+    overview: |
+      A formal risk assessment is each organization's own methodology and findings.
+      HDS is honest that its own formal risk assessment is not yet conducted — a
+      known gap being matured. What HDS contributes is the inventory of technical
+      controls (this matrix, especially the CC6 access and CC6.6/6.7 boundary and
+      cryptography rows), so when a confidentiality, integrity or availability risk
+      is identified, the control that addresses it is mechanical to locate.
+    detail: |
+      HDS treats its own risk assessment as an operator obligation in progress and
+      states the gap plainly rather than claiming a completed assessment. Its
+      contribution to a partner's risk assessment is the control inventory in this
+      matrix plus the audit and monitoring substrate that surfaces emerging risk
+      signals. The risk-assessment methodology and the specific findings are each
+      attesting organization's own.
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - soc2/procedures/risk-assessment
+  implementer:
+    - persona: service-organization
+      coverage: documented
+      overview: |
+        Conduct and document your own risk assessment; use this matrix to map
+        identified risks onto the platform controls that mitigate them.
+    - persona: user-entity
+      coverage: out-of-scope
+    - persona: subservice-organization
+      coverage: documented
+      overview: |
+        Conduct your own risk assessment for the service you operate downstream.
+
+- ref: CC3.3
+  title: CC3.3 — Consideration of the potential for fraud
+  text: |
+    The entity considers the potential for fraud when assessing risks to the
+    achievement of its objectives.
+  pryv_ref: CC3.3
+  draft: true
+  hds:
+    coverage: facilitated
+    effort_saved: low
+    facilitation_mode: evidence
+    overview: |
+      The audit log and operational monitoring are the detection substrate for
+      insider-misuse and anomalous-access fraud scenarios — every access is
+      attributable, and unusual read or write patterns surface. HDS operates this
+      substrate; the fraud-risk analysis itself (which scenarios matter, what
+      thresholds trigger review) is each organization's assessment.
+    detail: |
+      HDS contributes the technical means to detect the fraud scenarios an
+      assessment identifies: attributable audit records and anomaly signals from
+      monitoring. The analytical step — deciding which fraud risks are in scope and
+      how to respond — is governance and depends on the formal risk assessment
+      (see CC3.2, a known gap on the HDS side). A partner runs its own fraud-risk
+      analysis over the same substrate.
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - hipaa/policies/audit-controls
+        - soc2/procedures/risk-assessment
+  implementer:
+    - persona: service-organization
+      coverage: documented
+      overview: |
+        Analyze fraud risk as part of your risk assessment; use the audit log and
+        monitoring as the detection substrate for the scenarios you identify.
+    - persona: user-entity
+      coverage: out-of-scope
+    - persona: subservice-organization
+      coverage: documented
+      overview: |
+        Consider fraud risk for the service you operate downstream.
+
+- ref: CC3.4
+  title: CC3.4 — Identification and assessment of changes affecting internal control
+  text: |
+    The entity identifies and assesses changes that could significantly affect its
+    system of internal control.
+  pryv_ref: CC3.4
+  draft: true
+  hds:
+    coverage: facilitated
+    effort_saved: low
+    facilitation_mode: evidence
+    overview: |
+      For changes to the platform substrate, the public release notes announce what
+      changed, and the audit log shows when config-driven behaviour changed
+      observably in a deployment. HDS assesses substrate changes as part of its own
+      operations. The change-impact assessment process for an organization's wider
+      control system is its own.
+    detail: |
+      Change identification on the platform half is supported by published change
+      notes and the audit log's record of observable behaviour change. HDS folds
+      these into its own change handling. A partner uses the same signals to feed
+      its change-impact assessment over its broader control system, which it
+      authors itself. HDS's own formalised change-management programme is still
+      being matured (see CC8.1).
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - hipaa/policies/audit-controls
+        - soc2/policies/change-management
+  implementer:
+    - persona: service-organization
+      coverage: documented
+      overview: |
+        Identify and assess changes affecting your control system; use platform
+        release notes and the audit log as inputs.
+    - persona: user-entity
+      coverage: out-of-scope
+    - persona: subservice-organization
+      coverage: documented
+      overview: |
+        Assess control-affecting changes in the service you operate downstream.
+
+- ref: CC4.1
+  title: CC4.1 — Ongoing and separate evaluations
+  text: |
+    The entity selects, develops, and performs ongoing and/or separate evaluations
+    to ascertain whether the components of internal control are present and
+    functioning.
+  pryv_ref: CC4.1
+  draft: true
+  hds:
+    coverage: facilitated
+    effort_saved: medium
+    facilitation_mode: evidence
+    overview: |
+      The platform supplies the data an ongoing evaluation samples: the audit log
+      evidences control effectiveness (e.g. that access scoping actually blocks
+      out-of-scope reads), and operational monitoring evidences operational health.
+      HDS runs its own periodic evaluation over the platform and documents it. The
+      evaluation cadence and sampling method for an organization's own controls are
+      its own.
+    detail: |
+      HDS performs a periodic evaluation of its security programme drawing on audit
+      samples, monitoring data and this matrix as the control inventory, and
+      documents the cadence and findings. A partner consumes the same substrate to
+      sample its own controls and defines its own evaluation programme. This matrix
+      doubles as the control inventory an evaluation assesses against.
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - hipaa/procedures/periodic-evaluation
+        - soc2/procedures/control-monitoring
+  implementer:
+    - persona: service-organization
+      coverage: documented
+      overview: |
+        Define and run your own ongoing and separate evaluations of internal
+        control, sampling the audit and monitoring substrate HDS exposes.
+    - persona: user-entity
+      coverage: out-of-scope
+    - persona: subservice-organization
+      coverage: documented
+      overview: |
+        Evaluate the controls of the service you operate downstream.
+
+- ref: CC4.2
+  title: CC4.2 — Evaluation and communication of deficiencies
+  text: |
+    The entity evaluates and communicates internal-control deficiencies in a timely
+    manner to the parties responsible for taking corrective action.
+  pryv_ref: CC4.2
+  draft: true
+  hds:
+    coverage: facilitated
+    effort_saved: low
+    facilitation_mode: evidence
+    overview: |
+      Deficiency signals from the platform side — audit anomalies, monitoring
+      alerts — feed a deficiency-tracking process. HDS operates its own
+      deficiency-evaluation and corrective-action flow and documents it; corrective
+      records can themselves ride on the platform as events on a dedicated stream.
+      The evaluation and communication workflow is each organization's procedure.
+    detail: |
+      HDS runs a documented process for evaluating and communicating deficiencies
+      it observes in its own operation, fed by audit and monitoring signals and
+      tied to its incident and periodic-evaluation procedures. A partner authors
+      its own deficiency workflow over the same substrate. The platform can host
+      the corrective-action records themselves as attributable events.
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - hipaa/procedures/periodic-evaluation
+        - soc2/procedures/control-monitoring
+  implementer:
+    - persona: service-organization
+      coverage: documented
+      overview: |
+        Define how you evaluate, track and communicate control deficiencies and
+        their corrective actions.
+    - persona: user-entity
+      coverage: out-of-scope
+    - persona: subservice-organization
+      coverage: documented
+      overview: |
+        Operate your own deficiency-tracking and communication process downstream.
+
+- ref: CC5.1
+  title: CC5.1 — Selection and development of control activities
+  text: |
+    The entity selects and develops control activities that contribute to
+    mitigating risks to the achievement of objectives to acceptable levels.
+  pryv_ref: CC5.1
+  draft: true
+  hds:
+    coverage: facilitated
+    effort_saved: medium
+    facilitation_mode: primitive
+    overview: |
+      Several control activities are platform primitives HDS operates ready-made:
+      permission-scoped access tokens (purpose limitation), system-level isolation
+      of privileged data, and encryption of operator secrets at rest. An
+      organization selects which to deploy against which risk; HDS provides the
+      activities as shipped controls rather than something to build, and documents
+      the configuration it runs.
+    detail: |
+      The control-activity selection step is governance, but a meaningful subset of
+      the activities themselves are platform-native: least-privilege access grants,
+      privileged-namespace isolation, and at-rest encryption of operator secrets.
+      HDS operates these and documents its access-control configuration. A partner
+      selects and operates the activities appropriate to its risk assessment over
+      the same primitives.
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - hipaa/policies/access-control
+        - soc2/procedures/control-monitoring
+  implementer:
+    - persona: service-organization
+      coverage: documented
+      overview: |
+        Select the control activities appropriate to your risks; deploy the
+        platform primitives (scoped access, isolation, secret encryption) that
+        implement them.
+    - persona: user-entity
+      coverage: out-of-scope
+    - persona: subservice-organization
+      coverage: documented
+      overview: |
+        Select and operate control activities for the service you run downstream.
+
+- ref: CC5.2
+  title: CC5.2 — General control activities over technology
+  text: |
+    The entity selects and develops general control activities over technology to
+    support the achievement of its objectives.
+  pryv_ref: CC5.2
+  draft: true
+  hds:
+    coverage: implemented
+    effort_saved: high
+    overview: |
+      The technology general controls SOC 2 examines — logical access,
+      authentication, encryption in transit, audit logging, secure inter-core
+      transport — are shipped platform controls HDS operates, enforced at the API
+      surface rather than left to configuration discipline. The CC6 and CC7 rows
+      detail each. An organization's role is selecting and operating them; the
+      mechanisms are in place.
+    detail: |
+      General IT controls are where the platform contribution is strongest: access
+      control and authentication are enforced on every request, transmission is
+      TLS by default, the audit log is always-on, and inter-core transport is
+      mutually authenticated. HDS operates this stack across both data-residency
+      options. At-rest encryption of bulk event data is the one general control not
+      yet shipped (see CC6.7) and is noted honestly. A partner selects, configures
+      and operates these controls; it does not build them.
+    technical: |
+      Logical access and authentication enforced per request; TLS in transit;
+      always-on per-user audit log; mutually authenticated inter-core transport.
+      At-rest encryption of bulk event data is not yet platform-provided.
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - hipaa/policies/access-control
+        - hipaa/policies/audit-controls
+        - hipaa/policies/transmission-security
+  implementer:
+    - persona: service-organization
+      coverage: documented
+      overview: |
+        Select, configure and operate the platform general IT controls; document
+        the configuration and assess the at-rest encryption gap in your risk
+        analysis.
+    - persona: user-entity
+      coverage: out-of-scope
+    - persona: subservice-organization
+      coverage: documented
+      overview: |
+        Operate equivalent general IT controls for the service you run downstream.
+
+- ref: CC5.3
+  title: CC5.3 — Deployment of control activities through policies and procedures
+  text: |
+    The entity deploys control activities through policies that establish what is
+    expected and procedures that put those policies into action.
+  pryv_ref: CC5.3
+  draft: true
+  hds:
+    coverage: documented
+    effort_saved: medium
+    overview: |
+      Policy and procedure authoring is editorial governance work. HDS maintains
+      its own information-security policy set and the operating procedures that put
+      it into action over the platform; the platform enforces what the policies
+      decide (access rules, encryption in transit), but the policy text and
+      procedures are an organization's own.
+    detail: |
+      HDS's documented policies and procedures are referenced throughout this
+      matrix as the administrative backing for the technical controls, and they are
+      reviewed periodically. The platform enforces the decisions those policies
+      make but does not author them. A partner attesting under SOC 2 keeps its own
+      policy and procedure set; it cannot inherit HDS's, though it can cite HDS's
+      programme where HDS operates the underlying system.
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - hipaa/policies/information-security-policy
+        - soc2/procedures/control-monitoring
+  implementer:
+    - persona: service-organization
+      coverage: documented
+      overview: |
+        Author and maintain your own policies and operating procedures that deploy
+        your selected control activities.
+    - persona: user-entity
+      coverage: out-of-scope
+    - persona: subservice-organization
+      coverage: documented
+      overview: |
+        Maintain your own policies and procedures for the service you run
+        downstream.
+
+- ref: CC6.1
+  title: CC6.1 — Logical access security over protected information assets
+  text: |
+    The entity implements logical access security software, infrastructure, and
+    architectures over protected information assets to protect them from security
+    events.
+  pryv_ref: CC6.1
+  draft: true
+  hds:
+    coverage: implemented
+    effort_saved: high
+    overview: |
+      Logical access is enforced by the HDS-operated platform at the API surface:
+      every read or write is checked against the access's per-stream and per-level
+      permissions, token-based authentication is the default, multi-factor
+      authentication is available, and privileged data is held on a separately
+      controlled namespace. No plaintext transport path is served. An organization
+      defines who gets which access; HDS operates the enforcement.
+    detail: |
+      Logical access security is a technical property of the API boundary, not a
+      downstream policy layer. Each request must present a valid access token whose
+      per-stream, per-level permissions are checked before any data is touched;
+      credentials and privileged state live on a separately controlled namespace;
+      MFA strengthens the login where configured. HDS operates this stack across
+      both data-residency options and documents its access-control and
+      authentication policy. The implementer configures which grants its
+      application mints.
+    technical: |
+      Per-user data isolation; per-stream, per-level access tokens enforced on every
+      API call; token authentication by default with optional MFA; privileged data
+      on a separately controlled namespace.
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - hipaa/policies/access-control
+        - hipaa/policies/authentication
+  implementer:
+    - persona: service-organization
+      coverage: documented
+      overview: |
+        Configure least-privilege per-stream access grants for your application and
+        document your access-authorization rules; decide whether to require MFA.
+    - persona: user-entity
+      coverage: out-of-scope
+    - persona: subservice-organization
+      coverage: documented
+      overview: |
+        Apply the same logical-access controls to the service you run downstream.
+
+- ref: CC6.2
+  title: CC6.2 — Registration, credential issuance, and de-provisioning
+  text: |
+    Before issuing credentials and granting access, the entity registers and
+    authorizes new users; credentials are removed when access is no longer
+    authorized.
+  pryv_ref: CC6.2
+  draft: true
+  hds:
+    coverage: implemented
+    effort_saved: high
+    overview: |
+      The full credential lifecycle is platform-native and HDS-operated:
+      registration mints an account, a scoped access token issues a credential,
+      updating an access modifies its scope (writing the prior version to history),
+      and revocation or account deletion removes it. Each stage lands in the audit
+      log. The authorization decision (who may register, what scope is appropriate)
+      is an organization's policy; the mechanism is shipped.
+    detail: |
+      Registration, issuance, modification and de-provisioning are all first-class
+      operations: an access token is the credential, its scope is adjustable with
+      full version history, and revocation takes effect immediately. Account
+      deletion removes the identity entirely. Every step is audited. HDS operates
+      this lifecycle and documents the access-authorization and termination
+      procedures it follows for its own workforce; the implementer applies the same
+      primitives to its users.
+    technical: |
+      Account registration; scoped access-token issuance; access-scope updates with
+      version history; immediate revocation and account deletion; each stage
+      recorded in the per-user audit log.
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - hipaa/policies/access-authorization
+        - hipaa/procedures/access-termination
+  implementer:
+    - persona: service-organization
+      coverage: documented
+      overview: |
+        Document who may register and authorize users and at what scope, and tie
+        de-provisioning to immediate access revocation.
+    - persona: user-entity
+      coverage: out-of-scope
+    - persona: subservice-organization
+      coverage: documented
+      overview: |
+        Operate the same registration and de-provisioning lifecycle downstream.
+
+- ref: CC6.3
+  title: CC6.3 — Role-based access, least privilege, and segregation of duties
+  text: |
+    The entity authorizes, modifies, and removes access based on roles and the
+    system design, applying least privilege and segregation of duties.
+  pryv_ref: CC6.3
+  draft: true
+  hds:
+    coverage: implemented
+    effort_saved: high
+    overview: |
+      Least privilege is native to the HDS-operated platform: an access carries
+      only the per-stream, per-level permissions it needs, so a credential cannot
+      touch out-of-scope data. Segregation of duties is expressed by issuing
+      distinct narrow accesses per role, with privileged functions isolated on a
+      separate namespace. Modification and removal are audited operations with
+      version history as the review-evidence layer.
+    detail: |
+      The permission model makes least privilege the default rather than an aim:
+      each access lists exactly the streams and levels it may exercise. Distinct
+      roles map to distinct narrow accesses, giving segregation of duties; privileged
+      namespaces isolate sensitive functions. Access updates and revocations are
+      audited and version-history-tracked. Role definitions live in an
+      organization's identity system or policy; HDS records and enforces the
+      resulting access state and documents its own access-review cadence.
+    technical: |
+      Per-stream, per-level permission tuples per access; distinct narrow accesses
+      per role for segregation of duties; privileged-namespace isolation; audited,
+      version-tracked access modification and removal.
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - hipaa/policies/access-control
+        - hipaa/procedures/access-review
+  implementer:
+    - persona: service-organization
+      coverage: documented
+      overview: |
+        Define your role model and least-privilege scopes, map them onto access
+        grants, and run a periodic access review over the version history.
+    - persona: user-entity
+      coverage: out-of-scope
+    - persona: subservice-organization
+      coverage: documented
+      overview: |
+        Apply role-based least-privilege access and segregation of duties
+        downstream.
+
+- ref: CC6.4
+  title: CC6.4 — Physical access to facilities and protected assets
+  text: |
+    The entity restricts physical access to facilities and protected information
+    assets to authorized personnel.
+  pryv_ref: CC6.4
+  draft: true
+  hds:
+    coverage: facilitated
+    effort_saved: medium
+    facilitation_mode: infrastructure
+    overview: |
+      Physical access control (data-centre entry, media handling) is facility
+      scope, outside the platform software boundary. HDS carries this layer by
+      selecting certified hosting providers for each region (EU/Switzerland and US
+      data-residency options) and holding their facility-control attestations on
+      file, so an organization inherits a vetted physical posture for the server
+      tier rather than sourcing it itself.
+    detail: |
+      HDS does not operate its own data centres; it deploys the platform onto
+      certified infrastructure whose physical access controls are independently
+      attested, and records which attestation backs each region in its
+      hosting-provider register. The server-tier physical-access obligation is
+      satisfied by inheritance; an organization's own facilities (offices where
+      workforce access the service) remain its responsibility.
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - hipaa/registers/hosting-provider-attestations
+  implementer:
+    - persona: service-organization
+      coverage: documented
+      overview: |
+        Inherit the server-tier facility controls from the HDS hosting region and
+        reference the attestation; control and document physical access to your own
+        premises.
+    - persona: user-entity
+      coverage: out-of-scope
+    - persona: subservice-organization
+      coverage: documented
+      overview: |
+        Document the physical controls for any facilities you operate downstream.
+
+- ref: CC6.5
+  title: CC6.5 — Protections over data and software on disposed assets
+  text: |
+    The entity removes logical and physical protections over physical assets only
+    after the ability to read or recover the data and software from them has been
+    diminished and is no longer required.
+  pryv_ref: CC6.5
+  draft: true
+  hds:
+    coverage: configurable
+    effort_saved: medium
+    overview: |
+      Logical destruction is per-user on the HDS-operated platform: account
+      deletion removes a user's data from the live store, and event- and
+      stream-level deletion cover per-record needs. Whether destruction extends to
+      backups is storage-engine-dependent, so the engine is chosen to match the
+      destruction policy. Physical media sanitisation at the server tier is the
+      certified hosting provider's procedure.
+    detail: |
+      Per-user erasure gives a clean logical-destruction path; backup reach depends
+      on the configured storage engine (a per-user file model unlinks cleanly, a
+      shared relational store retains rows in historical dump artefacts until
+      rotated). HDS documents the engine posture it operates and relies on the
+      hosting provider's attested media-sanitisation for physical disposal. An
+      organization selects the engine matching its disposal commitment.
+    technical: |
+      Per-user account deletion plus event/stream deletion for logical destruction;
+      backup reach is storage-engine-dependent; physical media sanitisation
+      inherited from the certified hosting provider.
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - hipaa/registers/hosting-provider-attestations
+  implementer:
+    - persona: service-organization
+      coverage: configurable
+      overview: |
+        Choose the storage engine that matches your destruction policy and document
+        how backup-resident copies are aged out.
+    - persona: user-entity
+      coverage: out-of-scope
+    - persona: subservice-organization
+      coverage: configurable
+      overview: |
+        Make the same engine and sanitisation choices for the service you run
+        downstream.
+
+- ref: CC6.6
+  title: CC6.6 — Boundary protection against external threats
+  text: |
+    The entity implements logical access security measures to protect against
+    threats originating outside its system boundaries.
+  pryv_ref: CC6.6
+  draft: true
+  hds:
+    coverage: implemented
+    effort_saved: high
+    overview: |
+      The external boundary is the TLS-terminating HTTPS API HDS operates: TLS in
+      transit with automated certificate renewal, token-gated access on every
+      request, and no plaintext path. Inter-core traffic in a cluster runs over
+      mutually authenticated transport, separating the control plane from the
+      user-facing plane. Edge controls (WAF, firewall, rate limiting) sit in the
+      operator's reverse proxy by design.
+    detail: |
+      Boundary protection is enforced technically: every request crosses a TLS
+      boundary and presents a valid access token before reaching data, and
+      cluster-internal transport is mutually authenticated on a private CA. HDS
+      operates the certificate lifecycle and the edge controls (rate limiting,
+      firewalling) at the reverse proxy in each region. An organization inherits
+      this boundary and configures any additional edge policy its risk analysis
+      requires.
+    technical: |
+      TLS-terminating HTTPS API with automated certificate renewal; token-gated
+      access per request; mutually authenticated inter-core transport; operator
+      reverse-proxy edge controls.
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - hipaa/policies/transmission-security
+        - hipaa/policies/access-control
+  implementer:
+    - persona: service-organization
+      coverage: documented
+      overview: |
+        Inherit the TLS and token boundary; configure and document any additional
+        edge controls (WAF, rate limits) your risk analysis calls for.
+    - persona: user-entity
+      coverage: out-of-scope
+    - persona: subservice-organization
+      coverage: documented
+      overview: |
+        Operate equivalent boundary protection for the service you run downstream.
+
+- ref: CC6.7
+  title: CC6.7 — Restriction and protection of information in transmission and movement
+  text: |
+    The entity restricts the transmission, movement, and removal of information to
+    authorized users and processes, and protects it during transmission, movement,
+    or removal.
+  pryv_ref: CC6.7
+  draft: true
+  hds:
+    coverage: implemented
+    effort_saved: high
+    overview: |
+      Transmission is protected by TLS end to end (client to core direct, with no
+      HDS-shipped intermediary that could log or cache), and movement is restricted
+      by the permission model — a credential only moves the data its scope permits.
+      Operator secrets at rest and bootstrap bundles for core-to-core movement are
+      encrypted with authenticated encryption. Bulk event-data at-rest encryption
+      is an operator-side storage-layer choice and is not yet platform-provided.
+    detail: |
+      The transmission half is default-on TLS with no plaintext path; the movement
+      half is bounded by the access permission model, so data only moves where a
+      scope permits and there is no out-of-band dump path. Operator secrets and
+      core-to-core bootstrap material use authenticated encryption at rest. HDS is
+      honest that platform-managed at-rest encryption of bulk event data is not yet
+      shipped — at-rest protection is applied at the infrastructure/storage layer
+      in each region, and an organization assesses the residual gap in its risk
+      analysis.
+    technical: |
+      Default-on TLS for transmission with no intermediary; movement bounded by the
+      access permission model; authenticated encryption of operator secrets and
+      core-to-core bundles. Bulk event-data at-rest encryption is operator-side, not
+      yet platform-provided.
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - hipaa/policies/transmission-security
+        - hipaa/policies/encryption
+        - hipaa/risk/at-rest-encryption-gap
+  implementer:
+    - persona: service-organization
+      coverage: configurable
+      overview: |
+        Rely on default-on TLS and the permission-bounded movement model; apply
+        infrastructure at-rest encryption and assess the bulk-data at-rest gap in
+        your risk analysis.
+    - persona: user-entity
+      coverage: out-of-scope
+    - persona: subservice-organization
+      coverage: configurable
+      overview: |
+        Make the same transmission and at-rest choices for the service you run
+        downstream.
+
+- ref: CC6.8
+  title: CC6.8 — Prevention and detection of unauthorized or malicious software
+  text: |
+    The entity implements controls to prevent, or detect and act upon, the
+    introduction of unauthorized or malicious software.
+  pryv_ref: CC6.8
+  draft: true
+  hds:
+    coverage: facilitated
+    effort_saved: low
+    facilitation_mode: infrastructure
+    overview: |
+      Anti-malware and endpoint protection are host-and-network controls, not
+      platform features. HDS operates malware protection and patching at the
+      hosting layer for the environments it runs, documented internally. The
+      platform contributes detection-adjacent properties: server-side payload
+      validation rejects malformed input at ingest, and the audit and monitoring
+      substrate surfaces anomalous behaviour.
+    detail: |
+      HDS carries malware protection as operator-side infrastructure hardening for
+      the environments it runs; the platform software itself ships no antivirus. Its
+      indirect contribution is structural input validation at ingest and the
+      anomaly signal from audit and monitoring. An organization protects its own
+      endpoints and any infrastructure it operates outside HDS, and operates
+      application-allowlisting on its hosts.
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - hipaa/policies/malware-protection
+  implementer:
+    - persona: service-organization
+      coverage: documented
+      overview: |
+        Operate and document anti-malware and application-allowlisting on your own
+        endpoints and any infrastructure you run outside HDS.
+    - persona: user-entity
+      coverage: out-of-scope
+    - persona: subservice-organization
+      coverage: documented
+      overview: |
+        Operate equivalent malware controls for the infrastructure you run
+        downstream.
+
+- ref: CC7.1
+  title: CC7.1 — Detection of configuration changes and vulnerabilities
+  text: |
+    The entity uses detection and monitoring procedures to identify configuration
+    changes that introduce new vulnerabilities and susceptibility to newly
+    discovered vulnerabilities.
+  pryv_ref: CC7.1
+  draft: true
+  hds:
+    coverage: facilitated
+    effort_saved: low
+    facilitation_mode: evidence
+    overview: |
+      Substrate-vulnerability detection on the platform side is partial: a committed
+      dependency lockfile, dependency alerts on the open-source codebase, published
+      fix announcements, and a config-validation step that fails fast on malformed
+      configuration at start. Operational monitoring and the audit log surface
+      runtime anomalies. HDS operates this and layers its own patching cadence;
+      an organization's own vulnerability-scanning cadence sits on top.
+    detail: |
+      The platform contributes passive detection (lockfile, dependency alerts,
+      fail-fast config validation) plus the runtime anomaly signal from monitoring
+      and audit. HDS operates a patching and update process over the platform and
+      documents it. A partner defines its own vulnerability-scanning and
+      configuration-drift detection cadence over the same substrate.
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - hipaa/policies/audit-controls
+        - soc2/procedures/control-monitoring
+  implementer:
+    - persona: service-organization
+      coverage: documented
+      overview: |
+        Define your own vulnerability-scanning and configuration-drift detection
+        cadence over the platform and your own infrastructure.
+    - persona: user-entity
+      coverage: out-of-scope
+    - persona: subservice-organization
+      coverage: documented
+      overview: |
+        Operate equivalent vulnerability detection for the service you run
+        downstream.
+
+- ref: CC7.2
+  title: CC7.2 — Monitoring for anomalies indicative of security events
+  text: |
+    The entity monitors system components for anomalies indicative of malicious
+    acts, natural disasters, and errors, and analyzes them to determine whether
+    they represent security events.
+  pryv_ref: CC7.2
+  draft: true
+  hds:
+    coverage: facilitated
+    effort_saved: medium
+    facilitation_mode: evidence
+    overview: |
+      HDS's operational monitoring gives system-level anomaly signal (latency,
+      error rate, request volume) across both data-residency options, wired end to
+      end with alerting before any component is treated as in production; the
+      per-user audit log gives application-level activity attributable to an access.
+      HDS operates this monitoring; deciding which anomalies are security events is
+      an organization's analysis.
+    detail: |
+      Two signal sources back anomaly monitoring: HDS's infrastructure monitoring
+      and the audit log. HDS treats end-to-end alert wiring as a precondition for
+      treating any component as in production, so silent failures are caught. The
+      analytical step — classifying an anomaly as a security event — is governance
+      and is each organization's own, fed by the raw signal HDS exposes and
+      operates.
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - hipaa/policies/audit-controls
+        - hipaa/procedures/login-monitoring
+  implementer:
+    - persona: service-organization
+      coverage: documented
+      overview: |
+        Define your anomaly thresholds and the analysis that classifies an anomaly
+        as a security event, drawing on the monitoring and audit substrate.
+    - persona: user-entity
+      coverage: out-of-scope
+    - persona: subservice-organization
+      coverage: documented
+      overview: |
+        Operate equivalent anomaly monitoring for the service you run downstream.
+
+- ref: CC7.3
+  title: CC7.3 — Evaluation of security events
+  text: |
+    The entity evaluates security events to determine whether they could result, or
+    have resulted, in a failure to meet its objectives, and takes action.
+  pryv_ref: CC7.3
+  draft: true
+  hds:
+    coverage: facilitated
+    effort_saved: low
+    facilitation_mode: evidence
+    overview: |
+      Event-versus-incident classification is each organization's decision. The
+      platform and HDS monitoring supply the evaluation inputs — audit-row patterns
+      and monitoring anomalies — but the categorisation rule and the response
+      trigger are policy. HDS operates its own event-evaluation step as part of its
+      incident-response procedure and documents it.
+    detail: |
+      HDS evaluates the security events it observes in its own operation using audit
+      and monitoring inputs, against the criteria in its incident-response
+      procedure. A partner authors its own classification rule and response
+      triggers over the same inputs. The substrate is operated; the judgement is
+      governance.
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - hipaa/procedures/security-incident-response
+  implementer:
+    - persona: service-organization
+      coverage: documented
+      overview: |
+        Define how you classify a security event as an incident and what response
+        it triggers.
+    - persona: user-entity
+      coverage: out-of-scope
+    - persona: subservice-organization
+      coverage: documented
+      overview: |
+        Operate your own event-evaluation step for the service you run downstream.
+
+- ref: CC7.4
+  title: CC7.4 — Incident response program
+  text: |
+    The entity responds to identified security incidents through a defined program
+    to understand, contain, remediate, and communicate them.
+  pryv_ref: CC7.4
+  draft: true
+  hds:
+    coverage: facilitated
+    effort_saved: medium
+    facilitation_mode: evidence
+    overview: |
+      The platform contributes the technical halves of incident response: detection
+      and scoping (audit log plus monitoring) and containment (immediate revocation
+      of a compromised access). HDS runs its own incident-response programme as
+      operator — roles, escalation, communications — and documents it; that
+      programme feeds the notification obligations a partner carries. The partner
+      defines and rehearses its own programme.
+    detail: |
+      HDS operates an incident-response procedure: detection draws on audit and
+      monitoring, containment uses immediate access revocation or scope reduction,
+      and a documented flow governs escalation and communication. The procedure is
+      held internally and shared on request, and feeds breach-notification timing a
+      partner must honour. A partner authors and rehearses its own incident-response
+      programme over the same technical substrate.
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - hipaa/procedures/security-incident-response
+        - hipaa/procedures/incident-mitigation
+  implementer:
+    - persona: service-organization
+      coverage: documented
+      overview: |
+        Define and rehearse your own incident-response programme — roles,
+        escalation, containment, communication, lessons learned — over the platform
+        detection and containment primitives.
+    - persona: user-entity
+      coverage: out-of-scope
+    - persona: subservice-organization
+      coverage: documented
+      overview: |
+        Run your own incident-response programme and notify your upstream service
+        organization of incidents affecting their data.
+
+- ref: CC7.5
+  title: CC7.5 — Recovery from identified security incidents
+  text: |
+    The entity identifies, develops, and implements activities to recover from
+    identified security incidents.
+  pryv_ref: CC7.5
+  draft: true
+  hds:
+    coverage: facilitated
+    effort_saved: medium
+    facilitation_mode: infrastructure
+    overview: |
+      Recovery primitives ship and HDS operates them: per-user backup and restore
+      rebuild a subject from backup, and a replicated multi-core topology with
+      cluster-replicated certificates keeps a surviving core serving when a peer
+      fails. HDS documents the recovery objectives and runbook it operates; the
+      recovery-objective targets and drill cadence for an organization's own service
+      are its own.
+    detail: |
+      Recovery rests on two layers HDS operates: cold restore from per-user backups
+      as the canonical path, and live replication across cores so a single-region
+      failure does not lose live data. HDS documents the recovery objectives it
+      targets; verified, regularly tested recovery drilling is being matured (see
+      CC4.1 evaluation). A partner sets its own recovery-objective targets and drill
+      cadence over the same primitives.
+    technical: |
+      Per-user backup and restore; replicated multi-core topology with
+      cluster-replicated TLS certificates for hot redundancy.
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - hipaa/procedures/disaster-recovery-plan
+        - hipaa/procedures/incident-mitigation
+  implementer:
+    - persona: service-organization
+      coverage: documented
+      overview: |
+        Set your recovery-objective targets and drill cadence, and document the
+        recovery runbook over the platform backup and replication primitives.
+    - persona: user-entity
+      coverage: out-of-scope
+    - persona: subservice-organization
+      coverage: documented
+      overview: |
+        Operate your own recovery activities for the service you run downstream.
+
+- ref: CC8.1
+  title: CC8.1 — Authorized changes to infrastructure, data, software, and procedures
+  text: |
+    The entity authorizes, designs, develops or acquires, configures, documents,
+    tests, approves, and implements changes to infrastructure, data, software, and
+    procedures.
+  pryv_ref: CC8.1
+  draft: true
+  hds:
+    coverage: documented
+    effort_saved: low
+    overview: |
+      Platform-side change evidence is strong: tagged releases, SHA-pinned images,
+      per-release change notes, a forward-only schema-migration framework, and a
+      public CI test matrix; separate environments are supported via independent
+      deployments, and the audit log records config-driven behaviour change. HDS is
+      honest, though, that its own formalised change-management programme (windows,
+      sign-off, rollback) is still being matured — a known gap.
+    detail: |
+      The substrate supplies the raw change artefacts an auditor samples. What is
+      not yet fully formalised is HDS's own change-approval workflow as a
+      documented, verified programme — HDS states this gap plainly rather than
+      claiming an implemented change-management control. HDS documents its current
+      change handling and is maturing it. A partner authors its own
+      change-management programme over the platform's change-evidence substrate.
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - hipaa/policies/audit-controls
+        - soc2/policies/change-management
+  implementer:
+    - persona: service-organization
+      coverage: documented
+      overview: |
+        Author and document your own change-management workflow — authorization,
+        testing, approval, rollback — using the platform change-evidence artefacts.
+    - persona: user-entity
+      coverage: out-of-scope
+    - persona: subservice-organization
+      coverage: documented
+      overview: |
+        Operate your own change-management programme for the service you run
+        downstream.
+
+- ref: CC9.1
+  title: CC9.1 — Risk mitigation for business disruptions
+  text: |
+    The entity identifies, selects, and develops risk-mitigation activities for
+    risks arising from potential business disruptions.
+  pryv_ref: CC9.1
+  draft: true
+  hds:
+    coverage: facilitated
+    effort_saved: medium
+    facilitation_mode: infrastructure
+    overview: |
+      Disruption-mitigation primitives are inherited and HDS-operated: multi-core
+      high availability with replication, per-user backup and restore,
+      cluster-replicated certificates, and a clean cloud-exit path (re-issue the
+      cluster onto new infrastructure from a bootstrap bundle). HDS documents the
+      continuity posture it operates; the business-continuity objectives and any
+      insurance or contractual mitigation choices are an organization's own.
+    detail: |
+      HDS operates the technical continuity substrate — HA replication, backup and
+      restore, replicated TLS certificates, portable cluster re-issue — across both
+      data-residency options and documents it. The non-technical mitigation
+      choices (continuity objectives, insurance, contractual risk transfer) are
+      governance and belong to each attesting organization. HDS's own formal risk
+      assessment that would prioritise these mitigations is a known gap (see CC3.2).
+    technical: |
+      Multi-core HA with replication; per-user backup and restore; cluster-replicated
+      TLS certificates; portable cluster re-issue from a bootstrap bundle.
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - hipaa/procedures/disaster-recovery-plan
+        - hipaa/procedures/data-backup-plan
+  implementer:
+    - persona: service-organization
+      coverage: documented
+      overview: |
+        Set your business-continuity objectives and choose your non-technical
+        mitigations over the platform HA and backup substrate HDS operates.
+    - persona: user-entity
+      coverage: out-of-scope
+    - persona: subservice-organization
+      coverage: documented
+      overview: |
+        Operate equivalent disruption mitigation for the service you run
+        downstream.
+
+- ref: CC9.2
+  title: CC9.2 — Vendor and business-partner risk management
+  text: |
+    The entity assesses and manages risks associated with its vendors and business
+    partners.
+  pryv_ref: CC9.2
+  draft: true
+  hds:
+    coverage: documented
+    effort_saved: low
+    overview: |
+      Where the platform is an organization's vendor, the public release process,
+      change notes and this compliance matrix are the vendor-monitoring artefact
+      set it references. HDS maintains a subprocessor register for its own
+      downstream vendors. HDS is honest that a formalised vendor-management
+      programme (assessment criteria, SLA reviews) is still being matured — a known
+      gap.
+    detail: |
+      HDS's contribution has two parts. As a vendor it exposes a transparent
+      release process and this matrix for monitoring. As an operator it holds a
+      subprocessor register listing its own downstream vendors, available to
+      partners for their due diligence. HDS states plainly that its full
+      vendor-risk programme — assessment criteria, periodic reassessment, SLA
+      review — is not yet formalised. A partner runs its own vendor-risk programme,
+      treating HDS as one assessed vendor.
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - hipaa/registers/subprocessor-register
+        - soc2/policies/vendor-management
+  implementer:
+    - persona: service-organization
+      coverage: documented
+      overview: |
+        Run your own vendor-risk programme; assess HDS as a vendor using its
+        release process, this matrix and its subprocessor register.
+      templates: [subprocessor]
+    - persona: user-entity
+      coverage: out-of-scope
+    - persona: subservice-organization
+      coverage: documented
+      overview: |
+        Manage the risk of your own downstream vendors and flow obligations through
+        to them.
+      templates: [subcontractor]
+# ───────────────────────────────────────────────────────────────
+# A1 — Availability
+# ───────────────────────────────────────────────────────────────
+
+- ref: A1.1
+  title: A1.1 — Capacity management
+  text: |
+    The entity maintains, monitors, and evaluates current processing capacity
+    and use of system components to manage capacity demand and to enable
+    additional capacity in support of its objectives.
+  pryv_ref: A1.1
+  draft: true
+  hds:
+    coverage: facilitated
+    effort_saved: medium
+    facilitation_mode: infrastructure
+    overview: |
+      HDS runs the platform on a topology that scales horizontally (cores added
+      to a cluster), and operates infrastructure-level monitoring of memory,
+      CPU, latency and request volume across both the US and Switzerland
+      data-residency options. The capacity-planning cadence — thresholds,
+      provisioning triggers — is an operator procedure HDS documents; the
+      user-entity inherits the headroom rather than sizing it.
+    detail: |
+      Capacity signal comes from the platform's observability metrics plus HDS's
+      own infrastructure telemetry. HDS evaluates utilisation against headroom on
+      a defined cadence and adds capacity by extending the cluster. The
+      written capacity-management procedure HDS operates is held internally and
+      shared on request; a user-entity running its own deployment performs its
+      own capacity planning.
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - soc2/procedures/capacity-management
+  implementer:
+    - persona: service-organization
+      coverage: documented
+      overview: |
+        Define and document your own capacity-planning thresholds and the
+        provisioning workflow if you operate your own deployment; otherwise rely
+        on the HDS-operated capacity posture and reference it.
+    - persona: user-entity
+      coverage: out-of-scope
+    - persona: subservice-organization
+      coverage: documented
+      overview: |
+        Where a hosting subservice carries the underlying compute, its capacity
+        commitments back this control; record the reliance.
+
+- ref: A1.2
+  title: A1.2 — Environmental protections, backup, and recovery infrastructure
+  text: |
+    The entity authorizes, designs, implements, operates, maintains, and
+    monitors environmental protections, software, data back-up processes, and
+    recovery infrastructure to meet its objectives.
+  pryv_ref: A1.2
+  draft: true
+  hds:
+    coverage: facilitated
+    effort_saved: high
+    facilitation_mode: infrastructure
+    overview: |
+      The platform ships per-user backup and restore and a replicated multi-core
+      topology, and HDS operates these on a schedule with cluster-replicated TLS
+      so a surviving core stays user-facing. Environmental protections (power,
+      cooling, fire suppression) are inherited from the certified hosting
+      provider per region. Automated, regularly verified backups are still being
+      formalised, so this is facilitated rather than fully implemented.
+    detail: |
+      HDS runs the backup primitive on a schedule, relies on multi-core
+      replication for hot redundancy, and documents the recovery infrastructure
+      it operates. Environmental controls at the facility tier are covered by the
+      hosting provider's attestation, which HDS records. Verified, automatically
+      tested backups are a known gap being matured; the backup-and-recovery plan
+      as it stands is cited as an internal document. A user-entity running its
+      own deployment defines its own schedule.
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - hipaa/procedures/data-backup-plan
+        - hipaa/procedures/disaster-recovery-plan
+  implementer:
+    - persona: service-organization
+      coverage: documented
+      overview: |
+        Document your backup schedule, retention and offsite policy, and confirm
+        restorability; if you operate your own deployment, run the backup and
+        replication primitives yourself.
+    - persona: user-entity
+      coverage: out-of-scope
+    - persona: subservice-organization
+      coverage: documented
+      overview: |
+        The hosting subservice carries environmental protections at the facility
+        tier; obtain and retain its attestation.
+
+- ref: A1.3
+  title: A1.3 — Recovery plan testing
+  text: |
+    The entity tests recovery plan procedures supporting system recovery to
+    meet its objectives.
+  pryv_ref: A1.3
+  draft: true
+  hds:
+    coverage: facilitated
+    effort_saved: low
+    facilitation_mode: evidence
+    overview: |
+      The platform provides a testable recovery path (restore a user from a
+      backup into a clean core; fail a core and confirm a peer keeps serving),
+      and HDS documents the intended recovery-test cadence. Regular, verified
+      execution of the drill is a known gap being matured, so HDS facilitates
+      this rather than evidencing a fully operated test programme.
+    detail: |
+      Restore and failover are exercisable against the platform primitives. HDS
+      documents the recovery-test procedure it intends to run and feeds gaps back
+      into the plan; scheduled, verified drills with retained evidence are being
+      formalised and are stated plainly as a gap. A user-entity runs and
+      evidences its own recovery tests for its workload.
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - hipaa/procedures/contingency-plan-testing
+  implementer:
+    - persona: service-organization
+      coverage: documented
+      overview: |
+        Schedule, run and document recovery-plan tests for the parts of the
+        system you operate, and revise the plan from the results.
+    - persona: user-entity
+      coverage: out-of-scope
+    - persona: subservice-organization
+      coverage: out-of-scope
+
+# ───────────────────────────────────────────────────────────────
+# C1 — Confidentiality
+# ───────────────────────────────────────────────────────────────
+
+- ref: C1.1
+  title: C1.1 — Identification and maintenance of confidential information
+  text: |
+    The entity identifies and maintains confidential information to meet its
+    objectives related to confidentiality.
+  pryv_ref: C1.1
+  draft: true
+  hds:
+    coverage: implemented
+    effort_saved: high
+    overview: |
+      Confidential data is identified and isolated structurally on the
+      HDS-operated platform: subject data is per-user isolated, and confidential
+      streams are reachable only by access tokens granted the matching per-stream
+      permission, with privileged namespaces (credentials) separately controlled.
+      HDS operates this access-controlled isolation and documents its
+      confidentiality and access-control posture.
+    detail: |
+      Identification and maintenance of confidential information is enforced by
+      stream layout plus the permission model rather than left to downstream
+      policy: a credential can reach only the confidential streams it was granted,
+      at the level granted, on every API call. HDS operates this stack and
+      documents the access-control and minimum-necessary policies behind it. The
+      user-entity decides which streams carry which confidentiality tier and which
+      grants its application mints.
+    technical: |
+      Per-user data isolation; confidential streams gated by per-stream access
+      tokens enforced at every API call; privileged namespaces separately
+      controlled.
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - hipaa/policies/access-control
+        - hipaa/policies/minimum-necessary
+  implementer:
+    - persona: service-organization
+      coverage: documented
+      overview: |
+        Classify your confidential data, map it to a stream layout, and grant
+        least-privilege per-stream access; document the classification scheme.
+    - persona: user-entity
+      coverage: out-of-scope
+    - persona: subservice-organization
+      coverage: out-of-scope
+
+- ref: C1.2
+  title: C1.2 — Disposal of confidential information
+  text: |
+    The entity disposes of confidential information to meet its objectives
+    related to confidentiality.
+  pryv_ref: C1.2
+  draft: true
+  hds:
+    coverage: facilitated
+    effort_saved: medium
+    facilitation_mode: storage
+    overview: |
+      The platform provides per-user erasure (whole-account deletion, plus
+      event- and stream-level deletion) from the live store, which HDS operates.
+      Whether disposal reaches backups is storage-engine-dependent, and formal,
+      scheduled data-disposal automation is not yet shipped — so HDS facilitates
+      this and documents the boundary rather than claiming full disposal.
+    detail: |
+      Logical destruction in the live store is concrete: account deletion removes
+      a user's data, and event/stream deletion covers per-record needs. Backup
+      reach depends on the configured engine, and a documented retention-and-
+      disposal schedule with verified backup pruning is a known gap being
+      matured. HDS documents the disposal path and its limits; the user-entity
+      chooses the engine that matches its disposal commitment and applies media
+      sanitisation at the hosting tier.
+    technical: |
+      Per-user logical erasure from the live store; backup disposal reach is
+      storage-engine-dependent; scheduled disposal automation not yet shipped.
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - hipaa/policies/minimum-necessary
+        - soc2/procedures/data-retention-and-disposal
+  implementer:
+    - persona: service-organization
+      coverage: documented
+      overview: |
+        Define your disposal schedule and triggers, choose a storage engine
+        whose backup behaviour matches it, and document the procedure.
+    - persona: user-entity
+      coverage: out-of-scope
+    - persona: subservice-organization
+      coverage: documented
+      overview: |
+        The hosting subservice carries physical media sanitisation; obtain and
+        record its attestation.
+
+# ───────────────────────────────────────────────────────────────
+# PI1 — Processing Integrity
+# ───────────────────────────────────────────────────────────────
+
+- ref: PI1.1
+  title: PI1.1 — Quality information about processing objectives
+  text: |
+    The entity obtains or generates, uses, and communicates relevant, quality
+    information regarding the objectives related to processing, including
+    definitions of data processed and service specifications.
+  pryv_ref: PI1.1
+  draft: true
+  hds:
+    coverage: facilitated
+    effort_saved: low
+    facilitation_mode: evidence
+    overview: |
+      The platform's canonical event-type schemas are the machine-readable
+      definition of what data each processing path handles, and the HDS-operated
+      deployment serves these consistently. Authoring the processing-objective
+      specifications — what the service does with the data and to what end —
+      is the service organization's product definition; HDS facilitates by
+      supplying the data-definition substrate.
+    detail: |
+      Event-type schemas define the shape and meaning of data processed, and a
+      deployment can extend the catalogue with custom types. HDS operates the
+      deployment so these definitions are applied uniformly. The processing
+      objectives and service specifications themselves remain the implementer's
+      editorial work; HDS documents the data-quality posture it operates.
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - soc2/policies/data-quality
+  implementer:
+    - persona: service-organization
+      coverage: documented
+      overview: |
+        Define and communicate your processing objectives and service
+        specifications; declare the event types your application processes.
+    - persona: user-entity
+      coverage: out-of-scope
+    - persona: subservice-organization
+      coverage: out-of-scope
+
+- ref: PI1.2
+  title: PI1.2 — Completeness and accuracy of inputs
+  text: |
+    The entity implements controls over system inputs, including controls over
+    completeness and accuracy, to result in services that meet its objectives.
+  pryv_ref: PI1.2
+  draft: true
+  hds:
+    coverage: facilitated
+    effort_saved: medium
+    facilitation_mode: primitive
+    overview: |
+      Input accuracy is enforced structurally at ingest on the HDS-operated
+      platform: every payload is validated against its event-type schema and
+      schema violations are rejected outright, with no silent truncation. This is
+      the structural-completeness-and-accuracy layer; semantic correctness of a
+      value remains the service organization's application logic.
+    detail: |
+      Creates and updates run each payload through the event type's JSON Schema;
+      unknown types and violations are rejected with an error rather than stored
+      partially. HDS operates this validation by default and documents the
+      data-quality and integrity posture. Tighter structural constraints
+      (min/max/pattern) are available via a custom catalogue. Judging whether a
+      structurally valid value is the right value stays with the implementer.
+    technical: |
+      Server-side event-type schema validation at ingest; non-conforming inputs
+      rejected with an error, no silent truncation or downgrade.
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - hipaa/policies/integrity
+        - soc2/policies/data-quality
+  implementer:
+    - persona: service-organization
+      coverage: documented
+      overview: |
+        Define your event types and any tighter structural constraints, and own
+        the semantic-validation logic your application applies on top.
+    - persona: user-entity
+      coverage: out-of-scope
+    - persona: subservice-organization
+      coverage: out-of-scope
+
+- ref: PI1.3
+  title: PI1.3 — Completeness and accuracy of processing
+  text: |
+    The entity implements controls over system processing to result in services
+    that meet its objectives.
+  pryv_ref: PI1.3
+  draft: true
+  hds:
+    coverage: facilitated
+    effort_saved: medium
+    facilitation_mode: primitive
+    overview: |
+      The platform's processing model is deterministic and attributable: writes
+      are authorised by the permission model, updates snapshot the prior state
+      into version history, and every mutation is recorded in the per-user audit
+      log. HDS operates this substrate so processing is traceable; the
+      business-logic processing the application performs is the service
+      organization's own control.
+    detail: |
+      Each mutation is gated by per-stream permissions and recorded with its
+      acting access identity; version history preserves prior states so a
+      processing step can be reconstructed and checked. HDS operates and documents
+      this integrity substrate. The application-level processing the implementer
+      builds on top — calculations, transformations, workflows — is its own
+      completeness-and-accuracy responsibility.
+    technical: |
+      Permission-gated, attributable writes; event version history; per-user
+      audit log records every mutation.
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - hipaa/policies/integrity
+  implementer:
+    - persona: service-organization
+      coverage: documented
+      overview: |
+        Implement and document completeness-and-accuracy controls over your own
+        processing logic; rely on the platform substrate for traceability.
+    - persona: user-entity
+      coverage: out-of-scope
+    - persona: subservice-organization
+      coverage: out-of-scope
+
+- ref: PI1.4
+  title: PI1.4 — Completeness, accuracy, and timeliness of outputs
+  text: |
+    The entity implements controls to make available or deliver output
+    completely, accurately, and timely in accordance with specifications to
+    meet its objectives.
+  pryv_ref: PI1.4
+  draft: true
+  hds:
+    coverage: facilitated
+    effort_saved: low
+    facilitation_mode: primitive
+    overview: |
+      Output delivery from the HDS-operated platform is deterministic: reads
+      return canonical serialisations of the current authoritative state, and
+      change notifications signal subscribers to fetch that state over an
+      authenticated channel rather than pushing a possibly-stale copy. Delivery
+      SLAs to the implementer's own end recipients are the service
+      organization's specification.
+    detail: |
+      Gets return the canonical value; webhooks notify of change as a signal
+      only, so the receiver always retrieves the current authoritative output.
+      HDS operates this delivery substrate. Defining output specifications and the
+      timeliness commitments to downstream recipients, and verifying they are met,
+      is the implementer's control.
+    technical: |
+      Canonical read serialisations; signal-only change notification with
+      authenticated fetch of the authoritative state.
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - soc2/policies/data-quality
+  implementer:
+    - persona: service-organization
+      coverage: documented
+      overview: |
+        Define your output specifications and delivery SLAs and verify outputs
+        meet them; the platform supplies the canonical-state delivery substrate.
+    - persona: user-entity
+      coverage: out-of-scope
+    - persona: subservice-organization
+      coverage: out-of-scope
+
+- ref: PI1.5
+  title: PI1.5 — Completeness and accuracy of stored information
+  text: |
+    The entity implements controls to store inputs, items in processing, and
+    outputs completely, accurately, and timely in accordance with system
+    specifications to meet its objectives.
+  pryv_ref: PI1.5
+  draft: true
+  hds:
+    coverage: facilitated
+    effort_saved: medium
+    facilitation_mode: storage
+    overview: |
+      Storage integrity on the HDS-operated platform rests on event version
+      history (prior states preserved), the per-user audit log (every change
+      attributed), and operational backup-restore (a recoverable copy). Together
+      these give an accuracy-and-completeness signal for stored data. HDS operates
+      the substrate and the backup schedule; verified backups are a known gap.
+    detail: |
+      Stored data is protected against silent loss by versioning and by the
+      audit trail of every mutation, and against destruction by the backup path
+      HDS operates. Tamper-evidence on the audit log itself (hash chaining) is a
+      future platform primitive, and automatically verified backups are being
+      matured — both stated plainly. HDS documents the integrity posture; the
+      implementer owns the surrounding storage-control procedure.
+    technical: |
+      Event version history; per-user audit log; per-user backup/restore. Audit
+      tamper-evidence (chaining) and verified backups are not yet shipped.
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - hipaa/policies/integrity
+        - hipaa/procedures/data-backup-plan
+  implementer:
+    - persona: service-organization
+      coverage: documented
+      overview: |
+        Document your storage-integrity controls and retention, and assess the
+        verified-backup gap in your own risk analysis.
+    - persona: user-entity
+      coverage: out-of-scope
+    - persona: subservice-organization
+      coverage: out-of-scope
+
+# ───────────────────────────────────────────────────────────────
+# P1-P8 — Privacy
+# ───────────────────────────────────────────────────────────────
+
+- ref: P1.1
+  title: P1.1 — Notice of privacy practices
+  text: |
+    The entity provides notice to data subjects about its privacy practices to
+    meet its objectives related to privacy, and updates and communicates the
+    notice in a timely manner when those practices change.
+  pryv_ref: P1.1
+  draft: true
+  hds:
+    coverage: facilitated
+    effort_saved: medium
+    facilitation_mode: infrastructure
+    overview: |
+      The platform supplies the surface to present notice at authorization time —
+      a forkable consent/auth web page — and the durable access record can carry
+      the notice version the subject saw. HDS operates this surface; authoring the
+      notice content and keeping it current is the service organization's
+      editorial obligation.
+    detail: |
+      Notice text can be shown in the consent flow, and the granted access can
+      record which notice version was presented, giving an evidentiary link
+      between the subject and the practices disclosed. HDS operates the deployment
+      that carries this. The privacy-notice content, its review cadence and its
+      communication on change are the implementer's; HDS documents the consent-
+      flow substrate it provides.
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - soc2/policies/privacy-notice
+  implementer:
+    - persona: service-organization
+      coverage: documented
+      overview: |
+        Author your privacy notice, present it in the consent flow, and keep it
+        current; record the version each subject was shown.
+    - persona: user-entity
+      coverage: out-of-scope
+    - persona: subservice-organization
+      coverage: out-of-scope
+
+- ref: P2.1
+  title: P2.1 — Choice and consent
+  text: |
+    The entity communicates choices regarding the collection, use, retention,
+    disclosure, and disposal of personal information to data subjects and
+    obtains consent, as required, to meet its objectives related to privacy.
+  pryv_ref: P2.1
+  draft: true
+  hds:
+    coverage: implemented
+    effort_saved: high
+    overview: |
+      On the HDS-operated platform the access token IS the durable, versioned
+      consent record: it carries the permissions the subject agreed to, its
+      metadata holds the consent text and lawful basis, and the audit trail
+      proves the consent state at any moment. The subject's own credentials let
+      them grant and revoke directly. HDS operates this user-centric consent
+      substrate; the service organization designs the choices presented.
+    detail: |
+      Consent is enforced, not merely recorded: a grant authorises exactly the
+      scope the subject chose and nothing more, and revocation takes effect
+      immediately. The consent-presentation UX is the forkable consent web page,
+      and cross-account consent transitions are captured as typed events. HDS
+      operates and documents this stack as part of its access-control and
+      consent posture. Designing the choice set is the implementer's product
+      decision.
+    technical: |
+      Access tokens as versioned, enforced consent records; subject-driven grant
+      and immediate revocation; consent metadata and audit trail.
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - hipaa/policies/access-control
+        - soc2/policies/privacy-notice
+  implementer:
+    - persona: service-organization
+      coverage: documented
+      overview: |
+        Design the choices you present and the consent text, and map each choice
+        to the access scope it grants; the platform records and enforces it.
+    - persona: user-entity
+      coverage: out-of-scope
+    - persona: subservice-organization
+      coverage: out-of-scope
+
+- ref: P3.1
+  title: P3.1 — Collection consistent with objectives
+  text: |
+    Personal information is collected consistent with the entity's objectives
+    related to privacy.
+  pryv_ref: P3.1
+  draft: true
+  hds:
+    coverage: facilitated
+    effort_saved: medium
+    facilitation_mode: primitive
+    overview: |
+      Collection scope is bounded technically by the access token's permissions
+      on the HDS-operated platform: an application can only write to the streams
+      and levels it was granted, so collection cannot silently exceed the agreed
+      purpose. HDS operates this enforcement; defining the purpose and the
+      minimal stream set is the service organization's data-model design.
+    detail: |
+      A create-only grant on a specific subtree means an app collects only into
+      that subtree at that level — over-collection is structurally prevented
+      rather than policed after the fact. HDS operates and documents this
+      minimum-necessary posture. The implementer designs which streams and grants
+      correspond to which collection purpose.
+    technical: |
+      Collection bounded by per-stream, per-level access-token permissions;
+      out-of-scope writes rejected at the API.
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - hipaa/policies/minimum-necessary
+        - hipaa/policies/access-control
+  implementer:
+    - persona: service-organization
+      coverage: documented
+      overview: |
+        Define each collection purpose and the minimal stream set it needs, and
+        grant only that scope; document the mapping.
+    - persona: user-entity
+      coverage: out-of-scope
+    - persona: subservice-organization
+      coverage: out-of-scope
+
+- ref: P3.2
+  title: P3.2 — Explicit consent for sensitive personal information
+  text: |
+    Explicit consent for the collection, use, retention, disclosure, and
+    disposal of sensitive personal information is obtained from data subjects or
+    other authorized persons, if required.
+  pryv_ref: P3.2
+  draft: true
+  hds:
+    coverage: facilitated
+    effort_saved: medium
+    facilitation_mode: primitive
+    overview: |
+      Sensitive data can be isolated in dedicated streams gated by a distinct
+      access whose metadata records the explicit-consent basis, with the consent
+      state transition captured as a timestamped, auditable event. HDS operates
+      this isolation; presenting the separate, affirmative consent step is the
+      service organization's UX obligation.
+    detail: |
+      The platform records explicit consent as a distinct, auditable grant rather
+      than folding it into general consent, so a sensitive-data grant is
+      separable in evidence. HDS operates and documents the access-control
+      substrate. The "explicit" step — a separate affirmative action — is the
+      implementer's to present; the platform records it discretely.
+    technical: |
+      Sensitive data isolated in dedicated streams gated by a distinct access;
+      explicit-consent basis recorded in access metadata and as a typed,
+      timestamped event.
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - hipaa/policies/access-control
+        - soc2/policies/privacy-notice
+  implementer:
+    - persona: service-organization
+      coverage: documented
+      overview: |
+        Present a separate affirmative consent step for sensitive data and gate
+        that data behind a distinct access; document the explicit-consent flow.
+    - persona: user-entity
+      coverage: out-of-scope
+    - persona: subservice-organization
+      coverage: out-of-scope
+
+- ref: P4.1
+  title: P4.1 — Use limited to identified purposes
+  text: |
+    The entity limits the use of personal information to the purposes identified
+    in its objectives related to privacy.
+  pryv_ref: P4.1
+  draft: true
+  hds:
+    coverage: implemented
+    effort_saved: high
+    overview: |
+      Purpose limitation is the core job of the permission model HDS operates: a
+      credential issued for one purpose, scoped to one set of streams, cannot
+      read or write data for another purpose, and the audit log evidences that
+      uses stayed within scope. Enforcement is technical, on every API call, not
+      policy-on-paper. Mapping purposes to streams and accesses is the service
+      organization's design.
+    detail: |
+      A purpose-A credential is mechanically incapable of touching purpose-B
+      data, and every use is recorded against its acting access identity so
+      adherence is auditable. HDS operates and documents this minimum-necessary
+      and access-control posture. The implementer decides which purposes exist and
+      how they map to scopes.
+    technical: |
+      Per-stream, per-level access scopes enforce purpose limitation on every
+      API call; audit log evidences in-scope use.
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - hipaa/policies/minimum-necessary
+        - hipaa/policies/access-control
+  implementer:
+    - persona: service-organization
+      coverage: documented
+      overview: |
+        Map each identified purpose to a distinct access scope and document the
+        mapping; the platform enforces the boundary.
+    - persona: user-entity
+      coverage: out-of-scope
+    - persona: subservice-organization
+      coverage: out-of-scope
+
+- ref: P4.2
+  title: P4.2 — Retention of personal information
+  text: |
+    The entity retains personal information consistent with its objectives
+    related to privacy.
+  pryv_ref: P4.2
+  draft: true
+  hds:
+    coverage: facilitated
+    effort_saved: low
+    facilitation_mode: storage
+    overview: |
+      Retention metadata (period, basis, scheduled disposal date) can ride on
+      each record so it carries its own retention contract, but the platform
+      ships no automatic expiry primitive — enforcing the schedule is an operator
+      job today. HDS documents this gap honestly: automated retention enforcement
+      is not yet shipped, so the control is facilitated and the absence of
+      auto-expiry is called out.
+    detail: |
+      Each record can record its retention terms, but a scheduled sweep that
+      deletes expired records must be operated rather than relied on as a platform
+      feature. HDS treats formal, automated data-retention as a known gap being
+      matured and documents the retention posture and its limit. The retention
+      policy itself, and its enforcement, are the implementer's responsibility
+      when attesting this criterion.
+    technical: |
+      Per-record retention metadata; no automatic TTL/expiry — schedule
+      enforcement is operator-side today.
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - soc2/procedures/data-retention-and-disposal
+  implementer:
+    - persona: service-organization
+      coverage: documented
+      overview: |
+        Define your retention schedule, record retention terms on each record,
+        and operate the enforcement sweep yourself; document the absence of
+        platform auto-expiry as your responsibility.
+    - persona: user-entity
+      coverage: out-of-scope
+    - persona: subservice-organization
+      coverage: out-of-scope
+
+- ref: P4.3
+  title: P4.3 — Disposal of personal information
+  text: |
+    The entity securely disposes of personal information to meet its objectives
+    related to privacy.
+  pryv_ref: P4.3
+  draft: true
+  hds:
+    coverage: facilitated
+    effort_saved: medium
+    facilitation_mode: storage
+    overview: |
+      Disposal uses the platform's per-user erasure path (whole-account deletion,
+      plus event- and stream-level deletion) from the live store, which HDS
+      operates. Backup reach is storage-engine-dependent and scheduled disposal
+      automation is not yet shipped, so HDS facilitates this and documents the
+      boundary rather than claiming full secure disposal.
+    detail: |
+      Logical erasure from the live store is concrete; whether it reaches backups
+      depends on the configured engine, and a documented, verified disposal
+      schedule is a known gap. HDS documents the disposal path and its limits, and
+      relies on the hosting provider for physical media sanitisation. The
+      implementer chooses the engine that matches its disposal commitment.
+    technical: |
+      Per-user logical erasure from the live store; backup disposal reach is
+      engine-dependent; scheduled disposal automation not yet shipped.
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - soc2/procedures/data-retention-and-disposal
+        - hipaa/policies/minimum-necessary
+  implementer:
+    - persona: service-organization
+      coverage: documented
+      overview: |
+        Define your disposal procedure, choose a storage engine whose backup
+        behaviour matches it, and document how disposal reaches all copies.
+    - persona: user-entity
+      coverage: out-of-scope
+    - persona: subservice-organization
+      coverage: documented
+      overview: |
+        The hosting subservice carries physical media sanitisation; obtain and
+        record its attestation.
+
+- ref: P5.1
+  title: P5.1 — Data subject access to personal information
+  text: |
+    The entity grants identified and authenticated data subjects the ability to
+    access their stored personal information for review and, on request,
+    provides copies to meet its objectives related to privacy.
+  pryv_ref: P5.1
+  draft: true
+  hds:
+    coverage: implemented
+    effort_saved: high
+    overview: |
+      Subject access is user-centric and subject-runnable on the HDS-operated
+      platform: the data subject holds their own credentials, so reads return
+      their data directly, and an account-backup export produces a complete,
+      portable copy with a per-file integrity manifest — with no operator
+      dependency for routine requests. HDS operates this substrate; the
+      service organization owns the identity-verification step for any
+      operator-assisted request.
+    detail: |
+      Because the subject is the holder of their own access, review and export are
+      self-service. The export covers account, streams, accesses (including
+      revoked/expired with version history), events, audit log, and attachments,
+      with a sha256 manifest per file. HDS operates the deployment and documents
+      the access posture. Packaging a non-routine request and verifying the
+      requester's identity is the implementer's workflow.
+    technical: |
+      Subject holds own credentials; direct reads of own data; complete portable
+      account export with per-file sha256 integrity manifest.
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - hipaa/policies/access-control
+  implementer:
+    - persona: service-organization
+      coverage: documented
+      overview: |
+        Surface the self-service access and export paths to subjects, and
+        document your identity-verification step for any operator-assisted
+        request.
+    - persona: user-entity
+      coverage: out-of-scope
+    - persona: subservice-organization
+      coverage: out-of-scope
+
+- ref: P5.2
+  title: P5.2 — Correction, amendment, or appending of personal information
+  text: |
+    The entity corrects, amends, or appends personal information based on data
+    subject input and communicates such changes to third parties, as committed
+    or required, to meet its objectives related to privacy.
+  pryv_ref: P5.2
+  draft: true
+  hds:
+    coverage: implemented
+    effort_saved: medium
+    overview: |
+      Correction is a first-class operation on the HDS-operated platform: an
+      update snapshots the prior value into version history (preserving the
+      amendment trail) and the audit log records who amended what, when.
+      Propagation to third parties holding a shared access can be signalled via
+      change notification. Judging whether a correction request is valid is the
+      service organization's process.
+    detail: |
+      Amendments preserve, rather than overwrite, the record's history, so the
+      correction trail is intact and attributable. Third parties who hold a
+      shared grant can be notified of the change and fetch the corrected state.
+      HDS operates and documents the integrity and access substrate. Deciding the
+      correctness of a request and committing to third-party communication is the
+      implementer's.
+    technical: |
+      Update with prior-value version history; audit log attribution; change
+      notification to holders of a shared access.
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - hipaa/policies/integrity
+        - hipaa/policies/access-control
+  implementer:
+    - persona: service-organization
+      coverage: documented
+      overview: |
+        Define your process for assessing correction requests and your
+        commitments to notify third parties of amendments.
+    - persona: user-entity
+      coverage: out-of-scope
+    - persona: subservice-organization
+      coverage: out-of-scope
+
+- ref: P6.1
+  title: P6.1 — Disclosure to third parties for identified purposes with consent
+  text: |
+    The entity discloses personal information to third parties for the purposes
+    identified in its objectives related to privacy and with the explicit
+    consent of the data subject, if required.
+  pryv_ref: P6.1
+  draft: true
+  hds:
+    coverage: facilitated
+    effort_saved: medium
+    facilitation_mode: primitive
+    overview: |
+      Third-party disclosure on the HDS-operated platform happens by issuing a
+      scoped, revocable shared access — the disclosure is exactly the permissions
+      granted, nothing more, with the purpose and consent basis recorded in the
+      access metadata. There is no out-of-band data-dump path; every disclosure
+      is a tracked, revocable grant. Deciding the lawful purpose is the service
+      organization's.
+    detail: |
+      Disclosure being a grant rather than a copy means the recipient's reach is
+      bounded and reversible, and the grant itself carries the why. HDS operates
+      and documents this access-control posture. The implementer decides the
+      lawful purpose and obtains any required explicit consent before issuing the
+      grant.
+    technical: |
+      Disclosure as a scoped, revocable shared access; purpose and consent basis
+      in access metadata; no out-of-band export path.
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - hipaa/policies/access-control
+        - hipaa/policies/minimum-necessary
+  implementer:
+    - persona: service-organization
+      coverage: documented
+      overview: |
+        Decide the lawful purpose, obtain any required explicit consent, and
+        issue a scoped shared access for each disclosure; document the basis.
+    - persona: user-entity
+      coverage: out-of-scope
+    - persona: subservice-organization
+      coverage: out-of-scope
+
+- ref: P6.2
+  title: P6.2 — Record of authorized disclosures
+  text: |
+    The entity creates and retains a complete, accurate, and timely record of
+    authorized disclosures of personal information to meet its objectives
+    related to privacy.
+  pryv_ref: P6.2
+  draft: true
+  hds:
+    coverage: implemented
+    effort_saved: high
+    overview: |
+      Every disclosure is a read against a shared access, and the per-user audit
+      log records each invocation with the access identity that made it — a
+      complete, attributable record of who accessed what, when. HDS operates and
+      retains this disclosure register; how long it is retained is set per the
+      service organization's policy.
+    detail: |
+      The authorized-disclosure register is computable directly from the audit
+      log plus the list of granted accesses, with no separate logging to
+      maintain. HDS operates the substrate and documents the access and
+      audit-controls posture. The implementer sets the retention period for the
+      register consistent with its privacy objectives.
+    technical: |
+      Per-user audit log records each disclosure read with its acting access
+      identity; the accesses list enumerates who holds a grant.
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - hipaa/policies/access-control
+  implementer:
+    - persona: service-organization
+      coverage: documented
+      overview: |
+        Set and document the retention period for the disclosure register and
+        the cadence at which you review it.
+    - persona: user-entity
+      coverage: out-of-scope
+    - persona: subservice-organization
+      coverage: out-of-scope
+
+- ref: P6.3
+  title: P6.3 — Record of detected unauthorized disclosures
+  text: |
+    The entity creates and retains a complete, accurate, and timely record of
+    detected or reported unauthorized disclosures, including breaches, to meet
+    its objectives related to privacy.
+  pryv_ref: P6.3
+  draft: true
+  hds:
+    coverage: facilitated
+    effort_saved: medium
+    facilitation_mode: evidence
+    overview: |
+      The audit log captures access patterns including failed and out-of-scope
+      attempts, and HDS's infrastructure monitoring surfaces anomalies, so a
+      detected unauthorized disclosure has a contemporaneous evidentiary record.
+      Determining that a disclosure was unauthorized, and maintaining the formal
+      record, is the service organization's assessment. Note that logs may
+      contain PII, which HDS documents as a known handling consideration.
+    detail: |
+      HDS operates the audit and monitoring substrate that gives an unauthorized
+      disclosure a timestamped trail, and runs alerting end to end before any
+      component is treated as production. Classifying an event as unauthorized and
+      keeping the breach record is the implementer's process. HDS documents the
+      detection posture and the gap that log content is not yet PII-minimised.
+    technical: |
+      Audit log of access attempts (incl. failed/out-of-scope) plus
+      infrastructure anomaly monitoring; logs may contain PII (known gap).
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - hipaa/procedures/security-incident-response
+  implementer:
+    - persona: service-organization
+      coverage: documented
+      overview: |
+        Classify detected events as authorized or not, and create and retain the
+        unauthorized-disclosure record within your incident process.
+    - persona: user-entity
+      coverage: out-of-scope
+    - persona: subservice-organization
+      coverage: out-of-scope
+
+- ref: P6.4
+  title: P6.4 — Third-party commitments for privacy
+  text: |
+    The entity obtains privacy commitments from vendors and other third parties
+    who have access to personal information to meet its objectives related to
+    privacy.
+  pryv_ref: P6.4
+  draft: true
+  hds:
+    coverage: facilitated
+    effort_saved: medium
+    facilitation_mode: evidence
+    overview: |
+      Vendor and subprocessor privacy commitments are contractual. HDS obtains
+      such commitments from its own subprocessors and tracks them in a register,
+      and where a third party's technical access is a shared access, its
+      permission scope is a concrete, enforced bound the implementer's agreement
+      can reference. Executing the implementer's own third-party agreements is
+      its responsibility.
+    detail: |
+      HDS maintains a current subprocessor register with privacy commitments
+      flowed down, available to the implementer for its own due diligence. The
+      access scope of any third party that holds a platform grant is a technical,
+      auditable limit that complements the contractual commitment. The
+      implementer obtains and retains its own vendor commitments.
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - hipaa/registers/subprocessor-register
+  implementer:
+    - persona: service-organization
+      coverage: documented
+      overview: |
+        Obtain and retain privacy commitments from your own vendors and
+        third parties; reference the enforced access scope where applicable.
+      templates: [subprocessor]
+    - persona: user-entity
+      coverage: out-of-scope
+    - persona: subservice-organization
+      coverage: documented
+      overview: |
+        Provide your privacy commitments to the service organization and flow
+        them to any of your own downstream parties.
+
+- ref: P6.5
+  title: P6.5 — Third-party unauthorized disclosure response
+  text: |
+    The entity obtains commitments from vendors and third parties to notify it
+    of actual or suspected unauthorized disclosures, and responds to such
+    notifications, to meet its objectives related to privacy.
+  pryv_ref: P6.5
+  draft: true
+  hds:
+    coverage: facilitated
+    effort_saved: low
+    facilitation_mode: evidence
+    overview: |
+      The third-party notification commitment is contractual, and HDS commits to
+      notifying its implementers of incidents affecting their data, backed by its
+      monitoring and incident-response programme. Obtaining the same commitment
+      from the implementer's own third parties, and responding to notifications,
+      is the service organization's process.
+    detail: |
+      HDS flows a notification obligation to its own subprocessors and carries one
+      to its implementers; the detection and forensic evidence behind it comes
+      from the audit and monitoring substrate. The implementer obtains equivalent
+      commitments from its vendors and runs its own response when notified (see
+      CC7.4-equivalent incident handling).
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - hipaa/procedures/security-incident-response
+        - hipaa/registers/subprocessor-register
+  implementer:
+    - persona: service-organization
+      coverage: documented
+      overview: |
+        Obtain notification commitments from your third parties and run your
+        response process when notified.
+      templates: [subprocessor]
+    - persona: user-entity
+      coverage: out-of-scope
+    - persona: subservice-organization
+      coverage: documented
+      overview: |
+        Commit to notify the service organization of suspected unauthorized
+        disclosures and flow the same down your chain.
+
+- ref: P6.6
+  title: P6.6 — Notice of breaches and incidents to affected parties
+  text: |
+    The entity provides notification of breaches and incidents to affected data
+    subjects, regulators, and others to meet its objectives related to privacy.
+  pryv_ref: P6.6
+  draft: true
+  hds:
+    coverage: facilitated
+    effort_saved: medium
+    facilitation_mode: evidence
+    overview: |
+      The platform supplies the scoping evidence a breach notice needs — the
+      audit log ties a compromised access to the users and data it touched — and
+      HDS operates the monitoring and incident-response programme that detects
+      and scopes the event. Drafting and sending the notifications within the
+      regulatory deadline is the service organization's process.
+    detail: |
+      HDS operates the detection-and-scoping substrate (audit plus monitoring,
+      with alerting wired end to end) so a breach has a contemporaneous,
+      attributable record of who was affected. Today the reverse-index from a
+      compromised access to affected subjects is a manual step. The implementer
+      drafts and sends the breach notices and meets the regulatory clock; HDS's
+      incident procedure governs the report it produces.
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - hipaa/procedures/security-incident-response
+  implementer:
+    - persona: service-organization
+      coverage: documented
+      overview: |
+        Own the breach-notification workflow — assess scope, draft and send
+        notices to subjects and regulators within the applicable deadlines.
+    - persona: user-entity
+      coverage: out-of-scope
+    - persona: subservice-organization
+      coverage: out-of-scope
+
+- ref: P6.7
+  title: P6.7 — Accounting of disclosures to data subjects
+  text: |
+    The entity provides data subjects, on request, with an accounting of the
+    personal information held and the disclosures of their personal information,
+    to meet its objectives related to privacy.
+  pryv_ref: P6.7
+  draft: true
+  hds:
+    coverage: implemented
+    effort_saved: medium
+    overview: |
+      The accounting-of-disclosures answer is computable from the audit log
+      (which accesses read which data, when) plus the list of granted accesses
+      (who holds a grant) on the HDS-operated platform. HDS operates the
+      substrate; packaging it into a subject-facing report on request is the
+      service organization's workflow.
+    detail: |
+      Because every disclosure read and every grant is recorded, the underlying
+      accounting record is complete and attributable without separate
+      bookkeeping. HDS operates and documents the audit and access posture. The
+      implementer formats the accounting into a subject-facing response and
+      verifies the requester's identity.
+    technical: |
+      Audit log of disclosure reads plus the accesses list; together they yield a
+      complete, attributable accounting per subject.
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - hipaa/policies/access-control
+  implementer:
+    - persona: service-organization
+      coverage: documented
+      overview: |
+        Package the audit-derived accounting into a subject-facing report on
+        request and verify the requester's identity.
+    - persona: user-entity
+      coverage: out-of-scope
+    - persona: subservice-organization
+      coverage: out-of-scope
+
+- ref: P7.1
+  title: P7.1 — Data quality — accuracy, completeness, relevance
+  text: |
+    The entity collects and maintains accurate, up-to-date, complete, and
+    relevant personal information to meet its objectives related to privacy.
+  pryv_ref: P7.1
+  draft: true
+  hds:
+    coverage: facilitated
+    effort_saved: medium
+    facilitation_mode: primitive
+    overview: |
+      Structural data quality is enforced at ingest by event-type schema
+      validation (malformed input rejected), subjects keep their data current via
+      updates with version history, and "relevant" is bounded by the access scope
+      granted. HDS operates these primitives; judging the semantic accuracy of a
+      specific value is the service organization's application responsibility.
+    detail: |
+      Completeness and structural accuracy are enforced by validation; relevance
+      is enforced by minimum-necessary scoping; currency is supported by
+      subject-driven updates that preserve history. HDS operates and documents the
+      data-quality posture. Semantic correctness — is this the right value —
+      stays with the implementer's application logic.
+    technical: |
+      Event-type schema validation at ingest; subject-driven update with version
+      history; relevance bounded by per-stream access scope.
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - soc2/policies/data-quality
+        - hipaa/policies/minimum-necessary
+  implementer:
+    - persona: service-organization
+      coverage: documented
+      overview: |
+        Own semantic-accuracy validation in your application, surface update
+        paths to subjects, and scope collection to what each purpose needs.
+    - persona: user-entity
+      coverage: out-of-scope
+    - persona: subservice-organization
+      coverage: out-of-scope
+
+- ref: P8.1
+  title: P8.1 — Privacy complaint management and compliance monitoring
+  text: |
+    The entity implements a process for receiving, addressing, resolving, and
+    communicating the resolution of privacy inquiries, complaints, and disputes,
+    and periodically monitors compliance, taking timely corrective action on
+    identified deficiencies, to meet its objectives related to privacy.
+  pryv_ref: P8.1
+  draft: true
+  hds:
+    coverage: facilitated
+    effort_saved: low
+    facilitation_mode: evidence
+    overview: |
+      The complaint-handling workflow is the service organization's, but the
+      HDS-operated platform supplies the monitoring evidence (audit plus
+      infrastructure monitoring) and can host the complaint and resolution
+      records themselves as events on a dedicated stream with an attributable
+      trail. This compliance matrix doubles as the periodic control inventory the
+      implementer monitors against.
+    detail: |
+      HDS operates the audit and monitoring substrate that evidences ongoing
+      compliance, and the platform can store complaint/resolution records as
+      first-class, attributable data. HDS documents the monitoring posture. The
+      receiving, addressing, resolving and communicating process — and the
+      periodic compliance review with corrective action — is the implementer's.
+    regions: [us, ch]
+    evidence:
+      internal_docs:
+        - soc2/policies/privacy-notice
+  implementer:
+    - persona: service-organization
+      coverage: documented
+      overview: |
+        Run your complaint-handling and periodic-compliance-monitoring process,
+        and take timely corrective action; the platform can host the records.
+    - persona: user-entity
+      coverage: out-of-scope
+    - persona: subservice-organization
+      coverage: out-of-scope
