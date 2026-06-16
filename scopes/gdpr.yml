@@ -512,17 +512,24 @@ requirements:
       overview: |
         HDS is user-centric by construction: a subject holding their personal
         token reads everything via the standard API — events, streams, accesses
-        with history, and the audit log. The pryv-account-backup tool bundles all
-        read-side resources into a downloadable export the subject runs with
-        their own credentials, operator-independent.
+        with history, and the audit log. HDS publishes the app-portability
+        self-service web app (subject signs in, downloads a portable ZIP set)
+        as the canonical access path, built on the pryv-account-backup library.
       detail: |
         All read-side resources are reachable: events, streams, accesses with
-        version chain, audit-as-events, webhooks, HF series and attachments. The
-        supplementary information is in the access clientData when the controller
-        recorded it there. HDS operates this substrate; the controller may wrap
-        it in a subject portal but needs no special export endpoint.
+        version chain, audit-as-events, webhooks, HF series and attachments.
+        The supplementary information is in the access clientData when the
+        controller recorded it there. The subject can either drive the API
+        directly or use app-portability (operator-hosted at
+        portability.hds.ngo / demo-portability.datasafe.dev); the ZIPs include
+        an HDS provenance manifest (data-model version, deploy URL, completion
+        timestamp) and a portable sync-state for incremental re-runs.
       regions: [ch, us]
       evidence:
+        docs:
+          - https://demo-portability.datasafe.dev
+          - https://portability.hds.ngo
+          - https://github.com/healthdatasafe/app-portability
         internal_docs:
           - gdpr/procedures/data-subject-rights
     implementer:
@@ -662,17 +669,28 @@ requirements:
       overview: |
         Reads return canonical JSON validated against the data-type schemas —
         structured, commonly used and machine-readable — with attachments
-        downloadable and no proprietary lock-in. Another HDS/Pryv operator can
-        import the export via standard write APIs, and direct
-        controller-to-controller transmission is available via the CMC capability
-        flow.
+        downloadable and no proprietary lock-in. The app-portability web app
+        packages a full account into a series of ZIP files (events, streams,
+        accesses, attachments, audit, HFS, webhooks) that the subject downloads
+        in one self-service flow. Another HDS/Pryv operator can re-import via
+        standard write APIs; controller-to-controller transmission is also
+        available via the CMC capability flow.
       detail: |
-        The export shape is the same JSON the subject sees via the API, so no
-        special endpoint is needed. For custom event-type catalogues, schema
-        alignment between transmitting and receiving operators is the
-        controller's responsibility when relying on direct transmission.
+        The export shape is the same JSON the subject sees via the API. The
+        ZIP layout matches the upstream pryv-account-backup CLI restore
+        format, so a subject can later re-hydrate to a self-hosted or
+        partner-hosted node. HDS adds an `hds-manifest.json` in the final ZIP
+        (data-model version pin, app-portability version, deploy URL,
+        completion timestamp, total bytes) for audit-trail purposes. For
+        custom event-type catalogues, schema alignment between transmitting
+        and receiving operators is the controller's responsibility when
+        relying on direct transmission.
       regions: [ch, us]
       evidence:
+        docs:
+          - https://demo-portability.datasafe.dev
+          - https://portability.hds.ngo
+          - https://github.com/healthdatasafe/app-portability
         internal_docs:
           - gdpr/procedures/data-subject-rights
     implementer:

@@ -369,13 +369,19 @@ requirements:
         Pryv is user-centric: the data subject, holding a personal token, reads
         everything through the standard API — events, streams, accesses with
         history, audit records and attachments — in canonical JSON. HDS operates
-        this access capability end-to-end.
+        this access capability end-to-end and ships the app-portability
+        self-service web app (portability.hds.ngo) so subjects can obtain a
+        full account dump without operator involvement.
       detail: |
         The nLPD's extended minimum-information set maps onto the same artefacts as
         a GDPR access request, plus a Swiss-specific source duty satisfied by the
         provenance recorded on event client-data when data did not come from the
         subject directly. The response timeline is the controller's process target.
       evidence:
+        docs:
+          - https://demo-portability.datasafe.dev
+          - https://portability.hds.ngo
+          - https://github.com/healthdatasafe/app-portability
         internal_docs:
           - gdpr/procedures/data-subject-rights
           - hipaa/procedures/security-incident-response
@@ -411,14 +417,23 @@ requirements:
       overview: |
         The HDS-operated API returns events and streams as canonical JSON
         validated against the data-type schemas — a commonly used electronic
-        format. For controller-to-controller transmission, the consent and
-        capability-access flow mints a URL the receiving controller can read.
+        format. The app-portability web app (portability.hds.ngo) packages
+        the full account into ZIP files the subject downloads in one
+        self-service flow. For direct controller-to-controller transmission,
+        the consent and capability-access flow mints a URL the receiving
+        controller can read.
       detail: |
-        Portability requires no operational lift on the data subject's side. HDS
-        operates the read path that produces the structured export and the
-        cross-account capability used for direct controller-to-controller
-        transmission.
+        Portability requires no operational lift on the data subject's side.
+        The ZIP format matches the upstream pryv-account-backup CLI restore
+        format, so the subject can re-hydrate on a self-hosted or
+        partner-hosted node. HDS adds an `hds-manifest.json` (data-model
+        version pin, app version, deploy URL, completion timestamp) for
+        provenance.
       evidence:
+        docs:
+          - https://demo-portability.datasafe.dev
+          - https://portability.hds.ngo
+          - https://github.com/healthdatasafe/app-portability
         internal_docs:
           - gdpr/procedures/data-subject-rights
     implementer:

@@ -1005,13 +1005,21 @@ requirements:
       overview: |
         The HDS-operated API delivers events in canonical JSON validated against
         the data-type schemas — readily producible in the §524(c) sense — across
-        both regions. Transformation to PDF or print and summary construction are
-        application-layer work on the same source events.
+        both regions. The app-portability self-service web app gives individuals
+        a one-click ZIP download of their full PHI dump; transformation to PDF
+        or print and summary construction remain application-layer work on the
+        same source events.
       detail: |
         HDS operates the standard read path that returns structured,
-        machine-readable PHI. Non-native formats and summaries are built by the
+        machine-readable PHI. The app-portability tool (portability.hds.ngo)
+        packages it into ZIPs the individual can keep or forward to another
+        covered entity. Non-native formats and summaries are built by the
         implementer's portal from the same source events.
       evidence:
+        docs:
+          - https://demo-portability.datasafe.dev
+          - https://portability.hds.ngo
+          - https://github.com/healthdatasafe/app-portability
         internal_docs:
           - hipaa/procedures/individual-right-of-access
     implementer:
