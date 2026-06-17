@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Overview — HDS compliance-matrix</title>
+<title>HIPAA-Breach — HDS compliance-matrix</title>
 <link rel="stylesheet" href="styles.css">
 <!--
   New Relic Browser agent for compliance.datasafe.dev.
@@ -24,51 +24,808 @@
 <header class="top">
   <a class="brand" href="index.html">HDS <b>compliance-matrix</b></a>
   <nav>
-    <a href="index.html" class="on">Overview</a>
+    <a href="index.html">Overview</a>
     <a href="templates.html">Templates</a>
     <a href="https://github.com/healthdatasafe/compliance-matrix">Source</a>
   </nav>
 </header>
 <main>
-<section class="hero">
-  <h1>Health Data Safe — compliance matrix</h1>
-  <p class="lede">How HDS is compliant, and what an organisation building on HDS must still
-  do themselves. Each requirement is read across three layers.</p>
-  <div class="threelayer">
-    <div class="ll pryv"><b>Pryv platform</b><span>what the open-pryv.io software does (inherited)</span></div>
-    <div class="arrow">→</div>
-    <div class="ll hds"><b>HDS</b><span>what HDS-as-operator + the app stack adds</span></div>
-    <div class="arrow">→</div>
-    <div class="ll impl"><b>Implementer</b><span>what's on your plate, per persona (+ agreements to sign)</span></div>
-  </div>
-  <p class="count">6 scopes · 227 requirements · 4 agreement templates</p>
-</section>
-<section class="scopes"><a class="scopecard" href="gdpr.html">
-    <h3>General Data Protection Regulation <span class="short">GDPR</span></h3>
-    <p class="meta">regulation · EU + EEA (extraterritorial via Art. 3) <span class="rg">CH</span><span class="rg">US</span> · 47 requirements</p>
-    <div class="covbar"><span class="seg implemented" style="width:6.4%" title="implemented: 3"></span><span class="seg configurable" style="width:6.4%" title="configurable: 3"></span><span class="seg facilitated" style="width:66.0%" title="facilitated: 31"></span><span class="seg documented" style="width:6.4%" title="documented: 3"></span><span class="seg out-of-scope" style="width:14.9%" title="out-of-scope: 7"></span></div>
-  </a><a class="scopecard" href="hipaa-breach.html">
-    <h3>HIPAA Breach Notification Rule <span class="short">HIPAA-Breach</span></h3>
-    <p class="meta">regulation · US <span class="rg">US</span> · 13 requirements</p>
+    <a class="back" href="index.html">← All scopes</a>
+    <h1>HIPAA Breach Notification Rule <span class="short">HIPAA-Breach</span></h1>
+    <p class="meta">regulation · US · 45 CFR Part 164 Subpart D (HITECH 2013 Omnibus Final Rule) <span class="rg">US</span>
+      · layered on Pryv <code>hipaa-breach</code></p>
     <div class="covbar"><span class="seg facilitated" style="width:61.5%" title="facilitated: 8"></span><span class="seg documented" style="width:30.8%" title="documented: 4"></span><span class="seg out-of-scope" style="width:7.7%" title="out-of-scope: 1"></span></div>
-  </a><a class="scopecard" href="hipaa-privacy.html">
-    <h3>HIPAA Privacy Rule <span class="short">HIPAA-Privacy</span></h3>
-    <p class="meta">regulation · US <span class="rg">US</span> · 35 requirements</p>
-    <div class="covbar"><span class="seg implemented" style="width:5.7%" title="implemented: 2"></span><span class="seg configurable" style="width:2.9%" title="configurable: 1"></span><span class="seg facilitated" style="width:71.4%" title="facilitated: 25"></span><span class="seg documented" style="width:11.4%" title="documented: 4"></span><span class="seg out-of-scope" style="width:8.6%" title="out-of-scope: 3"></span></div>
-  </a><a class="scopecard" href="hipaa-security.html">
-    <h3>HIPAA Security Rule <span class="short">HIPAA-Security</span></h3>
-    <p class="meta">regulation · US <span class="rg">US</span> · 41 requirements</p>
-    <div class="covbar"><span class="seg implemented" style="width:29.3%" title="implemented: 12"></span><span class="seg configurable" style="width:4.9%" title="configurable: 2"></span><span class="seg facilitated" style="width:34.1%" title="facilitated: 14"></span><span class="seg documented" style="width:31.7%" title="documented: 13"></span></div>
-  </a><a class="scopecard" href="soc2.html">
-    <h3>SOC 2 — AICPA Trust Services Criteria (Security, Availability, Confidentiality, Processing Integrity, Privacy) <span class="short">SOC 2</span></h3>
-    <p class="meta">standard · United States (AICPA) <span class="rg">US</span><span class="rg">CH</span> · 61 requirements</p>
-    <div class="covbar"><span class="seg implemented" style="width:21.3%" title="implemented: 13"></span><span class="seg configurable" style="width:1.6%" title="configurable: 1"></span><span class="seg facilitated" style="width:60.7%" title="facilitated: 37"></span><span class="seg documented" style="width:16.4%" title="documented: 10"></span></div>
-  </a><a class="scopecard" href="swiss-nlpd.html">
-    <h3>Swiss Federal Act on Data Protection (revised FADP / nLPD) <span class="short">Swiss nLPD</span></h3>
-    <p class="meta">regulation · Switzerland (extraterritorial via Art. 3 for processing affecting CH) <span class="rg">CH</span> · 30 requirements</p>
-    <div class="covbar"><span class="seg implemented" style="width:13.3%" title="implemented: 4"></span><span class="seg configurable" style="width:3.3%" title="configurable: 1"></span><span class="seg facilitated" style="width:63.3%" title="facilitated: 19"></span><span class="seg out-of-scope" style="width:20.0%" title="out-of-scope: 6"></span></div>
-  </a></section>
-</main>
+    
+<div class="filters">
+  <input type="search" id="q" placeholder="Search requirements…" aria-label="search">
+  <span class="fgroup" id="cov">
+    <label><input type="checkbox" value="implemented" checked> <span class="b implemented">implemented</span></label><label><input type="checkbox" value="configurable" checked> <span class="b configurable">configurable</span></label><label><input type="checkbox" value="facilitated" checked> <span class="b facilitated">facilitated</span></label><label><input type="checkbox" value="documented" checked> <span class="b documented">documented</span></label><label><input type="checkbox" value="out-of-scope" checked> <span class="b out-of-scope">out-of-scope</span></label>
+  </span>
+  <span class="fgroup" id="persona">
+    <label><input type="checkbox" value="partner" checked> partner</label><label><input type="checkbox" value="covered-entity" checked> covered-entity</label><label><input type="checkbox" value="business-associate" checked> business-associate</label><label><input type="checkbox" value="individual" checked> individual</label>
+  </span>
+  <span class="fcount" id="fcount"></span>
+</div>
+    <div class="reqs"><article class="req" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.400 applicability subpart d only reaches phi that is &quot;unsecured&quot; — phi not rendered unusable
+per hhs guidance. hds narrows that surface by enforcing tls in transit by
+default; at-rest content encryption for ephi is not yet shipped, so the
+unsecured-phi scope is currently wider at rest than in transit.
+">
+  <h3><code>164.400</code> Applicability <span class="draft">draft</span></h3>
+  <p class="text">Subpart D applies to covered entities, business associates, subcontractors
+and affiliated entities with respect to unsecured protected health
+information.
+</p>
+  <div class="layers">
+    <div class="layer pryv">
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <p>Subpart D applies only
+to &quot;unsecured&quot; PHI — PHI that has not been rendered unusable
+through encryption or destruction per HHS guidance (NIST SP
+800-111 / SP 800-88). Pryv's posture (TLS in transit by default,
+operator-side encryption-at-rest, per-user backup files
+transportable as encrypted bundles) lets you put PHI inside the
+safe-harbor where you choose to — narrowing what §400 actually
+reaches in your deployment.
+</p>
+    </div>
+    <div class="layer hds">
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <p>Subpart D only reaches PHI that is &quot;unsecured&quot; — PHI not rendered unusable
+per HHS guidance. HDS narrows that surface by enforcing TLS in transit by
+default; at-rest content encryption for ePHI is not yet shipped, so the
+unsecured-PHI scope is currently wider at rest than in transit.
+</p>
+      <details><summary>detail</summary><p>As a business associate, HDS is squarely within Subpart D's reach. The
+practical effect of this row is to set the boundary that the encryption
+and risk-assessment rows below refine: what counts as unsecured PHI in an
+HDS deployment is governed by the transit/at-rest posture described under
+164.402(2), which today leaves at-rest ePHI inside the unsecured category.
+</p></details>
+      <ul class="ev"><li><span class="lock">🔒 hipaa/risk/at-rest-encryption-gap</span> <span class="onreq">available on request</span></li></ul>
+    </div>
+    <div class="layer impl">
+      <div class="lh">Implementer</div>
+      <div class="persona">
+        <strong>covered-entity</strong> <span class="b documented">documented</span>
+        
+        <p>Determine which of your data flows on HDS fall inside the unsecured-PHI
+scope and document that determination in your breach-readiness records.
+</p>
+      </div><div class="persona">
+        <strong>business-associate</strong> <span class="b documented">documented</span>
+        <a class="tpl" href="templates.html#tpl-baa">📄 baa</a>
+        <p>Confirm with HDS, in your BAA, which protections apply to your data and
+which obligations flow down to your own subcontractors.
+</p>
+      </div><div class="persona">
+        <strong>individual</strong> <span class="b out-of-scope">out-of-scope</span>
+        
+        
+      </div>
+    </div>
+  </div>
+</article><article class="req" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.402 definitions — breach and unsecured phi hds supplies the technical substrate that lets an implementer apply the
+§164.402 definitions to a concrete incident: the per-user audit log shows
+what was accessed, and the access-scoping model shows what a given token
+could reach. whether an access was &quot;permitted under subpart e&quot; becomes a
+property that can be checked against recorded scope rather than narrated
+after the fact.
+">
+  <h3><code>164.402</code> Definitions — breach and unsecured PHI <span class="draft">draft</span></h3>
+  <p class="text">Defines &quot;breach&quot; (an impermissible acquisition, access, use or disclosure of
+PHI under Subpart E, assessed against four risk factors) and &quot;unsecured PHI&quot;
+(PHI not rendered unusable per HHS guidance).
+</p>
+  <div class="layers">
+    <div class="layer pryv">
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <p>Two Pryv contributions to
+applying the §164.402 definitions: (1) the audit log is the data
+source for the §402 risk-assessment factors — nature of PHI
+involved, unauthorized person, whether PHI was actually acquired,
+mitigation extent; and (2) Pryv's access + permission model
+makes &quot;acquisition / access / use / disclosure not permitted
+under Subpart E&quot; a queryable property (was the access within its
+granted scope?) rather than an after-the-fact narrative.
+</p>
+    </div>
+    <div class="layer hds">
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <p>HDS supplies the technical substrate that lets an implementer apply the
+§164.402 definitions to a concrete incident: the per-user audit log shows
+what was accessed, and the access-scoping model shows what a given token
+could reach. Whether an access was &quot;permitted under Subpart E&quot; becomes a
+property that can be checked against recorded scope rather than narrated
+after the fact.
+</p>
+      <details><summary>detail</summary><p>The two limbs of §164.402 are refined in the dedicated rows below:
+164.402(1) covers the four-factor risk assessment, for which the audit log
+and access-version chain are the structured inputs, and 164.402(2) covers
+the unsecured-PHI safe harbor, where HDS is honest that at-rest content
+encryption is not yet shipped. The definitional analysis itself — deciding
+whether a given event meets the breach definition — remains the
+implementer's, supported by HDS evidence.
+</p></details>
+      <ul class="ev"><li><span class="lock">🔒 hipaa/procedures/breach-risk-assessment</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/risk/at-rest-encryption-gap</span> <span class="onreq">available on request</span></li></ul>
+    </div>
+    <div class="layer impl">
+      <div class="lh">Implementer</div>
+      <div class="persona">
+        <strong>covered-entity</strong> <span class="b documented">documented</span>
+        
+        <p>Apply the breach and unsecured-PHI definitions to each incident and
+record the determination, drawing on HDS-supplied audit evidence.
+</p>
+      </div><div class="persona">
+        <strong>business-associate</strong> <span class="b documented">documented</span>
+        
+        <p>Run the same definitional analysis for incidents in your custody and
+preserve the supporting evidence.
+</p>
+      </div><div class="persona">
+        <strong>individual</strong> <span class="b out-of-scope">out-of-scope</span>
+        
+        
+      </div>
+    </div>
+  </div>
+</article><article class="req" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.402(1) definition of &quot;breach&quot; — four-factor risk assessment each of the four risk-assessment factors maps onto data hds already
+retains. the per-user audit log and the access-version chain answer &quot;what
+phi, by which credential, actually acquired or merely accessed, and was the
+access revoked or scoped down&quot; — the structured inputs to the assessment.
+">
+  <h3><code>164.402(1)</code> Definition of &quot;breach&quot; — four-factor risk assessment <span class="draft">draft</span></h3>
+  <p class="text">An impermissible use or disclosure of PHI is presumed to be a breach unless
+a low probability of compromise is shown via a four-factor risk assessment:
+(i) the nature and extent of the PHI involved, (ii) the unauthorized person
+involved, (iii) whether the PHI was actually acquired or viewed, and (iv) the
+extent to which the risk has been mitigated.
+</p>
+  <div class="layers">
+    <div class="layer pryv">
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <p>The four risk-assessment
+factors all draw on Pryv data:
+  (i) nature + extent: audit-row method + key request fields +
+      derived event-type set from the touched streams.
+  (ii) unauthorized person: audit-row accessId → access holder
+      with clientData.role + clientData.purpose.
+  (iii) actually acquired vs merely accessed: method-level
+      distinction in audit (events.get vs attachments.get,
+      success vs unauthorized error).
+  (iv) mitigation extent: access-version chain showing
+      revoke / scope-down timestamps relative to the incident.
+The risk-assessment write-up is the operator's analytical
+artefact; Pryv supplies the structured inputs.
+</p>
+    </div>
+    <div class="layer hds">
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <p>Each of the four risk-assessment factors maps onto data HDS already
+retains. The per-user audit log and the access-version chain answer &quot;what
+PHI, by which credential, actually acquired or merely accessed, and was the
+access revoked or scoped down&quot; — the structured inputs to the assessment.
+</p>
+      <details><summary>detail</summary><p>Factor mapping: (i) nature and extent of PHI — audit records identify the
+API methods and the streams/event types touched; (ii) unauthorized person
+— each audit record carries the access identity behind the call; (iii)
+acquired vs. merely viewed — the method-level distinction (read vs.
+attachment download, success vs. denied) is recorded; (iv) mitigation
+extent — the access-version history shows revocation and scope-down
+timestamps relative to the incident. The analytical write-up that weighs
+these factors and reaches the low-probability conclusion is the
+implementer's artefact; HDS supplies and preserves the inputs.
+</p></details>
+      <ul class="ev"><li><span class="lock">🔒 hipaa/procedures/breach-risk-assessment</span> <span class="onreq">available on request</span></li></ul>
+    </div>
+    <div class="layer impl">
+      <div class="lh">Implementer</div>
+      <div class="persona">
+        <strong>covered-entity</strong> <span class="b documented">documented</span>
+        
+        <p>Perform and document the four-factor risk assessment for each
+impermissible use or disclosure, using the HDS-supplied audit inputs.
+</p>
+      </div><div class="persona">
+        <strong>business-associate</strong> <span class="b documented">documented</span>
+        
+        <p>Conduct the same assessment for incidents you discover and share the
+result with the covered entity.
+</p>
+      </div><div class="persona">
+        <strong>individual</strong> <span class="b out-of-scope">out-of-scope</span>
+        
+        
+      </div>
+    </div>
+  </div>
+</article><article class="req" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.402(2) definition of &quot;unsecured phi&quot; — encryption safe harbor the safe harbor exempts properly secured phi from breach notification. hds
+enforces tls in transit, which places the in-transit half of the data path
+inside the safe harbor. platform at-rest encryption for ephi content is not
+yet shipped, so the safe harbor does not currently apply to phi at rest and
+a disclosure of at-rest content can still be a reportable breach.
+">
+  <h3><code>164.402(2)</code> Definition of &quot;unsecured PHI&quot; — encryption safe harbor <span class="draft">draft</span></h3>
+  <p class="text">&quot;Unsecured PHI&quot; is PHI not rendered unusable, unreadable or indecipherable to
+unauthorized persons through a technology or methodology specified in HHS
+guidance (NIST SP 800-111 for at-rest encryption, the FIPS-validated
+in-transit standards, and NIST SP 800-88 for destruction).
+</p>
+  <div class="layers">
+    <div class="layer pryv">
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <p>The safe-harbor
+narrows what triggers Subpart D notification: PHI that's
+actually secured per HHS guidance is outside §164.402's
+&quot;unsecured PHI&quot; definition and a leak of it doesn't compel
+notification. Pryv's default posture (TLS 1.3 in transit via
+built-in ACME, AES-256-GCM for platform secrets at rest) puts
+the in-transit half firmly inside the safe-harbor; the at-rest
+half for ePHI content itself depends on the operator's chosen
+at-rest encryption (operator-side LUKS / PG TDE / dm-crypt).
+</p>
+    </div>
+    <div class="layer hds">
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <p>The safe harbor exempts properly secured PHI from breach notification. HDS
+enforces TLS in transit, which places the in-transit half of the data path
+inside the safe harbor. Platform at-rest encryption for ePHI content is NOT
+YET SHIPPED, so the safe harbor does not currently apply to PHI at rest and
+a disclosure of at-rest content can still be a reportable breach.
+</p>
+      <details><summary>detail</summary><p>This is an honest-gap row. In-transit protection (TLS) aligns with the
+FIPS-validated standards referenced by HHS guidance, so leaked data in
+flight is generally outside the unsecured-PHI definition. At rest, HDS does
+not yet provide NIST SP 800-111-equivalent content encryption for ePHI;
+until that ships, at-rest ePHI remains unsecured PHI for the purposes of
+this rule and any compromise must be assessed as a potential breach. The
+gap, its compensating controls and the remediation plan are tracked in the
+cited internal record.
+</p></details>
+      <ul class="ev"><li><span class="lock">🔒 hipaa/risk/at-rest-encryption-gap</span> <span class="onreq">available on request</span></li></ul>
+    </div>
+    <div class="layer impl">
+      <div class="lh">Implementer</div>
+      <div class="persona">
+        <strong>covered-entity</strong> <span class="b documented">documented</span>
+        
+        <p>Do not rely on the at-rest safe harbor on HDS today; document the gap in
+your risk analysis and treat at-rest exposures as potentially reportable.
+</p>
+      </div><div class="persona">
+        <strong>business-associate</strong> <span class="b documented">documented</span>
+        
+        <p>Account for the at-rest encryption gap in your own risk posture and in
+assurances you give upstream.
+</p>
+      </div><div class="persona">
+        <strong>individual</strong> <span class="b out-of-scope">out-of-scope</span>
+        
+        
+      </div>
+    </div>
+  </div>
+</article><article class="req" data-coverage="documented" data-personas="covered-entity business-associate individual" data-text="164.404 notification to individuals individual notification is owned by the covered entity, not by hds. hds
+supports it by supplying audit evidence to identify the affected
+individuals, but composing and delivering the notices is the covered
+entity's operational responsibility.
+">
+  <h3><code>164.404</code> Notification to individuals <span class="draft">draft</span></h3>
+  <p class="text">Following discovery of a breach of unsecured PHI, the covered entity must
+notify each affected individual without unreasonable delay and no later than
+60 calendar days after discovery.
+</p>
+  <div class="layers">
+    <div class="layer pryv">
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <p>The notification process splits into **identification**
+(Pryv-shipped — audit-log-driven per-subject roster, packaged
+by Q17 BREACH-SCOPE-TOOL once shipped) and **delivery**
+(voluntarily missing + operator-owned — Pryv's transactional
+mail surface isn't bulk-send; operators compose with their
+existing CRM / mail / SMS pipeline). The per-recipient
+audit-trace bridge uses operator-authored
+`compliance/breach-notification/sent-cmc` events on a
+compliance system stream, satisfying the §164.414 burden-
+of-proof obligation. Full delivery-side treatment in
+`context/breach-notification-delivery-operator-owned.md`.
+</p>
+    </div>
+    <div class="layer hds">
+      <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <p>Individual notification is owned by the covered entity, not by HDS. HDS
+supports it by supplying audit evidence to identify the affected
+individuals, but composing and delivering the notices is the covered
+entity's operational responsibility.
+</p>
+      <details><summary>detail</summary><p>HDS is not a bulk-notification system. The contribution is identification:
+filtering the audit log by the implicated credential and time window yields
+the distinct set of affected subjects, with evidence. Producing the roster
+and the per-recipient delivery sit with the covered entity, who carries
+this duty.
+</p></details>
+      <ul class="ev"><li><span class="lock">🔒 hipaa/procedures/breach-notification</span> <span class="onreq">available on request</span></li></ul>
+    </div>
+    <div class="layer impl">
+      <div class="lh">Implementer</div>
+      <div class="persona">
+        <strong>covered-entity</strong> <span class="b documented">documented</span>
+        
+        <p>Notify each affected individual within the 60-day window and retain proof
+of the notifications.
+</p>
+      </div><div class="persona">
+        <strong>business-associate</strong> <span class="b documented">documented</span>
+        <a class="tpl" href="templates.html#tpl-baa">📄 baa</a>
+        <p>If your BAA delegates individual notification to you, perform it;
+otherwise provide the covered entity the information it needs to notify.
+</p>
+      </div><div class="persona">
+        <strong>individual</strong> <span class="b out-of-scope">out-of-scope</span>
+        
+        
+      </div>
+    </div>
+  </div>
+</article><article class="req" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.404(b) timeliness of notification the 60-day clock is an operational cadence owned by the covered entity. hds
+shortens the data-gathering portion of that window: the audit log and
+access-version chain answer &quot;what was accessed, by whom, when&quot; quickly, so
+the timeline is dominated by editorial and decision work rather than
+investigation.
+">
+  <h3><code>164.404(b)</code> Timeliness of notification <span class="draft">draft</span></h3>
+  <p class="text">The required individual notification must be provided without unreasonable
+delay and in no case later than 60 calendar days after discovery of a breach.
+</p>
+  <div class="layers">
+    <div class="layer pryv">
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <p>The 60-day clock is procedural
+— the covered entity owns the incident-response cadence. Pryv-
+side data accelerates the &quot;discovery&quot; + &quot;scoping&quot; steps that
+dominate the timeline: audit log + access-version chain answer
+&quot;what was accessed, by whom, when&quot; in seconds. The discipline
+of acting on that data within the 60-day window is the
+operator's process.
+</p>
+    </div>
+    <div class="layer hds">
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <p>The 60-day clock is an operational cadence owned by the covered entity. HDS
+shortens the data-gathering portion of that window: the audit log and
+access-version chain answer &quot;what was accessed, by whom, when&quot; quickly, so
+the timeline is dominated by editorial and decision work rather than
+investigation.
+</p>
+      <details><summary>detail</summary><p>Discovery and scoping are typically the slowest steps before notices can be
+drafted. By making the access history queryable, HDS compresses scoping so
+that meeting the 60-day deadline becomes a matter of process discipline.
+Acting on the evidence within the window — and recording when discovery
+occurred — remains the implementer's responsibility.
+</p></details>
+      <ul class="ev"><li><span class="lock">🔒 hipaa/procedures/breach-notification</span> <span class="onreq">available on request</span></li></ul>
+    </div>
+    <div class="layer impl">
+      <div class="lh">Implementer</div>
+      <div class="persona">
+        <strong>covered-entity</strong> <span class="b documented">documented</span>
+        
+        <p>Track the discovery date and complete notification within 60 days,
+documenting the timeline.
+</p>
+      </div><div class="persona">
+        <strong>business-associate</strong> <span class="b documented">documented</span>
+        
+        <p>Surface discovery to the covered entity promptly so its 60-day clock is
+not eroded by your delay.
+</p>
+      </div><div class="persona">
+        <strong>individual</strong> <span class="b out-of-scope">out-of-scope</span>
+        
+        
+      </div>
+    </div>
+  </div>
+</article><article class="req" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.404(c) content of notification the wording of a notice is the covered entity's editorial artefact. hds
+contributes to one content element — the description of the phi involved —
+which is derivable from the audit-log scoping performed for the risk
+assessment. the remaining elements are operational and authored by the
+covered entity.
+">
+  <h3><code>164.404(c)</code> Content of notification <span class="draft">draft</span></h3>
+  <p class="text">The individual notification must describe what happened (including the dates
+of breach and discovery), the types of PHI involved, steps individuals should
+take, what the entity is doing in response, and contact procedures.
+</p>
+  <div class="layers">
+    <div class="layer pryv">
+      <div class="lh">Pryv platform <span class="b out-of-scope">out-of-scope</span></div>
+      <p>Content of the notification is the covered entity's editorial
+artefact. Pryv has no opinion on the wording. The PHI-involved
+description is derivable from the audit-log scoping done under
+Art. 402 risk assessment (see hipaa-breach.164.402 row), but
+composing the prose remains operator-side.
+</p>
+    </div>
+    <div class="layer hds">
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <p>The wording of a notice is the covered entity's editorial artefact. HDS
+contributes to one content element — the description of the PHI involved —
+which is derivable from the audit-log scoping performed for the risk
+assessment. The remaining elements are operational and authored by the
+covered entity.
+</p>
+      <details><summary>detail</summary><p>The &quot;types of PHI involved&quot; element can be derived from the streams and
+event types touched, as recorded in the audit data used under 164.402(1).
+The dates-of-breach-and-discovery, the steps individuals should take, the
+entity's response, and the contact procedures are not data HDS holds; they
+are composed by the covered entity. HDS therefore facilitates the
+evidence-derivable element and documents the rest.
+</p></details>
+      <ul class="ev"><li><span class="lock">🔒 hipaa/procedures/breach-notification</span> <span class="onreq">available on request</span></li></ul>
+    </div>
+    <div class="layer impl">
+      <div class="lh">Implementer</div>
+      <div class="persona">
+        <strong>covered-entity</strong> <span class="b documented">documented</span>
+        
+        <p>Author each notice with all required content elements; use HDS audit
+output to populate the PHI-involved description.
+</p>
+      </div><div class="persona">
+        <strong>business-associate</strong> <span class="b documented">documented</span>
+        
+        <p>Provide the covered entity the factual elements (PHI involved, dates) it
+needs to compose the notice.
+</p>
+      </div><div class="persona">
+        <strong>individual</strong> <span class="b out-of-scope">out-of-scope</span>
+        
+        
+      </div>
+    </div>
+  </div>
+</article><article class="req" data-coverage="out-of-scope" data-personas="covered-entity individual" data-text="164.404(d) methods of individual notification choosing and executing the notification method is operational; hds is not a
+mailer and plays no role in delivering notices. where the implementer
+records each delivery attempt as an event, the hds audit chain can evidence
+that the attempt occurred, but the delivery itself is out of scope for hds.
+">
+  <h3><code>164.404(d)</code> Methods of individual notification <span class="draft">draft</span></h3>
+  <p class="text">Notice must be by first-class mail (or email where the individual has agreed),
+with telephone or other urgent contact where imminent misuse is possible, and
+substitute notice (web posting or media) where contact information is
+insufficient or out of date.
+</p>
+  <div class="layers">
+    <div class="layer pryv">
+      <div class="lh">Pryv platform <span class="b out-of-scope">out-of-scope</span></div>
+      <p>Notification method choice is operational. Pryv has no software
+role in actually delivering the notice (Pryv is not a mailer).
+When the entity uses Pryv events to record the notice-delivery
+attempt (e.g., a `breach-notice/sent` event per affected
+individual), the audit chain proves the delivery attempt.
+</p>
+    </div>
+    <div class="layer hds">
+      <div class="lh">HDS <span class="b out-of-scope">out-of-scope</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <p>Choosing and executing the notification method is operational; HDS is not a
+mailer and plays no role in delivering notices. Where the implementer
+records each delivery attempt as an event, the HDS audit chain can evidence
+that the attempt occurred, but the delivery itself is out of scope for HDS.
+</p>
+      <details><summary>detail</summary><p>First-class mail, email, telephone, and substitute notice are all
+organizational channels the covered entity operates with its own
+communications stack. HDS neither selects nor sends. Its only adjacent
+contribution is preserving an audit record if the implementer chooses to
+log delivery attempts as events.
+</p></details>
+      
+    </div>
+    <div class="layer impl">
+      <div class="lh">Implementer</div>
+      <div class="persona">
+        <strong>covered-entity</strong> <span class="b documented">documented</span>
+        
+        <p>Select compliant notification methods, deliver the notices, and retain
+delivery records including any substitute-notice steps.
+</p>
+      </div><div class="persona">
+        <strong>individual</strong> <span class="b out-of-scope">out-of-scope</span>
+        
+        
+      </div>
+    </div>
+  </div>
+</article><article class="req" data-coverage="documented" data-personas="covered-entity individual" data-text="164.406 notification to media media notification is an organizational and communications procedure owned
+by the covered entity. hds provides no software contribution; the
+500-resident threshold can be derived from the affected-subject list
+produced under 164.404, but the notification itself is operational.
+">
+  <h3><code>164.406</code> Notification to media <span class="draft">draft</span></h3>
+  <p class="text">A breach affecting more than 500 residents of a State or jurisdiction
+requires notification to prominent media outlets serving that area.
+</p>
+  <div class="layers">
+    <div class="layer pryv">
+      <div class="lh">Pryv platform <span class="b out-of-scope">out-of-scope</span></div>
+      <p>Media notification is an organizational / communications
+procedure. No software contribution; the threshold determination
+(500 residents) is derivable from the §164.404 per-subject list,
+but the notification itself is operational.
+</p>
+    </div>
+    <div class="layer hds">
+      <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <p>Media notification is an organizational and communications procedure owned
+by the covered entity. HDS provides no software contribution; the
+500-resident threshold can be derived from the affected-subject list
+produced under 164.404, but the notification itself is operational.
+</p>
+      <details><summary>detail</summary><p>Determining whether the 500-resident threshold is met for a given State or
+jurisdiction draws on the per-subject roster that HDS audit evidence helps
+assemble. Identifying and notifying prominent media outlets is entirely the
+covered entity's process.
+</p></details>
+      <ul class="ev"><li><span class="lock">🔒 hipaa/procedures/breach-notification</span> <span class="onreq">available on request</span></li></ul>
+    </div>
+    <div class="layer impl">
+      <div class="lh">Implementer</div>
+      <div class="persona">
+        <strong>covered-entity</strong> <span class="b documented">documented</span>
+        
+        <p>Where the threshold is met, notify prominent media in the affected
+jurisdiction and retain the records.
+</p>
+      </div><div class="persona">
+        <strong>individual</strong> <span class="b out-of-scope">out-of-scope</span>
+        
+        
+      </div>
+    </div>
+  </div>
+</article><article class="req" data-coverage="documented" data-personas="covered-entity individual" data-text="164.408 notification to the secretary submission to the secretary via the hhs portal is procedural and owned by
+the covered entity. hds audit and access-version data inform the content
+(subjects affected, dates, contributing cause), but the submission itself
+is operational.
+">
+  <h3><code>164.408</code> Notification to the Secretary <span class="draft">draft</span></h3>
+  <p class="text">The covered entity must notify the Secretary of HHS following discovery of a
+breach of unsecured PHI; timing and method depend on whether 500 or more
+individuals are affected.
+</p>
+  <div class="layers">
+    <div class="layer pryv">
+      <div class="lh">Pryv platform <span class="b out-of-scope">out-of-scope</span></div>
+      <p>HHS notification (via the OCR online portal) is procedural and
+organizational. Pryv's audit + access-version data inform the
+content (subjects affected, dates, root cause) but the
+submission itself is operator-side.
+</p>
+    </div>
+    <div class="layer hds">
+      <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <p>Submission to the Secretary via the HHS portal is procedural and owned by
+the covered entity. HDS audit and access-version data inform the content
+(subjects affected, dates, contributing cause), but the submission itself
+is operational.
+</p>
+      <details><summary>detail</summary><p>For breaches of 500 or more individuals the notice is contemporaneous with
+individual notification; smaller breaches are logged and submitted
+annually. In both cases the factual inputs can be drawn from HDS evidence,
+while the act of submitting and tracking the report sits with the covered
+entity.
+</p></details>
+      <ul class="ev"><li><span class="lock">🔒 hipaa/procedures/breach-notification</span> <span class="onreq">available on request</span></li></ul>
+    </div>
+    <div class="layer impl">
+      <div class="lh">Implementer</div>
+      <div class="persona">
+        <strong>covered-entity</strong> <span class="b documented">documented</span>
+        
+        <p>File the required HHS notification on the applicable schedule and keep the
+submission records.
+</p>
+      </div><div class="persona">
+        <strong>individual</strong> <span class="b out-of-scope">out-of-scope</span>
+        
+        
+      </div>
+    </div>
+  </div>
+</article><article class="req" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.410 notification by a business associate this is hds's core breach duty. as a business associate, hds notifies the
+covered entity without unreasonable delay (and within 60 days) on discovery
+of a breach, following a documented procedure. the audit log lets hds
+gather the required content — affected subjects and timing — quickly.
+">
+  <h3><code>164.410</code> Notification by a business associate <span class="draft">draft</span></h3>
+  <p class="text">A business associate must notify the covered entity of a breach of unsecured
+PHI without unreasonable delay and no later than 60 days after discovery,
+including the identities of affected individuals where known.
+</p>
+  <div class="layers">
+    <div class="layer pryv">
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <p>When you (the implementer)
+act as a business associate to a covered entity and store their
+PHI on your Pryv deployment, your BA-to-CE notification chain
+is operational. The CMC plugin's cross-platform consent +
+revocation flow gives you the technical substrate for
+inter-organization handshakes; audit data lets you meet the
+&quot;without unreasonable delay&quot; element on the data-gathering side.
+</p>
+    </div>
+    <div class="layer hds">
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <p>This is HDS's core breach duty. As a business associate, HDS notifies the
+covered entity without unreasonable delay (and within 60 days) on discovery
+of a breach, following a documented procedure. The audit log lets HDS
+gather the required content — affected subjects and timing — quickly.
+</p>
+      <details><summary>detail</summary><p>HDS maintains an internal breach-notification procedure that defines
+discovery, escalation, content assembly and the upstream notification to
+affected covered entities, with the 60-day ceiling. The per-user audit log
+is the data source for the &quot;identities of affected individuals&quot; element and
+for the timing evidence backing &quot;without unreasonable delay&quot;. When an
+implementer is itself a business associate to a covered entity and stores
+PHI on HDS, the same procedure and evidence support its own upstream
+notification chain.
+</p></details>
+      <ul class="ev"><li><span class="lock">🔒 hipaa/procedures/breach-notification</span> <span class="onreq">available on request</span></li></ul>
+    </div>
+    <div class="layer impl">
+      <div class="lh">Implementer</div>
+      <div class="persona">
+        <strong>covered-entity</strong> <span class="b documented">documented</span>
+        
+        <p>On receipt of an HDS breach notice, run your own §164.404/406/408
+notification obligations.
+</p>
+      </div><div class="persona">
+        <strong>business-associate</strong> <span class="b documented">documented</span>
+        <a class="tpl" href="templates.html#tpl-baa">📄 baa</a>
+        <p>Notify the covered entity (or upstream BA) you serve within the 60-day
+window, using the BAA terms and your own breach procedure.
+</p>
+      </div><div class="persona">
+        <strong>individual</strong> <span class="b out-of-scope">out-of-scope</span>
+        
+        
+      </div>
+    </div>
+  </div>
+</article><article class="req" data-coverage="documented" data-personas="covered-entity business-associate individual" data-text="164.412 law enforcement delay invoking a law-enforcement delay is procedural and depends on receipt of an
+official statement. hds has no software role beyond preserving the audit log
+across the delay period, which happens by default; the decision and its
+documentation are the implementer's.
+">
+  <h3><code>164.412</code> Law enforcement delay <span class="draft">draft</span></h3>
+  <p class="text">Notification may be delayed when a law-enforcement official states that it
+would impede a criminal investigation or cause damage to national security,
+for the period specified (with a 30-day cap for oral statements).
+</p>
+  <div class="layers">
+    <div class="layer pryv">
+      <div class="lh">Pryv platform <span class="b out-of-scope">out-of-scope</span></div>
+      <p>Procedural — depends on receipt of the law-enforcement
+statement (oral with 30-day cap, or written with the official's
+time-limit). No software role beyond preserving the audit log
+across the delay period (which happens by default).
+</p>
+    </div>
+    <div class="layer hds">
+      <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <p>Invoking a law-enforcement delay is procedural and depends on receipt of an
+official statement. HDS has no software role beyond preserving the audit log
+across the delay period, which happens by default; the decision and its
+documentation are the implementer's.
+</p>
+      <details><summary>detail</summary><p>Whether the statement is oral (subject to a 30-day cap) or written (bounded
+by the official's stated period), the implementer must record it and pause
+the affected notifications accordingly. HDS retention keeps the underlying
+evidence intact for the duration so notification can proceed once the delay
+lapses.
+</p></details>
+      <ul class="ev"><li><span class="lock">🔒 hipaa/procedures/breach-notification</span> <span class="onreq">available on request</span></li></ul>
+    </div>
+    <div class="layer impl">
+      <div class="lh">Implementer</div>
+      <div class="persona">
+        <strong>covered-entity</strong> <span class="b documented">documented</span>
+        
+        <p>Document any law-enforcement delay request and the resumption of
+notification once the stated period ends.
+</p>
+      </div><div class="persona">
+        <strong>business-associate</strong> <span class="b documented">documented</span>
+        
+        <p>Honor and record any law-enforcement delay communicated to you and inform
+the covered entity.
+</p>
+      </div><div class="persona">
+        <strong>individual</strong> <span class="b out-of-scope">out-of-scope</span>
+        
+        
+      </div>
+    </div>
+  </div>
+</article><article class="req" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.414 administrative requirements and burden of proof the burden of proof is met with evidence. hds's per-user audit log and
+access-version chain are the technical evidence layer — a precise record of
+what was accessed, by which credential, and when — that backs both &quot;we
+notified&quot; and &quot;this was not a reportable breach&quot; determinations.
+">
+  <h3><code>164.414</code> Administrative requirements and burden of proof <span class="draft">draft</span></h3>
+  <p class="text">The covered entity or business associate must maintain documentation
+sufficient to demonstrate that all required notifications were made, or that
+an impermissible use or disclosure did not constitute a reportable breach.
+</p>
+  <div class="layers">
+    <div class="layer pryv">
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <p>&quot;Burden of proof&quot; is met
+with evidence; Pryv's audit + access-version chain is the
+technical evidence layer (&quot;we know exactly what was accessed by
+which credential at what time&quot;). The organizational
+documentation (incident response records, notification records,
+decisions to not notify with rationale) sits on top of that
+data.
+</p>
+    </div>
+    <div class="layer hds">
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <p>The burden of proof is met with evidence. HDS's per-user audit log and
+access-version chain are the technical evidence layer — a precise record of
+what was accessed, by which credential, and when — that backs both &quot;we
+notified&quot; and &quot;this was not a reportable breach&quot; determinations.
+</p>
+      <details><summary>detail</summary><p>The audit and access history give an implementer the factual spine for the
+§164.414 demonstration: it can show the scope of any incident and the basis
+for a no-breach conclusion. The organizational records that sit on top of
+that data — incident-response files, notification records, and the
+documented rationale for any decision not to notify — are the implementer's
+to maintain. HDS also retains its own breach-procedure execution records as
+evidence of its §164.410 performance.
+</p></details>
+      <ul class="ev"><li><span class="lock">🔒 hipaa/registers/breach-log</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/procedures/breach-notification</span> <span class="onreq">available on request</span></li></ul>
+    </div>
+    <div class="layer impl">
+      <div class="lh">Implementer</div>
+      <div class="persona">
+        <strong>covered-entity</strong> <span class="b documented">documented</span>
+        
+        <p>Maintain the documentation that demonstrates notification or a justified
+no-breach determination, retaining it for the required period.
+</p>
+      </div><div class="persona">
+        <strong>business-associate</strong> <span class="b documented">documented</span>
+        
+        <p>Keep records demonstrating your own notifications and risk assessments to
+meet the burden of proof.
+</p>
+      </div><div class="persona">
+        <strong>individual</strong> <span class="b out-of-scope">out-of-scope</span>
+        
+        
+      </div>
+    </div>
+  </div>
+</article></div>
+    <script>
+(function(){
+  const q=document.getElementById('q'),cards=[...document.querySelectorAll('.req')],fc=document.getElementById('fcount');
+  const covs=()=>[...document.querySelectorAll('#cov input:checked')].map(i=>i.value);
+  const pers=()=>[...document.querySelectorAll('#persona input:checked')].map(i=>i.value);
+  function apply(){const t=q.value.toLowerCase(),cv=covs(),pr=pers();let n=0;
+    cards.forEach(c=>{const okc=cv.includes(c.dataset.coverage||'');
+      const cp=(c.dataset.personas||'').split(' ').filter(Boolean);
+      const okp=cp.length===0||cp.some(p=>pr.includes(p));
+      const okt=!t||(c.dataset.text||'').includes(t);
+      const show=okc&&okp&&okt;c.style.display=show?'':'none';if(show)n++;});
+    fc.textContent=n+' / '+cards.length;}
+  document.querySelector('.filters').addEventListener('input',apply);apply();
+})();
+</script>
+  </main>
 <footer>
   <p><strong>Not legal advice.</strong> Engineering &amp; operational guidance; confirm your
   obligations with qualified counsel. All rows are <em>draft</em> pending review.</p>

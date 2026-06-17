@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Overview — HDS compliance-matrix</title>
+<title>Templates — HDS compliance-matrix</title>
 <link rel="stylesheet" href="styles.css">
 <!--
   New Relic Browser agent for compliance.datasafe.dev.
@@ -24,50 +24,45 @@
 <header class="top">
   <a class="brand" href="index.html">HDS <b>compliance-matrix</b></a>
   <nav>
-    <a href="index.html" class="on">Overview</a>
-    <a href="templates.html">Templates</a>
+    <a href="index.html">Overview</a>
+    <a href="templates.html" class="on">Templates</a>
     <a href="https://github.com/healthdatasafe/compliance-matrix">Source</a>
   </nav>
 </header>
 <main>
-<section class="hero">
-  <h1>Health Data Safe — compliance matrix</h1>
-  <p class="lede">How HDS is compliant, and what an organisation building on HDS must still
-  do themselves. Each requirement is read across three layers.</p>
-  <div class="threelayer">
-    <div class="ll pryv"><b>Pryv platform</b><span>what the open-pryv.io software does (inherited)</span></div>
-    <div class="arrow">→</div>
-    <div class="ll hds"><b>HDS</b><span>what HDS-as-operator + the app stack adds</span></div>
-    <div class="arrow">→</div>
-    <div class="ll impl"><b>Implementer</b><span>what's on your plate, per persona (+ agreements to sign)</span></div>
-  </div>
-  <p class="count">6 scopes · 227 requirements · 4 agreement templates</p>
-</section>
-<section class="scopes"><a class="scopecard" href="gdpr.html">
-    <h3>General Data Protection Regulation <span class="short">GDPR</span></h3>
-    <p class="meta">regulation · EU + EEA (extraterritorial via Art. 3) <span class="rg">CH</span><span class="rg">US</span> · 47 requirements</p>
-    <div class="covbar"><span class="seg implemented" style="width:6.4%" title="implemented: 3"></span><span class="seg configurable" style="width:6.4%" title="configurable: 3"></span><span class="seg facilitated" style="width:66.0%" title="facilitated: 31"></span><span class="seg documented" style="width:6.4%" title="documented: 3"></span><span class="seg out-of-scope" style="width:14.9%" title="out-of-scope: 7"></span></div>
-  </a><a class="scopecard" href="hipaa-breach.html">
-    <h3>HIPAA Breach Notification Rule <span class="short">HIPAA-Breach</span></h3>
-    <p class="meta">regulation · US <span class="rg">US</span> · 13 requirements</p>
-    <div class="covbar"><span class="seg facilitated" style="width:61.5%" title="facilitated: 8"></span><span class="seg documented" style="width:30.8%" title="documented: 4"></span><span class="seg out-of-scope" style="width:7.7%" title="out-of-scope: 1"></span></div>
-  </a><a class="scopecard" href="hipaa-privacy.html">
-    <h3>HIPAA Privacy Rule <span class="short">HIPAA-Privacy</span></h3>
-    <p class="meta">regulation · US <span class="rg">US</span> · 35 requirements</p>
-    <div class="covbar"><span class="seg implemented" style="width:5.7%" title="implemented: 2"></span><span class="seg configurable" style="width:2.9%" title="configurable: 1"></span><span class="seg facilitated" style="width:71.4%" title="facilitated: 25"></span><span class="seg documented" style="width:11.4%" title="documented: 4"></span><span class="seg out-of-scope" style="width:8.6%" title="out-of-scope: 3"></span></div>
-  </a><a class="scopecard" href="hipaa-security.html">
-    <h3>HIPAA Security Rule <span class="short">HIPAA-Security</span></h3>
-    <p class="meta">regulation · US <span class="rg">US</span> · 41 requirements</p>
-    <div class="covbar"><span class="seg implemented" style="width:29.3%" title="implemented: 12"></span><span class="seg configurable" style="width:4.9%" title="configurable: 2"></span><span class="seg facilitated" style="width:34.1%" title="facilitated: 14"></span><span class="seg documented" style="width:31.7%" title="documented: 13"></span></div>
-  </a><a class="scopecard" href="soc2.html">
-    <h3>SOC 2 — AICPA Trust Services Criteria (Security, Availability, Confidentiality, Processing Integrity, Privacy) <span class="short">SOC 2</span></h3>
-    <p class="meta">standard · United States (AICPA) <span class="rg">US</span><span class="rg">CH</span> · 61 requirements</p>
-    <div class="covbar"><span class="seg implemented" style="width:21.3%" title="implemented: 13"></span><span class="seg configurable" style="width:1.6%" title="configurable: 1"></span><span class="seg facilitated" style="width:60.7%" title="facilitated: 37"></span><span class="seg documented" style="width:16.4%" title="documented: 10"></span></div>
-  </a><a class="scopecard" href="swiss-nlpd.html">
-    <h3>Swiss Federal Act on Data Protection (revised FADP / nLPD) <span class="short">Swiss nLPD</span></h3>
-    <p class="meta">regulation · Switzerland (extraterritorial via Art. 3 for processing affecting CH) <span class="rg">CH</span> · 30 requirements</p>
-    <div class="covbar"><span class="seg implemented" style="width:13.3%" title="implemented: 4"></span><span class="seg configurable" style="width:3.3%" title="configurable: 1"></span><span class="seg facilitated" style="width:63.3%" title="facilitated: 19"></span><span class="seg out-of-scope" style="width:20.0%" title="out-of-scope: 6"></span></div>
-  </a></section>
+  <a class="back" href="index.html">← All scopes</a>
+  <h1>Agreement templates</h1>
+  <p class="lede">Fill-in templates implementers use to meet their obligations.
+  Review with counsel before use.</p>
+  <div class="reqs"><article class="req" id="tpl-baa">
+  <h3>📄 Business Associate Agreement (template) <span class="b draft">draft</span></h3>
+  <p class="meta">kind: baa · signer: <strong>covered-entity</strong>
+    · with: hds</p>
+  <p>Template BAA between a Covered Entity (or upstream Business Associate) and HDS, governing HDS's handling of ePHI on the customer's behalf.
+</p>
+  <p class="covers">satisfies: <code>hipaa-security.164.314(a)(1)</code> <code>hipaa-privacy.164.502(e)(1)</code></p>
+</article><article class="req" id="tpl-dpa">
+  <h3>📄 Data Processing Agreement (template) <span class="b draft">draft</span></h3>
+  <p class="meta">kind: dpa · signer: <strong>controller</strong>
+    · with: processor</p>
+  <p>Template Data Processing Agreement (GDPR Art.28 / Swiss nLPD) between a controller building on HDS and HDS as processor, governing the processing of personal data on the controller's documented instructions.
+</p>
+  <p class="covers">satisfies: <code>gdpr.Art.28</code> <code>swiss-nlpd.Art.9</code></p>
+</article><article class="req" id="tpl-subcontractor">
+  <h3>📄 Subcontractor Agreement (HIPAA flow-down, template) <span class="b draft">draft</span></h3>
+  <p class="meta">kind: subcontractor · signer: <strong>business-associate</strong>
+    · with: subcontractor</p>
+  <p>Template back-to-back agreement by which a Business Associate flows its HIPAA obligations down to a subcontractor that handles ePHI on its behalf.
+</p>
+  <p class="covers">satisfies: <code>hipaa-security.164.314(a)(2)(ii)(B)</code> <code>hipaa-security.164.314(a)(1)</code></p>
+</article><article class="req" id="tpl-subprocessor">
+  <h3>📄 Subprocessor Disclosure &amp; Assurance (template) <span class="b draft">draft</span></h3>
+  <p class="meta">kind: subprocessor · signer: <strong>business-associate</strong>
+    · with: subcontractor</p>
+  <p>Template for disclosing the subprocessors used to handle ePHI and recording the assurances obtained from each — the operational companion to the subcontractor agreement.
+</p>
+  <p class="covers">satisfies: <code>hipaa-security.164.314(a)(2)(ii)(B)</code></p>
+</article></div>
 </main>
 <footer>
   <p><strong>Not legal advice.</strong> Engineering &amp; operational guidance; confirm your
