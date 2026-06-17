@@ -969,13 +969,21 @@ requirements:
       overview: |
         HDS supports storing each access request as an event on a dedicated
         stream with a computed due date, so the 30/30-day cadence is trackable.
-        The operational cadence and decision remain the covered entity's; once
-        ready, the individual exercises access directly through the API.
+        The operational cadence and decision remain the covered entity's; for
+        individuals who can self-authenticate, the app-portability self-service
+        tool bypasses the 30-day clock entirely (the individual obtains the data
+        immediately, without a written-request intake).
       detail: |
         The request-intake artefact records receipt time and the resulting due
         date. The substantive response is delivered through the §164.524 access
-        capability described in the parent row.
+        capability described in the parent row. Self-service via app-portability
+        eliminates the need for a §524(b)(2) timely-response procedure on the
+        individual-direct path; the timeline obligation remains operative on the
+        partner-mediated path (covered entity intake → HDS-as-BA fulfilment).
       evidence:
+        docs:
+          - https://demo-portability.datasafe.dev
+          - https://portability.hds.ngo
         internal_docs:
           - hipaa/procedures/individual-right-of-access
     implementer:
@@ -1197,11 +1205,21 @@ requirements:
         Each §528(b)(2) field has an audit-log source — date, recipient, PHI
         description and purpose — as mapped in the parent accounting row. HDS
         operates the audit log that supplies these fields across both regions.
+        The audit log is included verbatim in every app-portability backup
+        (`audit_logs.json`), so individuals receive the raw §528 source data
+        alongside their PHI in a single self-service download.
       detail: |
         Pre-computing per-subject accounting reports and storing them on a
         dedicated stream keeps the §528 response window tractable. Compiling and
-        delivering the accounting is the covered entity's process.
+        delivering the accounting is the covered entity's process. The
+        app-portability tool ships the unfiltered audit-event stream (with
+        timestamps, requesting access tokens, methods invoked) — sufficient
+        source material for the covered entity to assemble the formal
+        §528(b) accounting.
       evidence:
+        docs:
+          - https://demo-portability.datasafe.dev
+          - https://portability.hds.ngo
         internal_docs:
           - hipaa/procedures/accounting-of-disclosures
     implementer:

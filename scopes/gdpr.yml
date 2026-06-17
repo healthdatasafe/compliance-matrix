@@ -557,13 +557,21 @@ requirements:
         HDS rectifies an event with a single update call that preserves the prior
         value as a new version, so accuracy is corrected without losing the audit
         trail. The updated payload is schema-validated, so a rectification cannot
-        introduce a structurally invalid value.
+        introduce a structurally invalid value. Subjects can inspect their full
+        record (including version history) via the app-portability self-service
+        tool to identify what needs rectifying before raising a request.
       detail: |
         The version chain is retrievable on request, and every update is in the
         audited method set. Detection of inaccuracy is semantic and stays with
-        the controller's app; HDS guarantees structural validity at ingest.
+        the controller's app; HDS guarantees structural validity at ingest. The
+        app-portability ZIPs include events, streams and (opt-in) per-access
+        version history, so a subject can audit their own data end-to-end before
+        filing a rectification claim.
       regions: [ch, us]
       evidence:
+        docs:
+          - https://demo-portability.datasafe.dev
+          - https://portability.hds.ngo
         internal_docs:
           - hipaa/policies/integrity
           - gdpr/procedures/data-subject-rights
@@ -595,14 +603,25 @@ requirements:
         depends on the storage engine and backup-rotation policy; HDS operates a
         documented backup and rotation regime as operator. Scheduled/automatic
         erasure under storage limitation is a known gap (no retention automation).
+        Subjects are advised to use the app-portability self-service tool to keep
+        a portable copy of their data **before** requesting erasure — the public
+        deletion page on healthdatasafe.org cross-links accordingly.
       detail: |
         Account deletion removes live events, attachments and audit rows
         engine-agnostically. Backup residue differs by engine and is bounded by
         the rotation policy. Erasure here is caller-triggered; automated
         retention deletion must be composed externally by the controller. The
-        operator backup/erasure procedure is available on request.
+        operator backup/erasure procedure is available on request. The
+        operator-facing healthdatasafe.org `/users/data-deletion` page surfaces
+        the portability tool as the first step ("Before You Delete — Download a
+        Copy") so the subject's right to a copy under Art.20 is exercised
+        ahead of an irreversible erasure.
       regions: [ch, us]
       evidence:
+        docs:
+          - https://www.healthdatasafe.org/users/data-deletion
+          - https://demo-portability.datasafe.dev
+          - https://portability.hds.ngo
         internal_docs:
           - gdpr/procedures/data-subject-rights
           - gdpr/policies/data-retention
