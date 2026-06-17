@@ -13,6 +13,7 @@
     "build:all": "npm run validate && npm run build",
     "preview": "node scripts/preview.js",
     "site": "node scripts/site.js",
+    "deploy": "bash scripts/deploy.sh",
     "check:links": "node scripts/check-internal-links.js",
     "sync:pryv": "node scripts/sync-from-pryv.js",
     "test": "echo \"no script tests yet\" && exit 0",
