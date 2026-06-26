@@ -85,6 +85,7 @@ requirements:
 
   - ref: "4.2.4"
     title: Control of documents
+    qms_docs: [qms/pryv/02-procedures/document-control.md]
     text: |
       Documents required by the QMS shall be controlled — review,
       approval, identification of changes, current revision status,
@@ -124,6 +125,7 @@ requirements:
 
   - ref: "7.3.7"
     title: Design verification
+    qms_docs: [qms/pryv/02-procedures/design-control.md]
     text: |
       Design and development verification shall be performed to ensure
       design + development outputs have met the design + development

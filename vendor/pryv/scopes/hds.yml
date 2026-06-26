@@ -100,17 +100,21 @@ requirements:
     pryv_effort_saved: medium
     facilitation_mode: infrastructure
     draft: true
-    pryv_primitives: [backup-restore, encryption-at-rest-secrets, multi-core-mTLS]
+    pryv_primitives: [backup-restore, backup-payload-encryption, encryption-at-rest-secrets, multi-core-mTLS]
     overview: |
       Pryv contributes the
       backup primitive (`bin/backup.js` per-user backups + `--restore`).
       Multi-core cluster topology gives in-line Raft replication of
-      platform data; for health data backed up to an outsourced
-      location, the operator handles transport + retention + at-rest
-      encryption of the backup archive (LUKS / GPG / KMS-wrapped). The
-      "outsourced" element (separate physical location) is the
-      operator's responsibility; Pryv provides the backup-generation +
-      restoration primitives.
+      platform data. The backup tool can **encrypt its output on demand**
+      so plaintext PHI never touches the destination disk: a recipient
+      public key (RSA-OAEP-wrapped per-backup data key — the backup host
+      holds no decryption secret) or a passphrase, with per-file
+      authenticated AES-256-GCM. This covers backup-archive at-rest
+      encryption directly; the operator may still layer
+      LUKS / GPG / KMS at the volume level, and remains responsible for
+      key management, transport, retention, and the "outsourced"
+      (separate physical location) element. Pryv provides the
+      backup-generation, payload-encryption, and restoration primitives.
 
   - ref: Activity.6
     title: Activity 6 — Archival of health data

@@ -288,8 +288,8 @@ narrative recipe:
 > process registry is self-documented via `GET /accesses` +
 > audit log. The 12 platform defaults [list per the catalogue
 > above] satisfy Art.25(2) by-default settings; our deployment's
-> specific configuration [pointing at the post-Plan-60-A.9
-> effective-config endpoint per Q20] proves which defaults are
+> specific configuration [pointing at the planned effective-config
+> endpoint per Q20] proves which defaults are
 > in force."*
 
 ## Matrix encoding

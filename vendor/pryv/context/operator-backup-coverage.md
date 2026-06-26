@@ -20,47 +20,47 @@ Pryv has shipped **three** backup tools with non-overlapping audiences. Two are 
 
 ## Third tier — operator-hosted subject Web UI (`pryv-account-backup-webapp`)
 
-`pryv-account-backup-webapp` is the current sample web UI for subject-facing backups. Operator hosts the static bundle on their own domain; subjects log in via a web form, click **Start backup**, download a series of ZIP files. The webapp consumes the browser-isomorphic resource fetchers from `pryv-account-backup` v0.6.0+ (`api-resources`, `events-chunked`, `audit-as-events`, `accesses-history`) — no server-side runtime, deploy via `npm run build && copy dist/ to your web server's docroot`.
+`pryv-account-backup-webapp` is the current sample web UI for subject-facing backups. Operator hosts the static bundle on their own domain; subjects log in via a web form, click **Start backup**, download a series of ZIP files. The webapp consumes the browser-isomorphic resource fetchers from `pryv-account-backup` v0.7.0+ (`api-resources`, `events-chunked`, `audit-as-events`, `accesses-history`, `attachments`, `hf-data`, `webhooks-export`) — no server-side runtime, deploy via `npm run build && copy dist/ to your web server's docroot`.
 
-| | `pryv-account-backup-webapp` (Web UI tier, v0.6.0+) |
+| | `pryv-account-backup-webapp` (Web UI tier, v0.2.0 against library v0.7.0+) |
 |---|---|
 | Audience | end user (the subject) — no Node / CLI knowledge required |
-| Surface | static site bundled by esbuild; vanilla JS + vanilla CSS; ~150 LOC of orchestrator + UI; no backend |
+| Surface | static site bundled by esbuild; vanilla JS + vanilla CSS; ~350 LOC of orchestrator + UI; no backend |
 | Auth | subject's Pryv credentials submitted via the web form (operator's TLS); direct `Service.login` (no MFA handling — webapp directs MFA-enabled subjects at the CLI) |
 | Distribution | git-clone + `npm install && npm run build`; deploy `dist/` behind operator's HTTPS |
 | Compliance role | same as the CLI tier — GDPR Art.15 / Art.20 / §1798.110 / PIPEDA Principle 4.9 / Swiss nLPD Art.25 — with significantly lower subject-side friction (no clone / install / CLI run) |
-| Coverage caveat | webapp omits attachments / HFS series / webhooks / per-file sha256 manifest (CLI-only resources); for subjects whose disclosure needs these, use the CLI |
+| Coverage caveat | webapp omits **only** `manifest.json` (per-file sha256 tamper-evidence — auditor-facing, CLI-only by design). All read-side resources (attachments / HFS series / webhooks / events / audit / accesses + history / profile) are covered with feature parity from v0.7.0 / webapp v0.2.0. The webapp also produces a portable `sync-state.json` inside the final ZIP — the subject re-uploads it on the next visit for cross-browser / cross-device incremental |
 
 **Why it matters for the symmetry audit:**
 
 - This is the **most ergonomic** path for an actual DSAR — a subject who can't be expected to install Node or run a CLI can still self-serve.
 - It is **operator-hosted**, so it moves the "who runs the export" responsibility back to the operator while keeping the output bundle subject-portable.
-- It consumes the **same library code** the CLI consumes (browser-isomorphic resource fetchers from v0.6.0) — no drift category between flavors. When the library ships a new resource fetcher, the webapp inherits it for free.
+- It consumes the **same library code** the CLI consumes (browser-isomorphic resource fetchers from v0.7.0) — no drift category between flavors. The seven core fetchers all expose the same `(connection, writer, stateStore-or-array, options, cb, log)` shape; the orchestrator drives both flavors uniformly.
 
 **Operational guidance for implementers:**
 
 - If you need a self-serve DSAR for a non-technical subject population, the webapp repo is a production-ready scaffold — fork, rebrand CSS custom properties, redeploy.
 - The operator security note about `profile.mfa.recoveryCodes` applies — the recovery codes ride verbatim in `profile_private.json`. Treat the downloaded ZIPs as password-reset-equivalent secrets; consider rotating recovery codes after disclosure.
-- For subjects whose disclosure includes attachments, HFS series, webhooks, or an integrity manifest, route them at the CLI flavor.
+- Subjects who need third-party-auditor tamper-evidence (e.g. handing the bundle to an external compliance auditor) should still use the CLI flavor — only the CLI emits the per-file sha256 `manifest.json`.
 
 ### Historical tier (archived 2026-06-15) — `pryv/example-service-bluebutton`
 
 Operator-hosted Express service that wrapped `@pryv/account-backup` 1.0.x behind a Web UI. Last substantive release v1.2.0 on 2022-10-11. The public Pryv-operated instance at `https://bluebutton.pryv.me/` was dormant by 2026-06; the repo was archived on 2026-06-15 as part of the v0.6.0 ship and replaced by `pryv-account-backup-webapp`. Listed here for historical context — operators with existing bluebutton deployments should plan a migration to the new webapp.
 
-## Per-resource symmetry (v2 deployments; subject backup at v0.6.0)
+## Per-resource symmetry (v2 deployments; subject backup at v0.7.0)
 
-| Resource | Operator `bin/backup.js` | Subject `@pryv/account-backup` v0.5.0 | Notes |
+| Resource | Operator `bin/backup.js` | Subject `@pryv/account-backup` v0.7.0 (CLI + webapp) | Notes |
 |---|---|---|---|
 | streams | ✅ raw rows (`storageLayer.streams.exportAll`) | ✅ `/streams[?state=all]` | symmetric coverage; subject sees wire shape, operator sees row shape |
 | accesses (current) | ✅ raw rows | ✅ `/accesses` → `accesses.json` | wire format on subject side carries `clientData.cmc` for CMC counterparties (see CMC row) |
 | accesses (deletions + expired) | ✅ raw rows (`exportAll` includes soft-deleted) | ✅ **0.5.0+** `/accesses?includeDeletions=true&includeExpired=true` → `accesses-all.json` | adds `accessDeletions[]` array |
 | accesses (per-access history) | ✅ raw history rows | ✅ **0.5.0+** opt-in: `accesses-history/<accessId>.json` per access, fetched via `GET /accesses/<id>?includeHistory=true`. CLI prompts; off by default (O(N) calls) | symmetric coverage when the operator opts in |
 | profile (private + public + per-app) | ✅ raw rows | ✅ `/profile/private` + `/profile/public` + per-app `/profile/app` | symmetric |
-| webhooks | ✅ raw rows (no token replay risk on operator side) | ✅ per-access `/webhooks` aggregated to `webhooks.json` keyed by `accessId` | symmetric |
+| webhooks | ✅ raw rows (no token replay risk on operator side) | ✅ **CLI + webapp** (v0.7.0+): per-access `/webhooks` aggregated to `webhooks.json` keyed by `accessId` | symmetric, both flavors; expired (401/403) tokens skipped silently and non-fatally |
 | events | ✅ raw rows from events table (cross-user filter by `user_id`) | ✅ **0.5.0+** chunked monthly: `events-YYYY-MM.json` (one file per UTC month in the discovered range; probed via `limit=1` ascending + descending) | subject side avoids single-shot timeout at production scale |
-| attachments | ✅ binary stream from `eventFiles.getAttachmentStream(userId, eventId, fileId)` | ✅ opt-in binary stream from `GET /events/<id>/<attId>?readToken=…` | symmetric |
+| attachments | ✅ binary stream from `eventFiles.getAttachmentStream(userId, eventId, fileId)` | ✅ **CLI + webapp** (v0.7.0+): opt-in binary stream from `GET /events/<id>/<attId>?readToken=…` piped chunk-by-chunk through the `StorageWriter` | symmetric, both flavors |
 | audit | ✅ per-user audit store (`auditStorage.forUser(userId).exportAllEvents()`) | ✅ `GET /audit/logs?fromTime=…&toTime=…` → `audit_logs.json` | same data; audit-store is also exposed as streams under the `:_audit:` store prefix (e.g., `:_audit:access-<accessId>`) — both backups capture it via different paths |
-| HFS series data points | ✅ per-user series DB (`seriesConnection.exportDatabase(userId)`) | ✅ per-event `GET /events/<id>/series` → `hf-data/<eventId>.json` | symmetric |
+| HFS series data points | ✅ per-user series DB (`seriesConnection.exportDatabase(userId)`) | ✅ **CLI + webapp** (v0.7.0+): per-event `GET /events/<id>/series` → `hf-data/<eventId>.json` | symmetric, both flavors |
 | account / system-streams account-tree | ✅ raw rows from user-account storage | ✅ `/account` (the standard system-streams account tree) | symmetric for visible system streams |
 | MFA enrolment metadata | ✅ in private profile (`profile.mfa = { content, recoveryCodes }`) | ✅ already in `profile_private.json` (`profile.get` returns the full profile verbatim) | **fully exported on both sides**, including `content` (template substitutions — phone number, headers) and `recoveryCodes` (10 UUIDs that bypass the SMS challenge). **Operator security note:** the subject backup file is therefore as sensitive as a password reset link — implementer must transport over a secure channel and document destruction policy. Recovery codes can be rotated post-export by re-running activate-confirm |
 | CMC counterparty metadata | ✅ via `clientData.cmc.counterparty` + `clientData.cmc.apiEndpoint` on each shared access row | ✅ via `clientData.cmc.counterparty` + `clientData.cmc.apiEndpoint` on each shared access (passed through `composeWireAccess`) | **no gap** — federation counterparty `{username, host}` and back-channel `apiEndpoint` round-trip in both tools. Jurisdiction-per-host inference is the implementer's responsibility — no host-to-country registry in the API |

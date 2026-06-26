@@ -97,8 +97,8 @@ the auth UI surfaces by default.
 
 ## How `serviceInfo` propagates
 
-- Set in operator config (currently YAML; post-Plan-60 A.4 the
-  `service.*` keys migrate to PlatformDB so they're cluster-
+- Set in operator config (currently YAML; a planned change migrates the
+  `service.*` keys to PlatformDB so they're cluster-
   wide editable via admin panel).
 - Returned by `GET /service/info` on every core — every client
   reads it.
@@ -117,7 +117,7 @@ overlapping:
 | | `serviceInfo` (`GET /service/info`) | `access.clientData` |
 |---|---|---|
 | Scope | Deployment-wide | Per-access |
-| Operator surface | Core config (YAML / PlatformDB post-Plan-60) | Per-access at mint time |
+| Operator surface | Core config (YAML; PlatformDB once config moves out of YAML) | Per-access at mint time |
 | Audience | All clients + SDKs | The specific app holding the access |
 | Compliance role | Controller identity + DPO contact + ToS + privacy URLs | Per-processing-activity claims (lawful basis, special-category basis, transfer basis, etc.) |
 | Versioning | Global; changes via config + deploy | Per-access version chain (`?includeHistory=true`) |

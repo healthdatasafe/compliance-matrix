@@ -1,13 +1,15 @@
 # pryv-account-backup — DSAR coverage matrix
 
 **Status:** implementer reference + audit of `pryv-account-backup`
-**v0.6.0** (`@pryv/account-backup`) against GDPR Art.15 / Art.20, CCPA
+**v0.7.0** (`@pryv/account-backup`) against GDPR Art.15 / Art.20, CCPA
 §1798.110 / §1798.115, PIPEDA Principle 4.9, and Swiss nLPD Art.25.
 Originally recorded from the gap-probing session (Q10, 2026-05-20)
 against v0.2.3; refreshed 2026-05-27 (v0.4.0 DSAR-completeness),
-2026-06-13 (v0.5.0 chunked-events + accesses-completeness), and
+2026-06-13 (v0.5.0 chunked-events + accesses-completeness),
 2026-06-15 (v0.6.0 library + CLI split + incremental backup +
-audit-as-events + browser-isomorphic core + sample webapp).
+audit-as-events + browser-isomorphic core + sample webapp), and
+2026-06-15 (v0.7.0 attachments / HFS / webhooks browser-isomorphic +
+portable `sync-state.json` for browser cross-session incremental).
 
 > **Distribution note:** `@pryv/account-backup` is **not on the
 > npm registry** — distribution is git-clone-based per the
@@ -18,21 +20,26 @@ audit-as-events + browser-isomorphic core + sample webapp).
 
 ## TL;DR
 
-`pryv-account-backup` v0.6.0 is the recommended **CLI** tool to point a
-subject at when they file a DSAR. v0.6.0 introduces two big architectural
-shifts: (1) the resource fetchers are **browser-isomorphic** — the same
-modules drive the CLI and the new sample webapp
-[`pryv-account-backup-webapp`](https://github.com/pryv/pryv-account-backup-webapp);
-(2) backups are now **incremental** via `events.get?modifiedSince=T`
-(events + audit-as-events) so subsequent runs only carry the delta.
+`pryv-account-backup` v0.7.0 is the recommended subject-side tool for
+DSAR / portability requests. v0.6.0 → v0.7.0 finishes the
+browser-isomorphic story: the three remaining Node-only fetchers
+(attachments / HFS series / webhooks) are now `fetch` + `StorageWriter`
+modules drained from a per-category ref store, and the sample webapp
+[`pryv-account-backup-webapp`](https://github.com/pryv/pryv-account-backup-webapp)
+v0.2.0 exposes all three behind Advanced-section toggles. Both flavors
+now write a portable `sync-state.json` (kv-only snapshot) that drives
+cross-session incremental — the subject keeps it alongside the backup
+and re-supplies it on the next run (CLI auto-reads the backup directory;
+webapp accepts it as an upload on the login screen).
 
-The CLI bundle covers every read-side resource (audit log + HF series +
-webhooks + chunked / incremental events + revoked/expired accesses +
-opt-in per-access version history) plus a per-file sha256 integrity
-manifest. The webapp covers the read-side text resources only (no
-attachments / HFS / webhooks / sha256 manifest) — implementers with
-non-technical subject populations point them at the webapp; technical
-subjects use the CLI.
+**Coverage symmetry CLI ↔ webapp as of v0.7.0:** both flavors cover
+every read-side resource (account / streams / accesses + accesses-all /
+profile / audit log / events chunked-or-incremental / opt-in per-access
+version history / attachments / HFS series / webhooks). The only
+remaining CLI-only artefact is `manifest.json` (per-file sha256
+tamper-evidence) — a deliberate trade-off; the subject answering their
+own DSAR doesn't need third-party-auditor tamper-evidence, and the ZIP
+files the webapp emits are signed by the operator's TLS already.
 
 The operator-side companion is `bin/backup.js` shipped in `open-pryv.io`
 (raw-row disaster-recovery snapshot, not subject-portable); see
@@ -51,7 +58,7 @@ store streams (audit is a regular `@pryv/datastore` mounted there on
 every Pryv core), which continues to work post-removal AND supports
 `modifiedSince` for incremental fetches.
 
-## Per-data-type coverage (v2 deployments + pryv-account-backup v0.6.0)
+## Per-data-type coverage (v2 deployments + pryv-account-backup v0.7.0)
 
 | Pryv data type | In backup today | Notes |
 |---|---|---|
@@ -62,14 +69,15 @@ every Pryv core), which continues to work post-removal AND supports
 | streams tree | ✅ via `/streams` | including trashed when `?state=all` |
 | events (standard) — initial run | ✅ chunked monthly via `events-YYYY-MM.json` (v0.5.0) | one file per UTC month in the discovered event-time range; replaced the v0.4.0 single-shot fetch that wouldn't scale to GB datasets |
 | events (standard) — incremental run | ✅ `events-incremental-<TS>.json` via `events.get?modifiedSince=T&includeDeletions=true` (v0.6.0) | only events with `modified > T`; deletions included so deletion-aware restore consumers can reconstruct |
-| event attachments | ✅ CLI: opt-in, via `GET /events/<id>/<attId>?readToken=...` (streamed binary). ❌ webapp omits — multi-GB streaming concerns | use CLI for HFS / attachment-using subjects |
+| event attachments | ✅ **CLI + webapp** (v0.7.0+): opt-in toggle in both flavors, via `GET /events/<id>/<attId>?readToken=...` streamed chunk-by-chunk through the `StorageWriter`. Output at `attachments/<eventId>_<fileName>` (flat layout). | refs collected from the events stream via `events-chunked.onEvents` hook; drained by `attachments.download`; per-attachment `markDone` enables mid-run resume |
 | accesses (current) | ✅ via `/accesses` | |
 | access version history | ✅ **covered** (v0.5.0) | `accesses-all.json` for deletions + expired tokens; opt-in `accesses-history/<accessId>.json` per access via `?includeHistory=true` for the full per-access version chain |
 | CMC counterparty metadata | ✅ confirmed in `accesses.json` | `clientData.cmc.counterparty.{username,host}` + `clientData.cmc.apiEndpoint` ride through `composeWireAccess` on every shared access; jurisdiction-per-host is implementer-side (no host-to-country registry in the API) |
-| HF series data points (`series:*`) | ✅ CLI: via `GET /events/<id>/series` per series-event (shipped in v0.3.0; **regression fixed in v0.6.0** — see Fixed section below). ❌ webapp omits | |
-| webhooks | ✅ CLI: per-access via `/webhooks` (aggregated to `webhooks.json` keyed by accessId). ❌ webapp omits | |
+| HF series data points (`series:*`) | ✅ **CLI + webapp** (v0.7.0+): via `GET /events/<id>/series` per series-event (shipped in v0.3.0; regression fixed in v0.6.0; **webapp parity added in v0.7.0**). | series-event refs collected from the events stream via `events-chunked.onEvents` hook; drained by `hf-data.download` |
+| webhooks | ✅ **CLI + webapp** (v0.7.0+): per-access via `/webhooks` (aggregated to `webhooks.json` keyed by accessId). | webhook refs collected from the accesses fetch via `api-resources.onParsed` hook; drained by `webhooks-export.download`; 401/403 on expired tokens is non-fatal |
 | audit log | ✅ **v0.6.0+: via `events.get?streams=[':_audit:accesses',':_audit:actions']&modifiedSince=T`**. The dedicated `/audit/logs` route was removed from open-pryv.io on 2026-06-15 (commit `19d1c11f`); v0.5.0 and earlier are now production-broken for the audit-log section. Output filename `audit_logs.json` unchanged | supports `modifiedSince` for incremental delta |
-| per-file integrity manifest | ✅ CLI only: `manifest.json` (sha256 per file). ❌ webapp omits | `manifest.verify(rootDir)` available for tamper-detect on the CLI side |
+| per-file integrity manifest | ✅ CLI only: `manifest.json` (sha256 per file). ❌ webapp omits — deliberate trade-off | `manifest.verify(rootDir)` available for tamper-detect on the CLI side; webapp ZIPs are signed by the operator's TLS instead |
+| portable sync-state | ✅ **CLI + webapp** (v0.7.0+): `sync-state.json` written via the `StorageWriter` at run-end. Kv-only snapshot (`lastRunAt` + per-resource `lastModifiedSince` + tool/format version). | full schema: `pryv-account-backup/docs/sync-state.md`. CLI auto-reads on the next run; webapp accepts it as an upload on the login screen. Drives cross-session / cross-device incremental |
 | followed-slices | n/a | v0.3.0 dropped the v1-only `/followed-slices` fetch |
 | MFA enrolment metadata | ✅ **already covered** (re-verified during 0.5.0 audit) | `profile.mfa = { content, recoveryCodes }` lives in the user's private profile and `profile.get` returns the full profile verbatim, so `profile_private.json` carries MFA state today — including the 10 SMS-bypass recovery codes. **Operator security note:** treat the backup file as a secret on par with a password-reset link; consider rotating recovery codes after the disclosure. |
 
@@ -96,7 +104,7 @@ data + multi-attachment events without loss.
 |---|---|---|---|
 | (a) purposes | per-access `clientData.purpose` | `accesses.json` | ✅ |
 | (b) categories of data | event `class/format` (data-types) | derivable from `events.json` | ✅ implicit |
-| (c) recipients / disclosures | audit log (who accessed what when) + accesses + webhooks | `events.get?streams=[':_audit:*']` (v0.6.0; was `/audit/logs` in v0.4.0–v0.5.0) + `/accesses` + `/accesses?includeDeletions=true` + `/webhooks` | ✅ all four wired; webhooks CLI-only |
+| (c) recipients / disclosures | audit log (who accessed what when) + accesses + webhooks | `events.get?streams=[':_audit:*']` (v0.6.0; was `/audit/logs` in v0.4.0–v0.5.0) + `/accesses` + `/accesses?includeDeletions=true` + `/webhooks` | ✅ all four wired; **CLI + webapp** since v0.7.0 |
 | (d) retention period | per-access `clientData.retention` + `access.expires` | `accesses.json` | ✅ |
 | (e) rectification / erasure rights | nothing to export — these are operator obligations | n/a | ✅ (out of scope for export) |
 | (f) right to lodge complaint | nothing to export | n/a | ✅ (out of scope) |

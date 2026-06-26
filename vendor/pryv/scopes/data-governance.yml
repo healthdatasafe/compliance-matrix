@@ -1,0 +1,151 @@
+id: data-governance
+title: Data Governance (DAMA-DMBOK knowledge areas)
+short: Data Governance
+type: discipline
+jurisdiction: International (framework)
+version: DAMA-DMBOK 2 (framing) + ISO/IEC 38505-1
+version_date: "2017-07-01"
+canonical_url: https://www.dama.org/cpages/body-of-knowledge
+matrix_language: EN
+curated: false
+
+changelog:
+  - date: "2026-06-19"
+    change: |
+      Initial first-cut — first scope of type `discipline`. A discipline is
+      an organizational framework where Pryv contributes uniquely but no single
+      regulator owns the requirements. Maps the 11 DAMA-DMBOK knowledge areas;
+      the 5 areas where Pryv provides concrete primitives are authored
+      (facilitated), the remaining 6 are out-of-scope stubs (Pryv is a personal-
+      data store, not an enterprise data-management suite). Pryv contributes
+      the substrate; the governance program itself is the operator's (QMS).
+
+requirements:
+  # ── Areas where Pryv contributes (authored) ──────────────────────────
+  - ref: DG-01
+    title: Data Governance (framework / accountability)
+    coverage: facilitated
+    facilitation_mode: primitive
+    pryv_effort_saved: medium
+    pryv_primitives: [access, audit, CMC, system-streams]
+    qms_docs:
+      - qms/pryv/01-policies/quality-policy.md
+      - qms/pryv/01-policies/information-security-policy.md
+    overview: |
+      Pryv gives you the governance substrate — every datum is owned by a
+      user (per-user storage isolation), every privileged action is auditable,
+      and cross-organization sharing is consent-managed (CMC). What Pryv does
+      NOT give you is the governance *program*: the policies, stewardship
+      roles, decision rights and oversight cadence. Those are organizational —
+      start from the QMS templates and the ISO/IEC 38505 Evaluate-Direct-
+      Monitor model.
+    detail: |
+      ISO/IEC 38505-1 frames governance as accountability for the value, risk
+      and constraints of data. Pryv's primitives map to the "constraints"
+      pillar (ownership, access, audit); value and risk decisions remain the
+      governing body's. The matrix itself is a governance artefact — it makes
+      "which control covers which obligation" mechanical.
+
+  - ref: DG-04
+    title: Data Storage & Operations
+    coverage: facilitated
+    facilitation_mode: infrastructure
+    pryv_effort_saved: medium
+    pryv_primitives: [data-residency, backup-restore]
+    overview: |
+      Pryv stores each user's data in isolation, lets you choose the storage
+      engine (PostgreSQL or SQLite) and keep data in-region per core
+      (residency), and ships backup/restore primitives. Capacity planning,
+      SLAs, monitoring and the operational runbook are yours (see the QMS
+      backup-and-recovery + change procedures).
+
+  - ref: DG-05
+    title: Data Security
+    coverage: facilitated
+    facilitation_mode: primitive
+    pryv_effort_saved: high
+    pryv_primitives: [access, permissions, system-streams, audit]
+    qms_docs:
+      - qms/pryv/01-policies/information-security-policy.md
+    overview: |
+      This is Pryv's strongest data-governance contribution: scoped accesses,
+      per-stream permissions, privileged-data separation via system streams,
+      and an audit trail are the enforcement primitives. You still own the
+      classification-to-control policy (which streams are sensitive, who may
+      hold which access) — Pryv enforces the decisions you encode.
+    detail: |
+      Cross-references the regulation scopes: the same primitives back
+      gdpr.Art.32, iso-27001 Annex A.5/A.8 access-control rows, and
+      hipaa-security technical safeguards. Use those rows for the
+      requirement-level evidence.
+
+  - ref: DG-06
+    title: Data Integration & Interoperability
+    coverage: facilitated
+    facilitation_mode: primitive
+    pryv_effort_saved: medium
+    pryv_primitives: [CMC, webhooks, data-types]
+    overview: |
+      Pryv moves data between parties through consented channels — CMC for
+      controller-to-controller sharing with a consent record, webhooks for
+      event propagation, and a shared event-type catalogue (data-types) for
+      semantic interoperability. Pipeline orchestration, transformation
+      governance and data-contract management remain yours.
+
+  - ref: DG-10
+    title: Metadata Management
+    coverage: facilitated
+    facilitation_mode: storage
+    pryv_effort_saved: medium
+    pryv_primitives: [stream, clientData, data-types]
+    overview: |
+      Streams classify data into a navigable hierarchy, clientData carries
+      business metadata alongside each access/event, and the data-types
+      catalogue is a schema registry for event formats. The metadata
+      *management process* (curation, ownership, glossary upkeep) is yours.
+
+  # ── Areas where Pryv does not contribute software (out-of-scope stubs) ─
+  - ref: DG-02
+    title: Data Architecture
+    coverage: out-of-scope
+    overview: |
+      Enterprise data architecture (target-state models, data-flow design
+      across systems) is the operator's. Pryv is one component within it; its
+      per-core residency topology is described under DG-04, not here.
+
+  - ref: DG-03
+    title: Data Modeling & Design
+    coverage: out-of-scope
+    overview: |
+      Logical/physical data modelling is an operator design activity. Pryv's
+      event/stream model is fixed substrate, not a modelling tool.
+
+  - ref: DG-07
+    title: Document & Content Management
+    coverage: out-of-scope
+    overview: |
+      Pryv stores events and attachments, not a document-management system
+      (records lifecycle, content workflow, e-discovery). Out of software
+      scope here.
+
+  - ref: DG-08
+    title: Reference & Master Data Management
+    coverage: out-of-scope
+    overview: |
+      MDM (golden records, match/merge, reference-data distribution) is an
+      operator capability layered above Pryv, not provided by it.
+
+  - ref: DG-09
+    title: Data Warehousing & Business Intelligence
+    coverage: out-of-scope
+    overview: |
+      Analytics warehousing and BI are downstream of Pryv; the operator
+      builds them from exported/streamed data.
+
+  - ref: DG-11
+    title: Data Quality
+    coverage: out-of-scope
+    overview: |
+      Typed events (data-types) give light structural validation, but a data-
+      quality program (profiling, rules, remediation, scorecards) is the
+      operator's. Recorded as out-of-scope rather than overclaiming.

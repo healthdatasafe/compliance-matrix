@@ -196,13 +196,16 @@ requirements:
 
   - ref: Art.5
     title: Principles relating to processing of personal data
+    sample_apps: [scheduled-retention-job]
     text: |
       Lawfulness, fairness, transparency; purpose limitation; data
       minimisation; accuracy; storage limitation; integrity and
       confidentiality (security); accountability.
     coverage: implemented
     pryv_effort_saved: high
-    draft: true
+    draft: false
+    reviewed_by: Pryv compliance
+    reviewed_at: "2026-06-19"
     pryv_primitives: [access, permissions, clientData, stream, audit]
     functional_specs: [EVENT.BASE, STREAM.BASE]
     tests: [GLHP, UZEV]
@@ -390,13 +393,16 @@ requirements:
 
   - ref: Art.7
     title: Conditions for consent
+    sample_apps: [who-has-access-to-my-data, cross-account-share]
     text: |
       Where processing is based on consent, controller must be able to
       demonstrate consent. Request must be in intelligible form,
       withdrawable.
     coverage: implemented
     pryv_effort_saved: high
-    draft: true
+    draft: false
+    reviewed_by: Pryv compliance
+    reviewed_at: "2026-06-19"
     pryv_primitives: [access, permissions, clientData, CMC, event]
     docs: [guides/consent.md]
     tests: [AA01, ACCP, USAD]
@@ -695,6 +701,7 @@ requirements:
 
   - ref: Art.15
     title: Right of access by the data subject
+    sample_apps: [who-has-access-to-my-data]
     text: |
       Right to obtain confirmation, access, copy of personal data +
       supplementary information (purposes, recipients, retention, rights,
@@ -754,7 +761,9 @@ requirements:
       Right to have inaccurate personal data rectified without undue delay.
     coverage: implemented
     pryv_effort_saved: high
-    draft: true
+    draft: false
+    reviewed_by: Pryv compliance
+    reviewed_at: "2026-06-19"
     pryv_primitives: [event, audit]
     functional_specs: [EVENT.BASE]
     tests: [PTU1]
@@ -793,6 +802,7 @@ requirements:
 
   - ref: Art.17
     title: Right to erasure ("right to be forgotten")
+    sample_apps: [scheduled-retention-job]
     text: |
       Right to obtain erasure without undue delay where one of six
       conditions applies (no longer necessary, withdrawn consent, no
@@ -916,6 +926,7 @@ requirements:
 
   - ref: Art.20
     title: Right to data portability
+    sample_apps: [cross-account-share]
     text: |
       Right to receive personal data concerning subject in structured,
       commonly used, machine-readable format; right to transmit to
@@ -954,6 +965,18 @@ requirements:
       write-time validation — the implementer ensures schema
       alignment between transmitting + receiving operators when
       relying on §2 controller-to-controller transmission.
+
+      **Calendar interoperability (adapter):** beyond raw JSON, Pryv
+      data can be exposed in a ubiquitous interchange standard. The
+      calendar adapter serves selected events as an iCalendar
+      (RFC 5545) subscription feed any calendar client can read, and
+      ingests an external iCalendar feed back into Pryv as
+      `calendar/ical-event` events (well-known fields in structured
+      `content`, the verbatim VEVENT in `clientData._raw`). Adapters
+      are discoverable via the `/service/info` `adapters` field. This
+      widens portability from machine-readable JSON to a standard the
+      subject's existing tools already consume, lowering the
+      implementer's integration burden.
 
   - ref: Art.21
     title: Right to object
@@ -1382,7 +1405,9 @@ requirements:
       recipients, transfers, retention, security).
     coverage: implemented
     pryv_effort_saved: high
-    draft: true
+    draft: false
+    reviewed_by: Pryv compliance
+    reviewed_at: "2026-06-19"
     pryv_primitives: [access, clientData, audit, CMC, data-residency]
     docs: [customer-resources/audit-setup.md, guides/audit-logs.md]
     tests: [UZEV, TJ8S, AA01]
@@ -1441,7 +1466,7 @@ requirements:
     pryv_effort_saved: high
     facilitation_mode: infrastructure
     draft: true
-    pryv_primitives: [permissions, system-streams, letsEncrypt-integration, multi-core-mTLS, encryption-at-rest-secrets, backup-restore, MFA, data-residency]
+    pryv_primitives: [permissions, system-streams, letsEncrypt-integration, multi-core-mTLS, encryption-at-rest-user-data, encryption-at-rest-secrets, backup-restore, MFA, data-residency]
     planned:
       - kind: feature
         summary: "End-to-end encryption shifts encryption from Configurable infrastructure to a Pryv-managed primitive"
@@ -1466,12 +1491,6 @@ requirements:
         proposal: proposals/platformdb-at-rest-encryption.md
         backlog: PLATFORMDB-AT-REST-ENCRYPTION
         tracking_url: https://github.com/pryv/open-pryv.io/issues/79
-        impact: medium
-      - kind: feature
-        summary: "PlatformDB HMAC-pseudonymisation gives §1(a) pseudonymisation evidence at the PlatformDB layer; reduces cross-border PII exposure in multi-region clusters"
-        proposal: proposals/platformdb-pii-hashing.md
-        backlog: PLATFORMDB-PII-HASHING
-        tracking_url: https://github.com/pryv/open-pryv.io/issues/80
         impact: medium
       - kind: enhancement
         summary: "Published vulnerability disclosure program (security mailbox + PGP + GHSA + scope + SLA + safe harbor) strengthens §1(d) testing/effectiveness evidence; modernises today's bare SECURITY.md"
@@ -1507,10 +1526,17 @@ requirements:
         - Data residency: CONFIGURABLE — multi-hosting puts data where
           your subjects (or your policy) require, bounding exposure
           surface.
-        - Ability to ensure ongoing CIA (§1(b)): FACILITATED — multi-core
-          HA via rqlite cluster, health-checks, audit log.
+        - Ability to ensure ongoing availability + resilience (§1(b)):
+          FACILITATED — a multi-core rqlite cluster in which joining
+          cores register as non-voters by default, so adding or losing a
+          core can never cost the cluster its quorum or take an existing
+          core's control plane offline. Leader-failover HA is an explicit
+          operator topology choice (run ≥3 voters; two voters are
+          rejected as a fragile 2-of-2 quorum); health-checks + audit log
+          round out the ongoing-CIA evidence.
         - Restoration (§1(c)): IMPLEMENTED — `bin/backup.js --restore`
-          per-user.
+          per-user; single-node `peers.json` recovery restores cluster
+          availability after a quorum loss.
         - Regular testing (§1(d)): FILLED BY EXISTING PRIMITIVES +
           PARTIALLY MISSING on the vulnerability-intake side.
           **Existing evidence (citable today)**:
@@ -1913,9 +1939,10 @@ requirements:
       continuous cross-border transfer of personal data — an
       Art.46 mechanism (SCCs / BCRs / etc.) is legally required
       even though Tier-2 stays put. Mitigation options (filed as
-      backlog): at-rest encryption of PlatformDB
+      backlog or shipped): at-rest encryption of PlatformDB
       (`PLATFORMDB-AT-REST-ENCRYPTION`), HMAC-pseudonymisation
-      of PII at the PlatformDB layer (`PLATFORMDB-PII-HASHING`),
+      of PII at the PlatformDB layer (`PLATFORMDB-PII-HASHING`
+      — shipped, opt-in via `platform.piiMode: hashed`),
       tokenisation with per-region mapping table (option C —
       brainstorm-tier, not yet backlogged).
 
@@ -1994,7 +2021,8 @@ requirements:
          mechanism (SCCs, BCRs, etc.) WITH at-rest encryption
          (`PLATFORMDB-AT-REST-ENCRYPTION` backlog) AND
          PII pseudonymisation at the PlatformDB layer
-         (`PLATFORMDB-PII-HASHING` backlog).
+         (`PLATFORMDB-PII-HASHING` — shipped, opt-in via
+         `platform.piiMode: hashed`).
 
       3. **Subprocessor outbound** (SMTP / SMS / observability
          vendors). See `context/subprocessor-posture-and-data-

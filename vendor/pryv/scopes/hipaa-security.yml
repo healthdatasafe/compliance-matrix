@@ -412,10 +412,10 @@ requirements:
     text: |
       Implement a mechanism to encrypt and decrypt ePHI.
     coverage: configurable
-    pryv_effort_saved: medium
+    pryv_effort_saved: high
     draft: true
-    pryv_primitives: [encryption-at-rest-secrets, letsEncrypt-integration]
-    config_keys: [letsEncrypt.atRestKey, storages.engines.postgresql.ssl]
+    pryv_primitives: [encryption-at-rest-user-data, encryption-at-rest-secrets, letsEncrypt-integration]
+    config_keys: [CEV_ENABLED, letsEncrypt.atRestKey, storages.engines.postgresql.ssl]
     tests: [ACMEINT, BUNDLEENC, CERTUTILS]
     planned:
       - kind: feature
@@ -425,25 +425,40 @@ requirements:
         tracking_url: https://github.com/pryv/open-pryv.io/issues/34
         impact: medium
     overview: |
-      Pryv encrypts operator-supplied secrets at rest using AES-256-GCM
-      (HKDF-derived per-key), and provides TLS-in-transit via the
-      built-in ACME integration. For ePHI itself, the operator chooses
-      the storage engine and its at-rest encryption posture (filesystem
-      encryption, PG TDE, etc.) — Pryv does not encrypt event content
-      with a Pryv-managed key.
+      The "mechanism to encrypt and decrypt ePHI" is delivered as
+      switch-on Pryv software. User PHI/PII at rest (events,
+      attachments, series, audit, platform DB) is encrypted by the
+      `container-encrypted-volume` companion
+      (`encryption-at-rest-user-data`) — layered onto the image, it
+      mounts an encrypted volume on boot so the application stores
+      ciphertext at rest. The operator enables it (`CEV_ENABLED`) and
+      chooses a key source. Pryv additionally encrypts operator-supplied
+      secrets at rest (AES-256-GCM, HKDF-derived) and provides
+      TLS-in-transit via the built-in ACME integration.
     detail: |
-      The "Pryv-managed" at-rest encryption today protects platform
-      secrets — Let's Encrypt account keys, observability provider
-      tokens, cluster bootstrap bundles. **At-rest encryption of bulk
-      event data is voluntarily out of scope** for the Pryv layer: it
-      is the hosting provider's responsibility (LUKS, dm-crypt, PG TDE,
-      KMS-wrapped backup archives). Customer-managed encryption keys
-      (CMEK / BYOK) sit at the same infrastructure layer.
+      `container-encrypted-volume` (v0.1.0, shipped 2026-06-23) provisions
+      and mounts a LUKS-encrypted volume inside the container and points
+      the data roots at it — verified end-to-end (an event written through
+      the API is unreadable in the stopped container file). Pluggable
+      backend (LUKS reference + gocryptfs) and key provider (`env` /
+      `file` / `exec` / `clevis` for TPM2·Tang·PKCS#11 / `aws-kms`
+      envelope). With an identity-bound provider no copyable key is held;
+      key custody is intrinsic to the control, not a Pryv gap. Rotation
+      uses LUKS key-slots (no bulk re-encrypt). Volume encryption also
+      grounds the breach-notification safe harbor (NIST SP 800-111).
+      Coverage is `configurable` — Pryv's software performs the encryption
+      once enabled — a step above the operator-implements-it tier. Caveats:
+      an external PostgreSQL data dir and remote object storage (S3) are
+      outside the mount (encrypt operator-side / via bucket SSE); LUKS
+      needs `--privileged`. See `proposals/container-encrypted-volume.md`.
 
-      Longer-term direction: end-to-end encryption where the server
-      never holds plaintext — research direction tracked under
-      internal backlog slug `E2E-ENCRYPTION` (proxy re-encryption);
-      matrix-side notes + per-row impact in
+      The platform-secret at-rest encryption (Let's Encrypt account keys,
+      observability tokens, cluster bootstrap bundles) remains on by
+      default (`encryption-at-rest-secrets`).
+
+      Longer-term direction: end-to-end encryption where the server never
+      holds plaintext — research direction tracked under internal backlog
+      slug `E2E-ENCRYPTION` (proxy re-encryption); per-row impact in
       `proposals/e2e-encryption.md`.
     technical: |
       AES-256-GCM at-rest module: `open-pryv.io/components/business/src/acme/AtRestEncryption.js`.

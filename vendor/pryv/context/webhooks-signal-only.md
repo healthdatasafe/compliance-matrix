@@ -72,10 +72,38 @@ The following still apply:
   for any other read. All the GDPR Art.15 / §164.524 / §1798.100
   protections apply.
 
+## Scoped delivery — narrows the signal even further (2026-06)
+
+Webhooks (and socket.io real-time notifications) can now be filtered to
+**named scopes** — each an `events.get`-shaped query of one resource kind
+(`events` / `streams` / `accesses`). This strengthens the signal-only posture
+on two compliance-relevant axes:
+
+- **Still signal-only, even thinner.** The delivery carries only the **matched
+  scope key names** the subscriber itself chose (e.g. `"chat"`, `"diary"`) — no
+  ids, no content, not even which stream changed. A webhook learns "the slice you
+  named X changed", nothing more. The receiver still fetches via the authenticated
+  GET path. So every row above holds; the wire payload is now subscriber-opaque
+  names rather than a coarse marker.
+- **The change-detection oracle is bounded by permissions.** The one residual
+  concern under "What still matters" — that the *existence* of a signal leaks
+  change-detection on a private account — is narrowed: a scope is bound at
+  registration to what the subscribing token can read (the same permission +
+  recursive stream-expansion `events.get` performs), and an unreadable stream is
+  rejected. A scope can therefore never fire for data the token couldn't already
+  read. On access **narrowing**, out-of-permission scopes are pruned; on access
+  **revocation**, socket connections are dropped. So the oracle never exceeds the
+  token's existing read scope.
+
+This is a **data-minimisation** improvement (the receiver is woken only for the
+slices it declared, bounded by its grant) on top of the existing transmission-
+surface narrowing.
+
 ## Matrix rows that benefit from this framing
 
 | Scope | Row | Why this matters |
 |---|---|---|
+| gdpr | Art.5(1)(c) data minimisation | scoped delivery wakes the receiver only for the slices it declared interest in, bounded by its token's read scope; payload is subscriber-chosen key names only |
 | gdpr | Art.32 security of processing | webhooks are part of the transmission surface; signal-only design narrows the attack surface |
 | hipaa-security | 164.312(e)(1) transmission security | TLS-only delivery + no PHI in webhook body |
 | hipaa-security | 164.312(e)(2)(i) integrity controls | webhook bodies carry no PHI to require integrity |

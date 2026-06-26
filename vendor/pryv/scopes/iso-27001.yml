@@ -42,6 +42,7 @@ requirements:
 
   - ref: "6.1.2"
     title: Clause 6.1.2 — Information security risk assessment
+    qms_docs: [qms/pryv/02-procedures/risk-management.md]
     text: |
       Organization shall define and apply an information security risk
       assessment process that establishes and maintains criteria for
@@ -373,6 +374,7 @@ requirements:
 
   - ref: A.8.25
     title: A.8.25 — Secure development lifecycle
+    qms_docs: [qms/pryv/01-policies/software-development-lifecycle-policy.md]
     text: |
       Rules for the secure development of software and systems shall be
       established and applied.
@@ -391,6 +393,7 @@ requirements:
 
   - ref: A.8.32
     title: A.8.32 — Change management
+    qms_docs: [qms/pryv/02-procedures/change-control.md]
     text: |
       Changes to information processing facilities and information
       systems shall be subject to change-management procedures.
@@ -1304,6 +1307,7 @@ requirements:
 
   - ref: "10.2"
     title: Clause 10.2 — Nonconformity and corrective action
+    qms_docs: [qms/pryv/02-procedures/corrective-and-preventive-action.md]
     text: |
       When a nonconformity occurs, the organization shall react to
       the nonconformity + take action to control + correct it;

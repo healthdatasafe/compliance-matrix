@@ -192,8 +192,8 @@ operational concern.
 
 ## How to query the conventions for Art.30 register
 
-One operator-side script (or admin-panel surface, post-Plan-60)
-joins all of them into the operator's Art.30 register:
+One operator-side script (or, once admin-panel config management lands,
+an admin-panel surface) joins all of them into the operator's Art.30 register:
 
 ```bash
 curl https://core.example.com/accesses \
