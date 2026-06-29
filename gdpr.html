@@ -1579,12 +1579,15 @@ each controller.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="facilitated" data-personas="controller processor" data-text="art.32 security of processing hds implements transport encryption (tls), technical access control and
-per-user restore, and operates monitoring and alerting as operator.
-encryption at rest is a known gap at the application layer — it relies on
-operator/infrastructure controls rather than a platform primitive.
-pseudonymisation and data residency are facilitated/configurable.
-organisational testing and incident procedures remain the controller's.
+</article><article class="req" data-coverage="facilitated" data-personas="controller processor" data-text="art.32 security of processing hds implements transport encryption (tls), encryption at rest, technical
+access control and per-user restore, and operates monitoring and alerting as
+operator. encryption at rest is now in place in both regions via hosting-layer
+volume encryption (exoscale default on ch1; aws ebs on us1, aes-256) —
+provider-managed keys, verified 2026-06-26. pseudonymisation is strengthened:
+cross-region platformdb identifiers are hmac-pseudonymised
+(platform.piimode=hashed, cutover 2026-06-24). data residency is
+facilitated/configurable. organisational testing and incident procedures
+remain the controller's.
 ">
   <h3><code>Art.32</code> Security of processing <span class="draft">draft</span></h3>
   <p class="text">The controller and processor must implement appropriate technical and
@@ -1604,18 +1607,25 @@ response procedures) stay in your court.
     </div>
     <div class="layer hds">
       <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">CH</span><span class="rg">US</span></div>
-      <p>HDS implements transport encryption (TLS), technical access control and
-per-user restore, and operates monitoring and alerting as operator.
-Encryption at rest is a known gap at the application layer — it relies on
-operator/infrastructure controls rather than a platform primitive.
-Pseudonymisation and data residency are facilitated/configurable.
-Organisational testing and incident procedures remain the controller's.
+      <p>HDS implements transport encryption (TLS), encryption at rest, technical
+access control and per-user restore, and operates monitoring and alerting as
+operator. Encryption at rest is now in place in both regions via hosting-layer
+volume encryption (Exoscale default on ch1; AWS EBS on us1, AES-256) —
+provider-managed keys, verified 2026-06-26. Pseudonymisation is strengthened:
+cross-region PlatformDB identifiers are HMAC-pseudonymised
+(platform.piiMode=hashed, cutover 2026-06-24). Data residency is
+facilitated/configurable. Organisational testing and incident procedures
+remain the controller's.
 </p>
       <details><summary>detail</summary><p>Access control is enforced at every API call; transport is TLS; per-user
-restore is available. At-rest encryption of event content is not provided
-by the platform and is the standing gap noted in this matrix. HDS as
-operator runs CI test matrices and a monitored, alert-wired production
-environment; the controller runs its own organisational testing regime.
+restore is available. Event content is encrypted at rest on each core's
+volume (Exoscale hypervisor-layer encryption on ch1; AWS EBS on us1) — an
+Art.32(1)(a) measure; keys are provider-managed, so operator-held-key
+(container-encrypted-volume, CEV_ENABLED) or end-to-end encryption remain
+stronger options for the &quot;operator cannot read at rest&quot; property. Cross-region
+PlatformDB PII is HMAC-pseudonymised (platform.piiMode=hashed). HDS as operator
+runs CI test matrices and a monitored, alert-wired production environment; the
+controller runs its own organisational testing regime.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/encryption</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/policies/transmission-security</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/policies/access-control</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/risk/at-rest-encryption-gap</span> <span class="onreq">available on request</span></li></ul>
     </div>

@@ -34,7 +34,7 @@
     <h1>HIPAA Security Rule <span class="short">HIPAA-Security</span></h1>
     <p class="meta">regulation · US · 45 CFR Part 164 Subpart C (as amended through the HITECH 2013 Omnibus Final Rule) <span class="rg">US</span>
       · layered on Pryv <code>hipaa-security</code></p>
-    <div class="covbar"><span class="seg implemented" style="width:29.3%" title="implemented: 12"></span><span class="seg configurable" style="width:4.9%" title="configurable: 2"></span><span class="seg facilitated" style="width:34.1%" title="facilitated: 14"></span><span class="seg documented" style="width:31.7%" title="documented: 13"></span></div>
+    <div class="covbar"><span class="seg implemented" style="width:31.7%" title="implemented: 13"></span><span class="seg configurable" style="width:4.9%" title="configurable: 2"></span><span class="seg facilitated" style="width:31.7%" title="facilitated: 13"></span><span class="seg documented" style="width:31.7%" title="documented: 13"></span></div>
     
 <div class="filters">
   <input type="search" id="q" placeholder="Search requirements…" aria-label="search">
@@ -1460,11 +1460,15 @@ sessions and tokens.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.312(a)(2)(iv) encryption and decryption — addressable tls protects ephi in transit by default, but platform-managed at-rest
-encryption of bulk event data is not yet shipped. hds therefore facilitates
-this requirement at the infrastructure layer — applying provider-side at-rest
-encryption (volume/storage encryption) in the chosen hosting region — and
-documents the gap honestly rather than claiming it as implemented.
+</article><article class="req" data-coverage="implemented" data-personas="covered-entity business-associate individual" data-text="164.312(a)(2)(iv) encryption and decryption — addressable ephi is encrypted at rest in both hosting regions, and tls protects it in
+transit by default. each core's storage volume is encrypted at the hosting
+layer: exoscale encrypts compute root volumes by default (aes-256-xts,
+ch1/switzerland); aws ebs volume encryption is enabled on the us core
+(aes-256, us1). verified 2026-06-26. keys are provider-managed (aws / exoscale,
+both baa subprocessors) — this satisfies the addressable mechanism and grounds
+the §164.402(2) breach safe-harbor for lost/stolen media, but is not
+operator-held-key or end-to-end encryption (see hipaa/risk/at-rest-encryption-gap
+for the residual).
 ">
   <h3><code>164.312(a)(2)(iv)</code> Encryption and decryption — Addressable <span class="draft">draft</span></h3>
   <p class="text">Implement a mechanism to encrypt and decrypt ePHI.
@@ -1472,29 +1476,43 @@ documents the gap honestly rather than claiming it as implemented.
   <div class="layers">
     <div class="layer pryv">
       <div class="lh">Pryv platform <span class="b configurable">configurable</span></div>
-      <p>Pryv encrypts operator-supplied secrets at rest using AES-256-GCM
-(HKDF-derived per-key), and provides TLS-in-transit via the
-built-in ACME integration. For ePHI itself, the operator chooses
-the storage engine and its at-rest encryption posture (filesystem
-encryption, PG TDE, etc.) — Pryv does not encrypt event content
-with a Pryv-managed key.
+      <p>The &quot;mechanism to encrypt and decrypt ePHI&quot; is delivered as
+switch-on Pryv software. User PHI/PII at rest (events,
+attachments, series, audit, platform DB) is encrypted by the
+`container-encrypted-volume` companion
+(`encryption-at-rest-user-data`) — layered onto the image, it
+mounts an encrypted volume on boot so the application stores
+ciphertext at rest. The operator enables it (`CEV_ENABLED`) and
+chooses a key source. Pryv additionally encrypts operator-supplied
+secrets at rest (AES-256-GCM, HKDF-derived) and provides
+TLS-in-transit via the built-in ACME integration.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
-      <p>TLS protects ePHI in transit by default, but platform-managed at-rest
-encryption of bulk event data is not yet shipped. HDS therefore facilitates
-this requirement at the infrastructure layer — applying provider-side at-rest
-encryption (volume/storage encryption) in the chosen hosting region — and
-documents the gap honestly rather than claiming it as implemented.
+      <div class="lh">HDS <span class="b implemented">implemented</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <p>ePHI is encrypted at rest in both hosting regions, and TLS protects it in
+transit by default. Each core's storage volume is encrypted at the hosting
+layer: Exoscale encrypts compute root volumes by default (AES-256-XTS,
+ch1/Switzerland); AWS EBS volume encryption is enabled on the US core
+(AES-256, us1). Verified 2026-06-26. Keys are provider-managed (AWS / Exoscale,
+both BAA subprocessors) — this satisfies the addressable mechanism and grounds
+the §164.402(2) breach safe-harbor for lost/stolen media, but is not
+operator-held-key or end-to-end encryption (see hipaa/risk/at-rest-encryption-gap
+for the residual).
 </p>
-      <details><summary>detail</summary><p>This is a known gap and is stated plainly: the platform does not yet encrypt
-event content with a platform-managed key. HDS covers at-rest protection at
-the infrastructure layer using the hosting provider's storage/volume
-encryption in each region, and TLS covers the transmission half (see
-§164.312(e)). HDS documents the at-rest posture and the boundary it does not
-yet cover so implementers can assess residual risk and apply additional
-at-rest controls where their risk analysis requires.
+      <details><summary>detail</summary><p>Both production cores store ePHI on encrypted volumes. ch1 (Exoscale, ch-dk-2)
+runs on an Exoscale-encrypted root volume by default — &quot;Compute root volumes …
+encrypted at rest transparently at the hypervisor layer,&quot; AES-256 in XTS mode,
+Exoscale-managed keys. us1 (AWS us-east-1) stores ePHI on an encrypted EBS
+volume (AES-256, aws/ebs KMS key). Encryption/decryption is transparent to the
+guest; it protects
+stolen/decommissioned disks, off-host snapshots and backups, and grounds the
+breach safe-harbor (NIST SP 800-111 recognises full-volume encryption). TLS
+covers the transmission half (§164.312(e)). Residual: keys are provider-managed,
+so a running host or a compelled provider could read plaintext — operator-held-key
+encryption (the container-encrypted-volume facility, CEV_ENABLED, shipped in the
+open-pryv.io rc.5 encrypted image and LUKS-verified on HDS hosts) or end-to-end
+encryption remain optional strengthenings, not required for this addressable spec.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/encryption</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/risk/at-rest-encryption-gap</span> <span class="onreq">available on request</span></li></ul>
     </div>
@@ -1503,15 +1521,16 @@ at-rest controls where their risk analysis requires.
       <div class="persona">
         <strong>covered-entity</strong> <span class="b configurable">configurable</span>
         
-        <p>Assess the at-rest encryption gap in your own risk analysis; apply
-additional at-rest controls (e.g. application-side encryption of sensitive
-fields) where warranted, and document the addressable decision.
+        <p>HDS encrypts ePHI at rest with provider-managed keys. In your own risk
+analysis, decide whether that key model is sufficient or whether you need
+operator-held-key or application-side encryption of sensitive fields on top,
+and document the addressable decision.
 </p>
       </div><div class="persona">
         <strong>business-associate</strong> <span class="b configurable">configurable</span>
         
-        <p>Same — evaluate and, where needed, supplement at-rest encryption, and
-document the decision.
+        <p>Same — at-rest encryption is in place (provider-managed keys); evaluate
+whether to supplement it and document the decision.
 </p>
       </div><div class="persona">
         <strong>individual</strong> <span class="b out-of-scope">out-of-scope</span>
