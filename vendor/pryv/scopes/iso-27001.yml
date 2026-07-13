@@ -593,14 +593,7 @@ requirements:
     pryv_effort_saved: medium
     facilitation_mode: primitive
     draft: true
-    pryv_primitives: [stream, system-streams, event]
-    planned:
-      - kind: feature
-        summary: "auth.randomAlias masks the real username at the access layer (row could move F:Primitive → Configurable)"
-        proposal: proposals/aliases-as-pseudonymization-primitive.md
-        backlog: ALIASES
-        tracking_url: https://github.com/pryv/open-pryv.io/issues/38
-        impact: medium
+    pryv_primitives: [randomAlias, stream, system-streams, event]
     overview: |
       Pryv enforces masking by **projection**, not transformation:
       stream-level isolation + permission-scoped access tokens hide
@@ -618,7 +611,8 @@ requirements:
           design (storage layer stays deterministic; "partially
           redacted" is not an API response).
         - Username-side pseudonymisation is the one transformation
-          Pryv would do natively when `randomAlias` ships
+          Pryv does natively: `accesses.create {randomAlias:true}` mints
+          a routable `r-XXXXXXXX` alias that hides the username per access
           (`proposals/aliases-as-pseudonymization-primitive.md`).
         - Static masking for non-prod environments + field-level
           encryption at the schema layer are both implementer

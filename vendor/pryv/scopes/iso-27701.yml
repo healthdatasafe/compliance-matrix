@@ -244,17 +244,10 @@ requirements:
     coverage: configurable
     pryv_effort_saved: medium
     draft: true
-    pryv_primitives: [event, stream, backup-restore]
-    derives_from: [gdpr.Art.17, hipaa-security.164.310, ccpa.1798.105]
+    pryv_primitives: [event, stream, backup-restore, randomAlias]
+    derives_from: [gdpr.Art.17, gdpr.Art.4, hipaa-security.164.310, hipaa-privacy.164.514, ccpa.1798.105]
     config_keys: [storages.userAccountStorage.engine, user-account.delete]
     tests: [USAD]
-    planned:
-      - kind: feature
-        summary: "auth.randomAlias supplies a de-identification primitive alongside the deletion path"
-        proposal: proposals/aliases-as-pseudonymization-primitive.md
-        backlog: ALIASES
-        tracking_url: https://github.com/pryv/open-pryv.io/issues/38
-        impact: low
     overview: |
       Per-user deletion via `system.users.delete` (engine-dependent
       backup behaviour — same notes as GDPR Art. 17). Per-event /

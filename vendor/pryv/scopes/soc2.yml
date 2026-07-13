@@ -788,15 +788,9 @@ requirements:
     pryv_effort_saved: medium
     facilitation_mode: primitive
     draft: true
-    pryv_primitives: [stream, system-streams, event, permissions, clientData]
+    pryv_primitives: [stream, system-streams, event, permissions, clientData, randomAlias]
     derives_from: [iso-27001.A.5.12, iso-27001.A.8.11]
     planned:
-      - kind: feature
-        summary: "auth.randomAlias adds username-side pseudonymisation at the access layer, tightening the confidentiality posture"
-        proposal: proposals/aliases-as-pseudonymization-primitive.md
-        backlog: ALIASES
-        tracking_url: https://github.com/pryv/open-pryv.io/issues/38
-        impact: medium
       - kind: feature
         summary: "End-to-end (proxy re-encryption / BYOK) keeps confidential content opaque to the operator; the natural future confidentiality primitive"
         proposal: proposals/e2e-encryption.md

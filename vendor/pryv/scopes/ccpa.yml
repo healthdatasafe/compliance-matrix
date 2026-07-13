@@ -396,22 +396,18 @@ requirements:
     pryv_effort_saved: medium
     facilitation_mode: primitive
     draft: true
-    pryv_primitives: [stream, system-streams, event]
+    pryv_primitives: [stream, system-streams, event, randomAlias]
     derives_from: [ccpa.1798.121, gdpr.Art.9]
-    planned:
-      - kind: feature
-        summary: "auth.randomAlias enables an alias-only deployment pattern (don't store linkable identifiers alongside sensitive PI)"
-        proposal: proposals/aliases-as-pseudonymization-primitive.md
-        backlog: ALIASES
-        tracking_url: https://github.com/pryv/open-pryv.io/issues/38
-        impact: low
     overview: |
       Sensitive-PI enumeration
       drives stream-layout design — dedicate subtrees per sensitive
       category (`sensitive/health/`, `sensitive/precise-location/`,
       etc.) for clean §1798.121 limit-use enforcement. The
       classification of whether a specific event qualifies as
-      sensitive PI is editorial.
+      sensitive PI is editorial. An alias-only deployment pattern is now
+      available: issue accesses with `randomAlias:true` so counterparties
+      hold a routable `r-XXXXXXXX` alias instead of a linkable username,
+      keeping linkable identifiers off the sensitive-PI access path.
 
   - ref: "1798.155"
     title: Enforcement

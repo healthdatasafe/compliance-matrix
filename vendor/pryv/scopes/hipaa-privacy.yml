@@ -731,27 +731,23 @@ requirements:
       individual + the entity does not use / disclose the code for
       any other purpose.
     coverage: facilitated
-    pryv_effort_saved: low
-    facilitation_mode: storage
+    pryv_effort_saved: medium
+    facilitation_mode: primitive
     draft: true
-    pryv_primitives: [stream, system-streams, access, clientData]
+    pryv_primitives: [randomAlias, stream, system-streams, access, clientData]
     derives_from: [hipaa-privacy.164.514(a)]
-    planned:
-      - kind: feature
-        summary: "auth.randomAlias IS the re-identification code (random by construction → satisfies §514(c)(1)(ii))"
-        proposal: proposals/aliases-as-pseudonymization-primitive.md
-        backlog: ALIASES
-        tracking_url: https://github.com/pryv/open-pryv.io/issues/38
-        impact: medium
     overview: |
-      When re-identification is a
-      workflow requirement, the code-to-PHI mapping is a tightly
-      scoped resource: keep it on a dedicated `re-id-map/*` system-
+      `accesses.create {randomAlias:true}` provides the re-identification
+      code directly: it mints a platform-unique `r-XXXXXXXX` alias that is
+      random by construction (does not encode PHI), so it satisfies
+      §514(c)(1)(ii) out of the box. The platform holds the alias-to-user
+      mapping and the aliased access exposes only the alias — the covered
+      entity re-identifies by resolving the alias, and the code is used for
+      no other purpose. When the workflow instead needs an explicit
+      code-to-PHI map, keep it on a dedicated `re-id-map/*` system-
       stream-adjacent subtree with access permitted only to the
-      re-identification administrator role. The code generation
-      method (random / hash-of-non-PHI) must not encode PHI per
-      §514(c)(1)(ii) — that's an editorial requirement on the
-      implementer.
+      re-identification administrator role; the code generation method
+      (random / hash-of-non-PHI) must not encode PHI per §514(c)(1)(ii).
 
   - ref: 164.528(b)
     title: Accounting of disclosures — Implementation specifications

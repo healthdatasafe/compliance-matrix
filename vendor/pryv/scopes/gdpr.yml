@@ -156,14 +156,7 @@ requirements:
     pryv_effort_saved: medium
     facilitation_mode: awareness
     draft: true
-    pryv_primitives: [access, permissions, stream, event, system-streams]
-    planned:
-      - kind: feature
-        summary: "auth.randomAlias names pseudonymisation as a primitive (Art.4(5) maps to a concrete switch)"
-        proposal: proposals/aliases-as-pseudonymization-primitive.md
-        backlog: ALIASES
-        tracking_url: https://github.com/pryv/open-pryv.io/issues/38
-        impact: medium
+    pryv_primitives: [access, permissions, stream, event, system-streams, randomAlias]
     overview: |
       Article 4 defines GDPR
       vocabulary. Pryv's primitives map cleanly to most of these
@@ -184,7 +177,7 @@ requirements:
       | processing | any API call on `events.*` / `streams.*` / `accesses.*` (audit-recorded) |
       | filing system | N/A — Pryv is fully automated |
       | personal data breach | event/audit anomaly + post-mortem (see Art.33) |
-      | pseudonymisation | system-streams + custom event-type design |
+      | pseudonymisation | `accesses.create {randomAlias:true}` (platform-unique routable alias hides the username per access) + system-streams + custom event-type design |
       | profiling | application-side concern (out for Pryv) |
       | restriction of processing | scope-down via `accesses.update` (see Art.18) |
 
@@ -872,11 +865,11 @@ requirements:
           audit under a separate lawful basis (GDPR Art.17(3)(b)). The
           operator documents the retention in their DPIA.
         - `pseudonymise` — REFUSED AT BOOT by `config/plugins/config-
-          validation.js`. Depends on the not-yet-shipped
-          `auth.randomAlias` primitive (`proposals/aliases-as-
-          pseudonymization-primitive.md`); will compose with it once
-          ALIASES ships, for audit-row PII null-out while preserving
-          forensic value.
+          validation.js`. The `auth.randomAlias` primitive it builds on
+          has now shipped (`accesses.create {randomAlias:true}`); the
+          audit-row PII null-out mode itself (composing the alias into
+          audit records while preserving forensic value) is still the
+          outstanding piece before this mode can be enabled.
 
       SQLite-audit + `keep` mode known caveat: the parent
       `deleteAuditData` filesystem-wipe step still runs after
@@ -1466,7 +1459,7 @@ requirements:
     pryv_effort_saved: high
     facilitation_mode: infrastructure
     draft: true
-    pryv_primitives: [permissions, system-streams, letsEncrypt-integration, multi-core-mTLS, encryption-at-rest-user-data, encryption-at-rest-secrets, backup-restore, MFA, data-residency]
+    pryv_primitives: [permissions, system-streams, randomAlias, letsEncrypt-integration, multi-core-mTLS, encryption-at-rest-user-data, encryption-at-rest-secrets, backup-restore, MFA, data-residency]
     planned:
       - kind: feature
         summary: "End-to-end encryption shifts encryption from Configurable infrastructure to a Pryv-managed primitive"
@@ -1474,12 +1467,6 @@ requirements:
         backlog: E2E-ENCRYPTION
         tracking_url: https://github.com/pryv/open-pryv.io/issues/34
         impact: low
-      - kind: feature
-        summary: "auth.randomAlias would name pseudonymisation as a switch-on primitive at Art.32 §1(a)"
-        proposal: proposals/aliases-as-pseudonymization-primitive.md
-        backlog: ALIASES
-        tracking_url: https://github.com/pryv/open-pryv.io/issues/38
-        impact: medium
       - kind: feature
         summary: "Three-phase supply-chain scanning pipeline strengthens the §1(b)/(c) ongoing-CIA + integrity axis with concrete SCA + SBOM + signed-image evidence"
         proposal: proposals/supply-chain-scanning-pipeline.md
