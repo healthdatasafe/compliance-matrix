@@ -170,6 +170,45 @@ fs.writeFileSync(path.join(OUT, 'templates.html'), layout('Templates', `
   <div class="reqs">${tplCards}</div>
 `, { active: 'templates' }));
 
+// ---- external-law redirect stubs (indirection layer) ----
+// Reads official-refs.yml (repo root) and emits one stub per citation at
+// /ref/<scope>/<slug>.html that forwards to the official text. Documents link
+// to these stubs, so an official URL move is a one-file edit here, not a sweep.
+const refSlug = (ref) =>
+  ref.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+const refsFile = path.join(ROOT, 'official-refs.yml');
+if (fs.existsSync(refsFile)) {
+  const { refs: refMap = {} } = loadYaml(refsFile) || {};
+  let n = 0;
+  for (const [key, entry] of Object.entries(refMap)) {
+    const dot = key.indexOf('.');
+    const scope = key.slice(0, dot);
+    const ref = key.slice(dot + 1);
+    const dir = path.join(OUT, 'ref', scope);
+    fs.mkdirSync(dir, { recursive: true });
+    const url = entry.url;
+    const label = entry.label || key;
+    const source = entry.source || 'official source';
+    fs.writeFileSync(path.join(dir, `${refSlug(ref)}.html`),
+`<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="refresh" content="0; url=${esc(url)}">
+<meta name="robots" content="noindex">
+<link rel="canonical" href="${esc(url)}">
+<title>${esc(label)} — official text</title>
+</head><body style="font-family:system-ui,-apple-system,sans-serif;max-width:40rem;margin:4rem auto;padding:0 1.25rem;line-height:1.6;color:#111827;">
+<p>Redirecting to the official text of <strong>${esc(label)}</strong>…</p>
+<p>If you are not redirected automatically, open it here:<br><a href="${esc(url)}">${esc(url)}</a></p>
+<p style="color:#6b7280;font-size:.85rem;margin-top:2rem;">Source: ${esc(source)}. This is a stable HDS redirect: the official location can be updated centrally in <code>official-refs.yml</code> without changing any citing document.</p>
+</body></html>
+`);
+    n++;
+  }
+  console.log(`[OK]   wrote ${n} external-law redirect stub(s) under ref/`);
+}
+
 // ---- styles + CNAME ----
 fs.writeFileSync(path.join(OUT, 'styles.css'), STYLES());
 fs.writeFileSync(path.join(OUT, 'CNAME'), DOMAIN + '\n');

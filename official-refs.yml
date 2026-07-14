@@ -1,0 +1,453 @@
+# official-refs.yml — external-law citation -> official-text redirect map.
+#
+# INDIRECTION LAYER: documents (in compliance-internal and this matrix) link to
+# a generated stub at /ref/<scope>/<slug>.html; the stub forwards to the official
+# text below. When an official URL moves, edit it HERE and redeploy — every citing
+# document is corrected at once, with no edit to the documents themselves.
+#
+# Keyed by <scope>.<ref>. `source` names where the URL points (swap centrally).
+# Generated from the distinct citations in the HDS document set; law refs are public.
+# HIPAA -> eCFR (official current 45 CFR). GDPR -> gdpr-info.eu (stable per-article
+# reference; swap to EUR-Lex here if an official OJ link is preferred).
+
+refs:
+  "hipaa-security.164.308(a)(1)":
+    url: "https://www.ecfr.gov/current/title-45/section-164.308#p-164.308(a)(1)"
+    label: "45 CFR §164.308(a)(1)"
+    source: eCFR
+  "hipaa-security.164.308(a)(1)(i)":
+    url: "https://www.ecfr.gov/current/title-45/section-164.308#p-164.308(a)(1)(i)"
+    label: "45 CFR §164.308(a)(1)(i)"
+    source: eCFR
+  "hipaa-security.164.308(a)(1)(ii)(A)":
+    url: "https://www.ecfr.gov/current/title-45/section-164.308#p-164.308(a)(1)(ii)(A)"
+    label: "45 CFR §164.308(a)(1)(ii)(A)"
+    source: eCFR
+  "hipaa-security.164.308(a)(1)(ii)(B)":
+    url: "https://www.ecfr.gov/current/title-45/section-164.308#p-164.308(a)(1)(ii)(B)"
+    label: "45 CFR §164.308(a)(1)(ii)(B)"
+    source: eCFR
+  "hipaa-security.164.308(a)(1)(ii)(C)":
+    url: "https://www.ecfr.gov/current/title-45/section-164.308#p-164.308(a)(1)(ii)(C)"
+    label: "45 CFR §164.308(a)(1)(ii)(C)"
+    source: eCFR
+  "hipaa-security.164.308(a)(1)(ii)(D)":
+    url: "https://www.ecfr.gov/current/title-45/section-164.308#p-164.308(a)(1)(ii)(D)"
+    label: "45 CFR §164.308(a)(1)(ii)(D)"
+    source: eCFR
+  "hipaa-security.164.308(a)(2)":
+    url: "https://www.ecfr.gov/current/title-45/section-164.308#p-164.308(a)(2)"
+    label: "45 CFR §164.308(a)(2)"
+    source: eCFR
+  "hipaa-security.164.308(a)(3)(ii)(C)":
+    url: "https://www.ecfr.gov/current/title-45/section-164.308#p-164.308(a)(3)(ii)(C)"
+    label: "45 CFR §164.308(a)(3)(ii)(C)"
+    source: eCFR
+  "hipaa-security.164.308(a)(4)(ii)(B)":
+    url: "https://www.ecfr.gov/current/title-45/section-164.308#p-164.308(a)(4)(ii)(B)"
+    label: "45 CFR §164.308(a)(4)(ii)(B)"
+    source: eCFR
+  "hipaa-security.164.308(a)(4)(ii)(C)":
+    url: "https://www.ecfr.gov/current/title-45/section-164.308#p-164.308(a)(4)(ii)(C)"
+    label: "45 CFR §164.308(a)(4)(ii)(C)"
+    source: eCFR
+  "hipaa-security.164.308(a)(5)(i)":
+    url: "https://www.ecfr.gov/current/title-45/section-164.308#p-164.308(a)(5)(i)"
+    label: "45 CFR §164.308(a)(5)(i)"
+    source: eCFR
+  "hipaa-security.164.308(a)(5)(ii)(A)":
+    url: "https://www.ecfr.gov/current/title-45/section-164.308#p-164.308(a)(5)(ii)(A)"
+    label: "45 CFR §164.308(a)(5)(ii)(A)"
+    source: eCFR
+  "hipaa-security.164.308(a)(6)(ii)":
+    url: "https://www.ecfr.gov/current/title-45/section-164.308#p-164.308(a)(6)(ii)"
+    label: "45 CFR §164.308(a)(6)(ii)"
+    source: eCFR
+  "hipaa-security.164.308(a)(7)":
+    url: "https://www.ecfr.gov/current/title-45/section-164.308#p-164.308(a)(7)"
+    label: "45 CFR §164.308(a)(7)"
+    source: eCFR
+  "hipaa-security.164.308(a)(7)(i)":
+    url: "https://www.ecfr.gov/current/title-45/section-164.308#p-164.308(a)(7)(i)"
+    label: "45 CFR §164.308(a)(7)(i)"
+    source: eCFR
+  "hipaa-security.164.308(a)(7)(ii)(A)":
+    url: "https://www.ecfr.gov/current/title-45/section-164.308#p-164.308(a)(7)(ii)(A)"
+    label: "45 CFR §164.308(a)(7)(ii)(A)"
+    source: eCFR
+  "hipaa-security.164.308(a)(7)(ii)(B)":
+    url: "https://www.ecfr.gov/current/title-45/section-164.308#p-164.308(a)(7)(ii)(B)"
+    label: "45 CFR §164.308(a)(7)(ii)(B)"
+    source: eCFR
+  "hipaa-security.164.308(a)(7)(ii)(C)":
+    url: "https://www.ecfr.gov/current/title-45/section-164.308#p-164.308(a)(7)(ii)(C)"
+    label: "45 CFR §164.308(a)(7)(ii)(C)"
+    source: eCFR
+  "hipaa-security.164.308(a)(7)(ii)(D)":
+    url: "https://www.ecfr.gov/current/title-45/section-164.308#p-164.308(a)(7)(ii)(D)"
+    label: "45 CFR §164.308(a)(7)(ii)(D)"
+    source: eCFR
+  "hipaa-security.164.308(b)":
+    url: "https://www.ecfr.gov/current/title-45/section-164.308#p-164.308(b)"
+    label: "45 CFR §164.308(b)"
+    source: eCFR
+  "hipaa-security.164.312(a)":
+    url: "https://www.ecfr.gov/current/title-45/section-164.312#p-164.312(a)"
+    label: "45 CFR §164.312(a)"
+    source: eCFR
+  "hipaa-security.164.312(a)(1)":
+    url: "https://www.ecfr.gov/current/title-45/section-164.312#p-164.312(a)(1)"
+    label: "45 CFR §164.312(a)(1)"
+    source: eCFR
+  "hipaa-security.164.312(a)(2)(i)":
+    url: "https://www.ecfr.gov/current/title-45/section-164.312#p-164.312(a)(2)(i)"
+    label: "45 CFR §164.312(a)(2)(i)"
+    source: eCFR
+  "hipaa-security.164.312(a)(2)(ii)":
+    url: "https://www.ecfr.gov/current/title-45/section-164.312#p-164.312(a)(2)(ii)"
+    label: "45 CFR §164.312(a)(2)(ii)"
+    source: eCFR
+  "hipaa-security.164.312(a)(2)(iii)":
+    url: "https://www.ecfr.gov/current/title-45/section-164.312#p-164.312(a)(2)(iii)"
+    label: "45 CFR §164.312(a)(2)(iii)"
+    source: eCFR
+  "hipaa-security.164.312(a)(2)(iv)":
+    url: "https://www.ecfr.gov/current/title-45/section-164.312#p-164.312(a)(2)(iv)"
+    label: "45 CFR §164.312(a)(2)(iv)"
+    source: eCFR
+  "hipaa-security.164.312(b)":
+    url: "https://www.ecfr.gov/current/title-45/section-164.312#p-164.312(b)"
+    label: "45 CFR §164.312(b)"
+    source: eCFR
+  "hipaa-security.164.312(c)":
+    url: "https://www.ecfr.gov/current/title-45/section-164.312#p-164.312(c)"
+    label: "45 CFR §164.312(c)"
+    source: eCFR
+  "hipaa-security.164.312(d)":
+    url: "https://www.ecfr.gov/current/title-45/section-164.312#p-164.312(d)"
+    label: "45 CFR §164.312(d)"
+    source: eCFR
+  "hipaa-security.164.312(e)(1)":
+    url: "https://www.ecfr.gov/current/title-45/section-164.312#p-164.312(e)(1)"
+    label: "45 CFR §164.312(e)(1)"
+    source: eCFR
+  "hipaa-security.164.312(e)(2)(i)":
+    url: "https://www.ecfr.gov/current/title-45/section-164.312#p-164.312(e)(2)(i)"
+    label: "45 CFR §164.312(e)(2)(i)"
+    source: eCFR
+  "hipaa-security.164.312(e)(2)(ii)":
+    url: "https://www.ecfr.gov/current/title-45/section-164.312#p-164.312(e)(2)(ii)"
+    label: "45 CFR §164.312(e)(2)(ii)"
+    source: eCFR
+  "hipaa-security.164.314(a)(2)(ii)":
+    url: "https://www.ecfr.gov/current/title-45/section-164.314#p-164.314(a)(2)(ii)"
+    label: "45 CFR §164.314(a)(2)(ii)"
+    source: eCFR
+  "hipaa-security.164.316(b)(1)":
+    url: "https://www.ecfr.gov/current/title-45/section-164.316#p-164.316(b)(1)"
+    label: "45 CFR §164.316(b)(1)"
+    source: eCFR
+  "hipaa-security.164.316(b)(2)(i)":
+    url: "https://www.ecfr.gov/current/title-45/section-164.316#p-164.316(b)(2)(i)"
+    label: "45 CFR §164.316(b)(2)(i)"
+    source: eCFR
+  "hipaa-security.164.316(b)(2)(iii)":
+    url: "https://www.ecfr.gov/current/title-45/section-164.316#p-164.316(b)(2)(iii)"
+    label: "45 CFR §164.316(b)(2)(iii)"
+    source: eCFR
+  "hipaa-breach.164.402":
+    url: "https://www.ecfr.gov/current/title-45/section-164.402"
+    label: "45 CFR §164.402"
+    source: eCFR
+  "hipaa-breach.164.402(1)":
+    url: "https://www.ecfr.gov/current/title-45/section-164.402#p-164.402(1)"
+    label: "45 CFR §164.402(1)"
+    source: eCFR
+  "hipaa-breach.164.402(2)":
+    url: "https://www.ecfr.gov/current/title-45/section-164.402#p-164.402(2)"
+    label: "45 CFR §164.402(2)"
+    source: eCFR
+  "hipaa-breach.164.404":
+    url: "https://www.ecfr.gov/current/title-45/section-164.404"
+    label: "45 CFR §164.404"
+    source: eCFR
+  "hipaa-breach.164.404(c)":
+    url: "https://www.ecfr.gov/current/title-45/section-164.404#p-164.404(c)"
+    label: "45 CFR §164.404(c)"
+    source: eCFR
+  "hipaa-breach.164.406":
+    url: "https://www.ecfr.gov/current/title-45/section-164.406"
+    label: "45 CFR §164.406"
+    source: eCFR
+  "hipaa-breach.164.408":
+    url: "https://www.ecfr.gov/current/title-45/section-164.408"
+    label: "45 CFR §164.408"
+    source: eCFR
+  "hipaa-breach.164.410":
+    url: "https://www.ecfr.gov/current/title-45/section-164.410"
+    label: "45 CFR §164.410"
+    source: eCFR
+  "hipaa-breach.164.410(b)":
+    url: "https://www.ecfr.gov/current/title-45/section-164.410#p-164.410(b)"
+    label: "45 CFR §164.410(b)"
+    source: eCFR
+  "hipaa-breach.164.410(c)":
+    url: "https://www.ecfr.gov/current/title-45/section-164.410#p-164.410(c)"
+    label: "45 CFR §164.410(c)"
+    source: eCFR
+  "hipaa-breach.164.412":
+    url: "https://www.ecfr.gov/current/title-45/section-164.412"
+    label: "45 CFR §164.412"
+    source: eCFR
+  "hipaa-breach.164.414":
+    url: "https://www.ecfr.gov/current/title-45/section-164.414"
+    label: "45 CFR §164.414"
+    source: eCFR
+  "hipaa-privacy.164.501":
+    url: "https://www.ecfr.gov/current/title-45/section-164.501"
+    label: "45 CFR §164.501"
+    source: eCFR
+  "hipaa-privacy.164.502":
+    url: "https://www.ecfr.gov/current/title-45/section-164.502"
+    label: "45 CFR §164.502"
+    source: eCFR
+  "hipaa-privacy.164.502(b)":
+    url: "https://www.ecfr.gov/current/title-45/section-164.502#p-164.502(b)"
+    label: "45 CFR §164.502(b)"
+    source: eCFR
+  "hipaa-privacy.164.502(e)":
+    url: "https://www.ecfr.gov/current/title-45/section-164.502#p-164.502(e)"
+    label: "45 CFR §164.502(e)"
+    source: eCFR
+  "hipaa-privacy.164.506":
+    url: "https://www.ecfr.gov/current/title-45/section-164.506"
+    label: "45 CFR §164.506"
+    source: eCFR
+  "hipaa-privacy.164.508":
+    url: "https://www.ecfr.gov/current/title-45/section-164.508"
+    label: "45 CFR §164.508"
+    source: eCFR
+  "hipaa-privacy.164.508(c)":
+    url: "https://www.ecfr.gov/current/title-45/section-164.508#p-164.508(c)"
+    label: "45 CFR §164.508(c)"
+    source: eCFR
+  "hipaa-privacy.164.510":
+    url: "https://www.ecfr.gov/current/title-45/section-164.510"
+    label: "45 CFR §164.510"
+    source: eCFR
+  "hipaa-privacy.164.510(b)":
+    url: "https://www.ecfr.gov/current/title-45/section-164.510#p-164.510(b)"
+    label: "45 CFR §164.510(b)"
+    source: eCFR
+  "hipaa-privacy.164.512":
+    url: "https://www.ecfr.gov/current/title-45/section-164.512"
+    label: "45 CFR §164.512"
+    source: eCFR
+  "hipaa-privacy.164.512(a)":
+    url: "https://www.ecfr.gov/current/title-45/section-164.512#p-164.512(a)"
+    label: "45 CFR §164.512(a)"
+    source: eCFR
+  "hipaa-privacy.164.512(b)":
+    url: "https://www.ecfr.gov/current/title-45/section-164.512#p-164.512(b)"
+    label: "45 CFR §164.512(b)"
+    source: eCFR
+  "hipaa-privacy.164.512(f)":
+    url: "https://www.ecfr.gov/current/title-45/section-164.512#p-164.512(f)"
+    label: "45 CFR §164.512(f)"
+    source: eCFR
+  "hipaa-privacy.164.514(a)":
+    url: "https://www.ecfr.gov/current/title-45/section-164.514#p-164.514(a)"
+    label: "45 CFR §164.514(a)"
+    source: eCFR
+  "hipaa-privacy.164.514(b)":
+    url: "https://www.ecfr.gov/current/title-45/section-164.514#p-164.514(b)"
+    label: "45 CFR §164.514(b)"
+    source: eCFR
+  "hipaa-privacy.164.514(c)":
+    url: "https://www.ecfr.gov/current/title-45/section-164.514#p-164.514(c)"
+    label: "45 CFR §164.514(c)"
+    source: eCFR
+  "hipaa-privacy.164.520":
+    url: "https://www.ecfr.gov/current/title-45/section-164.520"
+    label: "45 CFR §164.520"
+    source: eCFR
+  "hipaa-privacy.164.522":
+    url: "https://www.ecfr.gov/current/title-45/section-164.522"
+    label: "45 CFR §164.522"
+    source: eCFR
+  "hipaa-privacy.164.524":
+    url: "https://www.ecfr.gov/current/title-45/section-164.524"
+    label: "45 CFR §164.524"
+    source: eCFR
+  "hipaa-privacy.164.524(b)":
+    url: "https://www.ecfr.gov/current/title-45/section-164.524#p-164.524(b)"
+    label: "45 CFR §164.524(b)"
+    source: eCFR
+  "hipaa-privacy.164.524(c)":
+    url: "https://www.ecfr.gov/current/title-45/section-164.524#p-164.524(c)"
+    label: "45 CFR §164.524(c)"
+    source: eCFR
+  "hipaa-privacy.164.526":
+    url: "https://www.ecfr.gov/current/title-45/section-164.526"
+    label: "45 CFR §164.526"
+    source: eCFR
+  "hipaa-privacy.164.528":
+    url: "https://www.ecfr.gov/current/title-45/section-164.528"
+    label: "45 CFR §164.528"
+    source: eCFR
+  "hipaa-privacy.164.528(b)":
+    url: "https://www.ecfr.gov/current/title-45/section-164.528#p-164.528(b)"
+    label: "45 CFR §164.528(b)"
+    source: eCFR
+  "hipaa-privacy.164.530(a)":
+    url: "https://www.ecfr.gov/current/title-45/section-164.530#p-164.530(a)"
+    label: "45 CFR §164.530(a)"
+    source: eCFR
+  "hipaa-privacy.164.530(a)(1)":
+    url: "https://www.ecfr.gov/current/title-45/section-164.530#p-164.530(a)(1)"
+    label: "45 CFR §164.530(a)(1)"
+    source: eCFR
+  "hipaa-privacy.164.530(b)":
+    url: "https://www.ecfr.gov/current/title-45/section-164.530#p-164.530(b)"
+    label: "45 CFR §164.530(b)"
+    source: eCFR
+  "hipaa-privacy.164.530(c)":
+    url: "https://www.ecfr.gov/current/title-45/section-164.530#p-164.530(c)"
+    label: "45 CFR §164.530(c)"
+    source: eCFR
+  "hipaa-privacy.164.530(d)":
+    url: "https://www.ecfr.gov/current/title-45/section-164.530#p-164.530(d)"
+    label: "45 CFR §164.530(d)"
+    source: eCFR
+  "hipaa-privacy.164.530(e)":
+    url: "https://www.ecfr.gov/current/title-45/section-164.530#p-164.530(e)"
+    label: "45 CFR §164.530(e)"
+    source: eCFR
+  "hipaa-privacy.164.530(f)":
+    url: "https://www.ecfr.gov/current/title-45/section-164.530#p-164.530(f)"
+    label: "45 CFR §164.530(f)"
+    source: eCFR
+  "hipaa-privacy.164.530(g)":
+    url: "https://www.ecfr.gov/current/title-45/section-164.530#p-164.530(g)"
+    label: "45 CFR §164.530(g)"
+    source: eCFR
+  "hipaa-privacy.164.530(i)":
+    url: "https://www.ecfr.gov/current/title-45/section-164.530#p-164.530(i)"
+    label: "45 CFR §164.530(i)"
+    source: eCFR
+  "hipaa-privacy.164.530(j)":
+    url: "https://www.ecfr.gov/current/title-45/section-164.530#p-164.530(j)"
+    label: "45 CFR §164.530(j)"
+    source: eCFR
+  "gdpr.Art.12":
+    url: "https://gdpr-info.eu/art-12-gdpr/"
+    label: "GDPR Art.12"
+    source: gdpr-info.eu
+  "gdpr.Art.13":
+    url: "https://gdpr-info.eu/art-13-gdpr/"
+    label: "GDPR Art.13"
+    source: gdpr-info.eu
+  "gdpr.Art.14":
+    url: "https://gdpr-info.eu/art-14-gdpr/"
+    label: "GDPR Art.14"
+    source: gdpr-info.eu
+  "gdpr.Art.15":
+    url: "https://gdpr-info.eu/art-15-gdpr/"
+    label: "GDPR Art.15"
+    source: gdpr-info.eu
+  "gdpr.Art.16":
+    url: "https://gdpr-info.eu/art-16-gdpr/"
+    label: "GDPR Art.16"
+    source: gdpr-info.eu
+  "gdpr.Art.17":
+    url: "https://gdpr-info.eu/art-17-gdpr/"
+    label: "GDPR Art.17"
+    source: gdpr-info.eu
+  "gdpr.Art.18":
+    url: "https://gdpr-info.eu/art-18-gdpr/"
+    label: "GDPR Art.18"
+    source: gdpr-info.eu
+  "gdpr.Art.20":
+    url: "https://gdpr-info.eu/art-20-gdpr/"
+    label: "GDPR Art.20"
+    source: gdpr-info.eu
+  "gdpr.Art.21":
+    url: "https://gdpr-info.eu/art-21-gdpr/"
+    label: "GDPR Art.21"
+    source: gdpr-info.eu
+  "gdpr.Art.22":
+    url: "https://gdpr-info.eu/art-22-gdpr/"
+    label: "GDPR Art.22"
+    source: gdpr-info.eu
+  "gdpr.Art.24":
+    url: "https://gdpr-info.eu/art-24-gdpr/"
+    label: "GDPR Art.24"
+    source: gdpr-info.eu
+  "gdpr.Art.25":
+    url: "https://gdpr-info.eu/art-25-gdpr/"
+    label: "GDPR Art.25"
+    source: gdpr-info.eu
+  "gdpr.Art.28":
+    url: "https://gdpr-info.eu/art-28-gdpr/"
+    label: "GDPR Art.28"
+    source: gdpr-info.eu
+  "gdpr.Art.30":
+    url: "https://gdpr-info.eu/art-30-gdpr/"
+    label: "GDPR Art.30"
+    source: gdpr-info.eu
+  "gdpr.Art.32":
+    url: "https://gdpr-info.eu/art-32-gdpr/"
+    label: "GDPR Art.32"
+    source: gdpr-info.eu
+  "gdpr.Art.33":
+    url: "https://gdpr-info.eu/art-33-gdpr/"
+    label: "GDPR Art.33"
+    source: gdpr-info.eu
+  "gdpr.Art.34":
+    url: "https://gdpr-info.eu/art-34-gdpr/"
+    label: "GDPR Art.34"
+    source: gdpr-info.eu
+  "gdpr.Art.35":
+    url: "https://gdpr-info.eu/art-35-gdpr/"
+    label: "GDPR Art.35"
+    source: gdpr-info.eu
+  "gdpr.Art.37(1)":
+    url: "https://gdpr-info.eu/art-37-gdpr/"
+    label: "GDPR Art.37(1)"
+    source: gdpr-info.eu
+  "gdpr.Art.37–39":
+    url: "https://gdpr-info.eu/art-37-gdpr/"
+    label: "GDPR Art.37–39"
+    source: gdpr-info.eu
+  "gdpr.Art.44":
+    url: "https://gdpr-info.eu/art-44-gdpr/"
+    label: "GDPR Art.44"
+    source: gdpr-info.eu
+  "gdpr.Art.45":
+    url: "https://gdpr-info.eu/art-45-gdpr/"
+    label: "GDPR Art.45"
+    source: gdpr-info.eu
+  "gdpr.Art.46":
+    url: "https://gdpr-info.eu/art-46-gdpr/"
+    label: "GDPR Art.46"
+    source: gdpr-info.eu
+  "gdpr.Art.49":
+    url: "https://gdpr-info.eu/art-49-gdpr/"
+    label: "GDPR Art.49"
+    source: gdpr-info.eu
+  "gdpr.Art.5":
+    url: "https://gdpr-info.eu/art-5-gdpr/"
+    label: "GDPR Art.5"
+    source: gdpr-info.eu
+  "gdpr.Art.6":
+    url: "https://gdpr-info.eu/art-6-gdpr/"
+    label: "GDPR Art.6"
+    source: gdpr-info.eu
+  "gdpr.Art.7":
+    url: "https://gdpr-info.eu/art-7-gdpr/"
+    label: "GDPR Art.7"
+    source: gdpr-info.eu
+  "gdpr.Art.9":
+    url: "https://gdpr-info.eu/art-9-gdpr/"
+    label: "GDPR Art.9"
+    source: gdpr-info.eu
