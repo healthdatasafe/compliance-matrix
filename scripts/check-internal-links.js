@@ -8,7 +8,7 @@
  * repo, so this is NOT part of CI. Run it where both repos are checked out.
  *
  *   node scripts/check-internal-links.js
- *   INTERNAL_REPO=/path/to/compliance-internal/compliance-internal node scripts/check-internal-links.js
+ *   INTERNAL_REPO=/path/to/compliance-internal node scripts/check-internal-links.js
  *
  * Exit 0 if every cited code resolves; 1 if any are missing.
  */
@@ -17,12 +17,12 @@ import path from 'node:path';
 import { ROOT, loadYaml, hdsScopeFiles } from './lib/load.js';
 
 const INTERNAL = process.env.INTERNAL_REPO ||
-  path.resolve(ROOT, '../../compliance-internal/compliance-internal');
+  path.resolve(ROOT, '../compliance-internal');
 const DOCS_DIR = path.join(INTERNAL, 'src/content/documents');
 
 if (!fs.existsSync(DOCS_DIR)) {
   console.log(`[SKIP] compliance-internal not found at ${DOCS_DIR}`);
-  console.log('       set INTERNAL_REPO to the compliance-internal/compliance-internal path.');
+  console.log('       set INTERNAL_REPO to the compliance-internal path.');
   process.exit(0);
 }
 
