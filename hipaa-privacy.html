@@ -46,7 +46,7 @@
   </span>
   <span class="fcount" id="fcount"></span>
 </div>
-    <div class="reqs"><article class="req" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.502 uses and disclosures of phi — general rules on top of pryv's permission model, hds operates the platform that
+    <div class="reqs"><article class="req" id="req-164-502" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.502 uses and disclosures of phi — general rules on top of pryv's permission model, hds operates the platform that
 enforces it: as a business associate, hds uses or discloses phi only as
 its baa and the covered entity's instructions permit. the substantive
 determination of which uses are permitted remains the covered entity's.
@@ -104,7 +104,7 @@ instructions permit.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.506 uses and disclosures for treatment, payment, healthcare operations (tpo) hds provides the means to mint per-purpose accesses tagged with the tpo
+</article><article class="req" id="req-164-506" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.506 uses and disclosures for treatment, payment, healthcare operations (tpo) hds provides the means to mint per-purpose accesses tagged with the tpo
 purpose, each independently revocable and auditable. the classification
 of any given workflow as tpo is the covered entity's judgement, which hds
 carries forward into the audit trail.
@@ -159,7 +159,7 @@ accesses accordingly.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="facilitated" data-personas="covered-entity individual business-associate" data-text="164.508 uses and disclosures requiring authorization hds exposes consent primitives (the @pryv/cmc consent flow and access
+</article><article class="req" id="req-164-508" data-coverage="facilitated" data-personas="covered-entity individual business-associate" data-text="164.508 uses and disclosures requiring authorization hds exposes consent primitives (the @pryv/cmc consent flow and access
 grant) so the authorization captured when an individual grants an access
 is a versioned, immutable record binding the granted scope to the
 authorization text. withdrawal is a single api call.
@@ -217,7 +217,7 @@ is recorded.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="facilitated" data-personas="covered-entity individual" data-text="164.510 uses and disclosures requiring opportunity to agree or object hds provides durable storage for the offered choice and the individual's
+</article><article class="req" id="req-164-510" data-coverage="facilitated" data-personas="covered-entity individual" data-text="164.510 uses and disclosures requiring opportunity to agree or object hds provides durable storage for the offered choice and the individual's
 response as client-data on the relevant access or as a consent event, so
 the reasonable-inference standard rests on a record rather than
 recollection. the operational offer itself is the covered entity's.
@@ -266,7 +266,7 @@ response.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="facilitated" data-personas="covered-entity individual" data-text="164.512 uses and disclosures for which authorization or opportunity is not required hds contributes durability: every §164.512 disclosure still rides on an
+</article><article class="req" id="req-164-512" data-coverage="facilitated" data-personas="covered-entity individual" data-text="164.512 uses and disclosures for which authorization or opportunity is not required hds contributes durability: every §164.512 disclosure still rides on an
 access and is captured in the audit log, and the §512 category and
 rationale can be recorded against the access. whether a disclosure
 qualifies is the covered entity's legal determination.
@@ -317,7 +317,7 @@ category and statutory basis.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="facilitated" data-personas="covered-entity individual" data-text="164.514(a) de-identification of phi hds stores whatever event content is written and lets identified and
+</article><article class="req" id="req-164-514-a" data-coverage="facilitated" data-personas="covered-entity individual" data-text="164.514(a) de-identification of phi hds stores whatever event content is written and lets identified and
 de-identified copies sit under separate permission scopes, simplifying
 §514(a) workflows. the de-identification determination and transformation
 are the covered entity's.
@@ -366,7 +366,7 @@ retain the determination record.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.514(d) minimum necessary use, disclosure and requests per-stream, per-level access tokens are the minimum-necessary primitive
+</article><article class="req" id="req-164-514-d" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.514(d) minimum necessary use, disclosure and requests per-stream, per-level access tokens are the minimum-necessary primitive
 hds exposes: each access carries only the streams and levels its purpose
 needs, so by construction the holder cannot see more phi than granted.
 the granularity of &quot;minimum necessary&quot; follows the covered entity's
@@ -422,7 +422,7 @@ to the minimum necessary, and document the rationale.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="facilitated" data-personas="covered-entity individual" data-text="164.520 notice of privacy practices hds preserves the notice text shown to each individual, on the relevant
+</article><article class="req" id="req-164-520" data-coverage="facilitated" data-personas="covered-entity individual" data-text="164.520 notice of privacy practices hds preserves the notice text shown to each individual, on the relevant
 access client-data or as a dedicated event, so the exact words presented
 are recoverable per individual and per time. the notice content is the
 covered entity's editorial responsibility.
@@ -470,7 +470,7 @@ individuals as required.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="configurable" data-personas="covered-entity individual business-associate" data-text="164.522 right to request restriction; confidential communications a granted restriction is configured as a scope-down or revocation of the
+</article><article class="req" id="req-164-522" data-coverage="configurable" data-personas="covered-entity individual business-associate" data-text="164.522 right to request restriction; confidential communications a granted restriction is configured as a scope-down or revocation of the
 relevant access, and the access version chain proves what state was in
 force before and from when the restriction applies. confidential-
 communication preferences are stored as account client-data or a
@@ -528,7 +528,7 @@ which are recorded against your account.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="implemented" data-personas="individual covered-entity business-associate" data-text="164.524 right of access by the individual pryv is user-centric: the individual owns their data and, holding a
+</article><article class="req" id="req-164-524" data-coverage="implemented" data-personas="individual covered-entity business-associate" data-text="164.524 right of access by the individual pryv is user-centric: the individual owns their data and, holding a
 personal token, reads everything through the standard api — events,
 streams, accesses with history, audit records and attachments. hds
 operates this access capability end-to-end across both regions.
@@ -586,7 +586,7 @@ any requested non-native export format.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="facilitated" data-personas="covered-entity individual business-associate" data-text="164.526 right to amend hds exposes event update as the amendment primitive, with event
+</article><article class="req" id="req-164-526" data-coverage="facilitated" data-personas="covered-entity individual business-associate" data-text="164.526 right to amend hds exposes event update as the amendment primitive, with event
 versioning preserving prior content so the amendment trail is auditable.
 the §164.526 process of request, decision, action and notice is the
 covered entity's to run.
@@ -639,7 +639,7 @@ are preserved with version history.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="facilitated" data-personas="covered-entity individual business-associate" data-text="164.528 accounting of disclosures the audit log is the §164.528 substrate: every api method call attributed
+</article><article class="req" id="req-164-528" data-coverage="facilitated" data-personas="covered-entity individual business-associate" data-text="164.528 accounting of disclosures the audit log is the §164.528 substrate: every api method call attributed
 to an access and version is recorded, and filtering by access category
 lets the covered entity derive the accountable subset. six-year retention
 of the audit log is an hds-operated configuration on both regions.
@@ -697,7 +697,7 @@ disclosure record.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="documented" data-personas="covered-entity individual" data-text="164.530(a) privacy officer / contact person designation of a privacy official is the covered entity's organizational
+</article><article class="req" id="req-164-530-a" data-coverage="documented" data-personas="covered-entity individual" data-text="164.530(a) privacy officer / contact person designation of a privacy official is the covered entity's organizational
 decision. hds's contribution is indirect: the audit log gives that
 official a concrete artefact to review when investigating complaints or
 internal use. hds maintains its own privacy contact under its ba role.
@@ -742,7 +742,7 @@ programme element outside HDS's scope.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="documented" data-personas="covered-entity business-associate individual" data-text="164.530(b) training workforce privacy training is the covered entity's programme. hds trains
+</article><article class="req" id="req-164-530-b" data-coverage="documented" data-personas="covered-entity business-associate individual" data-text="164.530(b) training workforce privacy training is the covered entity's programme. hds trains
 its own workforce on its privacy and security policies as a business
 associate and retains the training records; the customer's programme is
 out of hds's scope.
@@ -795,7 +795,7 @@ records.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="facilitated" data-personas="covered-entity individual" data-text="164.530(c) safeguards section 530(c) points to the security rule and to physical and
+</article><article class="req" id="req-164-530-c" data-coverage="facilitated" data-personas="covered-entity individual" data-text="164.530(c) safeguards section 530(c) points to the security rule and to physical and
 administrative safeguards. hds supplies the technical and hosting
 safeguards documented in the hipaa-security scope — access control,
 audit, encryption in transit and at rest, regional residency — that
@@ -846,7 +846,7 @@ physical safeguards meet §530(c).
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.530(f) mitigation audit log and access version chain let the covered entity scope what was
+</article><article class="req" id="req-164-530-f" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.530(f) mitigation audit log and access version chain let the covered entity scope what was
 disclosed, to whom and when — the first step in any mitigation. hds
 provides access revocation and operates backup and restore should
 mitigation require rolling back data state.
@@ -901,7 +901,7 @@ BAA.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.502(b) minimum necessary uses, disclosures and requests per-stream permissions are the same minimum-necessary control as
+</article><article class="req" id="req-164-502-b" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.502(b) minimum necessary uses, disclosures and requests per-stream permissions are the same minimum-necessary control as
 §164.514(d): the holder cannot see more phi than the granted scope
 permits. the §502(b)(2) exceptions are programmatic, and the audit log
 records any broader access for accountability.
@@ -957,7 +957,7 @@ invoked.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.502(e)(1) disclosures to business associates hds offers a business associate agreement and the technical disclosure
+</article><article class="req" id="req-164-502-e-1" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.502(e)(1) disclosures to business associates hds offers a business associate agreement and the technical disclosure
 mechanism: a ba-specific access tagged with its role and contract
 reference, scoped to the subjects and streams the baa covers. hds itself
 signs a baa when it acts as the business associate.
@@ -1014,7 +1014,7 @@ scope their access to what the BAA covers.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="facilitated" data-personas="covered-entity individual" data-text="164.530(d) complaints to the covered entity hds provides the means to store each complaint as an event on a dedicated
+</article><article class="req" id="req-164-530-d" data-coverage="facilitated" data-personas="covered-entity individual" data-text="164.530(d) complaints to the covered entity hds provides the means to store each complaint as an event on a dedicated
 stream with a disposition field, and the audit log captures the timestamp
 and actor on each disposition update. the complaint-handling process is
 the covered entity's.
@@ -1063,7 +1063,7 @@ dispositions.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="documented" data-personas="covered-entity business-associate individual" data-text="164.530(e) sanctions sanctions are an hr and disciplinary process with no software role at the
+</article><article class="req" id="req-164-530-e" data-coverage="documented" data-personas="covered-entity business-associate individual" data-text="164.530(e) sanctions sanctions are an hr and disciplinary process with no software role at the
 decision layer. hds maintains its own workforce sanction policy as a
 business associate; the audit log supplies the underlying evidence that
 disciplinary processes evaluate.
@@ -1114,7 +1114,7 @@ enforcement.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="out-of-scope" data-personas="covered-entity individual" data-text="164.530(g) refraining from intimidating and retaliatory acts anti-retaliation is an organizational policy and culture commitment with
+</article><article class="req" id="req-164-530-g" data-coverage="out-of-scope" data-personas="covered-entity individual" data-text="164.530(g) refraining from intimidating and retaliatory acts anti-retaliation is an organizational policy and culture commitment with
 no software role. it rests entirely with the covered entity's programme.
 ">
   <h3><code>164.530(g)</code> Refraining from intimidating and retaliatory acts <span class="draft">draft</span></h3>
@@ -1153,7 +1153,7 @@ conduct obligation of the covered entity.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.530(i) policies and procedures as with the security rule's documentation requirement, hds provides the
+</article><article class="req" id="req-164-530-i" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.530(i) policies and procedures as with the security rule's documentation requirement, hds provides the
 means to hold policies as versioned, retained, audited data on a
 dedicated stream. the drafting, approval and review cycle is the privacy
 officer's, and hds maintains its own privacy policies as a ba.
@@ -1206,7 +1206,7 @@ procedures.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="facilitated" data-personas="covered-entity individual business-associate" data-text="164.510(b) disclosures for involvement in care and for notification purposes hds supports minting a time-bounded access for the involved person, with
+</article><article class="req" id="req-164-510-b" data-coverage="facilitated" data-personas="covered-entity individual business-associate" data-text="164.510(b) disclosures for involvement in care and for notification purposes hds supports minting a time-bounded access for the involved person, with
 permissions narrowed to the directly-relevant streams and client-data
 capturing the relationship and the §510(b) basis. the directly-relevant
 determination and relationship verification are clinical-workflow
@@ -1263,7 +1263,7 @@ the disclosure basis.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="facilitated" data-personas="covered-entity individual" data-text="164.512(b) uses and disclosures for public-health activities hds lets the recipient authority and statutory basis be recorded on the
+</article><article class="req" id="req-164-512-b" data-coverage="facilitated" data-personas="covered-entity individual" data-text="164.512(b) uses and disclosures for public-health activities hds lets the recipient authority and statutory basis be recorded on the
 access, and the audit log anchors the disclosure to a timestamp and event
 range. the authorized-by-law determination is the covered entity's legal
 judgement.
@@ -1312,7 +1312,7 @@ disclosure.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="facilitated" data-personas="covered-entity individual" data-text="164.512(f) uses and disclosures for law-enforcement purposes hds supports recording the §512(f) category as the law-enforcement basis
+</article><article class="req" id="req-164-512-f" data-coverage="facilitated" data-personas="covered-entity individual" data-text="164.512(f) uses and disclosures for law-enforcement purposes hds supports recording the §512(f) category as the law-enforcement basis
 on a per-instance access that is minted and revoked around the
 disclosure, with the audit log preserving the chain. whether the request
 qualifies under §512(f) is legal counsel's decision.
@@ -1361,7 +1361,7 @@ the basis.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="facilitated" data-personas="covered-entity individual business-associate" data-text="164.524(b) right of access — requests and responses hds supports storing each access request as an event on a dedicated
+</article><article class="req" id="req-164-524-b" data-coverage="facilitated" data-personas="covered-entity individual business-associate" data-text="164.524(b) right of access — requests and responses hds supports storing each access request as an event on a dedicated
 stream with a computed due date, so the 30/30-day cadence is trackable.
 the operational cadence and decision remain the covered entity's; for
 individuals who can self-authenticate, the app-portability self-service
@@ -1422,7 +1422,7 @@ partner-mediated path (covered entity intake → HDS-as-BA fulfilment).
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="implemented" data-personas="individual covered-entity business-associate" data-text="164.524(c) right of access — provision of access the hds-operated api delivers events in canonical json validated against
+</article><article class="req" id="req-164-524-c" data-coverage="implemented" data-personas="individual covered-entity business-associate" data-text="164.524(c) right of access — provision of access the hds-operated api delivers events in canonical json validated against
 the data-type schemas — readily producible in the §524(c) sense — across
 both regions. the app-portability self-service web app gives individuals
 a one-click zip download of their full phi dump; transformation to pdf
@@ -1481,7 +1481,7 @@ advance.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="facilitated" data-personas="covered-entity individual business-associate" data-text="164.502(g) personal representatives hds supports the representative holding an access to the individual's data
+</article><article class="req" id="req-164-502-g" data-coverage="facilitated" data-personas="covered-entity individual business-associate" data-text="164.502(g) personal representatives hds supports the representative holding an access to the individual's data
 with the appropriate scope — the technical &quot;treat as the individual&quot;
 permission — with the relationship and legal basis recorded as
 client-data. the abuse, neglect and endangerment exceptions are clinical
@@ -1541,7 +1541,7 @@ basis.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.512(a) uses and disclosures required by law required-by-law disclosures still ride on accesses, and hds lets the
+</article><article class="req" id="req-164-512-a" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.512(a) uses and disclosures required by law required-by-law disclosures still ride on accesses, and hds lets the
 statutory basis be recorded so the audit chain ties the disclosure to its
 legal authority. the compliance burden of the cited law is the covered
 entity's.
@@ -1593,7 +1593,7 @@ the basis.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="documented" data-personas="covered-entity individual" data-text="164.514(b) de-identification — implementation specifications the choice of method and its execution are application-side decisions of
+</article><article class="req" id="req-164-514-b" data-coverage="documented" data-personas="covered-entity individual" data-text="164.514(b) de-identification — implementation specifications the choice of method and its execution are application-side decisions of
 the covered entity. hds stores the output of either method as ordinary
 events on the de-identified streams and provides no de-identification
 determination of its own.
@@ -1639,7 +1639,7 @@ documentation.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="facilitated" data-personas="covered-entity individual" data-text="164.514(c) de-identification — re-identification when re-identification is needed, hds supports keeping the code-to-phi
+</article><article class="req" id="req-164-514-c" data-coverage="facilitated" data-personas="covered-entity individual" data-text="164.514(c) de-identification — re-identification when re-identification is needed, hds supports keeping the code-to-phi
 mapping as a tightly scoped resource reachable only by the
 re-identification administrator role. the code-generation method must not
 encode phi, which is the covered entity's editorial requirement.
@@ -1652,14 +1652,17 @@ individual and is not used or disclosed for any other purpose.
   <div class="layers">
     <div class="layer pryv">
       <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
-      <p>When re-identification is a
-workflow requirement, the code-to-PHI mapping is a tightly
-scoped resource: keep it on a dedicated `re-id-map/*` system-
+      <p>`accesses.create {randomAlias:true}` provides the re-identification
+code directly: it mints a platform-unique `r-XXXXXXXX` alias that is
+random by construction (does not encode PHI), so it satisfies
+§514(c)(1)(ii) out of the box. The platform holds the alias-to-user
+mapping and the aliased access exposes only the alias — the covered
+entity re-identifies by resolving the alias, and the code is used for
+no other purpose. When the workflow instead needs an explicit
+code-to-PHI map, keep it on a dedicated `re-id-map/*` system-
 stream-adjacent subtree with access permitted only to the
-re-identification administrator role. The code generation
-method (random / hash-of-non-PHI) must not encode PHI per
-§514(c)(1)(ii) — that's an editorial requirement on the
-implementer.
+re-identification administrator role; the code generation method
+(random / hash-of-non-PHI) must not encode PHI per §514(c)(1)(ii).
 </p>
     </div>
     <div class="layer hds">
@@ -1690,7 +1693,7 @@ re-identification.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="facilitated" data-personas="covered-entity individual business-associate" data-text="164.528(b) accounting of disclosures — implementation specifications each §528(b)(2) field has an audit-log source — date, recipient, phi
+</article><article class="req" id="req-164-528-b" data-coverage="facilitated" data-personas="covered-entity individual business-associate" data-text="164.528(b) accounting of disclosures — implementation specifications each §528(b)(2) field has an audit-log source — date, recipient, phi
 description and purpose — as mapped in the parent accounting row. hds
 operates the audit log that supplies these fields across both regions.
 the audit log is included verbatim in every app-portability backup
@@ -1752,7 +1755,7 @@ your records.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.504(e) organizational requirements — business associate contracts hds offers a baa template and the technical means to execute its terms: a
+</article><article class="req" id="req-164-504-e" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.504(e) organizational requirements — business associate contracts hds offers a baa template and the technical means to execute its terms: a
 business-associate access tagged with the contract reference and role,
 scoped to the covered subjects and streams, with full audit-log
 accountability. the contract content itself is contractual.
@@ -1808,7 +1811,7 @@ downstream processors.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="out-of-scope" data-personas="covered-entity individual" data-text="164.504(g) organizational requirements — group health plans group health plan and plan-sponsor arrangements are organizational and
+</article><article class="req" id="req-164-504-g" data-coverage="out-of-scope" data-personas="covered-entity individual" data-text="164.504(g) organizational requirements — group health plans group health plan and plan-sponsor arrangements are organizational and
 contractual, with no software role. hds provides no technical control
 specific to this requirement.
 ">
@@ -1850,7 +1853,7 @@ sponsor.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="out-of-scope" data-personas="covered-entity business-associate individual" data-text="164.502(j) disclosures by whistleblowers and workforce-member crime victims whistleblower protection is a legal framing with no software role. the
+</article><article class="req" id="req-164-502-j" data-coverage="out-of-scope" data-personas="covered-entity business-associate individual" data-text="164.502(j) disclosures by whistleblowers and workforce-member crime victims whistleblower protection is a legal framing with no software role. the
 audit-trail evidence of a disclosing person's access may be cited in
 subsequent proceedings, but hds provides no control specific to this
 requirement.

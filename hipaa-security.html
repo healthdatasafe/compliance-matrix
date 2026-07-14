@@ -46,7 +46,7 @@
   </span>
   <span class="fcount" id="fcount"></span>
 </div>
-    <div class="reqs"><article class="req" data-coverage="documented" data-personas="covered-entity business-associate individual" data-text="164.308(a)(1)(i) security management process — standard as an operator hds runs its own security-management programme over the
+    <div class="reqs"><article class="req" id="req-164-308-a-1-i" data-coverage="documented" data-personas="covered-entity business-associate individual" data-text="164.308(a)(1)(i) security management process — standard as an operator hds runs its own security-management programme over the
 open-pryv.io platform, covering the four required specifications below
 (risk analysis, risk management, sanction policy, activity review). the
 umbrella programme is documented internally and made available on request;
@@ -108,7 +108,7 @@ process, citing HDS substrate where it carries part of the control.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="implemented" data-personas="covered-entity business-associate individual" data-text="164.308(a)(1)(ii)(d) information system activity review — required on top of the platform's per-user audit log, hds operates the review
+</article><article class="req" id="req-164-308-a-1-ii-d" data-coverage="implemented" data-personas="covered-entity business-associate individual" data-text="164.308(a)(1)(ii)(d) information system activity review — required on top of the platform's per-user audit log, hds operates the review
 substrate: system-level activity is collected and monitored across both
 us and switzerland data-residency options, with alerting on crash,
 error-rate and silence conditions. the written review cadence remains the
@@ -167,7 +167,7 @@ process, drawing on the audit and monitoring substrate HDS exposes.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="documented" data-personas="covered-entity business-associate individual" data-text="164.308(a)(2) assigned security responsibility — standard hds designates a named security official accountable for its security
+</article><article class="req" id="req-164-308-a-2" data-coverage="documented" data-personas="covered-entity business-associate individual" data-text="164.308(a)(2) assigned security responsibility — standard hds designates a named security official accountable for its security
 programme over the platform; the designation is recorded internally and
 disclosed on request. each partner must designate their own official for
 their own programme.
@@ -218,7 +218,7 @@ partner running ePHI on HDS names their own security official.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="implemented" data-personas="covered-entity business-associate individual" data-text="164.308(a)(3)(ii)(c) termination procedures — addressable workforce access to ephi is mediated by platform access tokens with
+</article><article class="req" id="req-164-308-a-3-ii-c" data-coverage="implemented" data-personas="covered-entity business-associate individual" data-text="164.308(a)(3)(ii)(c) termination procedures — addressable workforce access to ephi is mediated by platform access tokens with
 granular per-stream permissions. termination is a single revocation that
 takes effect immediately, and the audit log records the termination
 instant; role changes narrow permissions without losing the version
@@ -276,7 +276,7 @@ process on HDS.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="implemented" data-personas="covered-entity business-associate individual" data-text="164.308(a)(4)(ii)(b) access authorization — addressable granting access to ephi on hds means minting an access token with explicit
+</article><article class="req" id="req-164-308-a-4-ii-b" data-coverage="implemented" data-personas="covered-entity business-associate individual" data-text="164.308(a)(4)(ii)(b) access authorization — addressable granting access to ephi on hds means minting an access token with explicit
 per-stream permissions, enforced at every api call. the authorization
 rationale can travel alongside the grant itself, so the &quot;why&quot; stays with
 the &quot;what&quot;.
@@ -330,7 +330,7 @@ rationale alongside each grant.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="implemented" data-personas="covered-entity business-associate individual" data-text="164.308(a)(4)(ii)(c) access establishment and modification — addressable the access lifecycle (create, read, review, update, revoke) is first-class
+</article><article class="req" id="req-164-308-a-4-ii-c" data-coverage="implemented" data-personas="covered-entity business-associate individual" data-text="164.308(a)(4)(ii)(c) access establishment and modification — addressable the access lifecycle (create, read, review, update, revoke) is first-class
 on the platform hds operates. every modification snapshots the prior
 version into history and is recorded in the audit log, giving the
 documented review trail this specification expects.
@@ -385,7 +385,7 @@ process on HDS.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.308(a)(5)(ii)(a) security reminders — addressable security-reminder cadence and content are an organisational awareness
+</article><article class="req" id="req-164-308-a-5-ii-a" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.308(a)(5)(ii)(a) security reminders — addressable security-reminder cadence and content are an organisational awareness
 control with no software role. hds runs reminders for its own workforce
 and documents the programme; the artefact is available on request but
 training delivery itself is not yet formalised as a verified programme.
@@ -435,7 +435,7 @@ workforce.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.308(a)(5)(ii)(b) protection from malicious software — addressable anti-malware is a host, endpoint and network-layer control rather than a
+</article><article class="req" id="req-164-308-a-5-ii-b" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.308(a)(5)(ii)(b) protection from malicious software — addressable anti-malware is a host, endpoint and network-layer control rather than a
 platform feature. hds operates malware protection and patching at the
 hosting layer for the environments it runs, documented internally; the
 partner's own endpoints remain the partner's responsibility.
@@ -489,7 +489,7 @@ outside HDS.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.308(a)(5)(ii)(c) log-in monitoring — addressable authentication and login-failure events are captured in the per-user
+</article><article class="req" id="req-164-308-a-5-ii-c" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.308(a)(5)(ii)(c) log-in monitoring — addressable authentication and login-failure events are captured in the per-user
 audit log, and hds's operational monitoring aggregates rate and anomaly
 signals across both data-residency options. discrepancy-reporting
 thresholds and the response cadence are operator-side procedure.
@@ -544,7 +544,7 @@ you operate.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="implemented" data-personas="covered-entity business-associate individual" data-text="164.308(a)(5)(ii)(d) password management — addressable the platform stores credentials on a privileged, separately controlled
+</article><article class="req" id="req-164-308-a-5-ii-d" data-coverage="implemented" data-personas="covered-entity business-associate individual" data-text="164.308(a)(5)(ii)(d) password management — addressable the platform stores credentials on a privileged, separately controlled
 namespace, and hds configures password rules and offers a second
 authentication factor on top. hds operates and documents the resulting
 password-management posture.
@@ -596,7 +596,7 @@ for your workforce.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="documented" data-personas="covered-entity business-associate individual" data-text="164.308(a)(6)(i) security incident procedures — standard hds runs an incident-response programme as operator: the audit log and
+</article><article class="req" id="req-164-308-a-6-i" data-coverage="documented" data-personas="covered-entity business-associate individual" data-text="164.308(a)(6)(i) security incident procedures — standard hds runs an incident-response programme as operator: the audit log and
 operational monitoring provide detection and scoping data, and access
 tokens provide the containment mechanism (revoke or narrow the implicated
 access). the written incident procedure is held internally and shared on
@@ -660,7 +660,7 @@ the covered entity per your BAA.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.308(a)(7)(ii)(a) data backup plan — required the platform produces per-user backup files (events, streams, accesses,
+</article><article class="req" id="req-164-308-a-7-ii-a" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.308(a)(7)(ii)(a) data backup plan — required the platform produces per-user backup files (events, streams, accesses,
 attachments) with a matching restore path, so the backup unit matches the
 natural ephi unit. hds operates a backup schedule on top; automated,
 regularly verified backups are still being formalised, so this is
@@ -715,7 +715,7 @@ confirm restorability.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="documented" data-personas="covered-entity business-associate individual" data-text="164.308(a)(7)(ii)(b) disaster recovery plan — required hds combines cold restore from per-user backups with hot redundancy from a
+</article><article class="req" id="req-164-308-a-7-ii-b" data-coverage="documented" data-personas="covered-entity business-associate individual" data-text="164.308(a)(7)(ii)(b) disaster recovery plan — required hds combines cold restore from per-user backups with hot redundancy from a
 replicated multi-core platform topology, composed to a recovery objective
 hds documents internally. the written disaster-recovery plan is available
 on request.
@@ -769,7 +769,7 @@ loss event.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="documented" data-personas="covered-entity business-associate individual" data-text="164.308(a)(7)(ii)(c) emergency mode operation plan — required the platform's high-availability primitives (replicated multi-core cluster
+</article><article class="req" id="req-164-308-a-7-ii-c" data-coverage="documented" data-personas="covered-entity business-associate individual" data-text="164.308(a)(7)(ii)(c) emergency mode operation plan — required the platform's high-availability primitives (replicated multi-core cluster
 with mutually authenticated inter-core traffic) support continued
 operation when a single facility fails. hds documents which processes are
 critical and the emergency-mode runbook it operates.
@@ -824,7 +824,7 @@ workload.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="documented" data-personas="covered-entity business-associate individual" data-text="164.308(a)(7)(ii)(d) testing and revision procedures — addressable contingency-plan testing is an operational drill whose restore phase
+</article><article class="req" id="req-164-308-a-7-ii-d" data-coverage="documented" data-personas="covered-entity business-associate individual" data-text="164.308(a)(7)(ii)(d) testing and revision procedures — addressable contingency-plan testing is an operational drill whose restore phase
 exercises the platform's backup-restore path. hds is formalising a regular
 test-and-revise cadence; the procedure is documented internally and
 regular verified execution remains a known gap.
@@ -877,7 +877,7 @@ records.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="documented" data-personas="covered-entity business-associate individual" data-text="164.308(a)(8) evaluation — standard hds performs a periodic evaluation of its security programme, drawing on
+</article><article class="req" id="req-164-308-a-8" data-coverage="documented" data-personas="covered-entity business-associate individual" data-text="164.308(a)(8) evaluation — standard hds performs a periodic evaluation of its security programme, drawing on
 the audit log, operational monitoring, this matrix as a control inventory,
 and the platform's test results as control-effectiveness evidence. the
 evaluation write-up is held internally and shared on request.
@@ -939,7 +939,7 @@ ePHI you process.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.310 physical safeguards — standard (framing) physical safeguards are properties of the hosting environment, not of the
+</article><article class="req" id="req-164-310" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.310 physical safeguards — standard (framing) physical safeguards are properties of the hosting environment, not of the
 open-pryv.io software. hds carries this layer by selecting certified hosting
 providers (eu/switzerland and us data-residency options) and documenting the
 facility-control attestations it relies on, so an implementer inherits a
@@ -1004,7 +1004,7 @@ physical-safeguards programme; cover your own premises and devices.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.310(a)(1) facility access controls — standard facility access control at the server tier is delivered by the certified
+</article><article class="req" id="req-164-310-a-1" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.310(a)(1) facility access controls — standard facility access control at the server tier is delivered by the certified
 hosting provider for the chosen region. hds selects providers whose
 data-centre access controls (badged entry, escort policies, access logging)
 are independently attested, and documents which attestation backs each region.
@@ -1057,7 +1057,7 @@ yours to control and document.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="documented" data-personas="covered-entity business-associate individual" data-text="164.310(b) workstation use — standard workstation use is a workforce and endpoint-management control that sits with
+</article><article class="req" id="req-164-310-b" data-coverage="documented" data-personas="covered-entity business-associate individual" data-text="164.310(b) workstation use — standard workstation use is a workforce and endpoint-management control that sits with
 the entity operating the workstations, not with the hds platform. hds
 documents the assumption that ephi access happens only through authenticated,
 access-token-scoped sessions, which bounds what any single workstation can do.
@@ -1110,7 +1110,7 @@ uses to access ePHI through the HDS-hosted application.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="documented" data-personas="covered-entity business-associate individual" data-text="164.310(c) workstation security — standard physical workstation security (screen locks, device controls, premises) is
+</article><article class="req" id="req-164-310-c" data-coverage="documented" data-personas="covered-entity business-associate individual" data-text="164.310(c) workstation security — standard physical workstation security (screen locks, device controls, premises) is
 endpoint-management scope owned by the entity operating the workstation. hds
 documents the compensating platform control: a lost or unattended workstation
 cannot exceed the permissions of its access token, and the token can be
@@ -1166,7 +1166,7 @@ device loss.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.310(d)(1) device and media controls — standard media disposal and re-use at the server tier are handled by the certified
+</article><article class="req" id="req-164-310-d-1" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.310(d)(1) device and media controls — standard media disposal and re-use at the server tier are handled by the certified
 hosting provider's media-sanitisation controls, which hds selects and
 documents. for per-subject ephi movement, the platform's per-user export unit
 is the natural medium so a single subject's data can be transferred or
@@ -1230,7 +1230,7 @@ of exports is your responsibility.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="implemented" data-personas="covered-entity business-associate individual" data-text="164.312(a)(1) access control — standard hds deploys open-pryv.io with per-user data isolation and per-stream access
+</article><article class="req" id="req-164-312-a-1" data-coverage="implemented" data-personas="covered-entity business-associate individual" data-text="164.312(a)(1) access control — standard hds deploys open-pryv.io with per-user data isolation and per-stream access
 tokens enforced at every api call: a token can read or write only the streams
 its permissions list, at the level granted, with no trust-based bypass path.
 access control is therefore a technical property of the api surface that hds
@@ -1290,7 +1290,7 @@ document the authorization scheme.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="implemented" data-personas="covered-entity business-associate individual" data-text="164.312(a)(2)(i) unique user identification — required every account in the hds-operated platform has a unique identifier, and every
+</article><article class="req" id="req-164-312-a-2-i" data-coverage="implemented" data-personas="covered-entity business-associate individual" data-text="164.312(a)(2)(i) unique user identification — required every account in the hds-operated platform has a unique identifier, and every
 access token derived from it carries a unique id and version. the per-user
 audit log cites that access identity on every recorded action, so each tracked
 operation ties back to a unique identity.
@@ -1344,7 +1344,7 @@ document the mapping; avoid shared credentials.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="configurable" data-personas="covered-entity business-associate individual" data-text="164.312(a)(2)(ii) emergency access procedure — required the platform provides an operator-held administrative access mechanism that
+</article><article class="req" id="req-164-312-a-2-ii" data-coverage="configurable" data-personas="covered-entity business-associate individual" data-text="164.312(a)(2)(ii) emergency access procedure — required the platform provides an operator-held administrative access mechanism that
 can serve as a break-glass path to ephi during an emergency, and every action
 taken under it is captured by the per-user audit log. hds documents the
 custody controls; the implementer defines when the procedure may be invoked
@@ -1403,7 +1403,7 @@ platform mechanism.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="configurable" data-personas="covered-entity business-associate individual" data-text="164.312(a)(2)(iii) automatic logoff — addressable the platform enforces automatic session and token expiry: interactive session
+</article><article class="req" id="req-164-312-a-2-iii" data-coverage="configurable" data-personas="covered-entity business-associate individual" data-text="164.312(a)(2)(iii) automatic logoff — addressable the platform enforces automatic session and token expiry: interactive session
 lifetime and per-grant access-token expiry can both be bounded, so a session
 or token becomes inert automatically once its window passes. hds operates the
 mechanism; the implementer sets the timeouts appropriate to its workflow.
@@ -1460,7 +1460,7 @@ sessions and tokens.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="implemented" data-personas="covered-entity business-associate individual" data-text="164.312(a)(2)(iv) encryption and decryption — addressable ephi is encrypted at rest in both hosting regions, and tls protects it in
+</article><article class="req" id="req-164-312-a-2-iv" data-coverage="implemented" data-personas="covered-entity business-associate individual" data-text="164.312(a)(2)(iv) encryption and decryption — addressable ephi is encrypted at rest in both hosting regions, and tls protects it in
 transit by default. each core's storage volume is encrypted at the hosting
 layer: exoscale encrypts compute root volumes by default (aes-256-xts,
 ch1/switzerland); aws ebs volume encryption is enabled on the us core
@@ -1539,7 +1539,7 @@ whether to supplement it and document the decision.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="implemented" data-personas="covered-entity business-associate individual" data-text="164.312(b) audit controls — standard the hds-operated platform records every api call in a per-user audit log —
+</article><article class="req" id="req-164-312-b" data-coverage="implemented" data-personas="covered-entity business-associate individual" data-text="164.312(b) audit controls — standard the hds-operated platform records every api call in a per-user audit log —
 timestamp, acting access identity, method, and success/error — and exposes it
 for examination. the audit record is data-minimal by construction (request
 bodies are not stored), so reviewing activity does not create a second copy of
@@ -1597,7 +1597,7 @@ the review records per your retention policy.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.312(c)(1) integrity — standard integrity is layered in the hds-operated platform: writes are gated by
+</article><article class="req" id="req-164-312-c-1" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.312(c)(1) integrity — standard integrity is layered in the hds-operated platform: writes are gated by
 per-stream permissions, updates preserve the prior value through versioning,
 the audit log pins who-changed-what-when, and operational backups provide a
 recovery path if a destruction event must be reversed. the overall integrity
@@ -1656,7 +1656,7 @@ how destruction is prevented and recovered — over the platform substrate.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.312(c)(2) mechanism to authenticate ephi — addressable event versioning retains prior content on every update, so &quot;is this the
+</article><article class="req" id="req-164-312-c-2" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.312(c)(2) mechanism to authenticate ephi — addressable event versioning retains prior content on every update, so &quot;is this the
 original?&quot; is answerable by comparison against the history, and the audit
 record anchors each change to an authenticated access identity. tamper
 detection beyond this — e.g. cryptographic content hashing under an
@@ -1716,7 +1716,7 @@ document the addressable decision.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="implemented" data-personas="covered-entity business-associate individual" data-text="164.312(d) person or entity authentication — standard authentication in the hds-operated platform is mediated by the access-token
+</article><article class="req" id="req-164-312-d" data-coverage="implemented" data-personas="covered-entity business-associate individual" data-text="164.312(d) person or entity authentication — standard authentication in the hds-operated platform is mediated by the access-token
 primitive: the bearer of a valid token has been authenticated. authentication
 strength is layered — credentials by default, with multi-factor authentication
 available — and recovery paths preserve account ownership when a factor is
@@ -1774,7 +1774,7 @@ required, and for which roles or operations).
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="implemented" data-personas="covered-entity business-associate individual" data-text="164.312(e)(1) transmission security — standard all api traffic to the hds-operated platform is carried over tls by default;
+</article><article class="req" id="req-164-312-e-1" data-coverage="implemented" data-personas="covered-entity business-associate individual" data-text="164.312(e)(1) transmission security — standard all api traffic to the hds-operated platform is carried over tls by default;
 there is no plaintext path served. transmission security is therefore a
 technical property of every connection rather than an optional add-on, in both
 the us and switzerland regions.
@@ -1828,7 +1828,7 @@ ePHI only over TLS; document the transmission-security boundary.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="implemented" data-personas="covered-entity business-associate individual" data-text="164.312(e)(2)(i) integrity controls — addressable tls provides cryptographic integrity on every byte in transit, so
+</article><article class="req" id="req-164-312-e-2-i" data-coverage="implemented" data-personas="covered-entity business-associate individual" data-text="164.312(e)(2)(i) integrity controls — addressable tls provides cryptographic integrity on every byte in transit, so
 modification of ephi on the connection to the hds-operated platform is
 cryptographically detectable. end-to-end integrity across any additional hops
 depends on the implementer's chain preserving the same property.
@@ -1884,7 +1884,7 @@ the addressable decision.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="implemented" data-personas="covered-entity business-associate individual" data-text="164.312(e)(2)(ii) encryption — addressable (transmission) encryption of ephi in transit is default-on: the hds-operated platform serves
+</article><article class="req" id="req-164-312-e-2-ii" data-coverage="implemented" data-personas="covered-entity business-associate individual" data-text="164.312(e)(2)(ii) encryption — addressable (transmission) encryption of ephi in transit is default-on: the hds-operated platform serves
 only tls-encrypted endpoints, so the &quot;whenever deemed appropriate&quot; judgement
 is resolved to &quot;always&quot; for transmission. this row covers transmission only;
 at-rest encryption is addressed under §164.312(a)(2)(iv).
@@ -1938,7 +1938,7 @@ separately.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.314(a)(1) business associate contracts — organizational requirement hds provides a business associate agreement template and the technical
+</article><article class="req" id="req-164-314-a-1" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.314(a)(1) business associate contracts — organizational requirement hds provides a business associate agreement template and the technical
 assurances (audit, access control, monitoring, regional residency) that
 back it, and signs baas with its own subcontractors. the contract itself
 is executed between the parties.
@@ -1998,7 +1998,7 @@ downstream processors.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.314(a)(2)(i)(a) business associate contract — implement reasonable and appropriate safeguards the safeguards hds commits to in its baa are the same technical and
+</article><article class="req" id="req-164-314-a-2-i-a" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.314(a)(2)(i)(a) business associate contract — implement reasonable and appropriate safeguards the safeguards hds commits to in its baa are the same technical and
 administrative controls enumerated across the §164.308, §164.310 and
 §164.312 rows of this matrix. the baa cites that programme so the
 implementer can populate its safeguards exhibit by reference.
@@ -2057,7 +2057,7 @@ the controls you and your downstream processors actually operate.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.314(a)(2)(i)(c) business associate contract — report security incidents hds's baa commits hds to notifying the implementer of security incidents
+</article><article class="req" id="req-164-314-a-2-i-c" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.314(a)(2)(i)(c) business associate contract — report security incidents hds's baa commits hds to notifying the implementer of security incidents
 affecting their ephi, and hds's monitoring and incident-response programme
 supplies the detection and forensic evidence behind that obligation.
 ">
@@ -2114,7 +2114,7 @@ down to your subcontractors.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.314(a)(2)(ii)(b) business associate contract — extend safeguards to subcontractors acting as a business associate, hds executes back-to-back agreements with
+</article><article class="req" id="req-164-314-a-2-ii-b" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.314(a)(2)(ii)(b) business associate contract — extend safeguards to subcontractors acting as a business associate, hds executes back-to-back agreements with
 each subcontractor that may touch ephi and tracks them in its baa register.
 hds also provides the implementer a subcontractor agreement template to
 flow the same obligations down their own chain.
@@ -2170,7 +2170,7 @@ through.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="documented" data-personas="covered-entity business-associate individual" data-text="164.316(a) policies and procedures — standard hds maintains its own written information-security policy set covering the
+</article><article class="req" id="req-164-316-a" data-coverage="documented" data-personas="covered-entity business-associate individual" data-text="164.316(a) policies and procedures — standard hds maintains its own written information-security policy set covering the
 security rule safeguards for the systems it operates. this governs hds's
 role as operator and business associate; the implementer keeps its own
 policy programme for the parts it controls.
@@ -2227,7 +2227,7 @@ ePHI.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="documented" data-personas="covered-entity business-associate individual" data-text="164.316(b)(1) documentation — required hds keeps its security policies, procedures, registers and assessment
+</article><article class="req" id="req-164-316-b-1" data-coverage="documented" data-personas="covered-entity business-associate individual" data-text="164.316(b)(1) documentation — required hds keeps its security policies, procedures, registers and assessment
 outputs in durable written form under a documentation-management policy.
 required activity records are retained alongside the audit trail of the
 systems hds operates.
@@ -2287,7 +2287,7 @@ activities the subpart requires you to record.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="documented" data-personas="covered-entity business-associate individual" data-text="164.316(b)(2)(i) documentation — time limit — required hds retains its security documentation and required records for at least
+</article><article class="req" id="req-164-316-b-2-i" data-coverage="documented" data-personas="covered-entity business-associate individual" data-text="164.316(b)(2)(i) documentation — time limit — required hds retains its security documentation and required records for at least
 six years under its documentation-and-retention policy, treating six years
 as a regulatory floor rather than a destruction deadline.
 ">
@@ -2345,7 +2345,7 @@ and required records.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="documented" data-personas="covered-entity business-associate individual" data-text="164.316(b)(2)(iii) documentation — updates — required hds reviews its security documentation on a defined periodic cadence and
+</article><article class="req" id="req-164-316-b-2-iii" data-coverage="documented" data-personas="covered-entity business-associate individual" data-text="164.316(b)(2)(iii) documentation — updates — required hds reviews its security documentation on a defined periodic cadence and
 updates it in response to changes in its environment or operations. review
 dates and changes are tracked so the documentation's currency is
 demonstrable.

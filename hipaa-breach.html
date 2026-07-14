@@ -46,7 +46,7 @@
   </span>
   <span class="fcount" id="fcount"></span>
 </div>
-    <div class="reqs"><article class="req" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.400 applicability subpart d only reaches phi that is &quot;unsecured&quot; — phi not rendered unusable
+    <div class="reqs"><article class="req" id="req-164-400" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.400 applicability subpart d only reaches phi that is &quot;unsecured&quot; — phi not rendered unusable
 per hhs guidance. hds narrows that surface by enforcing tls in transit by
 default; at-rest content encryption for ephi is not yet shipped, so the
 unsecured-phi scope is currently wider at rest than in transit.
@@ -105,7 +105,7 @@ which obligations flow down to your own subcontractors.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.402 definitions — breach and unsecured phi hds supplies the technical substrate that lets an implementer apply the
+</article><article class="req" id="req-164-402" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.402 definitions — breach and unsecured phi hds supplies the technical substrate that lets an implementer apply the
 §164.402 definitions to a concrete incident: the per-user audit log shows
 what was accessed, and the access-scoping model shows what a given token
 could reach. whether an access was &quot;permitted under subpart e&quot; becomes a
@@ -170,7 +170,7 @@ preserve the supporting evidence.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.402(1) definition of &quot;breach&quot; — four-factor risk assessment each of the four risk-assessment factors maps onto data hds already
+</article><article class="req" id="req-164-402-1" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.402(1) definition of &quot;breach&quot; — four-factor risk assessment each of the four risk-assessment factors maps onto data hds already
 retains. the per-user audit log and the access-version chain answer &quot;what
 phi, by which credential, actually acquired or merely accessed, and was the
 access revoked or scoped down&quot; — the structured inputs to the assessment.
@@ -240,7 +240,7 @@ result with the covered entity.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.402(2) definition of &quot;unsecured phi&quot; — encryption safe harbor the safe harbor exempts properly secured phi from breach notification. hds
+</article><article class="req" id="req-164-402-2" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.402(2) definition of &quot;unsecured phi&quot; — encryption safe harbor the safe harbor exempts properly secured phi from breach notification. hds
 enforces tls in transit, which places the in-transit half of the data path
 inside the safe harbor. platform at-rest encryption for ephi content is not
 yet shipped, so the safe harbor does not currently apply to phi at rest and
@@ -306,7 +306,7 @@ assurances you give upstream.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="documented" data-personas="covered-entity business-associate individual" data-text="164.404 notification to individuals individual notification is owned by the covered entity, not by hds. hds
+</article><article class="req" id="req-164-404" data-coverage="documented" data-personas="covered-entity business-associate individual" data-text="164.404 notification to individuals individual notification is owned by the covered entity, not by hds. hds
 supports it by supplying audit evidence to identify the affected
 individuals, but composing and delivering the notices is the covered
 entity's operational responsibility.
@@ -368,7 +368,7 @@ otherwise provide the covered entity the information it needs to notify.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.404(b) timeliness of notification the 60-day clock is an operational cadence owned by the covered entity. hds
+</article><article class="req" id="req-164-404-b" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.404(b) timeliness of notification the 60-day clock is an operational cadence owned by the covered entity. hds
 shortens the data-gathering portion of that window: the audit log and
 access-version chain answer &quot;what was accessed, by whom, when&quot; quickly, so
 the timeline is dominated by editorial and decision work rather than
@@ -427,7 +427,7 @@ not eroded by your delay.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.404(c) content of notification the wording of a notice is the covered entity's editorial artefact. hds
+</article><article class="req" id="req-164-404-c" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.404(c) content of notification the wording of a notice is the covered entity's editorial artefact. hds
 contributes to one content element — the description of the phi involved —
 which is derivable from the audit-log scoping performed for the risk
 assessment. the remaining elements are operational and authored by the
@@ -486,7 +486,7 @@ needs to compose the notice.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="out-of-scope" data-personas="covered-entity individual" data-text="164.404(d) methods of individual notification choosing and executing the notification method is operational; hds is not a
+</article><article class="req" id="req-164-404-d" data-coverage="out-of-scope" data-personas="covered-entity individual" data-text="164.404(d) methods of individual notification choosing and executing the notification method is operational; hds is not a
 mailer and plays no role in delivering notices. where the implementer
 records each delivery attempt as an event, the hds audit chain can evidence
 that the attempt occurred, but the delivery itself is out of scope for hds.
@@ -537,7 +537,7 @@ delivery records including any substitute-notice steps.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="documented" data-personas="covered-entity individual" data-text="164.406 notification to media media notification is an organizational and communications procedure owned
+</article><article class="req" id="req-164-406" data-coverage="documented" data-personas="covered-entity individual" data-text="164.406 notification to media media notification is an organizational and communications procedure owned
 by the covered entity. hds provides no software contribution; the
 500-resident threshold can be derived from the affected-subject list
 produced under 164.404, but the notification itself is operational.
@@ -584,7 +584,7 @@ jurisdiction and retain the records.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="documented" data-personas="covered-entity individual" data-text="164.408 notification to the secretary submission to the secretary via the hhs portal is procedural and owned by
+</article><article class="req" id="req-164-408" data-coverage="documented" data-personas="covered-entity individual" data-text="164.408 notification to the secretary submission to the secretary via the hhs portal is procedural and owned by
 the covered entity. hds audit and access-version data inform the content
 (subjects affected, dates, contributing cause), but the submission itself
 is operational.
@@ -633,7 +633,7 @@ submission records.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.410 notification by a business associate this is hds's core breach duty. as a business associate, hds notifies the
+</article><article class="req" id="req-164-410" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.410 notification by a business associate this is hds's core breach duty. as a business associate, hds notifies the
 covered entity without unreasonable delay (and within 60 days) on discovery
 of a breach, following a documented procedure. the audit log lets hds
 gather the required content — affected subjects and timing — quickly.
@@ -694,7 +694,7 @@ window, using the BAA terms and your own breach procedure.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="documented" data-personas="covered-entity business-associate individual" data-text="164.412 law enforcement delay invoking a law-enforcement delay is procedural and depends on receipt of an
+</article><article class="req" id="req-164-412" data-coverage="documented" data-personas="covered-entity business-associate individual" data-text="164.412 law enforcement delay invoking a law-enforcement delay is procedural and depends on receipt of an
 official statement. hds has no software role beyond preserving the audit log
 across the delay period, which happens by default; the decision and its
 documentation are the implementer's.
@@ -749,7 +749,7 @@ the covered entity.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.414 administrative requirements and burden of proof the burden of proof is met with evidence. hds's per-user audit log and
+</article><article class="req" id="req-164-414" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.414 administrative requirements and burden of proof the burden of proof is met with evidence. hds's per-user audit log and
 access-version chain are the technical evidence layer — a precise record of
 what was accessed, by which credential, and when — that backs both &quot;we
 notified&quot; and &quot;this was not a reportable breach&quot; determinations.

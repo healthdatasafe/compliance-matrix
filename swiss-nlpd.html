@@ -46,7 +46,7 @@
   </span>
   <span class="fcount" id="fcount"></span>
 </div>
-    <div class="reqs"><article class="req" data-coverage="facilitated" data-personas="controller processor data-subject" data-text="art.5 definitions on top of pryv's primitive model, hds operates the platform on which the
+    <div class="reqs"><article class="req" id="req-art-5" data-coverage="facilitated" data-personas="controller processor data-subject" data-text="art.5 definitions on top of pryv's primitive model, hds operates the platform on which the
 controller designs the stream layout. the classification of a data
 category as sensitive — including the nlpd's broader categories — is the
 controller's editorial decision, which hds carries into the access and
@@ -108,7 +108,7 @@ accordingly.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="implemented" data-personas="controller processor data-subject" data-text="art.6 principles of processing hds operates the platform whose permission model enforces purpose
+</article><article class="req" id="req-art-6" data-coverage="implemented" data-personas="controller processor data-subject" data-text="art.6 principles of processing hds operates the platform whose permission model enforces purpose
 limitation technically and whose audit log and access version history
 provide the accountability artefact. event update with version
 preservation supports the accuracy duty. the substantive purpose and
@@ -171,7 +171,7 @@ preserved.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="facilitated" data-personas="controller processor data-subject" data-text="art.7 data protection by design and by default the pryv architecture hds operates is privacy-protective by
+</article><article class="req" id="req-art-7" data-coverage="facilitated" data-personas="controller processor data-subject" data-text="art.7 data protection by design and by default the pryv architecture hds operates is privacy-protective by
 construction — per-user storage isolation, stream-scoped permissions,
 distinct access types, system streams for privileged data and
 audit-by-default. hds runs this baseline; the per-deployment default
@@ -230,7 +230,7 @@ scopes, retention policy and registration notice.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="facilitated" data-personas="controller processor data-subject" data-text="art.8 data security hds operates the technical security baseline: tls in transit, stream-scoped
+</article><article class="req" id="req-art-8" data-coverage="facilitated" data-personas="controller processor data-subject" data-text="art.8 data security hds operates the technical security baseline: tls in transit, stream-scoped
 permissions, mfa, multi-core high availability and operated backup and
 restore. at-rest encryption of customer event data is a known gap and is
 flagged so the controller can weigh it in its security assessment.
@@ -288,7 +288,7 @@ measures to the controller.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="facilitated" data-personas="controller data-subject" data-text="art.19 information duty when collecting personal data hds preserves the notice text presented to each data subject as
+</article><article class="req" id="req-art-19" data-coverage="facilitated" data-personas="controller data-subject" data-text="art.19 information duty when collecting personal data hds preserves the notice text presented to each data subject as
 client-data on the relevant access or as a dedicated consent event, so
 what was shown is recoverable per subject and per time. the notice
 content and its presentation are the controller's editorial
@@ -341,7 +341,7 @@ source where data is acquired indirectly.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="facilitated" data-personas="controller data-subject" data-text="art.21 automated individual decisions automated decisioning is the controller's application logic, not hds's.
+</article><article class="req" id="req-art-21" data-coverage="facilitated" data-personas="controller data-subject" data-text="art.21 automated individual decisions automated decisioning is the controller's application logic, not hds's.
 hds contributes the audit log, which records when automated-decision
 processing ran and on which inputs, and events as the carrier for the
 subject's expressed view.
@@ -391,7 +391,7 @@ the opportunity to state a view.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="facilitated" data-personas="controller processor data-subject" data-text="art.22 data protection impact assessment the dpia is a written assessment the controller produces. hds contributes
+</article><article class="req" id="req-art-22" data-coverage="facilitated" data-personas="controller processor data-subject" data-text="art.22 data protection impact assessment the dpia is a written assessment the controller produces. hds contributes
 its inputs: data residency tells you where each subject's data lives, the
 audit and access-version data describe the processing-flow technical
 layer, and system-stream isolation gives a defensible sensitive-data
@@ -449,7 +449,7 @@ artefacts as inputs.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="facilitated" data-personas="controller processor data-subject" data-text="art.24 notification of data security breaches hds operates the audit log and access version chain that let the
+</article><article class="req" id="req-art-24" data-coverage="facilitated" data-personas="controller processor data-subject" data-text="art.24 notification of data security breaches hds operates the audit log and access version chain that let the
 controller scope a breach — which subjects, which streams, by which
 access. the nlpd's &quot;as soon as possible&quot; timeline is the controller's to
 meet; hds provides the underlying scoping evidence.
@@ -511,7 +511,7 @@ scoping.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="implemented" data-personas="data-subject controller processor" data-text="art.25 right to information (data-subject access) pryv is user-centric: the data subject, holding a personal token, reads
+</article><article class="req" id="req-art-25" data-coverage="implemented" data-personas="data-subject controller processor" data-text="art.25 right to information (data-subject access) pryv is user-centric: the data subject, holding a personal token, reads
 everything through the standard api — events, streams, accesses with
 history, audit records and attachments — in canonical json. hds operates
 this access capability end-to-end and ships the app-portability
@@ -576,7 +576,7 @@ extended minimum-information set.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="implemented" data-personas="data-subject controller processor" data-text="art.28 right to data portability the hds-operated api returns events and streams as canonical json
+</article><article class="req" id="req-art-28" data-coverage="implemented" data-personas="data-subject controller processor" data-text="art.28 right to data portability the hds-operated api returns events and streams as canonical json
 validated against the data-type schemas — a commonly used electronic
 format. the app-portability web app (portability.hds.ngo) packages
 the full account into zip files the subject downloads in one
@@ -639,7 +639,7 @@ controller via the capability flow.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="facilitated" data-personas="controller processor data-subject" data-text="art.31 justification for processing sensitive personal data the legal-ground determination is the controller's programmatic decision.
+</article><article class="req" id="req-art-31" data-coverage="facilitated" data-personas="controller processor data-subject" data-text="art.31 justification for processing sensitive personal data the legal-ground determination is the controller's programmatic decision.
 hds preserves the cited ground per access in client-data so the
 justification travels with the technical authorization and lives in the
 audit trail.
@@ -694,7 +694,7 @@ ground on each access.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="implemented" data-personas="data-subject controller processor" data-text="art.32 rectification, erasure and destruction of personal data hds exposes event update as the rectification primitive with version
+</article><article class="req" id="req-art-32" data-coverage="implemented" data-personas="data-subject controller processor" data-text="art.32 rectification, erasure and destruction of personal data hds exposes event update as the rectification primitive with version
 preservation, and operates account deletion as the erasure path. the
 backup semantics of erasure depend on the configured storage engine, and
 retention automation is a known gap the controller covers by process.
@@ -748,7 +748,7 @@ destruction as automation is not built in.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="configurable" data-personas="controller processor data-subject" data-text="art.34 disclosure of personal data abroad data residency is the technical control: hds hosts ch-region data in
+</article><article class="req" id="req-art-34" data-coverage="configurable" data-personas="controller processor data-subject" data-text="art.34 disclosure of personal data abroad data residency is the technical control: hds hosts ch-region data in
 switzerland, so binding a subject to the ch region keeps the data in
 switzerland and the cross-border question moot. for legitimate transfers
 the per-user hosting field exposes which jurisdiction the data sits in,
@@ -808,7 +808,7 @@ Switzerland record the adequacy or safeguard basis.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="facilitated" data-personas="controller processor data-subject" data-text="art.35 disclosure of personal data abroad — particular cases exception-based transfers require recording the legal basis. hds stores the
+</article><article class="req" id="req-art-35" data-coverage="facilitated" data-personas="controller processor data-subject" data-text="art.35 disclosure of personal data abroad — particular cases exception-based transfers require recording the legal basis. hds stores the
 exception type on the access authorising the disclosure, and the audit row
 at disclosure time anchors the exception to the specific events
 transferred.
@@ -862,7 +862,7 @@ access.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="facilitated" data-personas="controller data-subject" data-text="art.2 material scope an hds deployment is fully in scope as automated processing of personal
+</article><article class="req" id="req-art-2" data-coverage="facilitated" data-personas="controller data-subject" data-text="art.2 material scope an hds deployment is fully in scope as automated processing of personal
 data. the purely-personal-use exception does not reach a hosted deployment
 where the controller acts for others. hds contributes awareness, not a
 scope-determining control.
@@ -910,7 +910,7 @@ records evidence that processing occurs.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="facilitated" data-personas="controller data-subject" data-text="art.3 territorial scope applicability turns on whether processing affects data subjects in
+</article><article class="req" id="req-art-3" data-coverage="facilitated" data-personas="controller data-subject" data-text="art.3 territorial scope applicability turns on whether processing affects data subjects in
 switzerland, not on where infrastructure lives. hds operates a ch region in
 switzerland to which subjects can be bound explicitly when ch jurisdiction
 is the chosen regime.
@@ -958,7 +958,7 @@ where appropriate.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="facilitated" data-personas="controller data-subject" data-text="art.16 disclosure of personal data abroad — principles (cross-link) this is a framing row pointing at art. 34 for the operative hds mapping.
+</article><article class="req" id="req-art-16" data-coverage="facilitated" data-personas="controller data-subject" data-text="art.16 disclosure of personal data abroad — principles (cross-link) this is a framing row pointing at art. 34 for the operative hds mapping.
 hds's contribution — data residency and recorded transfer basis — is
 described there.
 ">
@@ -1000,7 +1000,7 @@ pattern that satisfy the cross-border principle in practice.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="facilitated" data-personas="controller processor data-subject" data-text="art.30 justification of breaches of privacy hds records the justification basis on the access client-data, drawing on
+</article><article class="req" id="req-art-30" data-coverage="facilitated" data-personas="controller processor data-subject" data-text="art.30 justification of breaches of privacy hds records the justification basis on the access client-data, drawing on
 the nlpd's vocabulary, so the basis travels with the technical
 authorization and lives in the audit trail. determining which basis
 applies is the controller's editorial and legal judgement.
@@ -1051,7 +1051,7 @@ does not select it.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="out-of-scope" data-personas="controller data-subject" data-text="art.4 federal data protection and information commissioner (fdpic) the commissioner is a regulator; there is no software role. where an
+</article><article class="req" id="req-art-4" data-coverage="out-of-scope" data-personas="controller data-subject" data-text="art.4 federal data protection and information commissioner (fdpic) the commissioner is a regulator; there is no software role. where an
 investigation involves an hds deployment, the audit log and access version
 chain are the evidence layer the controller can provide.
 ">
@@ -1096,7 +1096,7 @@ evidence where needed.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="facilitated" data-personas="controller processor data-subject" data-text="art.23 privacy by default the platform hds operates leans privacy-protective by construction: the
+</article><article class="req" id="req-art-23" data-coverage="facilitated" data-personas="controller processor data-subject" data-text="art.23 privacy by default the platform hds operates leans privacy-protective by construction: the
 smallest-permission default is none, system streams isolate privileged
 data, and per-user storage isolates subjects. whether the by-default
 posture is fully exercised depends on the controller's deployment-time
@@ -1152,7 +1152,7 @@ processing is limited to the minimum required.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="facilitated" data-personas="controller data-subject" data-text="art.26 restriction of the right to information when the controller invokes art. 26 to restrict, refuse or defer an access
+</article><article class="req" id="req-art-26" data-coverage="facilitated" data-personas="controller data-subject" data-text="art.26 restriction of the right to information when the controller invokes art. 26 to restrict, refuse or defer an access
 request, hds supports recording the rationale as an event on a designated
 stream with the cited statutory letter, time-anchored by the audit log.
 whether the restriction is justified is the controller's legal judgement.
@@ -1201,7 +1201,7 @@ rationale.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="out-of-scope" data-personas="controller data-subject" data-text="art.33 cross-border international cooperation this is treaty-level activity with no software role. no implementer
+</article><article class="req" id="req-art-33" data-coverage="out-of-scope" data-personas="controller data-subject" data-text="art.33 cross-border international cooperation this is treaty-level activity with no software role. no implementer
 obligation arises from this article alone, and hds supplies no control
 specific to it.
 ">
@@ -1242,7 +1242,7 @@ relevant operational layer.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="facilitated" data-personas="controller processor data-subject" data-text="art.9 processing by a processor where hds acts as processor distinct from the controller, it offers a data
+</article><article class="req" id="req-art-9" data-coverage="facilitated" data-personas="controller processor data-subject" data-text="art.9 processing by a processor where hds acts as processor distinct from the controller, it offers a data
 processing agreement and maintains a sub-processor register. the audit log
 makes processing demonstrably attributable to instructed accesses, so the
 only-as-instructed duty rests on a record.
@@ -1298,7 +1298,7 @@ approval before engaging sub-processors.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="facilitated" data-personas="controller processor data-subject" data-text="art.12 register of processing activities hds supplies the technical register substrate — access, client-data, audit
+</article><article class="req" id="req-art-12" data-coverage="facilitated" data-personas="controller processor data-subject" data-text="art.12 register of processing activities hds supplies the technical register substrate — access, client-data, audit
 and data-residency records describe much of the processing. the register
 as a maintained document is a known gap: hds does not generate or keep the
 controller's register, which the controller must author.
@@ -1356,7 +1356,7 @@ controller.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="out-of-scope" data-personas="controller data-subject" data-text="art.17 exceptions to the duty to inform exception applicability is the controller's legal judgement with no
+</article><article class="req" id="req-art-17" data-coverage="out-of-scope" data-personas="controller data-subject" data-text="art.17 exceptions to the duty to inform exception applicability is the controller's legal judgement with no
 software role. where an exception applies, hds supports documenting the
 reasoning as client-data so it is available for auditor questions.
 ">
@@ -1399,7 +1399,7 @@ stored alongside the account or notice artefacts for traceability.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="facilitated" data-personas="controller data-subject" data-text="art.18 information when collecting personal data — specific cases hds stores the additional disclosures alongside the baseline notice as
+</article><article class="req" id="req-art-18" data-coverage="facilitated" data-personas="controller data-subject" data-text="art.18 information when collecting personal data — specific cases hds stores the additional disclosures alongside the baseline notice as
 client-data or dedicated notice events. the cross-border element ties to
 art. 34 and the automated-decision element to art. 21; hds preserves what
 was presented.
@@ -1448,7 +1448,7 @@ decisions and sensitive data, and record what was presented.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="out-of-scope" data-personas="controller data-subject" data-text="art.11 codes of conduct codes of conduct are a sector-level instrument with no software role.
+</article><article class="req" id="req-art-11" data-coverage="out-of-scope" data-personas="controller data-subject" data-text="art.11 codes of conduct codes of conduct are a sector-level instrument with no software role.
 adherence to a code may be cited as one of the appropriate-measures
 indicators on a deployment, but hds supplies no control specific to this
 article.
@@ -1491,7 +1491,7 @@ controller matter outside the platform's scope.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="out-of-scope" data-personas="controller data-subject" data-text="art.14 representative in switzerland designating a swiss representative is a contractual and regulatory
+</article><article class="req" id="req-art-14" data-coverage="out-of-scope" data-personas="controller data-subject" data-text="art.14 representative in switzerland designating a swiss representative is a contractual and regulatory
 registration step for non-swiss controllers with no software role. hds
 supplies no control specific to this requirement.
 ">
@@ -1533,7 +1533,7 @@ required.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="facilitated" data-personas="processor controller data-subject" data-text="art.15 duty of the processor to inform the controller where hds acts as processor, breach notification to the controller is its
+</article><article class="req" id="req-art-15" data-coverage="facilitated" data-personas="processor controller data-subject" data-text="art.15 duty of the processor to inform the controller where hds acts as processor, breach notification to the controller is its
 contractual commitment under the dpa. hds uses the audit and access
 primitives to give the controller the scoping data needed for the
 notification and to cooperate on data-subject rights.
@@ -1587,7 +1587,7 @@ data-subject obligations.
       </div>
     </div>
   </div>
-</article><article class="req" data-coverage="out-of-scope" data-personas="controller data-subject" data-text="art.29 information from official registers access to official public registers is a regulatory framing with no
+</article><article class="req" id="req-art-29" data-coverage="out-of-scope" data-personas="controller data-subject" data-text="art.29 information from official registers access to official public registers is a regulatory framing with no
 software role. hds supplies no control specific to this article.
 ">
   <h3><code>Art.29</code> Information from official registers <span class="draft">draft</span></h3>
