@@ -37,7 +37,10 @@ if [ "$GH_BRANCH" != "gh-pages" ]; then
   exit 1
 fi
 
-git pull --ff-only origin main
+# Fetch + ff-only merge FETCH_HEAD (not `pull --ff-only origin main`, which can
+# spuriously fail "Cannot fast-forward to multiple branches" even when current).
+git fetch origin main
+git merge --ff-only FETCH_HEAD
 
 echo "Validating + building..."
 npm run build:all
