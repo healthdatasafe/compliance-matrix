@@ -451,3 +451,11 @@ refs:
     url: "https://gdpr-info.eu/art-9-gdpr/"
     label: "GDPR Art.9"
     source: gdpr-info.eu
+  "hipaa-privacy.164.504(e)":
+    url: "https://www.ecfr.gov/current/title-45/section-164.504#p-164.504(e)"
+    label: "45 CFR §164.504(e)"
+    source: eCFR
+  "hipaa-security.164.314(a)":
+    url: "https://www.ecfr.gov/current/title-45/section-164.314#p-164.314(a)"
+    label: "45 CFR §164.314(a)"
+    source: eCFR
