@@ -20,12 +20,21 @@ export function evidenceList (ev = {}) {
 }
 
 /** A requirement card with data-* attributes for client-side filtering. */
+// Stable anchor id for a requirement, so other documents (e.g. the private
+// compliance-internal doc set) can deep-link a `§`/requirement citation to it:
+//   https://compliance.datasafe.dev/<scope>.html#<refAnchorId(ref)>
+// Scheme: lowercase the ref, collapse every non-alphanumeric run to a single '-'.
+// Must stay in sync with the linker on the consuming side.
+export function refAnchorId (ref) {
+  return 'req-' + String(ref).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+}
+
 export function requirementCard (r, pryvRow = {}) {
   const hds = r.hds || {};
   const personas = (r.implementer || []).map((o) => o.persona);
   const text = `${r.ref} ${r.title} ${hds.overview || ''}`.toLowerCase();
   const ev = evidenceList(hds.evidence);
-  return `<article class="req" data-coverage="${esc(hds.coverage || '')}" data-personas="${esc(personas.join(' '))}" data-text="${esc(text)}">
+  return `<article class="req" id="${refAnchorId(r.ref)}" data-coverage="${esc(hds.coverage || '')}" data-personas="${esc(personas.join(' '))}" data-text="${esc(text)}">
   <h3><code>${esc(r.ref)}</code> ${esc(r.title)} ${r.draft !== false ? '<span class="draft">draft</span>' : ''}</h3>
   ${r.text ? `<p class="text">${esc(r.text)}</p>` : ''}
   <div class="layers">
