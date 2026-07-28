@@ -11,6 +11,20 @@ box). HDS layers its own (HDS + implementer) rows on top.
   snapshot, and reports which rows changed so the corresponding HDS rows can be
   revisited). Use `npm run sync:pryv -- --check` for a report-only dry run.
 
+## Snapshot documents the software, not the HDS deployment
+
+The snapshot tracks the upstream **tip** and therefore describes what the
+open-pryv.io software does at that commit — which can run **ahead of the build
+HDS actually deploys**. As of 2026-07-28 the snapshot describes features up to
+open-pryv.io `2.0.0-rc.8` (OAuth2 authorization server + PKCE, DPoP,
+shared-secrets, operator client/key revocation, the allow-list observability
+emitter) while the deployed HDS production cores run `2.0.0-rc.4` (see
+`dev-deploy/config/apps.yml`), which carries none of those. **Deployment-anchored
+claims live in the HDS layer** (`../../scopes/*.yml`): an HDS row only cites a
+platform primitive once the deployed cores run a build carrying it. When the
+cores upgrade, revisit the HDS rows the sync report flagged and lift this gap
+note's version delta.
+
 ## Why vendored (not a submodule / live fetch)
 
 A vendored snapshot is reproducible, diffable in PRs, and needs no network in CI.

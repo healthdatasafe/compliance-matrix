@@ -59,8 +59,8 @@ requirements:
     overview: |
       Every API call is captured by Pryv's per-user audit log; the
       `audit.get` method exposes it for periodic review. Observability
-      (New Relic adapter) gives system-level activity reports for the
-      infrastructure side. The "regular review" cadence is your written
+      (opt-in telemetry emitter) gives system-level activity reports for
+      the infrastructure side. The "regular review" cadence is your written
       procedure.
     detail: |
       Audit records carry timestamp, user, access reference (accessId +
@@ -338,6 +338,19 @@ requirements:
       breakdown + operator mitigation patterns (PG row-level
       security, per-schema, per-account-DB, per-tenant deployments).
 
+      **Scope-gated OAuth2 grants.** The delegated-app access path
+      (OAuth2 authorization-code + PKCE,
+      `open-pryv.io/components/oauth2/`, open-pryv.io 2.0.0-rc.8)
+      inherits the same permission enforcement: an authorization-code
+      grant references exactly one consent offer and mints an app
+      access whose `permissions[]` are the user's granted subset of
+      that offer — it can touch nothing outside them. Presented
+      redirect URIs are validated by exact string match (loopback-port
+      carve-out only; fragment-bearing URIs rejected —
+      `open-pryv.io/components/oauth2/src/clientRegistry.ts`), so an
+      issued authorization code cannot be diverted to an unregistered
+      callback.
+
   - ref: 164.312(a)(2)(i)
     title: Unique user identification — Required
     text: |
@@ -474,7 +487,7 @@ requirements:
     pryv_effort_saved: high
     draft: true
     pryv_primitives: [audit, audit-event-stream]
-    tests: [AT01, AT02, AT51, AT52, AT53, AT61, AT65]
+    tests: [AT01, AT02, AT51, AT52, AT53, AT61, AT65, OE07]
     planned:
       - kind: feature
         summary: "Chained / signed audit log strengthens tamper-resistance evidence"
@@ -509,6 +522,20 @@ requirements:
       search criteria are the auditable action. Tier the audit log's
       protection accordingly. See
       `context/content-query-audit-semantics.md`.
+
+      Since open-pryv.io `07b6d3b6`, the OAuth2 authorization server
+      records its own activity in the same audit pipeline (`oauth.*`
+      events): consent lifecycle (shown / granted / refused),
+      authorization-code exchange including replay attempts, and token
+      lifecycle (issued per grant type / refreshed / revoked /
+      reuse-detected). User-resolved events land in the subject's
+      per-user trail (`[OE07]` proves rows in `:_audit:`); the
+      pre-identification ones (consent shown / refused, code replay)
+      go to syslog. A detected refresh-token replay additionally
+      revokes the whole token chain and records both the detection
+      and the resulting revocation (open-pryv.io `829f7238`) — so the
+      §164.312(b) trail covers delegated-app authorization activity,
+      not just data access.
 
   - ref: 164.312(c)(1)
     title: Integrity — standard
@@ -584,7 +611,7 @@ requirements:
     pryv_effort_saved: high
     draft: true
     pryv_primitives: [access, MFA, system-streams]
-    config_keys: [services.mfa.mode]
+    config_keys: [services.mfa.mode, oauth.accessTokenTTL, oauth.refreshTokenTTL, oauth.refreshTokenAbsoluteTTL, oauth.requireAppAccountMfa, oauth.dpop.clockSkewSeconds, oauth.dpop.keyRevokeCheckSeconds]
     tests: [MA01, MA02, MA03, MA04, MA05, MA06, MA07]
     planned:
       - kind: enhancement
@@ -624,6 +651,45 @@ requirements:
       exercises activate / confirm / challenge / verify / deactivate
       / recover paths.
 
+      **A second authentication path — OAuth2.** Beyond the token +
+      MFA stack above, Pryv can authenticate delegated apps through a
+      standards-based OAuth2 authorization-code + PKCE flow
+      (`open-pryv.io/components/oauth2/`, shipped in open-pryv.io
+      2.0.0-rc.8). PKCE is mandatory (S256 only —
+      `code_challenge_methods_supported: ['S256']` in
+      `open-pryv.io/components/oauth2/src/wellKnown.ts`); access tokens
+      are short-lived (`oauth.accessTokenTTL`, default 1 h) and refresh
+      tokens rotate single-use with a sliding TTL bounded by an
+      absolute cap (`oauth.refreshTokenTTL` /
+      `oauth.refreshTokenAbsoluteTTL`). When `oauth.requireAppAccountMfa`
+      is set (default true), an app account must enrol MFA before it can
+      drive the OAuth2 write surface — so the second-factor requirement
+      extends to the delegated-app path.
+
+      **Sender-constrained tokens (DPoP).** A delegated app may opt into
+      RFC 9449 DPoP: it proves possession of a client-held key on each
+      request, and the token is bound to that key's thumbprint (issued
+      `token_type: DPoP`). A token stolen in transit or from storage is
+      then useless without the private key — it materially strengthens
+      "the entity seeking access is the one claimed" for bearer tokens.
+      Opt-in and additive (Bearer clients are unchanged). The proof's
+      freshness window is `oauth.dpop.clockSkewSeconds` (default 120 s);
+      DEPLOYMENT NOTE: DPoP binds to the client-facing request URI, so a
+      deployment accepting it must sit behind a proxy that overwrites the
+      X-Forwarded-Host / -Proto headers. Server-side landed in open-pryv.io
+      `9a874599`; the client side ships in the `pryv` JS library 3.10.0
+      (`SignedConnection`, `OAuth2Client` with `dpop: true`).
+
+      **Operator key revocation.** When a bound key is compromised, you
+      revoke it platform-wide by its RFC 7638 thumbprint
+      (`bin/oauth-client.js revoke-key <jkt> --yes`): every token bound
+      to the key — including refresh rotations attempted after the
+      revoke — is rejected on all cores within
+      `oauth.dpop.keyRevokeCheckSeconds` (default 30 s), and the token
+      endpoint refuses to mint for it. An advisory per-client key
+      inventory (`list-keys`) shows what a revocation will hit before
+      you run it (open-pryv.io `4c0a5ade`).
+
   - ref: 164.312(e)(1)
     title: Transmission security — standard
     text: |
@@ -633,8 +699,8 @@ requirements:
     coverage: implemented
     pryv_effort_saved: high
     draft: true
-    pryv_primitives: [letsEncrypt-integration, multi-core-mTLS]
-    tests: [ACMEINT, ACMEORCH, CERTUTILS, FORCERENEWIPC]
+    pryv_primitives: [letsEncrypt-integration, multi-core-mTLS, shared-secrets]
+    tests: [ACMEINT, ACMEORCH, CERTUTILS, FORCERENEWIPC, SHS02, SHS12, SHS13]
     overview: |
       All Pryv API traffic terminates on TLS 1.3 by default, with
       certificates issued + auto-renewed via the built-in ACME
@@ -657,6 +723,19 @@ requirements:
       narrows accordingly. See `context/webhooks-signal-only.md` for
       the full design rationale + operational caveats (TLS-on-
       delivery, retry semantics, poison-pill protection).
+
+      **Credential hand-off between parties.** TLS protects the pipe;
+      the shared-secrets primitive
+      (`open-pryv.io/components/shared-secrets/`) protects the
+      credential travelling over it. Handing an access credential to a
+      counterparty (e.g. inviting a care-team member) used to mean a
+      URL-embedded token that lingers in browser history, referrer
+      headers, and intermediary access logs after the TLS session ends.
+      Instead, the counterparty receives a one-time random key —
+      redeemable exactly once, mandatory expiry, hash-only server-side
+      storage, optional passphrase / HMAC gate on redemption — so an
+      intercepted or logged link never carries a live, replayable
+      credential to ePHI.
 
   - ref: 164.312(e)(2)(i)
     title: Integrity controls — Addressable
@@ -988,13 +1067,6 @@ requirements:
     draft: true
     pryv_primitives: [audit, observability-provider, access]
     derives_from: [hipaa-security.164.308(a)(1)(i)]
-    planned:
-      - kind: enhancement
-        summary: "Published vulnerability disclosure program becomes the externally-facing intake channel for substrate-vulnerability reports — strengthens the security-incident-procedure intake layer"
-        proposal: proposals/vulnerability-disclosure-program.md
-        backlog: VULNERABILITY-DISCLOSURE-PROGRAM
-        tracking_url: https://github.com/pryv/open-pryv.io/issues/84
-        impact: low
     overview: |
       Incident-response procedure
       is the operator's organizational programme. Pryv contributes
@@ -1005,11 +1077,11 @@ requirements:
       substrate-vulnerability intake specifically (operator
       learning that the Pryv version they run has a confirmed
       vulnerability), the upstream's vulnerability disclosure
-      program is the externally-facing channel — today minimal
-      (SECURITY.md is a 6-line pointer at the public issue
-      tracker); modernised by backlog
-      `VULNERABILITY-DISCLOSURE-PROGRAM` (private GHSA flow +
-      `security@` mailbox + PGP + advisory history).
+      program is the externally-facing channel: `SECURITY.md`
+      publishes a coordinated disclosure policy (private GitHub
+      Security Advisories flow + `security-dev@` mailbox + scope +
+      SLA + safe harbor), and private vulnerability reporting is
+      enabled on the published repositories.
 
   - ref: 164.308(a)(7)(ii)(C)
     title: Emergency mode operation plan — Required
@@ -1057,13 +1129,6 @@ requirements:
     draft: true
     pryv_primitives: [audit, observability-provider]
     derives_from: [hipaa-security.164.316(b)(2)(iii)]
-    planned:
-      - kind: enhancement
-        summary: "Published vulnerability disclosure program + GHSA advisory history becomes one of the evidence inputs to the periodic evaluation (alongside audit log + test matrix + supply-chain pipeline)"
-        proposal: proposals/vulnerability-disclosure-program.md
-        backlog: VULNERABILITY-DISCLOSURE-PROGRAM
-        tracking_url: https://github.com/pryv/open-pryv.io/issues/84
-        impact: low
     overview: |
       Evaluation is the operator's
       cyclical assessment. Pryv-side inputs: audit log (control-
@@ -1073,9 +1138,10 @@ requirements:
       commit — concrete §164.308(a)(8) effectiveness evidence),
       Pryv's supply-chain pipeline (Q24 backlog `SUPPLY-CHAIN-
       SCANNING-PIPELINE` once shipped), Pryv's vulnerability
-      disclosure program + GHSA advisory history (backlog
-      `VULNERABILITY-DISCLOSURE-PROGRAM` once shipped). The
-      assessment write-up is operator-side.
+      disclosure program + GHSA advisory history (coordinated
+      disclosure policy published in `SECURITY.md`; private
+      vulnerability reporting enabled on the published
+      repositories). The assessment write-up is operator-side.
 
   - ref: "164.310(a)(1)"
     title: Facility access controls — standard

@@ -84,61 +84,114 @@ discloses them per Art.13(1)(f) where recipients exist.
   disk in plaintext.
 - **Code anchor**: `components/mfa/` module.
 
-### Observability vendor (pluggable façade — operator chooses)
+### Observability backend (operator chooses; telemetry is allow-listed)
 
-- **Architecture**: the observability primitive is a
-  **provider-agnostic façade** at
-  `components/business/src/observability/index.ts` —
-  business-layer callers invoke
-  `{init, setTransactionName, recordError, recordCustomEvent,
-  startBackgroundTransaction}` without knowing which vendor's
-  adapter is attached. Vendor adapters live at
-  `providers/<id>/`. **New Relic ships as the first concrete
-  adapter** (`providers/newrelic/`); operators are free to
-  write or contribute adapters for any APM vendor — Datadog,
-  Honeycomb, OpenTelemetry collectors, internal Prometheus
-  pipelines, etc. The façade contract doesn't bind operators
-  to any specific vendor.
-- **Config gate**: `observability.provider: <id>` + the
-  vendor-specific encrypted-PlatformDB credentials. Default
-  `observability.provider: disabled`.
-- **What flows out (NR adapter shipped today)**: aggregated
-  transaction metrics + error traces. **With PII filters
-  explicitly configured in the adapter.** Concrete attribute
-  exclude list at
-  `components/business/src/observability/providers/newrelic/newrelic.ts:39-49`:
-  ```
-  allow_all_headers: false
-  attributes.exclude: [
-    'request.headers.authorization',
-    'request.headers.cookie',
-    'request.headers.proxy-authorization',
-    'request.headers.set-cookie*',
-    'request.headers.x-*',
-    'request.body'
-  ]
-  transaction_tracer.record_sql: 'off'
-  ```
-  Plus `high_security` toggle off-by-default (account-side
-  HSM, irreversible — operator opts in if their NR account
-  supports it).
-- **What flows out (custom adapter)**: vendor-specific.
-  **The façade does NOT enforce PII filtering across all
-  providers** — every custom adapter implements filtering
-  through its vendor's mechanism (Datadog's attribute filters,
-  Honeycomb's redaction processor, OTel's span processor
-  attribute filter, etc.). The operator writing or installing
-  a custom adapter owns the PII-filter equivalence check
-  against the NR adapter's posture; the reviewer asking "what
-  does my observability vendor see?" needs an answer specific
-  to the adapter in use.
-- **Posture**: pluggable + opt-in. New Relic adapter ships with
-  strict defaults the operator can tighten further but cannot
-  loosen without modifying source. Custom adapters require
-  operator review.
-- **Code anchor**: `components/business/src/observability/`
-  module (façade + envBuilder + logForwarder);
-  `providers/newrelic/` (first concrete adapter).
+- **Architecture**: telemetry is **constructed by the platform**, not
+  observed by a third party. No vendor or OpenTelemetry SDK runs in
+  the process and nothing is auto-instrumented. A single emitter at
+  `components/business/src/observability/` builds every datapoint
+  from a compile-time allow-list
+  (`components/business/src/observability/schema.ts`) and ships it
+  over OTLP/HTTP. The consequence for a reviewer is that the
+  question "could a URL, a username, a header or a message body
+  reach the backend?" is answered by reading the schema, not by
+  auditing an external agent's behaviour across versions: a field
+  absent from the schema has no code path that can emit it.
+- ⚑ **Correction of record (2026-07-27), retained deliberately.**
+  Before that date this integration ran an in-process vendor agent,
+  and its scrubbing configuration was placed in a file the agent
+  does not look for, so the agent silently used its own defaults:
+  no attribute exclusion, SQL obfuscated rather than suppressed,
+  application log records forwarded. **Any deployment with
+  observability enabled before 2026-07-27 sent request URLs, the
+  `Host` header, route parameters carrying the username, and log
+  message bodies to its vendor**, regardless of what this document
+  claimed at the time. That defect was fixed on 2026-07-27 by
+  correcting the filename and hardening the exclusions
+  (`4fc63d87`, wire-validated). The architecture described above
+  supersedes that fix: enumerating what must not escape from an
+  agent that collects everything is a control whose correctness
+  depends on the agent's defaults, so the agent was removed rather
+  than reconfigured. The earlier text is corrected rather than
+  quietly rewritten, because reviewers relied on it.
+- **Config gate**: `observability.enabled` plus an OTLP endpoint
+  (`otlp-endpoint`) and the backend's auth headers (`otlp-headers`,
+  AES-256-GCM encrypted at rest in PlatformDB, never echoed by the
+  CLI). Default: disabled, and enabled-without-an-endpoint emits
+  nothing. Local `observability.enabled: false` always overrides
+  PlatformDB, which is the operator's emergency kill switch.
+- **What flows out — the complete list.** Metrics: per-API-method
+  call counts, duration histograms and error counts. Their only
+  labels are `method.id` (an identifier from the platform's own API
+  method registry, re-checked against that registry at emit time),
+  `status.class` (`2xx`/`3xx`/`4xx`/`5xx`) and `error.code` (a value
+  from the API's published error id list, or `unknown`). Resource
+  identity: service name, service version, the core's own FQDN and a
+  worker index. Error reports, for server-side faults only: the
+  error code, the error class name, and a stack trace whose frames
+  are rewritten repository-relative, with frames from outside the
+  repository discarded. One operational counter, `telemetry.dropped`,
+  reports how many datapoints the emitter refused, by reason.
+- **What cannot flow out, by construction**: request URLs, query
+  and route parameters, request and response bodies, HTTP headers of
+  any kind, usernames, stream/event/attachment identifiers, log
+  records, and error **message** text. None of these has a key in
+  the schema. Error messages are excluded permanently and by
+  design: on this platform they routinely interpolate file paths
+  and client-supplied values, so the code travels and the message
+  stays in the operator's own logs.
+- **The refusal is enforced, not documented.** Every datapoint is
+  validated at the choke point before it is buffered; a
+  non-allow-listed metric name, attribute key, method id, status
+  class or error code is dropped and counted rather than sent. The
+  test suite asserts the validator's decision for accepted and
+  refused inputs alike, including a fuzz pass over identifier-shaped
+  keys and values, with a legitimate datapoint pinned in each block
+  so the suite cannot pass by refusing everything.
+- **Residual formerly caused by outbound spans is gone.** The agent
+  reported `peer.hostname` / `peer.address` / `server.address` on
+  every outbound call, which for webhooks is the endpoint hostname
+  the receiving application registered, and no client-side setting
+  suppressed it. Nothing observes outbound calls now, so this class
+  of exposure no longer exists.
+- **Anonymous by construction, with one volume-dependent residual.**
+  The correlation handles were removed deliberately, not left as
+  accepted residuals: error reports are **aggregated by fault and
+  stamped at the reporting interval** rather than at the instant of
+  failure (a precise timestamp singles out one action to anyone
+  holding a second timestamped signal, the operator's own audit log
+  included), and the instance identifier is the **machine
+  hostname**, never derived from the service URL or DNS domain
+  (user-facing hosts are `<username>.<domain>` in DNS-based
+  deployments, so a URL-derived value was one config change away
+  from carrying a username on every datapoint).
+  **The residual**: on a very low-traffic instance, "one error in
+  this interval" can still correlate to the only active user. That
+  is a property of traffic volume, not of the schema, and the
+  operator reduces it by widening the reporting interval. A
+  reviewer should read the claim as *anonymous by construction,
+  with a residual correlation risk at very low traffic volumes* —
+  we do not assert an unqualified guarantee.
+  Where the residual applies, treat the telemetry as personal data
+  and keep the processor relationship in scope; pointing the
+  endpoint at a self-hosted collector removes the third party from
+  the question entirely.
+- **Backend choice is the operator's, and can be self-hosted.**
+  OTLP/HTTP is the wire format, so the destination is a URL plus
+  whatever auth header that backend expects. Any OTLP-ingesting
+  service works, and pointing the endpoint at an OpenTelemetry
+  Collector inside the operator's own infrastructure keeps
+  telemetry within their trust boundary, with no third-party
+  processor to add to the DPA at all. Unlike the previous
+  adapter model, the posture does not vary by backend: the same
+  emitter builds the same payload whatever the destination.
+- **Posture**: opt-in, disabled by default; the emitted surface is
+  fixed in source and an operator cannot widen it without modifying
+  and rebuilding the platform.
+- **Code anchors**: `components/business/src/observability/schema.ts`
+  (the allow-list), `emitter.ts` (the choke point), `sanitizeError.ts`
+  (stack sanitizing), `errorRegistry.ts` (error codes), `otlp.ts`
+  (payload builders).
 
 ### Upstream catalogue fetch (`service.eventTypes`)
 
@@ -220,17 +273,15 @@ leak via logs", not "no PII whatsoever leaks via logs". The
 operator's log-aggregator destination + their broader PII-in-
 logs policy fill the rest of the picture.
 
-### 3. Observability PII filters
+### 3. Observability allow-list
 
-The New Relic adapter's hard-coded attribute-exclude list (cited
-above) keeps `request.headers.authorization` / `cookie` /
-`proxy-authorization` / `set-cookie*` / `x-*` + `request.body` +
-SQL statements out of the transaction-tracer payloads sent to
-the observability vendor. Combined with `high_security: false`
-default (operator opts into account-side HSM if their NR account
-supports it), the data crossing to the observability vendor is
-aggregated metrics + error stack-traces without credentials or
-request bodies.
+Telemetry is constructed from a compile-time allow-list rather than
+filtered after collection (cited above). Because no third-party
+agent observes the process, credentials, request bodies, URLs,
+headers and SQL have no code path to the backend at all: they are
+absent from the schema rather than removed from a payload. What
+crosses to the observability backend is aggregated per-method
+metrics plus sanitized error stack traces.
 
 ## How to assemble the subprocessor inventory for your DPA
 
@@ -241,8 +292,9 @@ overlays + identify which optional integrations are non-default:
 - `services.email.smtp.host: ...` → your SMTP relay.
 - `services.mfa.mode: enabled` + `services.mfa.sms.endpoints[*]`
   → your SMS provider.
-- `observability.provider: newrelic` → New Relic (or your
-  pluggable provider).
+- `observability.enabled: true` with an `otlp-endpoint` → whichever
+  backend that endpoint belongs to (none, if it points at a
+  collector you host yourself).
 - `service.eventTypes: https://...` → upstream catalogue host (if
   not self-hosted).
 

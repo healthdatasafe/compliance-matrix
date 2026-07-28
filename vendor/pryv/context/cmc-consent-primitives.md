@@ -86,6 +86,28 @@ simpler: the user creates an access for the app via `app-web-auth3` flow;
 clientData can carry the consent text shown; permissions encode the scope.
 No `consent/*` events needed (the negotiation IS the local auth flow).
 
+## OAuth2 authorization consent screen (delegated-app grants)
+
+Since `open-pryv.io 2.0.0-rc.8` (`components/oauth2/`), a delegated app can
+obtain access through a standards-based OAuth2 authorization-code + PKCE flow
+whose consent step is a **granular consent screen**. `GET /oauth2/authorize`
+requires `scope` to be exactly one `cmc:<offer-name>` reference, resolves the
+client's registered consent offer, and hands the offer's per-permission set +
+consent texts to the authorization UI inside a signed state parameter
+(`components/oauth2/src/routes/authorize.ts`). The user can untick individual
+permissions to downgrade the grant; on accept, the kept subset
+(`grantedPermissions`) is validated ⊆ the signed offer and Pryv mints the app
+access from it (`components/oauth2/src/routes/accept.ts`). The **durable
+consent record is the same primitive as CMC** — a cross-account data-grant
+access, versioned and revocable (revoking it collapses the app's refresh
+chain) — so demonstrability and withdrawability rest on the access + its
+history exactly as for the flows above.
+
+Note on evidence surface: audit-event emission for the OAuth2 grant paths is
+defined (`components/oauth2/src/audit.ts` names the event catalogue) but **not
+yet wired** — the helper is a no-op stub. The citable consent evidence today is
+therefore the data-grant access + the signed offer material, not an event log.
+
 ## Gates on access-state-mutating consent triggers
 
 CMC's access-state-mutating lifecycle triggers are gated server-side. Two

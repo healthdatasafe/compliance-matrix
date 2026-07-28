@@ -198,7 +198,6 @@ requirements:
       - kind: feature
         summary: "bin/breach-scope.js bundles the §164.414 demonstration artefact (audit-walk + integrity hashes for the affected window)"
         proposal: proposals/breach-scope-tool.md
-        backlog: BREACH-SCOPE-TOOL
         tracking_url: https://github.com/pryv/open-pryv.io/issues/76
         impact: medium
     overview: |
@@ -226,7 +225,6 @@ requirements:
       - kind: feature
         summary: "bin/breach-scope.js compresses the scoping step so the 60-day clock is dominated by editorial work, not data-gathering"
         proposal: proposals/breach-scope-tool.md
-        backlog: BREACH-SCOPE-TOOL
         tracking_url: https://github.com/pryv/open-pryv.io/issues/76
         impact: medium
     overview: |
@@ -252,7 +250,6 @@ requirements:
       - kind: feature
         summary: "bin/breach-scope.js produces the §404(c) PHI-involved description machine-derivably from audit + access-version data"
         proposal: proposals/breach-scope-tool.md
-        backlog: BREACH-SCOPE-TOOL
         tracking_url: https://github.com/pryv/open-pryv.io/issues/76
         impact: medium
     overview: |

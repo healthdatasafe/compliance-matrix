@@ -82,7 +82,7 @@ cross-border replication unchanged by hashing under Recital 26.
   `PLATFORMDB-PII-HASHING`.
 - `compliance-matrix/context/cross-border-platformdb-implications.md`
   — option B in the A/B/C mitigation matrix.
-- `_plans/XXX-Backlog/PLATFORMDB-AT-REST-ENCRYPTION.md` —
+- `_plans/XXX-Backlog/COMPLIANCE-PLATFORMDB-AT-REST-ENCRYPTION.md` —
   orthogonal mitigation (option A); recommended in combination.
 - `_plans/XXX-Backlog/ALIASES.md` — pairs with this work; alias
   + HMAC combination strengthens the brute-force-resistance

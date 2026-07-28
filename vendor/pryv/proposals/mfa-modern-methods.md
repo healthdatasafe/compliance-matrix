@@ -1,7 +1,7 @@
 # Proposal: MFA — document the extension point + ship reference plugins
 
 **Status:** future. Mirror of the macroPryv backlog item
-`_plans/XXX-Backlog/MFA-MODERN-METHODS.md`, in the perspective of
+`_plans/XXX-Backlog/COMPLIANCE-MFA-MODERN-METHODS.md`, in the perspective of
 `_plans/40-OAUTH2-Account-based-signatures-later/` (the broader
 auth-modernisation plan).
 
@@ -81,7 +81,7 @@ add per-method tests.
 
 ## Related
 
-- Upstream backlog: `_plans/XXX-Backlog/MFA-MODERN-METHODS.md`.
+- Upstream backlog: `_plans/XXX-Backlog/COMPLIANCE-MFA-MODERN-METHODS.md`.
 - Plan 40 perspective: `_plans/40-OAUTH2-Account-based-signatures-later/PLAN.md`.
 - MFA code (open-pryv.io): `components/business/src/mfa/Service.ts`
   + subclasses `ChallengeVerifyService.ts` + `SingleService.ts`.
