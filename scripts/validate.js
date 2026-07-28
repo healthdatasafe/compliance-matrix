@@ -125,6 +125,18 @@ for (const { scope, file } of hdsScopes) {
       }
     }
 
+    // planned-chip drift guard: an upstream_proposal must exist in the vendored
+    // snapshot, so every sync:pryv flags uplinked chips whose upstream item
+    // shipped or was dropped; kind:platform must carry the anchor.
+    for (const p of (r.hds || {}).planned || []) {
+      if (p.kind === 'platform' && !p.upstream_proposal) {
+        e(`${cell}: hds.planned kind=platform requires upstream_proposal (the vendored proposal it is gated on)`);
+      }
+      if (p.upstream_proposal && !fs.existsSync(path.join(ROOT, p.upstream_proposal))) {
+        e(`${cell}: hds.planned upstream_proposal '${p.upstream_proposal}' not found in the vendored snapshot — upstream item shipped/dropped? Revisit this chip.`);
+      }
+    }
+
     // evidence completeness
     const hds = r.hds || {};
     if (['implemented', 'configurable'].includes(hds.coverage)) {

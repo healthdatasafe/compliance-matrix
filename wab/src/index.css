@@ -62,6 +62,7 @@ body {
 .planned-feature      { background-color: #e0e7ff; color: #3730a3; border: 1px solid #6366f1; }
 .planned-doc          { background-color: #fef3c7; color: #92400e; border: 1px solid #f59e0b; }
 .planned-procedure    { background-color: #fef3c7; color: #92400e; border: 1px solid #f59e0b; }
+.planned-platform     { background-color: #ccfbf1; color: #115e59; border: 1px solid #14b8a6; }
 
 .planned-impact-high   { font-weight: 700; }
 .planned-impact-medium { font-weight: 600; }

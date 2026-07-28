@@ -19,8 +19,12 @@ export const regions = (arr) =>
 export function plannedChips (planned = []) {
   return planned.map((p) => {
     const eta = p.eta || p.eta_release;
-    const tip = [p.summary, p.internal_doc ? `🔒 ${p.internal_doc}` : '', eta ? `target: ${eta}` : '']
-      .filter(Boolean).join(' — ');
+    const tip = [
+      p.summary,
+      p.internal_doc ? `🔒 ${p.internal_doc}` : '',
+      p.upstream_proposal ? `upstream: ${p.upstream_proposal.replace('vendor/pryv/', '')}` : '',
+      eta ? `target: ${eta}` : ''
+    ].filter(Boolean).join(' — ');
     const body = `⏳ ${esc(p.kind)}${eta ? ` · ${esc(eta)}` : ''}`;
     const cls = `pl ${esc(p.impact || 'low')}`;
     return p.tracking_url

@@ -3,7 +3,7 @@ import initSqlJs, { type BindParams, type Database, type SqlJsStatic } from 'sql
 export type Coverage = 'implemented' | 'configurable' | 'facilitated' | 'documented' | 'out-of-scope';
 export type EffortSaved = 'high' | 'medium' | 'low';
 export type FacilitationMode = 'primitive' | 'evidence' | 'storage' | 'infrastructure' | 'awareness' | 'operations';
-export type PlannedKind = 'feature' | 'doc' | 'procedure';
+export type PlannedKind = 'feature' | 'doc' | 'procedure' | 'platform';
 export type PlannedImpact = 'high' | 'medium' | 'low';
 
 export interface PlannedChange {
@@ -12,6 +12,7 @@ export interface PlannedChange {
   impact: PlannedImpact;
   internal_doc: string | null;
   tracking_url: string | null;
+  upstream_proposal: string | null;
   eta: string | null;
 }
 
@@ -137,7 +138,7 @@ export async function listRequirements (scopeId: string): Promise<Requirement[]>
   );
   const planned = rows<PlannedRaw>(
     db,
-    'SELECT ref, kind, summary, impact, internal_doc, tracking_url, eta FROM hds_planned WHERE scope_id = ? ORDER BY ref, seq',
+    'SELECT ref, kind, summary, impact, internal_doc, tracking_url, upstream_proposal, eta FROM hds_planned WHERE scope_id = ? ORDER BY ref, seq',
     [scopeId]
   );
   const plannedByRef = new Map<string, PlannedChange[]>();
@@ -149,6 +150,7 @@ export async function listRequirements (scopeId: string): Promise<Requirement[]>
       impact: p.impact,
       internal_doc: p.internal_doc,
       tracking_url: p.tracking_url,
+      upstream_proposal: p.upstream_proposal,
       eta: p.eta
     });
     plannedByRef.set(p.ref, arr);
@@ -197,7 +199,7 @@ export async function plannedCountsByScope (): Promise<Record<string, { planned:
   );
   const out: Record<string, { planned: number; byKind: Record<PlannedKind, number> }> = {};
   for (const r of raw) {
-    const entry = out[r.scope_id] ?? { planned: 0, byKind: { feature: 0, doc: 0, procedure: 0 } };
+    const entry = out[r.scope_id] ?? { planned: 0, byKind: { feature: 0, doc: 0, procedure: 0, platform: 0 } };
     entry.planned += r.c;
     entry.byKind[r.kind] = (entry.byKind[r.kind] ?? 0) + r.c;
     out[r.scope_id] = entry;

@@ -13,6 +13,12 @@ regions: [us]
 changelog:
   - date: "2026-07-28"
     change: >
+      Platform uplink chips (kind: platform): §164.308(a)(8) effective-config
+      endpoint as the evaluation baseline; §164.308(a)(5)(ii)(C) rate-limiting
+      recipes as the login-monitoring enforcement companion. Anchored on the
+      vendored upstream proposals, drift-guarded by validate.
+  - date: "2026-07-28"
+    change: >
       Internal-state sync: §164.308(a)(2) documented -> implemented (Security
       Official appointed 2026-07-15). §164.310(d)(1) stale "at-rest not yet
       shipped" wording corrected (shipped 2026-06-26); risk-doc code renamed
@@ -407,6 +413,15 @@ requirements:
     evidence:
       internal_docs:
         - hipaa/procedures/login-monitoring
+    planned:
+      - kind: platform
+        summary: >-
+          Upstream reference reverse-proxy rate-limiting configurations would
+          add an enforcement companion to login monitoring on the
+          authentication endpoints, once shipped and adopted in the HDS
+          deployment.
+        impact: low
+        upstream_proposal: vendor/pryv/proposals/rate-limiting-recipes.md
   implementer:
     - persona: covered-entity
       coverage: documented
@@ -704,6 +719,14 @@ requirements:
     evidence:
       internal_docs:
         - hipaa/procedures/periodic-evaluation
+    planned:
+      - kind: platform
+        summary: >-
+          A read-only effective-configuration endpoint queued upstream would
+          supply the per-core technical baseline snapshot this evaluation is
+          measured against, once shipped and deployed by HDS.
+        impact: low
+        upstream_proposal: vendor/pryv/proposals/config-effective-exposure.md
   implementer:
     - persona: covered-entity
       coverage: documented

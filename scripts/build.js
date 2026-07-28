@@ -13,7 +13,7 @@
  *                hds_overview, hds_detail, hds_technical, hds_regions)
  *   evidence(scope_id, ref, kind, value)            kind: test|doc|ops|internal_doc
  *   hds_planned(scope_id, ref, seq, kind, summary, impact, internal_doc,
- *               tracking_url, eta)
+ *               tracking_url, upstream_proposal, eta)
  *   implementer(scope_id, ref, persona, coverage, overview)
  *   implementer_templates(scope_id, ref, persona, template_id)
  *   templates(id, title, kind, signer, counterparty, frameworks, status, version, summary)
@@ -53,7 +53,7 @@ db.exec(`
   CREATE TABLE evidence (scope_id TEXT, ref TEXT, kind TEXT, value TEXT);
   CREATE TABLE hds_planned (
     scope_id TEXT, ref TEXT, seq INTEGER, kind TEXT, summary TEXT, impact TEXT,
-    internal_doc TEXT, tracking_url TEXT, eta TEXT
+    internal_doc TEXT, tracking_url TEXT, upstream_proposal TEXT, eta TEXT
   );
   CREATE TABLE implementer (scope_id TEXT, ref TEXT, persona TEXT, coverage TEXT, overview TEXT);
   CREATE TABLE implementer_templates (scope_id TEXT, ref TEXT, persona TEXT, template_id TEXT);
@@ -69,7 +69,7 @@ const insScope = db.prepare(`INSERT INTO scopes VALUES
 const insReq = db.prepare(`INSERT INTO requirements VALUES
   (@scope_id,@ref,@title,@text,@text_url,@pryv_ref,@draft,@hds_coverage,@hds_effort_saved,@hds_facilitation_mode,@hds_overview,@hds_detail,@hds_technical,@hds_regions)`);
 const insEv = db.prepare('INSERT INTO evidence VALUES (?,?,?,?)');
-const insPlanned = db.prepare('INSERT INTO hds_planned VALUES (?,?,?,?,?,?,?,?,?)');
+const insPlanned = db.prepare('INSERT INTO hds_planned VALUES (?,?,?,?,?,?,?,?,?,?)');
 const insImpl = db.prepare('INSERT INTO implementer VALUES (?,?,?,?,?)');
 const insImplT = db.prepare('INSERT INTO implementer_templates VALUES (?,?,?,?)');
 const insTpl = db.prepare(`INSERT INTO templates VALUES
@@ -123,7 +123,8 @@ const buildAll = db.transaction(() => {
       }
       (hds.planned || []).forEach((p, seq) => {
         insPlanned.run(s.id, r.ref, seq, p.kind, p.summary, p.impact,
-          p.internal_doc ?? null, p.tracking_url ?? null, p.eta ?? null);
+          p.internal_doc ?? null, p.tracking_url ?? null,
+          p.upstream_proposal ?? null, p.eta ?? null);
         nPlanned++;
       });
       for (const ob of r.implementer || []) {

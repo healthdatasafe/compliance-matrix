@@ -63,19 +63,20 @@
         },
         "planned": {
           "type": "array",
-          "description": "Queued HDS-side work whose delivery would change this row's claim, each entry backed by evidence it is actually coming (a compliance-internal document moving through review, or a public tracking issue). Rendered as one chip per entry alongside the coverage badge; scope pages filter on it. THIS REPO IS PUBLIC: reference only internal document CODES or public URLs — never private workspace paths or plan numbers.",
+          "description": "Queued work whose delivery would change this row's claim, each entry backed by evidence it is actually coming (a compliance-internal document moving through review, a public tracking issue, or a vendored upstream proposal). Rendered as one chip per entry alongside the coverage badge; scope pages filter on it. THIS REPO IS PUBLIC: reference only internal document CODES, public URLs, or vendored paths — never private workspace paths or plan numbers.",
           "items": {
             "type": "object",
             "additionalProperties": false,
             "required": ["kind", "summary", "impact"],
             "anyOf": [
               { "required": ["internal_doc"] },
-              { "required": ["tracking_url"] }
+              { "required": ["tracking_url"] },
+              { "required": ["upstream_proposal"] }
             ],
             "properties": {
               "kind": {
-                "enum": ["feature", "doc", "procedure"],
-                "description": "feature = HDS app/infra capability queued for delivery; doc = a compliance-internal document drafted and moving through review/approval (name its code in internal_doc); procedure = an operational procedure being stood up (first verified execution pending)."
+                "enum": ["feature", "doc", "procedure", "platform"],
+                "description": "feature = HDS app/infra capability queued for delivery; doc = a compliance-internal document drafted and moving through review/approval (name its code in internal_doc); procedure = an operational procedure being stood up (first verified execution pending); platform = an upstream platform feature queued by the vendor whose shipping AND HDS-side deploy+verify would change this row's claim (authored uplink — impact rated from the HDS row's perspective, not the vendor's; anchor it with upstream_proposal)."
               },
               "summary": {
                 "type": "string",
@@ -94,6 +95,11 @@
                 "type": "string",
                 "format": "uri",
                 "description": "PUBLIC tracker only (GitHub issue / public project card). Never a private workspace path."
+              },
+              "upstream_proposal": {
+                "type": "string",
+                "pattern": "^vendor/pryv/proposals/[A-Za-z0-9._-]+\\.md$",
+                "description": "Path to the vendored upstream proposal this chip is gated on (e.g. 'vendor/pryv/proposals/e2e-encryption.md'). The file must exist in the snapshot — validate.js fails otherwise, so every sync:pryv automatically flags uplinked chips whose upstream item shipped or was dropped."
               },
               "eta": {
                 "type": "string",

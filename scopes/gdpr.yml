@@ -13,6 +13,12 @@ regions: [ch, us]
 changelog:
   - date: "2026-07-28"
     change: >
+      Platform uplink chips (new kind: platform, anchored on vendored upstream
+      proposals, drift-guarded by validate): Art.32 e2e/operator-held-key
+      encryption; Art.17 audit pseudonymise mode. Each impact-rated from the
+      HDS row's perspective with the ships-AND-HDS-deploys gate stated.
+  - date: "2026-07-28"
+    change: >
       Internal-state sync: Art.37 out-of-scope -> implemented (DPO appointed
       2026-07-17). Art.33/Art.34 stale "at-rest known gap" wording corrected
       (shipped 2026-06-26); Art.32 risk-doc code renamed
@@ -654,6 +660,15 @@ requirements:
           - gdpr/procedures/data-subject-rights
           - gdpr/policies/data-retention
           - hipaa/procedures/data-backup-plan
+      planned:
+        - kind: platform
+          summary: >-
+            The audit.onUserDelete pseudonymise mode (audit-row PII null-out
+            composing the shipped alias primitive) is queued upstream; this
+            row's erasure-vs-audit-retention position stays partial until it
+            ships and HDS deploys it.
+          impact: medium
+          upstream_proposal: vendor/pryv/proposals/audit-on-user-delete.md
     implementer:
       - persona: controller
         coverage: documented
@@ -1175,6 +1190,15 @@ requirements:
           - hipaa/policies/access-control
           - hipaa/risk/at-rest-encryption
           - hipaa/evidence/at-rest-encryption-verification
+      planned:
+        - kind: platform
+          summary: >-
+            End-to-end / operator-held-key encryption is queued upstream as the
+            strengthening for the provider-managed-key at-rest residual;
+            claimable on this row only after pryv ships it AND HDS deploys and
+            enables it on all cores.
+          impact: medium
+          upstream_proposal: vendor/pryv/proposals/e2e-encryption.md
     implementer:
       - persona: controller
         coverage: documented

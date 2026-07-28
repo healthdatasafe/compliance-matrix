@@ -13,6 +13,11 @@ regions: [us, ch]
 changelog:
   - date: "2026-07-28"
     change: >
+      Platform uplink chips (kind: platform): CC6.7 e2e/operator-held-key
+      encryption; PI1.5 audit-log chaining. Impact rated from the HDS row's
+      perspective; anchored on the vendored upstream proposals.
+  - date: "2026-07-28"
+    change: >
       Internal-state sync: CC5.2 + CC6.7 stale "at-rest not yet shipped"
       wording corrected (hosting-layer full-volume encryption in force since
       2026-06-26; provider-managed-key residual documented); risk-doc code
@@ -1101,6 +1106,15 @@ requirements:
         - hipaa/policies/encryption
         - hipaa/risk/at-rest-encryption
         - hipaa/evidence/at-rest-encryption-verification
+    planned:
+      - kind: platform
+        summary: >-
+          End-to-end / operator-held-key encryption is queued upstream as the
+          strengthening for the provider-managed-key at-rest residual;
+          claimable here only after pryv ships it AND HDS deploys and enables
+          it on all cores.
+        impact: medium
+        upstream_proposal: vendor/pryv/proposals/e2e-encryption.md
   implementer:
     - persona: service-organization
       coverage: configurable
@@ -2000,6 +2014,14 @@ requirements:
       internal_docs:
         - hipaa/policies/integrity
         - hipaa/procedures/data-backup-plan
+    planned:
+      - kind: platform
+        summary: >-
+          A hash-chained (tamper-evident) audit log is queued upstream; the
+          tamper-evidence half of this row becomes claimable after it ships
+          and HDS deploys it.
+        impact: medium
+        upstream_proposal: vendor/pryv/proposals/audit-log-chaining.md
   implementer:
     - persona: service-organization
       coverage: documented

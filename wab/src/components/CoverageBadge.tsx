@@ -118,7 +118,8 @@ export function DraftBadge () {
 const PLANNED_KIND_LABELS: Record<PlannedKind, string> = {
   feature: 'PLANNED',
   doc: 'DOC PENDING',
-  procedure: 'PROC PENDING'
+  procedure: 'PROC PENDING',
+  platform: 'PLATFORM'
 };
 
 /**
@@ -139,6 +140,7 @@ export function PlannedBadge ({ change }: { change: PlannedChange }) {
     `${labelKind} (${impact} impact): ${change.summary}`
   ];
   if (change.internal_doc) titleParts.push(`Internal doc: 🔒 ${change.internal_doc} (on request)`);
+  if (change.upstream_proposal) titleParts.push(`Upstream: ${change.upstream_proposal}`);
   if (change.eta) titleParts.push(`ETA: ${change.eta}`);
   if (change.tracking_url) titleParts.push(`Tracker: ${change.tracking_url}`);
 
