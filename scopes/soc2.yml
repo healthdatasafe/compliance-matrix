@@ -13,6 +13,11 @@ regions: [us, ch]
 changelog:
   - date: "2026-07-28"
     change: >
+      P6.6: platform uplink chip for the upstream breach-scope tool
+      (pryv/open-pryv.io#76) — automates the manual compromised-access
+      reverse-index this row states.
+  - date: "2026-07-28"
+    change: >
       Platform uplink chips (kind: platform): CC6.7 e2e/operator-held-key
       encryption; PI1.5 audit-log chaining. Impact rated from the HDS row's
       perspective; anchored on the vendored upstream proposals.
@@ -2700,6 +2705,15 @@ requirements:
     evidence:
       internal_docs:
         - hipaa/procedures/security-incident-response
+    planned:
+      - kind: platform
+        summary: >-
+          The upstream breach-scope tool would automate exactly the manual
+          step this row states — the reverse-index from a compromised access
+          to affected subjects — once shipped and deployed by HDS.
+        impact: medium
+        upstream_proposal: vendor/pryv/proposals/breach-scope-tool.md
+        tracking_url: https://github.com/pryv/open-pryv.io/issues/76
   implementer:
     - persona: service-organization
       coverage: documented

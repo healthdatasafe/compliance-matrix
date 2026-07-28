@@ -13,6 +13,10 @@ regions: [ch]
 changelog:
   - date: "2026-07-28"
     change: >
+      Art.24: platform uplink chip for the upstream breach-scope tool
+      (pryv/open-pryv.io#76) — delivery watch armed.
+  - date: "2026-07-28"
+    change: >
       Art.8 + Art.24: stale "at-rest not implemented" wording corrected — the
       event store is encrypted at rest since 2026-06-26 (hosting-layer volume
       encryption, provider-managed-key residual documented); risk-doc code
@@ -352,6 +356,16 @@ requirements:
           - hipaa/procedures/security-incident-response
           - gdpr/procedures/breach-notification-72h
           - hipaa/risk/at-rest-encryption
+      planned:
+        - kind: platform
+          summary: >-
+            The upstream breach-scope tool (automated scoping report from
+            audit + access-version data for a compromised access) is queued;
+            once shipped and deployed by HDS it turns the Commissioner-
+            notification scoping into an emitted artefact.
+          impact: medium
+          upstream_proposal: vendor/pryv/proposals/breach-scope-tool.md
+          tracking_url: https://github.com/pryv/open-pryv.io/issues/76
     implementer:
       - persona: controller
         coverage: documented
