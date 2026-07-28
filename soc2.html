@@ -44,6 +44,7 @@
   <span class="fgroup" id="persona">
     <label><input type="checkbox" value="partner" checked> partner</label><label><input type="checkbox" value="covered-entity" checked> covered-entity</label><label><input type="checkbox" value="business-associate" checked> business-associate</label><label><input type="checkbox" value="individual" checked> individual</label>
   </span>
+  <label class="fgroup"><input type="checkbox" id="fplan"> <span class="pl low">⏳ planned only</span></label>
   <span class="fcount" id="fcount"></span>
 </div>
     <div class="reqs"><article class="req" id="req-cc1-1" data-coverage="documented" data-personas="service-organization user-entity subservice-organization" data-text="cc1.1 cc1.1 — commitment to integrity and ethical values integrity and ethical values are a matter of organizational culture, not
@@ -52,14 +53,14 @@ policy that set the ethical baseline for its own workforce operating the
 platform; the service organization building on hds sets and documents its
 own. the platform contributes only after the fact: the per-user audit log
 can evidence whether workforce behaviour matched the stated values.
-">
+" data-planned="0">
   <h3><code>CC1.1</code> CC1.1 — Commitment to integrity and ethical values <span class="draft">draft</span></h3>
   <p class="text">The service organization demonstrates a commitment to integrity and ethical
 values as a foundation for its system of internal control.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b out-of-scope">out-of-scope</span></div>
+      <div class="lh">Pryv platform <span class="b out-of-scope">out-of-scope</span> </div>
       <p>Integrity + ethics are a management-and-culture matter. Pryv has
 no software role at the values / code-of-conduct layer; your audit
 log can later evidence whether workforce behaviour matched the
@@ -68,7 +69,7 @@ document.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>Integrity and ethical values are a matter of organizational culture, not
 software. HDS maintains a written code of conduct and information-security
 policy that set the ethical baseline for its own workforce operating the
@@ -113,21 +114,21 @@ role. hds documents its own governance and oversight arrangements internally;
 the service organization documents its own board's independence and oversight
 function. this matrix and the audit log can feed the oversight pack a board
 reviews, but the oversight function itself is a governance obligation.
-">
+" data-planned="0">
   <h3><code>CC1.2</code> CC1.2 — Board independence and oversight <span class="draft">draft</span></h3>
   <p class="text">The board of directors operates independently of management and oversees the
 development and performance of internal control.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b out-of-scope">out-of-scope</span></div>
+      <div class="lh">Pryv platform <span class="b out-of-scope">out-of-scope</span> </div>
       <p>Board governance is organizational. No software contribution; this
 matrix + the audit log feed the oversight pack the board reviews,
 but the oversight function is yours.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>Board governance and oversight are organizational structures with no software
 role. HDS documents its own governance and oversight arrangements internally;
 the service organization documents its own board's independence and oversight
@@ -169,7 +170,7 @@ operation, including the named security official accountable for the
 programme. the platform enforces the technical half of &quot;appropriate
 authorities&quot; once they are decided (least-privilege access, see cc6.3), but
 the structure design itself is management work.
-">
+" data-planned="0">
   <h3><code>CC1.3</code> CC1.3 — Management structures, reporting lines, and authorities <span class="draft">draft</span></h3>
   <p class="text">Management, with board oversight, establishes structures, reporting lines, and
 appropriate authorities and responsibilities in pursuit of the entity's
@@ -177,7 +178,7 @@ objectives.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b out-of-scope">out-of-scope</span></div>
+      <div class="lh">Pryv platform <span class="b out-of-scope">out-of-scope</span> </div>
       <p>Org structure + authority assignment are management artefacts.
 Pryv enforces the *technical* half of &quot;appropriate authorities&quot;
 once you've decided them (see CC6.3 least-privilege), but the
@@ -185,7 +186,7 @@ reporting-line design itself is yours.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>Organizational structure and authority assignment are management artefacts.
 HDS documents the reporting lines and authorities for its own platform
 operation, including the named security official accountable for the
@@ -227,20 +228,20 @@ operate downstream.
 software role. hds runs and documents its own competence programme for the
 workforce operating the platform; formal, verified security-awareness
 training is a known gap being matured. the service organization runs its own.
-">
+" data-planned="0">
   <h3><code>CC1.4</code> CC1.4 — Commitment to competence <span class="draft">draft</span></h3>
   <p class="text">The entity demonstrates a commitment to attract, develop, and retain competent
 individuals in alignment with its objectives.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b out-of-scope">out-of-scope</span></div>
+      <div class="lh">Pryv platform <span class="b out-of-scope">out-of-scope</span> </div>
       <p>Hiring + training + retention is an HR programme. No software
 role.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>Hiring, training and retention of competent staff is an HR programme with no
 software role. HDS runs and documents its own competence programme for the
 workforce operating the platform; formal, verified security-awareness
@@ -280,14 +281,14 @@ audit log, so &quot;who did what, when&quot; is recoverable when an individual m
 held to account. hds layers its own sanction and accountability policy on
 top and documents it; defining responsibilities and the consequence process
 is each organization's management activity.
-">
+" data-planned="0">
   <h3><code>CC1.5</code> CC1.5 — Accountability for internal control responsibilities <span class="draft">draft</span></h3>
   <p class="text">The entity holds individuals accountable for their internal control
 responsibilities in pursuit of its objectives.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Pryv gives you the technical accountability substrate: every API
 call is attributable to an access (accessId + accessSerial) in the
 per-user audit log, so &quot;who did what, when&quot; is recoverable when
@@ -297,7 +298,7 @@ activity; Pryv supplies the evidence trail.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>The platform HDS operates supplies the technical accountability substrate:
 every API call is attributable to a specific access identity in the per-user
 audit log, so &quot;who did what, when&quot; is recoverable when an individual must be
@@ -342,14 +343,14 @@ an access identity) and operational monitoring (security and operational
 kpis across both data-residency options). what to monitor and how to act on
 it is each organization's programme; hds supplies the quality data and runs
 its own monitoring over the platform.
-">
+" data-planned="0">
   <h3><code>CC2.1</code> CC2.1 — Quality information to support internal control <span class="draft">draft</span></h3>
   <p class="text">The entity obtains or generates and uses relevant, quality information to
 support the functioning of internal control.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Pryv produces two streams of control-relevant information: the
 per-user audit log (application-level activity, attributable to an
 access) and observability metrics (operational + security KPIs via
@@ -358,7 +359,7 @@ your programme; Pryv supplies the quality data.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>The platform produces two streams of control-relevant information that HDS
 operates: the per-user audit log (application-level activity, attributable to
 an access identity) and operational monitoring (security and operational
@@ -399,20 +400,20 @@ substrate you run downstream.
 software role at the communication-content layer. hds documents how it
 communicates security objectives and responsibilities to its own workforce;
 the service organization runs its own internal-communication programme.
-">
+" data-planned="0">
   <h3><code>CC2.2</code> CC2.2 — Internal communication of objectives and responsibilities <span class="draft">draft</span></h3>
   <p class="text">The entity internally communicates information, including objectives and
 responsibilities for internal control, needed to support its functioning.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b out-of-scope">out-of-scope</span></div>
+      <div class="lh">Pryv platform <span class="b out-of-scope">out-of-scope</span> </div>
       <p>Internal communication of objectives is a management activity. No
 software role at the communication-content layer.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>Internal communication of objectives is a management activity with no
 software role at the communication-content layer. HDS documents how it
 communicates security objectives and responsibilities to its own workforce;
@@ -453,14 +454,14 @@ change notes communicate what changed in the substrate. hds layers its own
 external-communication programme (customer, subprocessor and auditor
 communications) on top and documents it. the service organization runs its
 own.
-">
+" data-planned="0">
   <h3><code>CC2.3</code> CC2.3 — External communication on internal control matters <span class="draft">draft</span></h3>
   <p class="text">The entity communicates with external parties about matters affecting the
 functioning of internal control.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>For the slice of external communication that concerns the Pryv
 platform itself, open-pryv.io's public release process is the
 channel: tagged releases, CHANGELOG-v2 + CHANGELOG-v2-back, and
@@ -469,7 +470,7 @@ your own customer / subprocessor / auditor communications on top.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>For the slice of external communication that concerns the platform itself,
 the public release process is the channel: tagged releases and published
 change notes communicate what changed in the substrate. HDS layers its own
@@ -511,21 +512,21 @@ upstream service organization.
 authoring objectives. hds documents the security and availability objectives
 it sets for its own platform operation. this matrix supports the downstream
 risk-to-control mapping once an organization's objectives exist.
-">
+" data-planned="0">
   <h3><code>CC3.1</code> CC3.1 — Objectives specified with sufficient clarity <span class="draft">draft</span></h3>
   <p class="text">The entity specifies objectives with enough clarity to enable the
 identification and assessment of risks relating to them.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b out-of-scope">out-of-scope</span></div>
+      <div class="lh">Pryv platform <span class="b out-of-scope">out-of-scope</span> </div>
       <p>Objective-setting is your management exercise. Pryv has no role in
 authoring objectives; the matrix supports the downstream
 risk-to-control mapping once your objectives exist.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>Objective-setting is a management exercise; the platform has no role in
 authoring objectives. HDS documents the security and availability objectives
 it sets for its own platform operation. This matrix supports the downstream
@@ -565,14 +566,14 @@ known gap being matured. what hds contributes is the inventory of technical
 controls (this matrix, especially the cc6 access and cc6.6/6.7 boundary and
 cryptography rows), so when a confidentiality, integrity or availability risk
 is identified, the control that addresses it is mechanical to locate.
-">
+" data-planned="0">
   <h3><code>CC3.2</code> CC3.2 — Identification and analysis of risk <span class="draft">draft</span></h3>
   <p class="text">The entity identifies risks to the achievement of its objectives across the
 entity and analyzes them as a basis for deciding how they should be managed.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Your risk-assessment methodology and the specific findings are
 yours. Pryv contributes the inventory of technical controls (this
 matrix, particularly the CC6 access + CC6.6/6.7 boundary +
@@ -583,7 +584,7 @@ rather than judgemental.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>A formal risk assessment is each organization's own methodology and findings.
 HDS is honest that its own formal risk assessment is not yet conducted — a
 known gap being matured. What HDS contributes is the inventory of technical
@@ -625,14 +626,14 @@ insider-misuse and anomalous-access fraud scenarios — every access is
 attributable, and unusual read or write patterns surface. hds operates this
 substrate; the fraud-risk analysis itself (which scenarios matter, what
 thresholds trigger review) is each organization's assessment.
-">
+" data-planned="0">
   <h3><code>CC3.3</code> CC3.3 — Consideration of the potential for fraud <span class="draft">draft</span></h3>
   <p class="text">The entity considers the potential for fraud when assessing risks to the
 achievement of its objectives.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Pryv's audit log + observability metrics are the detection
 substrate for insider-misuse and anomalous-access fraud scenarios
 (every access is attributable; unusual read/write patterns
@@ -641,7 +642,7 @@ what thresholds trigger review — is your assessment.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>The audit log and operational monitoring are the detection substrate for
 insider-misuse and anomalous-access fraud scenarios — every access is
 attributable, and unusual read or write patterns surface. HDS operates this
@@ -682,14 +683,14 @@ changed, and the audit log shows when config-driven behaviour changed
 observably in a deployment. hds assesses substrate changes as part of its own
 operations. the change-impact assessment process for an organization's wider
 control system is its own.
-">
+" data-planned="0">
   <h3><code>CC3.4</code> CC3.4 — Identification and assessment of changes affecting internal control <span class="draft">draft</span></h3>
   <p class="text">The entity identifies and assesses changes that could significantly affect its
 system of internal control.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>For changes to the Pryv platform, open-pryv.io's CHANGELOGs +
 tagged releases announce what changed; the audit log shows when
 config-driven behaviour changed observably in your deployment. The
@@ -697,7 +698,7 @@ change-impact assessment process is yours.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>For changes to the platform substrate, the public release notes announce what
 changed, and the audit log shows when config-driven behaviour changed
 observably in a deployment. HDS assesses substrate changes as part of its own
@@ -739,7 +740,7 @@ out-of-scope reads), and operational monitoring evidences operational health.
 hds runs its own periodic evaluation over the platform and documents it. the
 evaluation cadence and sampling method for an organization's own controls are
 its own.
-">
+" data-planned="0">
   <h3><code>CC4.1</code> CC4.1 — Ongoing and separate evaluations <span class="draft">draft</span></h3>
   <p class="text">The entity selects, develops, and performs ongoing and/or separate evaluations
 to ascertain whether the components of internal control are present and
@@ -747,7 +748,7 @@ functioning.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Pryv supplies the data an ongoing evaluation samples: the audit
 log evidences control-effectiveness (e.g., that access scoping
 actually blocks out-of-scope reads), observability evidences
@@ -756,7 +757,7 @@ sampling method.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>The platform supplies the data an ongoing evaluation samples: the audit log
 evidences control effectiveness (e.g. that access scoping actually blocks
 out-of-scope reads), and operational monitoring evidences operational health.
@@ -797,14 +798,14 @@ alerts — feed a deficiency-tracking process. hds operates its own
 deficiency-evaluation and corrective-action flow and documents it; corrective
 records can themselves ride on the platform as events on a dedicated stream.
 the evaluation and communication workflow is each organization's procedure.
-">
+" data-planned="0">
   <h3><code>CC4.2</code> CC4.2 — Evaluation and communication of deficiencies <span class="draft">draft</span></h3>
   <p class="text">The entity evaluates and communicates internal-control deficiencies in a timely
 manner to the parties responsible for taking corrective action.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Pryv-side deficiency signals (audit anomalies, observability
 alerts) feed your deficiency-tracking process. CAPA-style records
 can themselves ride on Pryv events on a dedicated stream. The
@@ -812,7 +813,7 @@ evaluation + communication workflow is your procedure.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>Deficiency signals from the platform side — audit anomalies, monitoring
 alerts — feed a deficiency-tracking process. HDS operates its own
 deficiency-evaluation and corrective-action flow and documents it; corrective
@@ -853,14 +854,14 @@ of privileged data, and encryption of operator secrets at rest. an
 organization selects which to deploy against which risk; hds provides the
 activities as shipped controls rather than something to build, and documents
 the configuration it runs.
-">
+" data-planned="0">
   <h3><code>CC5.1</code> CC5.1 — Selection and development of control activities <span class="draft">draft</span></h3>
   <p class="text">The entity selects and develops control activities that contribute to
 mitigating risks to the achievement of objectives to acceptable levels.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Several of your control activities ARE Pryv primitives:
 permission-scoped access tokens (purpose limitation), system
 streams (privileged-data isolation), encryption of operator
@@ -870,7 +871,7 @@ you build.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>Several control activities are platform primitives HDS operates ready-made:
 permission-scoped access tokens (purpose limitation), system-level isolation
 of privileged data, and encryption of operator secrets at rest. An
@@ -914,14 +915,14 @@ transport — are shipped platform controls hds operates, enforced at the api
 surface rather than left to configuration discipline. the cc6 and cc7 rows
 detail each. an organization's role is selecting and operating them; the
 mechanisms are in place.
-">
+" data-planned="0">
   <h3><code>CC5.2</code> CC5.2 — General control activities over technology <span class="draft">draft</span></h3>
   <p class="text">The entity selects and develops general control activities over technology to
 support the achievement of its objectives.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>The technology general controls SOC 2 examines — logical access,
 authentication, encryption in transit + at rest for secrets,
 audit logging, secure inter-core transport — are shipped Pryv
@@ -931,7 +932,7 @@ Your role is selecting and operating them.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b implemented">implemented</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b implemented">implemented</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>The technology general controls SOC 2 examines — logical access,
 authentication, encryption in transit, audit logging, secure inter-core
 transport — are shipped platform controls HDS operates, enforced at the API
@@ -975,21 +976,21 @@ its own information-security policy set and the operating procedures that put
 it into action over the platform; the platform enforces what the policies
 decide (access rules, encryption in transit), but the policy text and
 procedures are an organization's own.
-">
+" data-planned="0">
   <h3><code>CC5.3</code> CC5.3 — Deployment of control activities through policies and procedures <span class="draft">draft</span></h3>
   <p class="text">The entity deploys control activities through policies that establish what is
 expected and procedures that put those policies into action.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b out-of-scope">out-of-scope</span></div>
+      <div class="lh">Pryv platform <span class="b out-of-scope">out-of-scope</span> </div>
       <p>Policy + procedure authoring is your editorial work. Pryv enforces
 what the policies decide (access rules, encryption), but the
 policy text and the operating procedures are yours.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>Policy and procedure authoring is editorial governance work. HDS maintains
 its own information-security policy set and the operating procedures that put
 it into action over the platform; the platform enforces what the policies
@@ -1032,7 +1033,7 @@ permissions, token-based authentication is the default, multi-factor
 authentication is available, and privileged data is held on a separately
 controlled namespace. no plaintext transport path is served. an organization
 defines who gets which access; hds operates the enforcement.
-">
+" data-planned="1">
   <h3><code>CC6.1</code> CC6.1 — Logical access security over protected information assets <span class="draft">draft</span></h3>
   <p class="text">The entity implements logical access security software, infrastructure, and
 architectures over protected information assets to protect them from security
@@ -1040,7 +1041,7 @@ events.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b implemented">implemented</span></div>
+      <div class="lh">Pryv platform <span class="b implemented">implemented</span> <a class="pl medium" href="https://github.com/pryv/open-pryv.io/issues/78" title="Reference TOTP / WebAuthn MFA plugins + AAL-tier mapping strengthen the CC6.1 authentication-strength evidence">⏳ enhancement</a></div>
       <p>Logical access is enforced by Pryv at the API surface: every
 read/write is checked against the access's per-stream + level
 permissions, token-based authentication is the default, and MFA is
@@ -1051,7 +1052,7 @@ enforces it.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b implemented">implemented</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b implemented">implemented</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>Logical access is enforced by the HDS-operated platform at the API surface:
 every read or write is checked against the access's per-stream and per-level
 permissions, token-based authentication is the default, multi-factor
@@ -1096,7 +1097,7 @@ updating an access modifies its scope (writing the prior version to history),
 and revocation or account deletion removes it. each stage lands in the audit
 log. the authorization decision (who may register, what scope is appropriate)
 is an organization's policy; the mechanism is shipped.
-">
+" data-planned="0">
   <h3><code>CC6.2</code> CC6.2 — Registration, credential issuance, and de-provisioning <span class="draft">draft</span></h3>
   <p class="text">Before issuing credentials and granting access, the entity registers and
 authorizes new users; credentials are removed when access is no longer
@@ -1104,7 +1105,7 @@ authorized.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b implemented">implemented</span></div>
+      <div class="lh">Pryv platform <span class="b implemented">implemented</span> </div>
       <p>The full credential lifecycle is Pryv primitives: registration
 mints an account; accesses.create issues a scoped credential;
 accesses.update modifies scope (writing the prior version to
@@ -1115,7 +1116,7 @@ appropriate) is your policy; the mechanism is shipped.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b implemented">implemented</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b implemented">implemented</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>The full credential lifecycle is platform-native and HDS-operated:
 registration mints an account, a scoped access token issues a credential,
 updating an access modifies its scope (writing the prior version to history),
@@ -1159,14 +1160,14 @@ touch out-of-scope data. segregation of duties is expressed by issuing
 distinct narrow accesses per role, with privileged functions isolated on a
 separate namespace. modification and removal are audited operations with
 version history as the review-evidence layer.
-">
+" data-planned="0">
   <h3><code>CC6.3</code> CC6.3 — Role-based access, least privilege, and segregation of duties <span class="draft">draft</span></h3>
   <p class="text">The entity authorizes, modifies, and removes access based on roles and the
 system design, applying least privilege and segregation of duties.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b implemented">implemented</span></div>
+      <div class="lh">Pryv platform <span class="b implemented">implemented</span> </div>
       <p>Least privilege is native: an access carries only the
 stream+level tuples it needs (none / create-only / read /
 contribute / manage), so a credential cannot touch out-of-scope
@@ -1179,7 +1180,7 @@ access state.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b implemented">implemented</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b implemented">implemented</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>Least privilege is native to the HDS-operated platform: an access carries
 only the per-stream, per-level permissions it needs, so a credential cannot
 touch out-of-scope data. Segregation of duties is expressed by issuing
@@ -1224,14 +1225,14 @@ selecting certified hosting providers for each region (eu/switzerland and us
 data-residency options) and holding their facility-control attestations on
 file, so an organization inherits a vetted physical posture for the server
 tier rather than sourcing it itself.
-">
+" data-planned="0">
   <h3><code>CC6.4</code> CC6.4 — Physical access to facilities and protected assets <span class="draft">draft</span></h3>
   <p class="text">The entity restricts physical access to facilities and protected information
 assets to authorized personnel.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b out-of-scope">out-of-scope</span></div>
+      <div class="lh">Pryv platform <span class="b out-of-scope">out-of-scope</span> </div>
       <p>Physical access control (data-center entry, badge systems, media
 vaults) is facility scope, outside Pryv's software boundary. Your
 hosting provider carries this — an HDS- or ISO 27001-certified
@@ -1240,7 +1241,7 @@ the attestation you reference.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>Physical access control (data-centre entry, media handling) is facility
 scope, outside the platform software boundary. HDS carries this layer by
 selecting certified hosting providers for each region (EU/Switzerland and US
@@ -1284,7 +1285,7 @@ stream-level deletion cover per-record needs. whether destruction extends to
 backups is storage-engine-dependent, so the engine is chosen to match the
 destruction policy. physical media sanitisation at the server tier is the
 certified hosting provider's procedure.
-">
+" data-planned="0">
   <h3><code>CC6.5</code> CC6.5 — Protections over data and software on disposed assets <span class="draft">draft</span></h3>
   <p class="text">The entity removes logical and physical protections over physical assets only
 after the ability to read or recover the data and software from them has been
@@ -1292,7 +1293,7 @@ diminished and is no longer required.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b configurable">configurable</span></div>
+      <div class="lh">Pryv platform <span class="b configurable">configurable</span> </div>
       <p>Logical destruction is per-user: system.users.delete removes the
 user's data from the live store; event- and stream-level deletion
 cover per-record needs. Whether destruction extends to backups is
@@ -1304,7 +1305,7 @@ procedure.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b configurable">configurable</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b configurable">configurable</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>Logical destruction is per-user on the HDS-operated platform: account
 deletion removes a user's data from the live store, and event- and
 stream-level deletion cover per-record needs. Whether destruction extends to
@@ -1348,14 +1349,14 @@ request, and no plaintext path. inter-core traffic in a cluster runs over
 mutually authenticated transport, separating the control plane from the
 user-facing plane. edge controls (waf, firewall, rate limiting) sit in the
 operator's reverse proxy by design.
-">
+" data-planned="0">
   <h3><code>CC6.6</code> CC6.6 — Boundary protection against external threats <span class="draft">draft</span></h3>
   <p class="text">The entity implements logical access security measures to protect against
 threats originating outside its system boundaries.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b implemented">implemented</span></div>
+      <div class="lh">Pryv platform <span class="b implemented">implemented</span> </div>
       <p>The external boundary is the TLS-terminating HTTPS API: TLS 1.3 in
 transit with the built-in ACME integration (auto-renewal +
 cluster-replicated rotation), token-gated access on every request,
@@ -1366,7 +1367,7 @@ reverse proxy by design — see context/rate-limiting-and-dos-protection.md.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b implemented">implemented</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b implemented">implemented</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>The external boundary is the TLS-terminating HTTPS API HDS operates: TLS in
 transit with automated certificate renewal, token-gated access on every
 request, and no plaintext path. Inter-core traffic in a cluster runs over
@@ -1410,7 +1411,7 @@ by the permission model — a credential only moves the data its scope permits.
 operator secrets at rest and bootstrap bundles for core-to-core movement are
 encrypted with authenticated encryption. bulk event-data at-rest encryption
 is an operator-side storage-layer choice and is not yet platform-provided.
-">
+" data-planned="0">
   <h3><code>CC6.7</code> CC6.7 — Restriction and protection of information in transmission and movement <span class="draft">draft</span></h3>
   <p class="text">The entity restricts the transmission, movement, and removal of information to
 authorized users and processes, and protects it during transmission, movement,
@@ -1418,7 +1419,7 @@ or removal.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b implemented">implemented</span></div>
+      <div class="lh">Pryv platform <span class="b implemented">implemented</span> </div>
       <p>Transmission is TLS 1.3 end-to-end (client ↔ core direct, no
 Pryv-shipped intermediary that could log or cache). Movement is
 restricted by the permission model — a credential only moves the
@@ -1429,7 +1430,7 @@ operator-side storage-layer choice (LUKS / SSE-KMS / customer keys).
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b implemented">implemented</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b implemented">implemented</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>Transmission is protected by TLS end to end (client to core direct, with no
 HDS-shipped intermediary that could log or cache), and movement is restricted
 by the permission model — a credential only moves the data its scope permits.
@@ -1476,14 +1477,14 @@ hosting layer for the environments it runs, documented internally. the
 platform contributes detection-adjacent properties: server-side payload
 validation rejects malformed input at ingest, and the audit and monitoring
 substrate surfaces anomalous behaviour.
-">
+" data-planned="0">
   <h3><code>CC6.8</code> CC6.8 — Prevention and detection of unauthorized or malicious software <span class="draft">draft</span></h3>
   <p class="text">The entity implements controls to prevent, or detect and act upon, the
 introduction of unauthorized or malicious software.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Anti-malware / endpoint protection is a host-and-network control,
 not shipped in Pryv. Pryv's contribution is detection-adjacent:
 server-side event-type validation rejects malformed payloads at
@@ -1493,7 +1494,7 @@ application-allowlisting on the hosts is your operator scope.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>Anti-malware and endpoint protection are host-and-network controls, not
 platform features. HDS operates malware protection and patching at the
 hosting layer for the environments it runs, documented internally. The
@@ -1537,7 +1538,7 @@ fix announcements, and a config-validation step that fails fast on malformed
 configuration at start. operational monitoring and the audit log surface
 runtime anomalies. hds operates this and layers its own patching cadence;
 an organization's own vulnerability-scanning cadence sits on top.
-">
+" data-planned="1">
   <h3><code>CC7.1</code> CC7.1 — Detection of configuration changes and vulnerabilities <span class="draft">draft</span></h3>
   <p class="text">The entity uses detection and monitoring procedures to identify configuration
 changes that introduce new vulnerabilities and susceptibility to newly
@@ -1545,7 +1546,7 @@ discovered vulnerabilities.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> <a class="pl medium" href="https://github.com/pryv/open-pryv.io/issues/81" title="Supply-chain scanning pipeline (CI npm audit gate + SBOM + image scan + signing) gives CC7.1 a software-side vulnerability-detection feed; shifts F:Evidence Low → F:Evidence Medium">⏳ feature</a></div>
       <p>Pryv-side substrate-vulnerability detection today is partial +
 passive: committed package-lock, Dependabot alerts on
 open-pryv.io master, CHANGELOG announcements of relevant fixes,
@@ -1556,7 +1557,7 @@ to upgrade, how to verify) sits on top.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>Substrate-vulnerability detection on the platform side is partial: a committed
 dependency lockfile, dependency alerts on the open-source codebase, published
 fix announcements, and a config-validation step that fails fast on malformed
@@ -1599,7 +1600,7 @@ end with alerting before any component is treated as in production; the
 per-user audit log gives application-level activity attributable to an access.
 hds operates this monitoring; deciding which anomalies are security events is
 an organization's analysis.
-">
+" data-planned="0">
   <h3><code>CC7.2</code> CC7.2 — Monitoring for anomalies indicative of security events <span class="draft">draft</span></h3>
   <p class="text">The entity monitors system components for anomalies indicative of malicious
 acts, natural disasters, and errors, and analyzes them to determine whether
@@ -1607,7 +1608,7 @@ they represent security events.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>The pluggable observability provider gives system-level anomaly
 signal (latency, error rate, request volume); the per-user audit
 log gives application-level activity, attributable to an access.
@@ -1616,7 +1617,7 @@ extension you build; the raw signal is shipped.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>HDS's operational monitoring gives system-level anomaly signal (latency,
 error rate, request volume) across both data-residency options, wired end to
 end with alerting before any component is treated as in production; the
@@ -1658,14 +1659,14 @@ platform and hds monitoring supply the evaluation inputs — audit-row patterns
 and monitoring anomalies — but the categorisation rule and the response
 trigger are policy. hds operates its own event-evaluation step as part of its
 incident-response procedure and documents it.
-">
+" data-planned="0">
   <h3><code>CC7.3</code> CC7.3 — Evaluation of security events <span class="draft">draft</span></h3>
   <p class="text">The entity evaluates security events to determine whether they could result, or
 have resulted, in a failure to meet its objectives, and takes action.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Event-vs-incident classification is your decision. Pryv supplies
 the evaluation inputs — audit row patterns, observability
 anomalies — but the categorisation rule and the response trigger
@@ -1673,7 +1674,7 @@ are your policy.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>Event-versus-incident classification is each organization's decision. The
 platform and HDS monitoring supply the evaluation inputs — audit-row patterns
 and monitoring anomalies — but the categorisation rule and the response
@@ -1714,14 +1715,14 @@ of a compromised access). hds runs its own incident-response programme as
 operator — roles, escalation, communications — and documents it; that
 programme feeds the notification obligations a partner carries. the partner
 defines and rehearses its own programme.
-">
+" data-planned="1">
   <h3><code>CC7.4</code> CC7.4 — Incident response program <span class="draft">draft</span></h3>
   <p class="text">The entity responds to identified security incidents through a defined program
 to understand, contain, remediate, and communicate them.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> <a class="pl low" href="https://github.com/pryv/open-pryv.io/issues/74" title="Chained / signed audit log strengthens forensic evidence during incident analysis (F:Evidence Med → High)">⏳ feature</a></div>
       <p>Pryv contributes the technical halves of incident response:
 detection + scoping (audit + observability) and containment
 (accesses.delete revokes a compromised credential immediately).
@@ -1735,7 +1736,7 @@ to define and rehearse.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>The platform contributes the technical halves of incident response: detection
 and scoping (audit log plus monitoring) and containment (immediate revocation
 of a compromised access). HDS runs its own incident-response programme as
@@ -1785,14 +1786,14 @@ cluster-replicated certificates keeps a surviving core serving when a peer
 fails. hds documents the recovery objectives and runbook it operates; the
 recovery-objective targets and drill cadence for an organization's own service
 are its own.
-">
+" data-planned="0">
   <h3><code>CC7.5</code> CC7.5 — Recovery from identified security incidents <span class="draft">draft</span></h3>
   <p class="text">The entity identifies, develops, and implements activities to recover from
 identified security incidents.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Recovery primitives: bin/backup.js + --restore rebuild a user from
 backup; a multi-core cluster gives in-line Raft replication +
 cluster-replicated TLS certs so a surviving core keeps serving when
@@ -1801,7 +1802,7 @@ drill cadence are your policy.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>Recovery primitives ship and HDS operates them: per-user backup and restore
 rebuild a subject from backup, and a replicated multi-core topology with
 cluster-replicated certificates keeps a surviving core serving when a peer
@@ -1844,7 +1845,7 @@ public ci test matrix; separate environments are supported via independent
 deployments, and the audit log records config-driven behaviour change. hds is
 honest, though, that its own formalised change-management programme (windows,
 sign-off, rollback) is still being matured — a known gap.
-">
+" data-planned="0">
   <h3><code>CC8.1</code> CC8.1 — Authorized changes to infrastructure, data, software, and procedures <span class="draft">draft</span></h3>
   <p class="text">The entity authorizes, designs, develops or acquires, configures, documents,
 tests, approves, and implements changes to infrastructure, data, software, and
@@ -1852,7 +1853,7 @@ procedures.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Pryv-side change evidence: tagged releases, SHA-pinned Docker
 images, CHANGELOG-v2 + CHANGELOG-v2-back per release, an
 engine-agnostic forward-only schema-migration framework
@@ -1864,7 +1865,7 @@ change-approval workflow (windows, sign-off, rollback) sits on top.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>Platform-side change evidence is strong: tagged releases, SHA-pinned images,
 per-release change notes, a forward-only schema-migration framework, and a
 public CI test matrix; separate environments are supported via independent
@@ -1908,14 +1909,14 @@ cluster-replicated certificates, and a clean cloud-exit path (re-issue the
 cluster onto new infrastructure from a bootstrap bundle). hds documents the
 continuity posture it operates; the business-continuity objectives and any
 insurance or contractual mitigation choices are an organization's own.
-">
+" data-planned="0">
   <h3><code>CC9.1</code> CC9.1 — Risk mitigation for business disruptions <span class="draft">draft</span></h3>
   <p class="text">The entity identifies, selects, and develops risk-mitigation activities for
 risks arising from potential business disruptions.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Disruption-mitigation inheritance: multi-core HA + Raft
 replication, backup-restore, cluster-replicated TLS certificates,
 and a clean cloud-exit path (re-issue the cluster onto new
@@ -1925,7 +1926,7 @@ yours.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>Disruption-mitigation primitives are inherited and HDS-operated: multi-core
 high availability with replication, per-user backup and restore,
 cluster-replicated certificates, and a clean cloud-exit path (re-issue the
@@ -1969,14 +1970,14 @@ set it references. hds maintains a subprocessor register for its own
 downstream vendors. hds is honest that a formalised vendor-management
 programme (assessment criteria, sla reviews) is still being matured — a known
 gap.
-">
+" data-planned="0">
   <h3><code>CC9.2</code> CC9.2 — Vendor and business-partner risk management <span class="draft">draft</span></h3>
   <p class="text">The entity assesses and manages risks associated with its vendors and business
 partners.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Where Pryv is your vendor (open-pryv.io as a third-party,
 BSD-licensed platform), the public release process + CHANGELOGs +
 this compliance matrix are the vendor-monitoring artefact set you
@@ -1985,7 +1986,7 @@ criteria, SLA reviews, subprocessor inventory) sits on top.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>Where the platform is an organization's vendor, the public release process,
 change notes and this compliance matrix are the vendor-monitoring artefact
 set it references. HDS maintains a subprocessor register for its own
@@ -2030,7 +2031,7 @@ cpu, latency and request volume across both the us and switzerland
 data-residency options. the capacity-planning cadence — thresholds,
 provisioning triggers — is an operator procedure hds documents; the
 user-entity inherits the headroom rather than sizing it.
-">
+" data-planned="0">
   <h3><code>A1.1</code> A1.1 — Capacity management <span class="draft">draft</span></h3>
   <p class="text">The entity maintains, monitors, and evaluates current processing capacity
 and use of system components to manage capacity demand and to enable
@@ -2038,7 +2039,7 @@ additional capacity in support of its objectives.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Capacity signal comes from per-core observability metrics (memory,
 CPU, latency, request volume); capacity grows by adding cores to
 the cluster (each serves its bound users behind the shared rqlite
@@ -2047,7 +2048,7 @@ automation are yours.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>HDS runs the platform on a topology that scales horizontally (cores added
 to a cluster), and operates infrastructure-level monitoring of memory,
 CPU, latency and request volume across both the US and Switzerland
@@ -2092,7 +2093,7 @@ so a surviving core stays user-facing. environmental protections (power,
 cooling, fire suppression) are inherited from the certified hosting
 provider per region. automated, regularly verified backups are still being
 formalised, so this is facilitated rather than fully implemented.
-">
+" data-planned="0">
   <h3><code>A1.2</code> A1.2 — Environmental protections, backup, and recovery infrastructure <span class="draft">draft</span></h3>
   <p class="text">The entity authorizes, designs, implements, operates, maintains, and
 monitors environmental protections, software, data back-up processes, and
@@ -2100,7 +2101,7 @@ recovery infrastructure to meet its objectives.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Backup + recovery infrastructure ships: bin/backup.js produces
 per-user backups, multi-core topology gives in-line Raft
 replication, TLS certs replicate across the cluster so a surviving
@@ -2111,7 +2112,7 @@ yours.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>The platform ships per-user backup and restore and a replicated multi-core
 topology, and HDS operates these on a schedule with cluster-replicated TLS
 so a surviving core stays user-facing. Environmental protections (power,
@@ -2156,14 +2157,14 @@ backup into a clean core; fail a core and confirm a peer keeps serving),
 and hds documents the intended recovery-test cadence. regular, verified
 execution of the drill is a known gap being matured, so hds facilitates
 this rather than evidencing a fully operated test programme.
-">
+" data-planned="0">
   <h3><code>A1.3</code> A1.3 — Recovery plan testing <span class="draft">draft</span></h3>
   <p class="text">The entity tests recovery plan procedures supporting system recovery to
 meet its objectives.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Pryv gives you a testable recovery path (restore a user from a
 backup file into a clean core; fail a core and confirm a peer keeps
 serving). The recovery drill — scheduling it, evidencing the result,
@@ -2171,7 +2172,7 @@ feeding gaps back into the plan — is your operating procedure.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>The platform provides a testable recovery path (restore a user from a
 backup into a clean core; fail a core and confirm a peer keeps serving),
 and HDS documents the intended recovery-test cadence. Regular, verified
@@ -2214,14 +2215,14 @@ primitive (`accesses.create {randomalias:true}`, deployed on the hds
 cores since 2026-07-28) lets a grant expose a random routable alias in
 place of the username. hds operates this access-controlled isolation and
 documents its confidentiality and access-control posture.
-">
+" data-planned="1">
   <h3><code>C1.1</code> C1.1 — Identification and maintenance of confidential information <span class="draft">draft</span></h3>
   <p class="text">The entity identifies and maintains confidential information to meet its
 objectives related to confidentiality.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> <a class="pl low" href="https://github.com/pryv/open-pryv.io/issues/34" title="End-to-end (proxy re-encryption / BYOK) keeps confidential content opaque to the operator; the natural future confidentiality primitive">⏳ feature</a></div>
       <p>Pryv lets you identify + isolate confidential data by stream
 layout: dedicate subtrees per confidentiality tier and gate each
 with a distinct permission scope, so confidential streams are
@@ -2233,7 +2234,7 @@ see context/data-masking-projection-vs-transformation.md.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b implemented">implemented</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b implemented">implemented</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>Confidential data is identified and isolated structurally on the
 HDS-operated platform: subject data is per-user isolated, and confidential
 streams are reachable only by access tokens granted the matching per-stream
@@ -2278,14 +2279,14 @@ event- and stream-level deletion) from the live store, which hds operates.
 whether disposal reaches backups is storage-engine-dependent, and formal,
 scheduled data-disposal automation is not yet shipped — so hds facilitates
 this and documents the boundary rather than claiming full disposal.
-">
+" data-planned="0">
   <h3><code>C1.2</code> C1.2 — Disposal of confidential information <span class="draft">draft</span></h3>
   <p class="text">The entity disposes of confidential information to meet its objectives
 related to confidentiality.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b configurable">configurable</span></div>
+      <div class="lh">Pryv platform <span class="b configurable">configurable</span> </div>
       <p>Confidential-data disposal uses the same per-user erasure path as
 CC6.5: system.users.delete for whole-account, event/stream
 deletion for per-record. Backup reach is engine-dependent (SQLite
@@ -2294,7 +2295,7 @@ engine that matches your disposal commitment.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>The platform provides per-user erasure (whole-account deletion, plus
 event- and stream-level deletion) from the live store, which HDS operates.
 Whether disposal reaches backups is storage-engine-dependent, and formal,
@@ -2338,7 +2339,7 @@ deployment serves these consistently. authoring the processing-objective
 specifications — what the service does with the data and to what end —
 is the service organization's product definition; hds facilitates by
 supplying the data-definition substrate.
-">
+" data-planned="0">
   <h3><code>PI1.1</code> PI1.1 — Quality information about processing objectives <span class="draft">draft</span></h3>
   <p class="text">The entity obtains or generates, uses, and communicates relevant, quality
 information regarding the objectives related to processing, including
@@ -2346,7 +2347,7 @@ definitions of data processed and service specifications.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>The canonical event-type schemas (class/format JSON Schemas in the
 data-types repo) are the machine-readable definition of &quot;data
 processed&quot; — what each event type means and what shape it takes.
@@ -2356,7 +2357,7 @@ themselves are your product definitions.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>The platform's canonical event-type schemas are the machine-readable
 definition of what data each processing path handles, and the HDS-operated
 deployment serves these consistently. Authoring the processing-objective
@@ -2396,14 +2397,14 @@ platform: every payload is validated against its event-type schema and
 schema violations are rejected outright, with no silent truncation. this is
 the structural-completeness-and-accuracy layer; semantic correctness of a
 value remains the service organization's application logic.
-">
+" data-planned="0">
   <h3><code>PI1.2</code> PI1.2 — Completeness and accuracy of inputs <span class="draft">draft</span></h3>
   <p class="text">The entity implements controls over system inputs, including controls over
 completeness and accuracy, to result in services that meet its objectives.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Input accuracy is enforced structurally at ingest: events.create
 and events.update run every payload through the event type's JSON
 Schema (ajv-draft-04) — unknown types and schema violations are
@@ -2415,7 +2416,7 @@ catalogue — see context/data-accuracy-structural-vs-semantic.md.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>Input accuracy is enforced structurally at ingest on the HDS-operated
 platform: every payload is validated against its event-type schema and
 schema violations are rejected outright, with no silent truncation. This is
@@ -2456,14 +2457,14 @@ into version history, and every mutation is recorded in the per-user audit
 log. hds operates this substrate so processing is traceable; the
 business-logic processing the application performs is the service
 organization's own control.
-">
+" data-planned="0">
   <h3><code>PI1.3</code> PI1.3 — Completeness and accuracy of processing <span class="draft">draft</span></h3>
   <p class="text">The entity implements controls over system processing to result in services
 that meet its objectives.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Pryv's processing model is deterministic + attributable: events
 are immutable-when-written (history-only append for
 audit/consent/attestation), events.update snapshots prior state
@@ -2474,7 +2475,7 @@ control responsibility.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>The platform's processing model is deterministic and attributable: writes
 are authorised by the permission model, updates snapshot the prior state
 into version history, and every mutation is recorded in the per-user audit
@@ -2516,7 +2517,7 @@ change notifications signal subscribers to fetch that state over an
 authenticated channel rather than pushing a possibly-stale copy. delivery
 slas to the implementer's own end recipients are the service
 organization's specification.
-">
+" data-planned="0">
   <h3><code>PI1.4</code> PI1.4 — Completeness, accuracy, and timeliness of outputs <span class="draft">draft</span></h3>
   <p class="text">The entity implements controls to make available or deliver output
 completely, accurately, and timely in accordance with specifications to
@@ -2524,7 +2525,7 @@ meet its objectives.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Output delivery is deterministic: events.get / streams.get return
 canonical serialisations; the audit log carries an integrity
 checksum of the affected event when a method mutates one, so
@@ -2536,7 +2537,7 @@ recipients are your specification.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>Output delivery from the HDS-operated platform is deterministic: reads
 return canonical serialisations of the current authoritative state, and
 change notifications signal subscribers to fetch that state over an
@@ -2576,7 +2577,7 @@ history (prior states preserved), the per-user audit log (every change
 attributed), and operational backup-restore (a recoverable copy). together
 these give an accuracy-and-completeness signal for stored data. hds operates
 the substrate and the backup schedule; verified backups are a known gap.
-">
+" data-planned="0">
   <h3><code>PI1.5</code> PI1.5 — Completeness and accuracy of stored information <span class="draft">draft</span></h3>
   <p class="text">The entity implements controls to store inputs, items in processing, and
 outputs completely, accurately, and timely in accordance with system
@@ -2584,7 +2585,7 @@ specifications to meet its objectives.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Storage integrity: event version history preserves prior states,
 the audit log can carry a per-event integrity checksum, and
 backup-restore provides a recoverable copy. Together these give an
@@ -2594,7 +2595,7 @@ the CC7.4 chain proposal.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>Storage integrity on the HDS-operated platform rests on event version
 history (prior states preserved), the per-user audit log (every change
 attributed), and operational backup-restore (a recoverable copy). Together
@@ -2634,7 +2635,7 @@ a forkable consent/auth web page — and the durable access record can carry
 the notice version the subject saw. hds operates this surface; authoring the
 notice content and keeping it current is the service organization's
 editorial obligation.
-">
+" data-planned="0">
   <h3><code>P1.1</code> P1.1 — Notice of privacy practices <span class="draft">draft</span></h3>
   <p class="text">The entity provides notice to data subjects about its privacy practices to
 meet its objectives related to privacy, and updates and communicates the
@@ -2642,7 +2643,7 @@ notice in a timely manner when those practices change.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Pryv gives you the surface to present notice: app-web-auth3 is the
 forkable consent / auth web page where notice text is shown at
 authorization time, and the durable access record (with clientData)
@@ -2652,7 +2653,7 @@ carries it through the consent flow and records what was presented.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>The platform supplies the surface to present notice at authorization time —
 a forkable consent/auth web page — and the durable access record can carry
 the notice version the subject saw. HDS operates this surface; authoring the
@@ -2693,7 +2694,7 @@ metadata holds the consent text and lawful basis, and the audit trail
 proves the consent state at any moment. the subject's own credentials let
 them grant and revoke directly. hds operates this user-centric consent
 substrate; the service organization designs the choices presented.
-">
+" data-planned="0">
   <h3><code>P2.1</code> P2.1 — Choice and consent <span class="draft">draft</span></h3>
   <p class="text">The entity communicates choices regarding the collection, use, retention,
 disclosure, and disposal of personal information to data subjects and
@@ -2701,7 +2702,7 @@ obtains consent, as required, to meet its objectives related to privacy.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b implemented">implemented</span></div>
+      <div class="lh">Pryv platform <span class="b implemented">implemented</span> </div>
       <p>The access IS the durable, versioned consent record: it carries
 the granted permissions (the scope the subject agreed to), and its
 clientData holds the consent text / purposes / lawful basis. CMC
@@ -2712,7 +2713,7 @@ the choices; Pryv records and enforces them.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b implemented">implemented</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b implemented">implemented</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>On the HDS-operated platform the access token IS the durable, versioned
 consent record: it carries the permissions the subject agreed to, its
 metadata holds the consent text and lawful basis, and the audit trail
@@ -2754,14 +2755,14 @@ on the hds-operated platform: an application can only write to the streams
 and levels it was granted, so collection cannot silently exceed the agreed
 purpose. hds operates this enforcement; defining the purpose and the
 minimal stream set is the service organization's data-model design.
-">
+" data-planned="0">
   <h3><code>P3.1</code> P3.1 — Collection consistent with objectives <span class="draft">draft</span></h3>
   <p class="text">Personal information is collected consistent with the entity's objectives
 related to privacy.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Collection scope is bounded by the access's permissions — an app
 can only write to the streams + levels it was granted (e.g.
 create-only on a specific subtree), so collection cannot silently
@@ -2770,7 +2771,7 @@ stream set is your data-model design; the boundary is enforced.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>Collection scope is bounded technically by the access token's permissions
 on the HDS-operated platform: an application can only write to the streams
 and levels it was granted, so collection cannot silently exceed the agreed
@@ -2809,7 +2810,7 @@ access whose metadata records the explicit-consent basis, with the consent
 state transition captured as a timestamped, auditable event. hds operates
 this isolation; presenting the separate, affirmative consent step is the
 service organization's ux obligation.
-">
+" data-planned="0">
   <h3><code>P3.2</code> P3.2 — Explicit consent for sensitive personal information <span class="draft">draft</span></h3>
   <p class="text">Explicit consent for the collection, use, retention, disclosure, and
 disposal of sensitive personal information is obtained from data subjects or
@@ -2817,7 +2818,7 @@ other authorized persons, if required.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Sensitive data can be isolated in dedicated streams gated by a
 distinct access whose clientData records the explicit-consent
 basis; consent/* events capture the state transition with a
@@ -2827,7 +2828,7 @@ grant rather than folding it into general consent.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>Sensitive data can be isolated in dedicated streams gated by a distinct
 access whose metadata records the explicit-consent basis, with the consent
 state transition captured as a timestamped, auditable event. HDS operates
@@ -2867,14 +2868,14 @@ read or write data for another purpose, and the audit log evidences that
 uses stayed within scope. enforcement is technical, on every api call, not
 policy-on-paper. mapping purposes to streams and accesses is the service
 organization's design.
-">
+" data-planned="0">
   <h3><code>P4.1</code> P4.1 — Use limited to identified purposes <span class="draft">draft</span></h3>
   <p class="text">The entity limits the use of personal information to the purposes identified
 in its objectives related to privacy.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Purpose limitation is the permission model's core job: a
 credential issued for purpose A (scoped to stream A) cannot read
 or write purpose-B data. The audit log evidences that uses stayed
@@ -2883,7 +2884,7 @@ design; the enforcement is technical, not policy-on-paper.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b implemented">implemented</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b implemented">implemented</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>Purpose limitation is the core job of the permission model HDS operates: a
 credential issued for one purpose, scoped to one set of streams, cannot
 read or write data for another purpose, and the audit log evidences that
@@ -2924,14 +2925,14 @@ ships no automatic expiry primitive — enforcing the schedule is an operator
 job today. hds documents this gap honestly: automated retention enforcement
 is not yet shipped, so the control is facilitated and the absence of
 auto-expiry is called out.
-">
+" data-planned="0">
   <h3><code>P4.2</code> P4.2 — Retention of personal information <span class="draft">draft</span></h3>
   <p class="text">The entity retains personal information consistent with its objectives
 related to privacy.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Retention metadata (period, basis, scheduled disposal date) can
 ride on event / access clientData so each record carries its own
 retention contract. Pryv ships no automatic TTL / expiry primitive
@@ -2942,7 +2943,7 @@ operator responsibility when you attest P4.2.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>Retention metadata (period, basis, scheduled disposal date) can ride on
 each record so it carries its own retention contract, but the platform
 ships no automatic expiry primitive — enforcing the schedule is an operator
@@ -2984,14 +2985,14 @@ plus event- and stream-level deletion) from the live store, which hds
 operates. backup reach is storage-engine-dependent and scheduled disposal
 automation is not yet shipped, so hds facilitates this and documents the
 boundary rather than claiming full secure disposal.
-">
+" data-planned="0">
   <h3><code>P4.3</code> P4.3 — Disposal of personal information <span class="draft">draft</span></h3>
   <p class="text">The entity securely disposes of personal information to meet its objectives
 related to privacy.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b configurable">configurable</span></div>
+      <div class="lh">Pryv platform <span class="b configurable">configurable</span> </div>
       <p>Disposal uses the per-user erasure path: system.users.delete for
 whole-account, event/stream deletion for per-record. Backup reach
 is engine-dependent (SQLite per-user file unlink vs PostgreSQL row
@@ -3000,7 +3001,7 @@ commitment, same as GDPR Art.17.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>Disposal uses the platform's per-user erasure path (whole-account deletion,
 plus event- and stream-level deletion) from the live store, which HDS
 operates. Backup reach is storage-engine-dependent and scheduled disposal
@@ -3043,7 +3044,7 @@ portable copy with a per-file integrity manifest — with no operator
 dependency for routine requests. hds operates this substrate; the
 service organization owns the identity-verification step for any
 operator-assisted request.
-">
+" data-planned="0">
   <h3><code>P5.1</code> P5.1 — Data subject access to personal information <span class="draft">draft</span></h3>
   <p class="text">The entity grants identified and authenticated data subjects the ability to
 access their stored personal information for review and, on request,
@@ -3051,7 +3052,7 @@ provides copies to meet its objectives related to privacy.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b implemented">implemented</span></div>
+      <div class="lh">Pryv platform <span class="b implemented">implemented</span> </div>
       <p>Subject access is subject-runnable: the data subject holds their
 own credentials, so events.get / streams.get return their data
 directly, and the pryv-account-backup CLI produces a complete
@@ -3067,7 +3068,7 @@ context/account-backup-coverage.md.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b implemented">implemented</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b implemented">implemented</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>Subject access is user-centric and subject-runnable on the HDS-operated
 platform: the data subject holds their own credentials, so reads return
 their data directly, and an account-backup export produces a complete,
@@ -3111,7 +3112,7 @@ amendment trail) and the audit log records who amended what, when.
 propagation to third parties holding a shared access can be signalled via
 change notification. judging whether a correction request is valid is the
 service organization's process.
-">
+" data-planned="0">
   <h3><code>P5.2</code> P5.2 — Correction, amendment, or appending of personal information <span class="draft">draft</span></h3>
   <p class="text">The entity corrects, amends, or appends personal information based on data
 subject input and communicates such changes to third parties, as committed
@@ -3119,7 +3120,7 @@ or required, to meet its objectives related to privacy.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b implemented">implemented</span></div>
+      <div class="lh">Pryv platform <span class="b implemented">implemented</span> </div>
       <p>Correction is events.update (which snapshots the prior value into
 version history, preserving the amendment trail) and account.update
 for profile fields; the audit log records who amended what, when.
@@ -3129,7 +3130,7 @@ correction request is your process.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b implemented">implemented</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b implemented">implemented</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>Correction is a first-class operation on the HDS-operated platform: an
 update snapshots the prior value into version history (preserving the
 amendment trail) and the audit log records who amended what, when.
@@ -3171,7 +3172,7 @@ granted, nothing more, with the purpose and consent basis recorded in the
 access metadata. there is no out-of-band data-dump path; every disclosure
 is a tracked, revocable grant. deciding the lawful purpose is the service
 organization's.
-">
+" data-planned="0">
   <h3><code>P6.1</code> P6.1 — Disclosure to third parties for identified purposes with consent <span class="draft">draft</span></h3>
   <p class="text">The entity discloses personal information to third parties for the purposes
 identified in its objectives related to privacy and with the explicit
@@ -3179,7 +3180,7 @@ consent of the data subject, if required.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Third-party disclosure happens by issuing a scoped shared / CMC
 access — the disclosure is exactly the permissions granted,
 nothing more, and the access's clientData records the purpose +
@@ -3189,7 +3190,7 @@ is yours.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>Third-party disclosure on the HDS-operated platform happens by issuing a
 scoped, revocable shared access — the disclosure is exactly the permissions
 granted, nothing more, with the purpose and consent basis recorded in the
@@ -3229,7 +3230,7 @@ log records each invocation with the access identity that made it — a
 complete, attributable record of who accessed what, when. hds operates and
 retains this disclosure register; how long it is retained is set per the
 service organization's policy.
-">
+" data-planned="0">
   <h3><code>P6.2</code> P6.2 — Record of authorized disclosures <span class="draft">draft</span></h3>
   <p class="text">The entity creates and retains a complete, accurate, and timely record of
 authorized disclosures of personal information to meet its objectives
@@ -3237,7 +3238,7 @@ related to privacy.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b implemented">implemented</span></div>
+      <div class="lh">Pryv platform <span class="b implemented">implemented</span> </div>
       <p>Every disclosure is a read against a shared / CMC access, and the
 per-user audit log records each access invocation with the
 accessId + accessSerial that made it — a complete, attributable
@@ -3252,7 +3253,7 @@ policy.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b implemented">implemented</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b implemented">implemented</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>Every disclosure is a read against a shared access, and the per-user audit
 log records each invocation with the access identity that made it — a
 complete, attributable record of who accessed what, when. HDS operates and
@@ -3292,7 +3293,7 @@ detected unauthorized disclosure has a contemporaneous evidentiary record.
 determining that a disclosure was unauthorized, and maintaining the formal
 record, is the service organization's assessment. note that logs may
 contain pii, which hds documents as a known handling consideration.
-">
+" data-planned="0">
   <h3><code>P6.3</code> P6.3 — Record of detected unauthorized disclosures <span class="draft">draft</span></h3>
   <p class="text">The entity creates and retains a complete, accurate, and timely record of
 detected or reported unauthorized disclosures, including breaches, to meet
@@ -3300,7 +3301,7 @@ its objectives related to privacy.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>The audit log captures access patterns (including failed /
 out-of-scope attempts), and observability surfaces anomalies, so a
 detected unauthorized disclosure has a contemporaneous evidentiary
@@ -3309,7 +3310,7 @@ authorized) is your assessment; Pryv supplies the raw trail.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>The audit log captures access patterns including failed and out-of-scope
 attempts, and HDS's infrastructure monitoring surfaces anomalies, so a
 detected unauthorized disclosure has a contemporaneous evidentiary record.
@@ -3350,7 +3351,7 @@ and where a third party's technical access is a shared access, its
 permission scope is a concrete, enforced bound the implementer's agreement
 can reference. executing the implementer's own third-party agreements is
 its responsibility.
-">
+" data-planned="0">
   <h3><code>P6.4</code> P6.4 — Third-party commitments for privacy <span class="draft">draft</span></h3>
   <p class="text">The entity obtains privacy commitments from vendors and other third parties
 who have access to personal information to meet its objectives related to
@@ -3358,7 +3359,7 @@ privacy.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b out-of-scope">out-of-scope</span></div>
+      <div class="lh">Pryv platform <span class="b out-of-scope">out-of-scope</span> </div>
       <p>Vendor / subprocessor privacy commitments are contractual
 artefacts (DPAs, BAAs). No software role — though when the third
 party's technical access is a Pryv shared/CMC access, the
@@ -3367,7 +3368,7 @@ given, which your DPA can reference.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>Vendor and subprocessor privacy commitments are contractual. HDS obtains
 such commitments from its own subprocessors and tracks them in a register,
 and where a third party's technical access is a shared access, its
@@ -3409,7 +3410,7 @@ notifying its implementers of incidents affecting their data, backed by its
 monitoring and incident-response programme. obtaining the same commitment
 from the implementer's own third parties, and responding to notifications,
 is the service organization's process.
-">
+" data-planned="0">
   <h3><code>P6.5</code> P6.5 — Third-party unauthorized disclosure response <span class="draft">draft</span></h3>
   <p class="text">The entity obtains commitments from vendors and third parties to notify it
 of actual or suspected unauthorized disclosures, and responds to such
@@ -3417,14 +3418,14 @@ notifications, to meet its objectives related to privacy.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b out-of-scope">out-of-scope</span></div>
+      <div class="lh">Pryv platform <span class="b out-of-scope">out-of-scope</span> </div>
       <p>The third-party notification commitment is contractual and the
 response is your incident process (see CC7.4). No software role at
 the vendor-commitment layer.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>The third-party notification commitment is contractual, and HDS commits to
 notifying its implementers of incidents affecting their data, backed by its
 monitoring and incident-response programme. Obtaining the same commitment
@@ -3465,14 +3466,14 @@ audit log ties a compromised access to the users and data it touched — and
 hds operates the monitoring and incident-response programme that detects
 and scopes the event. drafting and sending the notifications within the
 regulatory deadline is the service organization's process.
-">
+" data-planned="1">
   <h3><code>P6.6</code> P6.6 — Notice of breaches and incidents to affected parties <span class="draft">draft</span></h3>
   <p class="text">The entity provides notification of breaches and incidents to affected data
 subjects, regulators, and others to meet its objectives related to privacy.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> <a class="pl high" href="https://github.com/pryv/open-pryv.io/issues/76" title="Breach-scope tool (accessId → userId reverse-index + audit recordCount + affectedStreamIds) turns the audit trail into a who-was-affected answer for breach notices">⏳ feature</a><a class="pl low" href="https://github.com/pryv/open-pryv.io/issues/74" title="Chained audit log raises forensic confidence in the breach-scope determination">⏳ feature</a></div>
       <p>Pryv contributes the scoping evidence a breach notice needs — the
 audit log ties a compromised access to the users + data it
 touched. Today that reverse-index is manual; the breach-scope tool
@@ -3482,7 +3483,7 @@ regulatory deadline is your process.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>The platform supplies the scoping evidence a breach notice needs — the
 audit log ties a compromised access to the users and data it touched — and
 HDS operates the monitoring and incident-response programme that detects
@@ -3522,7 +3523,7 @@ notices to subjects and regulators within the applicable deadlines.
 (who holds a grant) on the hds-operated platform. hds operates the
 substrate; packaging it into a subject-facing report on request is the
 service organization's workflow.
-">
+" data-planned="0">
   <h3><code>P6.7</code> P6.7 — Accounting of disclosures to data subjects <span class="draft">draft</span></h3>
   <p class="text">The entity provides data subjects, on request, with an accounting of the
 personal information held and the disclosures of their personal information,
@@ -3530,7 +3531,7 @@ to meet its objectives related to privacy.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b implemented">implemented</span></div>
+      <div class="lh">Pryv platform <span class="b implemented">implemented</span> </div>
       <p>The accounting-of-disclosures answer is computable from the audit
 log (which accesses read which data, when) plus the accesses list
 (who holds a grant). The audit-event-stream can expose this to the
@@ -3540,7 +3541,7 @@ attributable.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b implemented">implemented</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b implemented">implemented</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>The accounting-of-disclosures answer is computable from the audit log
 (which accesses read which data, when) plus the list of granted accesses
 (who holds a grant) on the HDS-operated platform. HDS operates the
@@ -3579,14 +3580,14 @@ validation (malformed input rejected), subjects keep their data current via
 updates with version history, and &quot;relevant&quot; is bounded by the access scope
 granted. hds operates these primitives; judging the semantic accuracy of a
 specific value is the service organization's application responsibility.
-">
+" data-planned="0">
   <h3><code>P7.1</code> P7.1 — Data quality — accuracy, completeness, relevance <span class="draft">draft</span></h3>
   <p class="text">The entity collects and maintains accurate, up-to-date, complete, and
 relevant personal information to meet its objectives related to privacy.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Structural data quality is enforced at ingest by event-type schema
 validation (HTTP 400 on malformed input); subjects keep their data
 up-to-date via events.update / account.update (with version
@@ -3596,7 +3597,7 @@ accuracy of a specific value is your application's responsibility.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>Structural data quality is enforced at ingest by event-type schema
 validation (malformed input rejected), subjects keep their data current via
 updates with version history, and &quot;relevant&quot; is bounded by the access scope
@@ -3636,7 +3637,7 @@ infrastructure monitoring) and can host the complaint and resolution
 records themselves as events on a dedicated stream with an attributable
 trail. this compliance matrix doubles as the periodic control inventory the
 implementer monitors against.
-">
+" data-planned="0">
   <h3><code>P8.1</code> P8.1 — Privacy complaint management and compliance monitoring <span class="draft">draft</span></h3>
   <p class="text">The entity implements a process for receiving, addressing, resolving, and
 communicating the resolution of privacy inquiries, complaints, and disputes,
@@ -3645,7 +3646,7 @@ identified deficiencies, to meet its objectives related to privacy.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>The complaint-handling workflow is yours, but Pryv supplies the
 monitoring evidence (audit + observability) and can host the
 complaint / resolution records themselves as events on a dedicated
@@ -3654,7 +3655,7 @@ as the periodic control-inventory you monitor against.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>The complaint-handling workflow is the service organization's, but the
 HDS-operated platform supplies the monitoring evidence (audit plus
 infrastructure monitoring) and can host the complaint and resolution
@@ -3692,7 +3693,7 @@ and take timely corrective action; the platform can host the records.
 </article></div>
     <script>
 (function(){
-  const q=document.getElementById('q'),cards=[...document.querySelectorAll('.req')],fc=document.getElementById('fcount');
+  const q=document.getElementById('q'),cards=[...document.querySelectorAll('.req')],fc=document.getElementById('fcount'),fp=document.getElementById('fplan');
   const covs=()=>[...document.querySelectorAll('#cov input:checked')].map(i=>i.value);
   const pers=()=>[...document.querySelectorAll('#persona input:checked')].map(i=>i.value);
   function apply(){const t=q.value.toLowerCase(),cv=covs(),pr=pers();let n=0;
@@ -3700,7 +3701,8 @@ and take timely corrective action; the platform can host the records.
       const cp=(c.dataset.personas||'').split(' ').filter(Boolean);
       const okp=cp.length===0||cp.some(p=>pr.includes(p));
       const okt=!t||(c.dataset.text||'').includes(t);
-      const show=okc&&okp&&okt;c.style.display=show?'':'none';if(show)n++;});
+      const okpl=!fp.checked||c.dataset.planned==='1';
+      const show=okc&&okp&&okt&&okpl;c.style.display=show?'':'none';if(show)n++;});
     fc.textContent=n+' / '+cards.length;}
   document.querySelector('.filters').addEventListener('input',apply);apply();
 })();

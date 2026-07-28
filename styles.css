@@ -34,6 +34,9 @@ h1{font-size:1.5rem}.short{font-weight:400;color:var(--muted);font-size:.9rem}
 .req code{background:#eef1f5;padding:.05rem .3rem;border-radius:.3rem;font-size:.85em}
 .text{color:#374151;font-size:.88rem;background:#fafbfc;border-left:3px solid var(--line);padding:.4rem .7rem;margin:.4rem 0}
 .draft{background:#fef3c7;color:#b45309;font-size:.62rem;text-transform:uppercase;padding:.1rem .4rem;border-radius:999px;vertical-align:middle}
+.pl{font-size:.62rem;padding:.1rem .45rem;border-radius:999px;vertical-align:middle;text-decoration:none;display:inline-block;white-space:nowrap;cursor:default}
+a.pl{cursor:pointer}
+.pl.high{background:#fee2e2;color:#b91c1c}.pl.medium{background:#fef3c7;color:#b45309}.pl.low{background:#e0f2fe;color:#0369a1}
 .layers{display:grid;grid-template-columns:1fr 1.2fr 1.2fr;gap:.8rem;margin-top:.6rem}
 @media(max-width:800px){.layers{grid-template-columns:1fr}}
 .layer{border:1px solid var(--line);border-radius:.5rem;padding:.6rem .7rem;font-size:.84rem}

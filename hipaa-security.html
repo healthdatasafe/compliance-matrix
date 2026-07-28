@@ -44,6 +44,7 @@
   <span class="fgroup" id="persona">
     <label><input type="checkbox" value="partner" checked> partner</label><label><input type="checkbox" value="covered-entity" checked> covered-entity</label><label><input type="checkbox" value="business-associate" checked> business-associate</label><label><input type="checkbox" value="individual" checked> individual</label>
   </span>
+  <label class="fgroup"><input type="checkbox" id="fplan"> <span class="pl low">⏳ planned only</span></label>
   <span class="fcount" id="fcount"></span>
 </div>
     <div class="reqs"><article class="req" id="req-164-308-a-1-i" data-coverage="documented" data-personas="covered-entity business-associate individual" data-text="164.308(a)(1)(i) security management process — standard as an operator hds runs its own security-management programme over the
@@ -51,14 +52,14 @@ open-pryv.io platform, covering the four required specifications below
 (risk analysis, risk management, sanction policy, activity review). the
 umbrella programme is documented internally and made available on request;
 a partner running their own ephi workload still maintains their own.
-">
+" data-planned="0">
   <h3><code>164.308(a)(1)(i)</code> Security management process — standard <span class="draft">draft</span></h3>
   <p class="text">Implement policies and procedures to prevent, detect, contain, and correct
 security violations.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>The Security Management
 Process is a programme you run as the covered entity / business
 associate — risk analysis, risk-management decisions, sanctions,
@@ -70,7 +71,7 @@ programme itself remains yours to define and run.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>As an operator HDS runs its own security-management programme over the
 open-pryv.io platform, covering the four required specifications below
 (risk analysis, risk management, sanction policy, activity review). The
@@ -113,7 +114,7 @@ substrate: system-level activity is collected and monitored across both
 us and switzerland data-residency options, with alerting on crash,
 error-rate and silence conditions. the written review cadence remains the
 implementer's responsibility.
-">
+" data-planned="0">
   <h3><code>164.308(a)(1)(ii)(D)</code> Information system activity review — Required <span class="draft">draft</span></h3>
   <p class="text">Implement procedures to regularly review records of information system
 activity, such as audit logs, access reports, and security incident
@@ -121,7 +122,7 @@ tracking reports.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b implemented">implemented</span></div>
+      <div class="lh">Pryv platform <span class="b implemented">implemented</span> </div>
       <p>Every API call is captured by Pryv's per-user audit log; the
 `audit.get` method exposes it for periodic review. Observability
 (opt-in telemetry emitter) gives system-level activity reports for
@@ -130,7 +131,7 @@ procedure.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b implemented">implemented</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b implemented">implemented</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>On top of the platform's per-user audit log, HDS operates the review
 substrate: system-level activity is collected and monitored across both
 US and Switzerland data-residency options, with alerting on crash,
@@ -171,14 +172,14 @@ process, drawing on the audit and monitoring substrate HDS exposes.
 programme over the platform; the designation is recorded internally and
 disclosed on request. each partner must designate their own official for
 their own programme.
-">
+" data-planned="0">
   <h3><code>164.308(a)(2)</code> Assigned security responsibility — standard <span class="draft">draft</span></h3>
   <p class="text">Identify the security official who is responsible for developing and
 implementing the policies and procedures required by this subpart.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b out-of-scope">out-of-scope</span></div>
+      <div class="lh">Pryv platform <span class="b out-of-scope">out-of-scope</span> </div>
       <p>Security-official designation is HR / organizational. No software
 role. When the assigned official needs operational data, the
 audit log + observability + this matrix are the substrate they
@@ -186,7 +187,7 @@ draw on.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>HDS designates a named security official accountable for its security
 programme over the platform; the designation is recorded internally and
 disclosed on request. Each partner must designate their own official for
@@ -223,14 +224,14 @@ granular per-stream permissions. termination is a single revocation that
 takes effect immediately, and the audit log records the termination
 instant; role changes narrow permissions without losing the version
 history of the change.
-">
+" data-planned="0">
   <h3><code>164.308(a)(3)(ii)(C)</code> Termination procedures — Addressable <span class="draft">draft</span></h3>
   <p class="text">Implement procedures for terminating access to ePHI when employment ends or
 a workforce member's role changes.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b implemented">implemented</span></div>
+      <div class="lh">Pryv platform <span class="b implemented">implemented</span> </div>
       <p>Workforce access to ePHI is mediated by Pryv accesses. Termination
 is a single API call (`accesses.delete`) which immediately revokes
 the token. The audit log proves the termination instant. For
@@ -239,7 +240,7 @@ full revocation, preserving the version history of the change.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b implemented">implemented</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b implemented">implemented</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>Workforce access to ePHI is mediated by platform access tokens with
 granular per-stream permissions. Termination is a single revocation that
 takes effect immediately, and the audit log records the termination
@@ -280,14 +281,14 @@ process on HDS.
 per-stream permissions, enforced at every api call. the authorization
 rationale can travel alongside the grant itself, so the &quot;why&quot; stays with
 the &quot;what&quot;.
-">
+" data-planned="0">
   <h3><code>164.308(a)(4)(ii)(B)</code> Access authorization — Addressable <span class="draft">draft</span></h3>
   <p class="text">Implement policies and procedures for granting access to ePHI through a
 workstation, transaction, program, process, or other mechanism.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b implemented">implemented</span></div>
+      <div class="lh">Pryv platform <span class="b implemented">implemented</span> </div>
       <p>Granting access to ePHI in Pryv means minting an access with
 explicit per-stream permissions. The technical authorization
 decision is enforced at every API call. Documentation of the
@@ -296,7 +297,7 @@ grant itself, so the &quot;why&quot; travels with the &quot;what&quot;.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b implemented">implemented</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b implemented">implemented</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>Granting access to ePHI on HDS means minting an access token with explicit
 per-stream permissions, enforced at every API call. The authorization
 rationale can travel alongside the grant itself, so the &quot;why&quot; stays with
@@ -334,7 +335,7 @@ rationale alongside each grant.
 on the platform hds operates. every modification snapshots the prior
 version into history and is recorded in the audit log, giving the
 documented review trail this specification expects.
-">
+" data-planned="0">
   <h3><code>164.308(a)(4)(ii)(C)</code> Access establishment and modification — Addressable <span class="draft">draft</span></h3>
   <p class="text">Implement policies and procedures to establish, document, review, and modify
 a user's right of access, based on the entity's access authorization
@@ -342,7 +343,7 @@ policies.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b implemented">implemented</span></div>
+      <div class="lh">Pryv platform <span class="b implemented">implemented</span> </div>
       <p>The access lifecycle (create / read / update / delete) is first-
 class in Pryv. `accesses.update` writes a tamper-evident snapshot
 of the prior version into history on every modification, giving
@@ -350,7 +351,7 @@ you the documented review trail this standard expects.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b implemented">implemented</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b implemented">implemented</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>The access lifecycle (create, read, review, update, revoke) is first-class
 on the platform HDS operates. Every modification snapshots the prior
 version into history and is recorded in the audit log, giving the
@@ -389,19 +390,19 @@ process on HDS.
 control with no software role. hds runs reminders for its own workforce
 and documents the programme; the artefact is available on request but
 training delivery itself is not yet formalised as a verified programme.
-">
+" data-planned="0">
   <h3><code>164.308(a)(5)(ii)(A)</code> Security reminders — Addressable <span class="draft">draft</span></h3>
   <p class="text">Implement periodic security updates and reminders for the workforce.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b out-of-scope">out-of-scope</span></div>
+      <div class="lh">Pryv platform <span class="b out-of-scope">out-of-scope</span> </div>
       <p>Reminder cadence + content are organizational. Pryv has no role
 at the awareness-content layer.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>Security-reminder cadence and content are an organisational awareness
 control with no software role. HDS runs reminders for its own workforce
 and documents the programme; the artefact is available on request but
@@ -439,14 +440,14 @@ workforce.
 platform feature. hds operates malware protection and patching at the
 hosting layer for the environments it runs, documented internally; the
 partner's own endpoints remain the partner's responsibility.
-">
+" data-planned="0">
   <h3><code>164.308(a)(5)(ii)(B)</code> Protection from malicious software — Addressable <span class="draft">draft</span></h3>
   <p class="text">Implement procedures for guarding against, detecting, and reporting
 malicious software.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b out-of-scope">out-of-scope</span></div>
+      <div class="lh">Pryv platform <span class="b out-of-scope">out-of-scope</span> </div>
       <p>Anti-malware is a host / endpoint / network-layer control —
 Pryv-the-software doesn't include AV. Same out-of-scope reasoning
 as ISO 27001 A.8.7. The operator's hosting environment carries
@@ -454,7 +455,7 @@ this control.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>Anti-malware is a host, endpoint and network-layer control rather than a
 platform feature. HDS operates malware protection and patching at the
 hosting layer for the environments it runs, documented internally; the
@@ -493,14 +494,14 @@ outside HDS.
 audit log, and hds's operational monitoring aggregates rate and anomaly
 signals across both data-residency options. discrepancy-reporting
 thresholds and the response cadence are operator-side procedure.
-">
+" data-planned="0">
   <h3><code>164.308(a)(5)(ii)(C)</code> Log-in monitoring — Addressable <span class="draft">draft</span></h3>
   <p class="text">Implement procedures for monitoring log-in attempts and reporting
 discrepancies.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Login + authentication-
 failure events are captured in the audit log (per `auth.*` API
 method calls). Observability data aggregates rate + anomaly
@@ -509,7 +510,7 @@ are operator-side procedure.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>Authentication and login-failure events are captured in the per-user
 audit log, and HDS's operational monitoring aggregates rate and anomaly
 signals across both data-residency options. Discrepancy-reporting
@@ -548,13 +549,13 @@ you operate.
 namespace, and hds configures password rules and offers a second
 authentication factor on top. hds operates and documents the resulting
 password-management posture.
-">
+" data-planned="1">
   <h3><code>164.308(a)(5)(ii)(D)</code> Password management — Addressable <span class="draft">draft</span></h3>
   <p class="text">Implement procedures for creating, changing, and safeguarding passwords.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b configurable">configurable</span></div>
+      <div class="lh">Pryv platform <span class="b configurable">configurable</span> <a class="pl low" href="https://github.com/pryv/open-pryv.io/issues/78" title="Reference TOTP / WebAuthn plugins reduce dependence on SMS-OTP for the second factor">⏳ enhancement</a></div>
       <p>Pryv stores credentials on a privileged `system-stream`, separate
 from ordinary content. Password rules (complexity, rotation) are
 operator-configured. Adding `services.mfa.mode` raises the
@@ -562,7 +563,7 @@ authentication strength beyond a password alone — see §164.312(d).
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b implemented">implemented</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b implemented">implemented</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>The platform stores credentials on a privileged, separately controlled
 namespace, and HDS configures password rules and offers a second
 authentication factor on top. HDS operates and documents the resulting
@@ -601,13 +602,13 @@ operational monitoring provide detection and scoping data, and access
 tokens provide the containment mechanism (revoke or narrow the implicated
 access). the written incident procedure is held internally and shared on
 request.
-">
+" data-planned="0">
   <h3><code>164.308(a)(6)(i)</code> Security incident procedures — standard <span class="draft">draft</span></h3>
   <p class="text">Implement policies and procedures to address security incidents.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Incident-response procedure
 is the operator's organizational programme. Pryv contributes
 the detection + scoping data layer: audit log shows who
@@ -625,7 +626,7 @@ enabled on the published repositories.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>HDS runs an incident-response programme as operator: the audit log and
 operational monitoring provide detection and scoping data, and access
 tokens provide the containment mechanism (revoke or narrow the implicated
@@ -670,14 +671,14 @@ attachments) with a matching restore path, so the backup unit matches the
 natural ephi unit. hds operates a backup schedule on top; automated,
 regularly verified backups are still being formalised, so this is
 facilitated rather than fully implemented.
-">
+" data-planned="0">
   <h3><code>164.308(a)(7)(ii)(A)</code> Data backup plan — Required <span class="draft">draft</span></h3>
   <p class="text">Establish and implement procedures to create and maintain retrievable exact
 copies of ePHI.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b implemented">implemented</span></div>
+      <div class="lh">Pryv platform <span class="b implemented">implemented</span> </div>
       <p>`bin/backup.js` produces per-user backup files (events, streams,
 accesses, attachments). `--restore` rebuilds a user from a backup
 file. The backup procedure (&quot;when, where, how often&quot;) is yours to
@@ -685,7 +686,7 @@ schedule; the underlying primitive is shipped.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>The platform produces per-user backup files (events, streams, accesses,
 attachments) with a matching restore path, so the backup unit matches the
 natural ePHI unit. HDS operates a backup schedule on top; automated,
@@ -724,13 +725,13 @@ confirm restorability.
 replicated multi-core platform topology, composed to a recovery objective
 hds documents internally. the written disaster-recovery plan is available
 on request.
-">
+" data-planned="0">
   <h3><code>164.308(a)(7)(ii)(B)</code> Disaster recovery plan — Required <span class="draft">draft</span></h3>
   <p class="text">Establish, and implement as needed, procedures to restore any loss of data.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b configurable">configurable</span></div>
+      <div class="lh">Pryv platform <span class="b configurable">configurable</span> </div>
       <p>Two layers Pryv gives you: (1) cold restore from `bin/backup.js
 --restore`, the canonical recovery path; (2) hot redundancy via a
 multi-core cluster (rqlite replication + cluster-CA mTLS between
@@ -739,7 +740,7 @@ compose them per your RTO / RPO.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>HDS combines cold restore from per-user backups with hot redundancy from a
 replicated multi-core platform topology, composed to a recovery objective
 HDS documents internally. The written disaster-recovery plan is available
@@ -778,7 +779,7 @@ loss event.
 with mutually authenticated inter-core traffic) support continued
 operation when a single facility fails. hds documents which processes are
 critical and the emergency-mode runbook it operates.
-">
+" data-planned="0">
   <h3><code>164.308(a)(7)(ii)(C)</code> Emergency mode operation plan — Required <span class="draft">draft</span></h3>
   <p class="text">Establish, and implement as needed, procedures to enable continuation of
 critical business processes for protection of ePHI while operating in
@@ -786,7 +787,7 @@ emergency mode.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Pryv's HA primitives
 (multi-core cluster + Raft replication + cluster-CA mTLS)
 support continued operation when a single facility fails. The
@@ -796,7 +797,7 @@ Recovery row.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>The platform's high-availability primitives (replicated multi-core cluster
 with mutually authenticated inter-core traffic) support continued
 operation when a single facility fails. HDS documents which processes are
@@ -833,13 +834,13 @@ workload.
 exercises the platform's backup-restore path. hds is formalising a regular
 test-and-revise cadence; the procedure is documented internally and
 regular verified execution remains a known gap.
-">
+" data-planned="0">
   <h3><code>164.308(a)(7)(ii)(D)</code> Testing and revision procedures — Addressable <span class="draft">draft</span></h3>
   <p class="text">Implement procedures for periodic testing and revision of contingency plans.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b out-of-scope">out-of-scope</span></div>
+      <div class="lh">Pryv platform <span class="b out-of-scope">out-of-scope</span> </div>
       <p>Contingency-plan testing is an operational drill. Pryv has no
 software role at the drill-execution layer. The drill's
 restoration-from-backup phase exercises Pryv primitives but
@@ -847,7 +848,7 @@ the testing programme itself is the operator's.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>Contingency-plan testing is an operational drill whose restore phase
 exercises the platform's backup-restore path. HDS is formalising a regular
 test-and-revise cadence; the procedure is documented internally and
@@ -886,7 +887,7 @@ records.
 the audit log, operational monitoring, this matrix as a control inventory,
 and the platform's test results as control-effectiveness evidence. the
 evaluation write-up is held internally and shared on request.
-">
+" data-planned="0">
   <h3><code>164.308(a)(8)</code> Evaluation — standard <span class="draft">draft</span></h3>
   <p class="text">Perform periodic technical and nontechnical evaluation, in response to
 environmental or operational changes, to confirm that security policies and
@@ -894,7 +895,7 @@ procedures continue to meet the requirements of this subpart.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Evaluation is the operator's
 cyclical assessment. Pryv-side inputs: audit log (control-
 effectiveness sample), observability (operational stability
@@ -910,7 +911,7 @@ repositories). The assessment write-up is operator-side.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>HDS performs a periodic evaluation of its security programme, drawing on
 the audit log, operational monitoring, this matrix as a control inventory,
 and the platform's test results as control-effectiveness evidence. The
@@ -953,7 +954,7 @@ open-pryv.io software. hds carries this layer by selecting certified hosting
 providers (eu/switzerland and us data-residency options) and documenting the
 facility-control attestations it relies on, so an implementer inherits a
 vetted physical posture rather than sourcing it themselves.
-">
+" data-planned="0">
   <h3><code>164.310</code> Physical Safeguards — standard (framing) <span class="draft">draft</span></h3>
   <p class="text">Implement policies and procedures to limit physical access to electronic
 information systems and the facilities in which they are housed, while
@@ -961,7 +962,7 @@ ensuring that properly authorized access is allowed.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Physical safeguards (facility
 access, workstation security, device and media controls) are
 properties of the hosting environment, not of the Pryv software
@@ -974,7 +975,7 @@ themselves.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>Physical safeguards are properties of the hosting environment, not of the
 open-pryv.io software. HDS carries this layer by selecting certified hosting
 providers (EU/Switzerland and US data-residency options) and documenting the
@@ -1017,7 +1018,7 @@ physical-safeguards programme; cover your own premises and devices.
 hosting provider for the chosen region. hds selects providers whose
 data-centre access controls (badged entry, escort policies, access logging)
 are independently attested, and documents which attestation backs each region.
-">
+" data-planned="0">
   <h3><code>164.310(a)(1)</code> Facility access controls — standard <span class="draft">draft</span></h3>
   <p class="text">Implement policies and procedures to limit physical access to electronic
 information systems and the facilities housing them, while ensuring properly
@@ -1025,12 +1026,12 @@ authorized access is allowed.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b out-of-scope">out-of-scope</span></div>
+      <div class="lh">Pryv platform <span class="b out-of-scope">out-of-scope</span> </div>
       <p>Facility access is physical. See the §164.310 framing row.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>Facility access control at the server tier is delivered by the certified
 hosting provider for the chosen region. HDS selects providers whose
 data-centre access controls (badged entry, escort policies, access logging)
@@ -1070,7 +1071,7 @@ yours to control and document.
 the entity operating the workstations, not with the hds platform. hds
 documents the assumption that ephi access happens only through authenticated,
 access-token-scoped sessions, which bounds what any single workstation can do.
-">
+" data-planned="0">
   <h3><code>164.310(b)</code> Workstation use — standard <span class="draft">draft</span></h3>
   <p class="text">Implement policies and procedures specifying the proper functions to be
 performed, how they are to be performed, and the physical attributes of the
@@ -1078,13 +1079,13 @@ surroundings of any workstation or class of workstation that can access ePHI.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b out-of-scope">out-of-scope</span></div>
+      <div class="lh">Pryv platform <span class="b out-of-scope">out-of-scope</span> </div>
       <p>Workstation use + physical attributes are facility / HR
 controls.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>Workstation use is a workforce and endpoint-management control that sits with
 the entity operating the workstations, not with the HDS platform. HDS
 documents the assumption that ePHI access happens only through authenticated,
@@ -1124,20 +1125,20 @@ endpoint-management scope owned by the entity operating the workstation. hds
 documents the compensating platform control: a lost or unattended workstation
 cannot exceed the permissions of its access token, and the token can be
 revoked centrally.
-">
+" data-planned="0">
   <h3><code>164.310(c)</code> Workstation security — standard <span class="draft">draft</span></h3>
   <p class="text">Implement physical safeguards for all workstations that access ePHI, to
 restrict access to authorized users.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b out-of-scope">out-of-scope</span></div>
+      <div class="lh">Pryv platform <span class="b out-of-scope">out-of-scope</span> </div>
       <p>Physical workstation security (screen locks, kensington locks,
 privacy filters) is endpoint-management scope.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>Physical workstation security (screen locks, device controls, premises) is
 endpoint-management scope owned by the entity operating the workstation. HDS
 documents the compensating platform control: a lost or unattended workstation
@@ -1180,7 +1181,7 @@ hosting provider's media-sanitisation controls, which hds selects and
 documents. for per-subject ephi movement, the platform's per-user export unit
 is the natural medium so a single subject's data can be transferred or
 archived discretely.
-">
+" data-planned="0">
   <h3><code>164.310(d)(1)</code> Device and media controls — standard <span class="draft">draft</span></h3>
   <p class="text">Implement policies and procedures governing the receipt and removal of
 hardware and electronic media containing ePHI into and out of a facility, and
@@ -1188,7 +1189,7 @@ the movement of these items within the facility.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Pryv-side contribution
 at the media-controls layer: per-user backup files are the
 natural unit when an individual subject's ePHI moves off the
@@ -1199,7 +1200,7 @@ is the operator's.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>Media disposal and re-use at the server tier are handled by the certified
 hosting provider's media-sanitisation controls, which HDS selects and
 documents. For per-subject ePHI movement, the platform's per-user export unit
@@ -1244,7 +1245,7 @@ tokens enforced at every api call: a token can read or write only the streams
 its permissions list, at the level granted, with no trust-based bypass path.
 access control is therefore a technical property of the api surface that hds
 operates, not a downstream policy layer.
-">
+" data-planned="0">
   <h3><code>164.312(a)(1)</code> Access control — standard <span class="draft">draft</span></h3>
   <p class="text">Implement technical policies and procedures for electronic information
 systems holding ePHI so that access is allowed only to persons or software
@@ -1252,7 +1253,7 @@ programs granted access rights under §164.308(a)(4).
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b implemented">implemented</span></div>
+      <div class="lh">Pryv platform <span class="b implemented">implemented</span> </div>
       <p>Per-stream permissions are enforced at every API call; an access
 can read or write only the streams its `permissions[]` lists, at
 the level granted. There is no &quot;bypass on trust&quot; path — the
@@ -1262,7 +1263,7 @@ controlled namespace.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b implemented">implemented</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b implemented">implemented</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>HDS deploys open-pryv.io with per-user data isolation and per-stream access
 tokens enforced at every API call: a token can read or write only the streams
 its permissions list, at the level granted, with no trust-based bypass path.
@@ -1303,14 +1304,14 @@ document the authorization scheme.
 access token derived from it carries a unique id and version. the per-user
 audit log cites that access identity on every recorded action, so each tracked
 operation ties back to a unique identity.
-">
+" data-planned="0">
   <h3><code>164.312(a)(2)(i)</code> Unique user identification — Required <span class="draft">draft</span></h3>
   <p class="text">Assign a unique name and/or number for identifying and tracking user
 identity.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b implemented">implemented</span></div>
+      <div class="lh">Pryv platform <span class="b implemented">implemented</span> </div>
       <p>Every Pryv account has a unique username + cuid; every access
 derived from it carries a unique access id (cuid) and version
 serial. Audit records cite the (accessId, accessSerial) tuple,
@@ -1318,7 +1319,7 @@ so each tracked action ties back to a unique identity.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b implemented">implemented</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b implemented">implemented</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>Every account in the HDS-operated platform has a unique identifier, and every
 access token derived from it carries a unique id and version. The per-user
 audit log cites that access identity on every recorded action, so each tracked
@@ -1358,14 +1359,14 @@ can serve as a break-glass path to ephi during an emergency, and every action
 taken under it is captured by the per-user audit log. hds documents the
 custody controls; the implementer defines when the procedure may be invoked
 and the review that follows.
-">
+" data-planned="0">
   <h3><code>164.312(a)(2)(ii)</code> Emergency access procedure — Required <span class="draft">draft</span></h3>
   <p class="text">Establish (and implement as needed) procedures for obtaining necessary ePHI
 during an emergency.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b configurable">configurable</span></div>
+      <div class="lh">Pryv platform <span class="b configurable">configurable</span> </div>
       <p>The operator-held admin access key (`auth.adminAccessKey`) is the
 break-glass mechanism: it grants administrative reads not
 requiring an ordinary user's consent. You document the
@@ -1374,7 +1375,7 @@ review that must follow.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b configurable">configurable</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b configurable">configurable</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>The platform provides an operator-held administrative access mechanism that
 can serve as a break-glass path to ePHI during an emergency, and every action
 taken under it is captured by the per-user audit log. HDS documents the
@@ -1416,14 +1417,14 @@ platform mechanism.
 lifetime and per-grant access-token expiry can both be bounded, so a session
 or token becomes inert automatically once its window passes. hds operates the
 mechanism; the implementer sets the timeouts appropriate to its workflow.
-">
+" data-planned="0">
   <h3><code>164.312(a)(2)(iii)</code> Automatic logoff — Addressable <span class="draft">draft</span></h3>
   <p class="text">Implement electronic procedures that terminate an electronic session after a
 predetermined time of inactivity.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b configurable">configurable</span></div>
+      <div class="lh">Pryv platform <span class="b configurable">configurable</span> </div>
       <p>Two configurables: personal-token session lifetime
 (`auth.sessionMaxAge`) and per-access expiry (`access.expires`).
 The latter is per-grant (the access is automatically inert after
@@ -1432,7 +1433,7 @@ whose validity is bounded by the case.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b configurable">configurable</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b configurable">configurable</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>The platform enforces automatic session and token expiry: interactive session
 lifetime and per-grant access-token expiry can both be bounded, so a session
 or token becomes inert automatically once its window passes. HDS operates the
@@ -1478,13 +1479,13 @@ both baa subprocessors) — this satisfies the addressable mechanism and grounds
 the §164.402(2) breach safe-harbor for lost/stolen media, but is not
 operator-held-key or end-to-end encryption (see hipaa/risk/at-rest-encryption-gap
 for the residual).
-">
+" data-planned="1">
   <h3><code>164.312(a)(2)(iv)</code> Encryption and decryption — Addressable <span class="draft">draft</span></h3>
   <p class="text">Implement a mechanism to encrypt and decrypt ePHI.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b configurable">configurable</span></div>
+      <div class="lh">Pryv platform <span class="b configurable">configurable</span> <a class="pl medium" href="https://github.com/pryv/open-pryv.io/issues/34" title="End-to-end (server-blind) encryption via proxy re-encryption brings CMEK / BYOK to the Pryv layer">⏳ feature</a></div>
       <p>The &quot;mechanism to encrypt and decrypt ePHI&quot; is delivered as
 switch-on Pryv software. User PHI/PII at rest (events,
 attachments, series, audit, platform DB) is encrypted by the
@@ -1498,7 +1499,7 @@ TLS-in-transit via the built-in ACME integration.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b implemented">implemented</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b implemented">implemented</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>ePHI is encrypted at rest in both hosting regions, and TLS protects it in
 transit by default. Each core's storage volume is encrypted at the hosting
 layer: Exoscale encrypts compute root volumes by default (AES-256-XTS,
@@ -1553,14 +1554,14 @@ timestamp, acting access identity, method, and success/error — and exposes it
 for examination. the audit record is data-minimal by construction (request
 bodies are not stored), so reviewing activity does not create a second copy of
 ephi.
-">
+" data-planned="1">
   <h3><code>164.312(b)</code> Audit controls — standard <span class="draft">draft</span></h3>
   <p class="text">Implement hardware, software, and/or procedural mechanisms that record and
 examine activity in information systems containing or using ePHI.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b implemented">implemented</span></div>
+      <div class="lh">Pryv platform <span class="b implemented">implemented</span> <a class="pl low" href="https://github.com/pryv/open-pryv.io/issues/74" title="Chained / signed audit log strengthens tamper-resistance evidence">⏳ feature</a></div>
       <p>Pryv's per-user audit log records every API method invocation —
 timestamp, user, access reference, method, success / error. The
 `audit.get` API method surfaces it for examination. The optional
@@ -1570,7 +1571,7 @@ authorise) can examine the history.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b implemented">implemented</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b implemented">implemented</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>The HDS-operated platform records every API call in a per-user audit log —
 timestamp, acting access identity, method, and success/error — and exposes it
 for examination. The audit record is data-minimal by construction (request
@@ -1611,14 +1612,14 @@ per-stream permissions, updates preserve the prior value through versioning,
 the audit log pins who-changed-what-when, and operational backups provide a
 recovery path if a destruction event must be reversed. the overall integrity
 programme remains the implementer's; the technical substrate is hds-operated.
-">
+" data-planned="1">
   <h3><code>164.312(c)(1)</code> Integrity — standard <span class="draft">draft</span></h3>
   <p class="text">Implement policies and procedures to protect ePHI from improper alteration or
 destruction.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> <a class="pl medium" href="https://github.com/pryv/open-pryv.io/issues/74" title="Chained / signed audit log enforces log integrity at the primitive layer">⏳ feature</a></div>
       <p>Integrity is multi-
 layered: write authorization gated by `permissions`, event
 versioning preserves the prior value on every update, audit
@@ -1629,7 +1630,7 @@ obligation is yours; the technical substrate is Pryv's.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>Integrity is layered in the HDS-operated platform: writes are gated by
 per-stream permissions, updates preserve the prior value through versioning,
 the audit log pins who-changed-what-when, and operational backups provide a
@@ -1670,14 +1671,14 @@ original?&quot; is answerable by comparison against the history, and the audit
 record anchors each change to an authenticated access identity. tamper
 detection beyond this — e.g. cryptographic content hashing under an
 implementer-held key — remains on the implementer or an extension.
-">
+" data-planned="1">
   <h3><code>164.312(c)(2)</code> Mechanism to authenticate ePHI — Addressable <span class="draft">draft</span></h3>
   <p class="text">Implement electronic mechanisms to corroborate that ePHI has not been altered
 or destroyed in an unauthorized manner.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> <a class="pl medium" href="https://github.com/pryv/open-pryv.io/issues/74" title="Chained / signed audit log authenticates audit data (row moves F:Evidence|Low → F:Evidence|Med)">⏳ feature</a></div>
       <p>Event versioning preserves
 the prior content on every update, so &quot;is this the original?&quot;
 is a tractable question — compare against the history. The
@@ -1688,7 +1689,7 @@ a customer-held key) is on the implementer or an extension.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>Event versioning retains prior content on every update, so &quot;is this the
 original?&quot; is answerable by comparison against the history, and the audit
 record anchors each change to an authenticated access identity. Tamper
@@ -1730,14 +1731,14 @@ primitive: the bearer of a valid token has been authenticated. authentication
 strength is layered — credentials by default, with multi-factor authentication
 available — and recovery paths preserve account ownership when a factor is
 lost.
-">
+" data-planned="1">
   <h3><code>164.312(d)</code> Person or entity authentication — standard <span class="draft">draft</span></h3>
   <p class="text">Implement procedures to verify that a person or entity seeking access to ePHI
 is the one claimed.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b implemented">implemented</span></div>
+      <div class="lh">Pryv platform <span class="b implemented">implemented</span> <a class="pl medium" href="https://github.com/pryv/open-pryv.io/issues/78" title="Reference MFA plugins (TOTP / WebAuthn) + primitive-catalogue doc surface the pluggability">⏳ enhancement</a></div>
       <p>Authentication is mediated by the access-token primitive: the
 bearer of a valid token has been authenticated. Strength of
 that authentication is layered — username + password by default;
@@ -1747,7 +1748,7 @@ device is lost.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b implemented">implemented</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b implemented">implemented</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>Authentication in the HDS-operated platform is mediated by the access-token
 primitive: the bearer of a valid token has been authenticated. Authentication
 strength is layered — credentials by default, with multi-factor authentication
@@ -1787,14 +1788,14 @@ required, and for which roles or operations).
 there is no plaintext path served. transmission security is therefore a
 technical property of every connection rather than an optional add-on, in both
 the us and switzerland regions.
-">
+" data-planned="0">
   <h3><code>164.312(e)(1)</code> Transmission security — standard <span class="draft">draft</span></h3>
   <p class="text">Implement technical security measures to guard against unauthorized access to
 ePHI being transmitted over an electronic communications network.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b implemented">implemented</span></div>
+      <div class="lh">Pryv platform <span class="b implemented">implemented</span> </div>
       <p>All Pryv API traffic terminates on TLS 1.3 by default, with
 certificates issued + auto-renewed via the built-in ACME
 integration. Inter-core traffic in a multi-core cluster runs over
@@ -1803,7 +1804,7 @@ shipped.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b implemented">implemented</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b implemented">implemented</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>All API traffic to the HDS-operated platform is carried over TLS by default;
 there is no plaintext path served. Transmission security is therefore a
 technical property of every connection rather than an optional add-on, in both
@@ -1841,14 +1842,14 @@ ePHI only over TLS; document the transmission-security boundary.
 modification of ephi on the connection to the hds-operated platform is
 cryptographically detectable. end-to-end integrity across any additional hops
 depends on the implementer's chain preserving the same property.
-">
+" data-planned="0">
   <h3><code>164.312(e)(2)(i)</code> Integrity controls — Addressable <span class="draft">draft</span></h3>
   <p class="text">Implement security measures to ensure that electronically transmitted ePHI is
 not improperly modified without detection until disposed of.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b implemented">implemented</span></div>
+      <div class="lh">Pryv platform <span class="b implemented">implemented</span> </div>
       <p>TLS 1.3 provides cryptographic integrity (AEAD) on every byte in
 transit. End-to-end transmission integrity is therefore a
 property of the connection — modification in transit is
@@ -1858,7 +1859,7 @@ implementer's chain to preserve this property.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b implemented">implemented</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b implemented">implemented</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>TLS provides cryptographic integrity on every byte in transit, so
 modification of ePHI on the connection to the HDS-operated platform is
 cryptographically detectable. End-to-end integrity across any additional hops
@@ -1897,13 +1898,13 @@ the addressable decision.
 only tls-encrypted endpoints, so the &quot;whenever deemed appropriate&quot; judgement
 is resolved to &quot;always&quot; for transmission. this row covers transmission only;
 at-rest encryption is addressed under §164.312(a)(2)(iv).
-">
+" data-planned="0">
   <h3><code>164.312(e)(2)(ii)</code> Encryption — Addressable (transmission) <span class="draft">draft</span></h3>
   <p class="text">Implement a mechanism to encrypt ePHI whenever deemed appropriate.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b implemented">implemented</span></div>
+      <div class="lh">Pryv platform <span class="b implemented">implemented</span> </div>
       <p>TLS 1.3 in transit is default-on via the built-in ACME
 integration; mTLS between cores is the inter-node default once
 a cluster is bootstrapped. &quot;Whenever deemed appropriate&quot; — Pryv's
@@ -1911,7 +1912,7 @@ default for ePHI transit is: always.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b implemented">implemented</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b implemented">implemented</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>Encryption of ePHI in transit is default-on: the HDS-operated platform serves
 only TLS-encrypted endpoints, so the &quot;whenever deemed appropriate&quot; judgement
 is resolved to &quot;always&quot; for transmission. This row covers transmission only;
@@ -1951,7 +1952,7 @@ separately.
 assurances (audit, access control, monitoring, regional residency) that
 back it, and signs baas with its own subcontractors. the contract itself
 is executed between the parties.
-">
+" data-planned="0">
   <h3><code>164.314(a)(1)</code> Business associate contracts — Organizational requirement <span class="draft">draft</span></h3>
   <p class="text">A covered entity is not in compliance unless it has obtained satisfactory
 assurances, via a written contract, that the business associate will
@@ -1960,7 +1961,7 @@ transmits on the covered entity's behalf.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>The BAA itself is a contract —
 the covered entity drafts it with legal counsel. What Pryv
 contributes when you operate as a business associate: the audit
@@ -1973,7 +1974,7 @@ breach-notification pipe between BA and CE.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>HDS provides a Business Associate Agreement template and the technical
 assurances (audit, access control, monitoring, regional residency) that
 back it, and signs BAAs with its own subcontractors. The contract itself
@@ -2011,7 +2012,7 @@ downstream processors.
 administrative controls enumerated across the §164.308, §164.310 and
 §164.312 rows of this matrix. the baa cites that programme so the
 implementer can populate its safeguards exhibit by reference.
-">
+" data-planned="0">
   <h3><code>164.314(a)(2)(i)(A)</code> Business associate contract — implement reasonable and appropriate safeguards <span class="draft">draft</span></h3>
   <p class="text">The business associate contract must require the business associate to
 implement administrative, physical, and technical safeguards that reasonably
@@ -2020,7 +2021,7 @@ of the ePHI it handles on the covered entity's behalf.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>The BAA's &quot;reasonable
 and appropriate safeguards&quot; obligation is satisfied by the
 technical-safeguards programme already enumerated across
@@ -2031,7 +2032,7 @@ is the `derives_from` chain.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>The safeguards HDS commits to in its BAA are the same technical and
 administrative controls enumerated across the §164.308, §164.310 and
 §164.312 rows of this matrix. The BAA cites that programme so the
@@ -2069,7 +2070,7 @@ the controls you and your downstream processors actually operate.
 </article><article class="req" id="req-164-314-a-2-i-c" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.314(a)(2)(i)(c) business associate contract — report security incidents hds's baa commits hds to notifying the implementer of security incidents
 affecting their ephi, and hds's monitoring and incident-response programme
 supplies the detection and forensic evidence behind that obligation.
-">
+" data-planned="0">
   <h3><code>164.314(a)(2)(i)(C)</code> Business associate contract — report security incidents <span class="draft">draft</span></h3>
   <p class="text">The business associate contract must require the business associate to
 report to the covered entity any security incident of which it becomes
@@ -2077,7 +2078,7 @@ aware, including breaches of unsecured ePHI.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Detection of a security
 incident is the BA's operational concern (audit-log review +
 observability). Reporting to the CE is the contractual flow.
@@ -2088,7 +2089,7 @@ The audit log supplies the forensic evidence the report cites.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>HDS's BAA commits HDS to notifying the implementer of security incidents
 affecting their ePHI, and HDS's monitoring and incident-response programme
 supplies the detection and forensic evidence behind that obligation.
@@ -2127,7 +2128,7 @@ down to your subcontractors.
 each subcontractor that may touch ephi and tracks them in its baa register.
 hds also provides the implementer a subcontractor agreement template to
 flow the same obligations down their own chain.
-">
+" data-planned="0">
   <h3><code>164.314(a)(2)(ii)(B)</code> Business associate contract — extend safeguards to subcontractors <span class="draft">draft</span></h3>
   <p class="text">Where applicable, the business associate must ensure that any subcontractors
 that create, receive, maintain, or transmit ePHI on its behalf agree, via a
@@ -2135,7 +2136,7 @@ written contract, to comply with the applicable Security Rule requirements.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b out-of-scope">out-of-scope</span></div>
+      <div class="lh">Pryv platform <span class="b out-of-scope">out-of-scope</span> </div>
       <p>Subcontracting chains are contractual — no software role. The
 only built-in subprocessor Pryv-the-software carries is the
 observability-provider adapter (default disabled); when enabled,
@@ -2145,7 +2146,7 @@ and GDPR Art.28(4).
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>Acting as a Business Associate, HDS executes back-to-back agreements with
 each subcontractor that may touch ePHI and tracks them in its BAA register.
 HDS also provides the implementer a subcontractor agreement template to
@@ -2183,7 +2184,7 @@ through.
 security rule safeguards for the systems it operates. this governs hds's
 role as operator and business associate; the implementer keeps its own
 policy programme for the parts it controls.
-">
+" data-planned="0">
   <h3><code>164.316(a)</code> Policies and procedures — standard <span class="draft">draft</span></h3>
   <p class="text">Implement reasonable and appropriate policies and procedures to comply with
 the standards, implementation specifications, and other requirements of the
@@ -2191,7 +2192,7 @@ Security Rule.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b out-of-scope">out-of-scope</span></div>
+      <div class="lh">Pryv platform <span class="b out-of-scope">out-of-scope</span> </div>
       <p>The policies-and-procedures programme is an organizational
 artefact owned by the covered entity / business associate's
 security officer. Pryv has no software role in drafting them.
@@ -2201,7 +2202,7 @@ substitute for it.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>HDS maintains its own written information-security policy set covering the
 Security Rule safeguards for the systems it operates. This governs HDS's
 role as operator and Business Associate; the implementer keeps its own
@@ -2240,7 +2241,7 @@ ePHI.
 outputs in durable written form under a documentation-management policy.
 required activity records are retained alongside the audit trail of the
 systems hds operates.
-">
+" data-planned="0">
   <h3><code>164.316(b)(1)</code> Documentation — Required <span class="draft">draft</span></h3>
   <p class="text">Maintain the policies and procedures implemented to comply with the Security
 Rule in written or electronic form, and maintain a written or electronic
@@ -2249,7 +2250,7 @@ documented.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Where the required record
 is operational (activity logs, assessment outputs), Pryv events
 on a designated `compliance/*` stream carry the documentation
@@ -2260,7 +2261,7 @@ retention window.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>HDS keeps its security policies, procedures, registers and assessment
 outputs in durable written form under a documentation-management policy.
 Required activity records are retained alongside the audit trail of the
@@ -2299,7 +2300,7 @@ activities the subpart requires you to record.
 </article><article class="req" id="req-164-316-b-2-i" data-coverage="documented" data-personas="covered-entity business-associate individual" data-text="164.316(b)(2)(i) documentation — time limit — required hds retains its security documentation and required records for at least
 six years under its documentation-and-retention policy, treating six years
 as a regulatory floor rather than a destruction deadline.
-">
+" data-planned="0">
   <h3><code>164.316(b)(2)(i)</code> Documentation — time limit — Required <span class="draft">draft</span></h3>
   <p class="text">Retain the documentation required by §164.316(b)(1) for six years from the
 date of its creation or the date when it last was in effect, whichever is
@@ -2307,7 +2308,7 @@ later.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Six-year is a **minimum** retention period, not a maximum
 (the statute says &quot;retain … for 6 years&quot;; covered entities
 may retain indefinitely). Pryv's audit log persists by
@@ -2319,7 +2320,7 @@ to.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>HDS retains its security documentation and required records for at least
 six years under its documentation-and-retention policy, treating six years
 as a regulatory floor rather than a destruction deadline.
@@ -2358,14 +2359,14 @@ and required records.
 updates it in response to changes in its environment or operations. review
 dates and changes are tracked so the documentation's currency is
 demonstrable.
-">
+" data-planned="0">
   <h3><code>164.316(b)(2)(iii)</code> Documentation — updates — Required <span class="draft">draft</span></h3>
   <p class="text">Review documentation periodically, and update it as needed in response to
 environmental or operational changes affecting the security of the ePHI.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Periodic review cadence is
 the operator's procedure. Pryv's contribution: when policies-
 as-data are stored as events on a `compliance/policies/*`
@@ -2375,7 +2376,7 @@ what.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>HDS reviews its security documentation on a defined periodic cadence and
 updates it in response to changes in its environment or operations. Review
 dates and changes are tracked so the documentation's currency is
@@ -2413,7 +2414,7 @@ event-driven reviews.
 </article></div>
     <script>
 (function(){
-  const q=document.getElementById('q'),cards=[...document.querySelectorAll('.req')],fc=document.getElementById('fcount');
+  const q=document.getElementById('q'),cards=[...document.querySelectorAll('.req')],fc=document.getElementById('fcount'),fp=document.getElementById('fplan');
   const covs=()=>[...document.querySelectorAll('#cov input:checked')].map(i=>i.value);
   const pers=()=>[...document.querySelectorAll('#persona input:checked')].map(i=>i.value);
   function apply(){const t=q.value.toLowerCase(),cv=covs(),pr=pers();let n=0;
@@ -2421,7 +2422,8 @@ event-driven reviews.
       const cp=(c.dataset.personas||'').split(' ').filter(Boolean);
       const okp=cp.length===0||cp.some(p=>pr.includes(p));
       const okt=!t||(c.dataset.text||'').includes(t);
-      const show=okc&&okp&&okt;c.style.display=show?'':'none';if(show)n++;});
+      const okpl=!fp.checked||c.dataset.planned==='1';
+      const show=okc&&okp&&okt&&okpl;c.style.display=show?'':'none';if(show)n++;});
     fc.textContent=n+' / '+cards.length;}
   document.querySelector('.filters').addEventListener('input',apply);apply();
 })();

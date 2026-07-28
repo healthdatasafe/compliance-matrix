@@ -44,6 +44,7 @@
   <span class="fgroup" id="persona">
     <label><input type="checkbox" value="partner" checked> partner</label><label><input type="checkbox" value="covered-entity" checked> covered-entity</label><label><input type="checkbox" value="business-associate" checked> business-associate</label><label><input type="checkbox" value="individual" checked> individual</label>
   </span>
+  <label class="fgroup"><input type="checkbox" id="fplan"> <span class="pl low">⏳ planned only</span></label>
   <span class="fcount" id="fcount"></span>
 </div>
     <div class="reqs"><article class="req" id="req-art-5" data-coverage="facilitated" data-personas="controller processor data-subject" data-text="art.5 definitions on top of pryv's primitive model, hds operates the platform on which the
@@ -51,7 +52,7 @@ controller designs the stream layout. the classification of a data
 category as sensitive — including the nlpd's broader categories — is the
 controller's editorial decision, which hds carries into the access and
 audit record.
-">
+" data-planned="0">
   <h3><code>Art.5</code> Definitions <span class="draft">draft</span></h3>
   <p class="text">Defines key terms including personal data, sensitive personal data,
 processing, controller and processor. The nLPD's sensitive-data category
@@ -60,7 +61,7 @@ on administrative or criminal proceedings and sanctions.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>The same primitive
 mapping that handles GDPR Art. 4 carries here (event = personal
 data, access = consent / authorization, etc.). The Swiss-
@@ -72,7 +73,7 @@ you apply to it.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">CH</span> </div>
       <p>On top of Pryv's primitive model, HDS operates the platform on which the
 controller designs the stream layout. The classification of a data
 category as sensitive — including the nLPD's broader categories — is the
@@ -113,7 +114,7 @@ limitation technically and whose audit log and access version history
 provide the accountability artefact. event update with version
 preservation supports the accuracy duty. the substantive purpose and
 proportionality judgements remain the controller's.
-">
+" data-planned="0">
   <h3><code>Art.6</code> Principles of processing <span class="draft">draft</span></h3>
   <p class="text">Processing must be lawful, in good faith and proportionate. Personal data
 may be collected only for a purpose recognisable to the data subject;
@@ -122,7 +123,7 @@ needed.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b implemented">implemented</span></div>
+      <div class="lh">Pryv platform <span class="b implemented">implemented</span> </div>
       <p>Same Pryv contributions as GDPR Art. 5: permissions enforce
 purpose-limitation technically; audit + access versioning give
 the accountability artefact; events.update with version history
@@ -134,7 +135,7 @@ to the subject.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b implemented">implemented</span> <span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b implemented">implemented</span> <span class="rg">CH</span> </div>
       <p>HDS operates the platform whose permission model enforces purpose
 limitation technically and whose audit log and access version history
 provide the accountability artefact. Event update with version
@@ -176,7 +177,7 @@ construction — per-user storage isolation, stream-scoped permissions,
 distinct access types, system streams for privileged data and
 audit-by-default. hds runs this baseline; the per-deployment default
 configuration is the controller's.
-">
+" data-planned="0">
   <h3><code>Art.7</code> Data protection by design and by default <span class="draft">draft</span></h3>
   <p class="text">The controller must ensure, from planning through implementation, that
 processing complies with the Act through suitable technical and
@@ -184,7 +185,7 @@ organisational measures, with privacy-protective default settings.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Pryv's architecture is
 designed to satisfy Art. 7's &quot;from planning through
 implementation&quot; directive — per-user storage isolation, stream-
@@ -196,7 +197,7 @@ shown at registration).
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">CH</span> </div>
       <p>The Pryv architecture HDS operates is privacy-protective by
 construction — per-user storage isolation, stream-scoped permissions,
 distinct access types, system streams for privileged data and
@@ -234,7 +235,7 @@ scopes, retention policy and registration notice.
 permissions, mfa, multi-core high availability and operated backup and
 restore. at-rest encryption of customer event data is a known gap and is
 flagged so the controller can weigh it in its security assessment.
-">
+" data-planned="0">
   <h3><code>Art.8</code> Data security <span class="draft">draft</span></h3>
   <p class="text">The controller and processor must ensure data security through appropriate
 technical and organisational measures; the Federal Council may set minimum
@@ -242,7 +243,7 @@ requirements through the Ordinance on Data Protection.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Pryv contributes the
 same multi-aspect technical baseline as for GDPR Art. 32: TLS
 in transit (letsEncrypt-integration); operator-side at-rest
@@ -253,7 +254,7 @@ detailing remains the operator's compliance verification work.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">CH</span> </div>
       <p>HDS operates the technical security baseline: TLS in transit, stream-scoped
 permissions, MFA, multi-core high availability and operated backup and
 restore. At-rest encryption of customer event data is a known gap and is
@@ -293,7 +294,7 @@ client-data on the relevant access or as a dedicated consent event, so
 what was shown is recoverable per subject and per time. the notice
 content and its presentation are the controller's editorial
 responsibility.
-">
+" data-planned="0">
   <h3><code>Art.19</code> Information duty when collecting personal data <span class="draft">draft</span></h3>
   <p class="text">The controller must inform the data subject of any acquisition of personal
 data, whether collected from the subject or from a third party, including
@@ -301,7 +302,7 @@ controller identity, purpose, recipients and any transfer abroad.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Same mapping as GDPR
 Art. 13/14: notice text lives in
 `access.clientData.privacy_notice` (or a dedicated `consent/*`
@@ -312,7 +313,7 @@ presentation itself is your editorial responsibility.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">CH</span> </div>
       <p>HDS preserves the notice text presented to each data subject as
 client-data on the relevant access or as a dedicated consent event, so
 what was shown is recoverable per subject and per time. The notice
@@ -345,7 +346,7 @@ source where data is acquired indirectly.
 hds contributes the audit log, which records when automated-decision
 processing ran and on which inputs, and events as the carrier for the
 subject's expressed view.
-">
+" data-planned="0">
   <h3><code>Art.21</code> Automated individual decisions <span class="draft">draft</span></h3>
   <p class="text">The controller must inform the data subject of a decision based exclusively
 on automated processing that has a legal effect or significantly affects
@@ -353,7 +354,7 @@ them; the subject may state their view.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Automated decisioning is the
 implementer's application logic, not Pryv's. What Pryv
 contributes: the audit log lets you record when automated-
@@ -363,7 +364,7 @@ are the carrier for the subject's expressed view (e.g., a
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">CH</span> </div>
       <p>Automated decisioning is the controller's application logic, not HDS's.
 HDS contributes the audit log, which records when automated-decision
 processing ran and on which inputs, and events as the carrier for the
@@ -396,7 +397,7 @@ its inputs: data residency tells you where each subject's data lives, the
 audit and access-version data describe the processing-flow technical
 layer, and system-stream isolation gives a defensible sensitive-data
 boundary.
-">
+" data-planned="0">
   <h3><code>Art.22</code> Data protection impact assessment <span class="draft">draft</span></h3>
   <p class="text">The controller must carry out a data protection impact assessment in
 advance where processing may entail a high risk to the personality or
@@ -404,7 +405,7 @@ fundamental rights of the data subject.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>The DPIA itself is a written
 assessment artefact that you (the controller) produce. Pryv
 contributes to its inputs: the data-residency primitive tells
@@ -416,7 +417,7 @@ writing of the assessment remain yours.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">CH</span> </div>
       <p>The DPIA is a written assessment the controller produces. HDS contributes
 its inputs: data residency tells you where each subject's data lives, the
 audit and access-version data describe the processing-flow technical
@@ -453,7 +454,7 @@ artefacts as inputs.
 controller scope a breach — which subjects, which streams, by which
 access. the nlpd's &quot;as soon as possible&quot; timeline is the controller's to
 meet; hds provides the underlying scoping evidence.
-">
+" data-planned="1">
   <h3><code>Art.24</code> Notification of data security breaches <span class="draft">draft</span></h3>
   <p class="text">The controller must notify the Federal Data Protection and Information
 Commissioner of a breach likely to result in a high risk to the personality
@@ -463,7 +464,7 @@ Commissioner's request.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> <a class="pl medium" href="https://github.com/pryv/open-pryv.io/issues/76" title="bin/breach-scope.js inherits from gdpr.Art.33 — same scoping artefact serves the FDPIC 'as soon as possible' regime">⏳ feature</a></div>
       <p>Same Pryv contribution as
 GDPR Art. 33: audit data + access-version chain let you scope
 the breach (which subjects, which streams, by which access).
@@ -475,7 +476,7 @@ regime if you face both.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">CH</span> </div>
       <p>HDS operates the audit log and access version chain that let the
 controller scope a breach — which subjects, which streams, by which
 access. The nLPD's &quot;as soon as possible&quot; timeline is the controller's to
@@ -517,7 +518,7 @@ history, audit records and attachments — in canonical json. hds operates
 this access capability end-to-end and ships the app-portability
 self-service web app (portability.hds.ngo) so subjects can obtain a
 full account dump without operator involvement.
-">
+" data-planned="0">
   <h3><code>Art.25</code> Right to information (data-subject access) <span class="draft">draft</span></h3>
   <p class="text">A data subject may request information from the controller as to whether
 personal data about them is processed, with the information needed to
@@ -526,7 +527,7 @@ and any automated decisions.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b implemented">implemented</span></div>
+      <div class="lh">Pryv platform <span class="b implemented">implemented</span> </div>
       <p>Same implementation as GDPR Art. 15: subject holding a personal
 token reads everything via the standard Pryv API (events, streams,
 accesses with history, audit, attachments) in the canonical
@@ -539,7 +540,7 @@ directly.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b implemented">implemented</span> <span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b implemented">implemented</span> <span class="rg">CH</span> </div>
       <p>Pryv is user-centric: the data subject, holding a personal token, reads
 everything through the standard API — events, streams, accesses with
 history, audit records and attachments — in canonical JSON. HDS operates
@@ -583,7 +584,7 @@ the full account into zip files the subject downloads in one
 self-service flow. for direct controller-to-controller transmission,
 the consent and capability-access flow mints a url the receiving
 controller can read.
-">
+" data-planned="0">
   <h3><code>Art.28</code> Right to data portability <span class="draft">draft</span></h3>
   <p class="text">The data subject has the right to receive personal data they have provided
 to the controller in a commonly used electronic format and to have it
@@ -591,7 +592,7 @@ transmitted to another controller where feasible.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b implemented">implemented</span></div>
+      <div class="lh">Pryv platform <span class="b implemented">implemented</span> </div>
       <p>Same implementation as GDPR Art. 20: `events.get` + `streams.get`
 return canonical JSON validated against `data-types` schemas.
 For controller-to-controller transmission (§2), the CMC capability-
@@ -600,7 +601,7 @@ operational lift on the subject's side.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b implemented">implemented</span> <span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b implemented">implemented</span> <span class="rg">CH</span> </div>
       <p>The HDS-operated API returns events and streams as canonical JSON
 validated against the data-type schemas — a commonly used electronic
 format. The app-portability web app (portability.hds.ngo) packages
@@ -643,7 +644,7 @@ controller via the capability flow.
 hds preserves the cited ground per access in client-data so the
 justification travels with the technical authorization and lives in the
 audit trail.
-">
+" data-planned="0">
   <h3><code>Art.31</code> Justification for processing sensitive personal data <span class="draft">draft</span></h3>
   <p class="text">Processing of sensitive personal data without consent requires an
 overriding private or public interest, with enumerated grounds such as
@@ -651,7 +652,7 @@ medical care, social assistance and statistics under conditions.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Same approach as GDPR Art. 9:
 legal-ground determination is your programmatic decision; Pryv
 preserves the cited ground per access in
@@ -662,7 +663,7 @@ vocabulary your implementer uses for the `legal_ground` values.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">CH</span> </div>
       <p>The legal-ground determination is the controller's programmatic decision.
 HDS preserves the cited ground per access in client-data so the
 justification travels with the technical authorization and lives in the
@@ -698,7 +699,7 @@ ground on each access.
 preservation, and operates account deletion as the erasure path. the
 backup semantics of erasure depend on the configured storage engine, and
 retention automation is a known gap the controller covers by process.
-">
+" data-planned="0">
   <h3><code>Art.32</code> Rectification, erasure and destruction of personal data <span class="draft">draft</span></h3>
   <p class="text">The controller must take appropriate measures to keep personal data
 accurate; the data subject may request rectification, erasure or
@@ -706,7 +707,7 @@ destruction of inaccurate or no-longer-needed personal data.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b implemented">implemented</span></div>
+      <div class="lh">Pryv platform <span class="b implemented">implemented</span> </div>
       <p>Rectification and erasure: same mapping as GDPR Art. 16 + 17.
 `events.update` for rectification (with version preservation);
 `system.users.delete` for erasure (with the same engine-dependent
@@ -714,7 +715,7 @@ backup semantics noted under GDPR Art. 17).
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b implemented">implemented</span> <span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b implemented">implemented</span> <span class="rg">CH</span> </div>
       <p>HDS exposes event update as the rectification primitive with version
 preservation, and operates account deletion as the erasure path. The
 backup semantics of erasure depend on the configured storage engine, and
@@ -753,7 +754,7 @@ switzerland, so binding a subject to the ch region keeps the data in
 switzerland and the cross-border question moot. for legitimate transfers
 the per-user hosting field exposes which jurisdiction the data sits in,
 recoverable for audit.
-">
+" data-planned="0">
   <h3><code>Art.34</code> Disclosure of personal data abroad <span class="draft">draft</span></h3>
   <p class="text">Personal data may be disclosed abroad only where the receiving state
 guarantees adequate protection or, in defined cases, with appropriate
@@ -762,7 +763,7 @@ approval.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b configurable">configurable</span></div>
+      <div class="lh">Pryv platform <span class="b configurable">configurable</span> </div>
       <p>The `data-residency` primitive is the technical control here:
 bind each subject's data to a hosting whose jurisdiction matches
 your transfer regime. For CH data, route subjects to a CH
@@ -773,7 +774,7 @@ jurisdiction the data sits in, recoverable for audit.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b configurable">configurable</span> <span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b configurable">configurable</span> <span class="rg">CH</span> </div>
       <p>Data residency is the technical control: HDS hosts CH-region data in
 Switzerland, so binding a subject to the CH region keeps the data in
 Switzerland and the cross-border question moot. For legitimate transfers
@@ -812,7 +813,7 @@ Switzerland record the adequacy or safeguard basis.
 exception type on the access authorising the disclosure, and the audit row
 at disclosure time anchors the exception to the specific events
 transferred.
-">
+" data-planned="0">
   <h3><code>Art.35</code> Disclosure of personal data abroad — particular cases <span class="draft">draft</span></h3>
   <p class="text">Disclosure abroad without adequate protection requires one of the defined
 exceptions, such as the subject's consent, performance of a contract or an
@@ -820,7 +821,7 @@ overriding interest.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Exception-based transfers
 require recording the legal basis. Pryv pattern: the access
 authorising the disclosure carries the exception type in
@@ -830,7 +831,7 @@ the exception to the specific event(s) transferred.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">CH</span> </div>
       <p>Exception-based transfers require recording the legal basis. HDS stores the
 exception type on the access authorising the disclosure, and the audit row
 at disclosure time anchors the exception to the specific events
@@ -866,7 +867,7 @@ access.
 data. the purely-personal-use exception does not reach a hosted deployment
 where the controller acts for others. hds contributes awareness, not a
 scope-determining control.
-">
+" data-planned="0">
   <h3><code>Art.2</code> Material scope <span class="draft">draft</span></h3>
   <p class="text">The Act applies to the processing of personal data of natural persons by
 private persons and federal bodies; it does not apply to purely personal
@@ -875,7 +876,7 @@ procedures.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Your Pryv deployment is
 fully in scope as automated processing of personal data. The
 &quot;purely personal use&quot; exception (§2 §1 lit a) doesn't reach a
@@ -884,7 +885,7 @@ for others.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">CH</span> </div>
       <p>An HDS deployment is fully in scope as automated processing of personal
 data. The purely-personal-use exception does not reach a hosted deployment
 where the controller acts for others. HDS contributes awareness, not a
@@ -914,14 +915,14 @@ records evidence that processing occurs.
 switzerland, not on where infrastructure lives. hds operates a ch region in
 switzerland to which subjects can be bound explicitly when ch jurisdiction
 is the chosen regime.
-">
+" data-planned="0">
   <h3><code>Art.3</code> Territorial scope <span class="draft">draft</span></h3>
   <p class="text">The Act applies to facts that have an effect in Switzerland, even if
 initiated abroad.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Whether revFADP applies
 depends on whether processing affects CH data subjects, not on
 where infrastructure lives. Pryv's data-residency primitive lets
@@ -931,7 +932,7 @@ side.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">CH</span> </div>
       <p>Applicability turns on whether processing affects data subjects in
 Switzerland, not on where infrastructure lives. HDS operates a CH region in
 Switzerland to which subjects can be bound explicitly when CH jurisdiction
@@ -961,7 +962,7 @@ where appropriate.
 </article><article class="req" id="req-art-16" data-coverage="facilitated" data-personas="controller data-subject" data-text="art.16 disclosure of personal data abroad — principles (cross-link) this is a framing row pointing at art. 34 for the operative hds mapping.
 hds's contribution — data residency and recorded transfer basis — is
 described there.
-">
+" data-planned="0">
   <h3><code>Art.16</code> Disclosure of personal data abroad — principles (cross-link) <span class="draft">draft</span></h3>
   <p class="text">Personal data may be disclosed abroad only where adequate protection has
 been determined or appropriate safeguards are in place; Art. 34 sets out
@@ -969,14 +970,14 @@ the operative framework.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Framing row pointing at
 Art. 34 for the operative Pryv mapping and at GDPR Chapter V
 (Art. 44-50) for the parallel EU regime.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">CH</span> </div>
       <p>This is a framing row pointing at Art. 34 for the operative HDS mapping.
 HDS's contribution — data residency and recorded transfer basis — is
 described there.
@@ -1004,14 +1005,14 @@ pattern that satisfy the cross-border principle in practice.
 the nlpd's vocabulary, so the basis travels with the technical
 authorization and lives in the audit trail. determining which basis
 applies is the controller's editorial and legal judgement.
-">
+" data-planned="0">
   <h3><code>Art.30</code> Justification of breaches of privacy <span class="draft">draft</span></h3>
   <p class="text">Processing that breaches privacy is unlawful unless justified by the
 subject's consent, an overriding private or public interest, or by law.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Same pattern as GDPR Art. 6 —
 justification basis is recorded on the access's
 `clientData.legal_basis` (Swiss-specific vocabulary drawn from
@@ -1020,7 +1021,7 @@ editorial / legal judgement.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">CH</span> </div>
       <p>HDS records the justification basis on the access client-data, drawing on
 the nLPD's vocabulary, so the basis travels with the technical
 authorization and lives in the audit trail. Determining which basis
@@ -1054,7 +1055,7 @@ does not select it.
 </article><article class="req" id="req-art-4" data-coverage="out-of-scope" data-personas="controller data-subject" data-text="art.4 federal data protection and information commissioner (fdpic) the commissioner is a regulator; there is no software role. where an
 investigation involves an hds deployment, the audit log and access version
 chain are the evidence layer the controller can provide.
-">
+" data-planned="0">
   <h3><code>Art.4</code> Federal Data Protection and Information Commissioner (FDPIC) <span class="draft">draft</span></h3>
   <p class="text">The Commissioner supervises application of data-protection law by federal
 bodies and private persons, advises them, investigates breaches and issues
@@ -1062,7 +1063,7 @@ recommendations and orders.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b out-of-scope">out-of-scope</span></div>
+      <div class="lh">Pryv platform <span class="b out-of-scope">out-of-scope</span> </div>
       <p>The FDPIC is a regulator; no software role. When an FDPIC
 investigation involves a Pryv deployment, the audit log +
 access-version chain are the evidence layer the controller
@@ -1071,7 +1072,7 @@ legal / regulatory process.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b out-of-scope">out-of-scope</span> <span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b out-of-scope">out-of-scope</span> <span class="rg">CH</span> </div>
       <p>The Commissioner is a regulator; there is no software role. Where an
 investigation involves an HDS deployment, the audit log and access version
 chain are the evidence layer the controller can provide.
@@ -1101,7 +1102,7 @@ smallest-permission default is none, system streams isolate privileged
 data, and per-user storage isolates subjects. whether the by-default
 posture is fully exercised depends on the controller's deployment-time
 choices.
-">
+" data-planned="0">
   <h3><code>Art.23</code> Privacy by default <span class="draft">draft</span></h3>
   <p class="text">The controller must by default ensure processing is limited to the minimum
 required for the purpose, in particular through appropriate technical
@@ -1109,7 +1110,7 @@ settings.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Pryv defaults lean privacy-
 protective by construction: smallest-permission default is
 &quot;none&quot;; system streams isolate privileged data; per-user storage
@@ -1119,7 +1120,7 @@ whether the by-default posture is fully exercised.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">CH</span> </div>
       <p>The platform HDS operates leans privacy-protective by construction: the
 smallest-permission default is none, system streams isolate privileged
 data, and per-user storage isolates subjects. Whether the by-default
@@ -1156,7 +1157,7 @@ processing is limited to the minimum required.
 request, hds supports recording the rationale as an event on a designated
 stream with the cited statutory letter, time-anchored by the audit log.
 whether the restriction is justified is the controller's legal judgement.
-">
+" data-planned="0">
   <h3><code>Art.26</code> Restriction of the right to information <span class="draft">draft</span></h3>
   <p class="text">The right to information under Art. 25 may be restricted, refused or
 deferred where a law so provides, where an overriding third-party interest
@@ -1164,7 +1165,7 @@ requires it, or where the request is manifestly unfounded.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>When a controller invokes
 Art. 26 to restrict / refuse / defer a DSAR, the rationale is
 recorded as a `dsar/restricted` event on a designated stream
@@ -1174,7 +1175,7 @@ restriction is justified is the controller's legal judgement.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">CH</span> </div>
       <p>When the controller invokes Art. 26 to restrict, refuse or defer an access
 request, HDS supports recording the rationale as an event on a designated
 stream with the cited statutory letter, time-anchored by the audit log.
@@ -1204,7 +1205,7 @@ rationale.
 </article><article class="req" id="req-art-33" data-coverage="out-of-scope" data-personas="controller data-subject" data-text="art.33 cross-border international cooperation this is treaty-level activity with no software role. no implementer
 obligation arises from this article alone, and hds supplies no control
 specific to it.
-">
+" data-planned="0">
   <h3><code>Art.33</code> Cross-border international cooperation <span class="draft">draft</span></h3>
   <p class="text">The Federal Council may conclude international treaties on the cross-border
 exchange of personal data, including treaties on mutual data-protection
@@ -1212,13 +1213,13 @@ cooperation.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b out-of-scope">out-of-scope</span></div>
+      <div class="lh">Pryv platform <span class="b out-of-scope">out-of-scope</span> </div>
       <p>Treaty-level activity. No software role; no implementer
 obligation arises from this Article alone.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b out-of-scope">out-of-scope</span> <span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b out-of-scope">out-of-scope</span> <span class="rg">CH</span> </div>
       <p>This is treaty-level activity with no software role. No implementer
 obligation arises from this Article alone, and HDS supplies no control
 specific to it.
@@ -1246,7 +1247,7 @@ relevant operational layer.
 processing agreement and maintains a sub-processor register. the audit log
 makes processing demonstrably attributable to instructed accesses, so the
 only-as-instructed duty rests on a record.
-">
+" data-planned="0">
   <h3><code>Art.9</code> Processing by a processor <span class="draft">draft</span></h3>
   <p class="text">The controller may entrust processing to a processor only where the
 processor processes data solely as instructed, ensures equivalent data
@@ -1254,7 +1255,7 @@ security, and obtains controller approval before engaging a sub-processor.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Same pattern as GDPR Art. 28:
 when the Pryv operator is a processor distinct from the
 controller, the DPA + sub-processor list are the operator's
@@ -1265,7 +1266,7 @@ disabled).
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">CH</span> </div>
       <p>Where HDS acts as processor distinct from the controller, it offers a Data
 Processing Agreement and maintains a sub-processor register. The audit log
 makes processing demonstrably attributable to instructed accesses, so the
@@ -1302,7 +1303,7 @@ approval before engaging sub-processors.
 and data-residency records describe much of the processing. the register
 as a maintained document is a known gap: hds does not generate or keep the
 controller's register, which the controller must author.
-">
+" data-planned="0">
   <h3><code>Art.12</code> Register of processing activities <span class="draft">draft</span></h3>
   <p class="text">Each controller and processor must maintain a register of processing
 activities, subject to an exception for smaller enterprises whose
@@ -1310,7 +1311,7 @@ processing poses a low risk; content parallels GDPR Art. 30.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b implemented">implemented</span></div>
+      <div class="lh">Pryv platform <span class="b implemented">implemented</span> </div>
       <p>Same primitive-set mapping as GDPR Art. 30: access + clientData
 + audit + CMC + data-residency form the technical register
 substrate. Swiss-specific note: the SME exception (Ordinance on
@@ -1321,7 +1322,7 @@ legal judgement.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">CH</span> </div>
       <p>HDS supplies the technical register substrate — access, client-data, audit
 and data-residency records describe much of the processing. The register
 as a maintained document is a known gap: HDS does not generate or keep the
@@ -1359,7 +1360,7 @@ controller.
 </article><article class="req" id="req-art-17" data-coverage="out-of-scope" data-personas="controller data-subject" data-text="art.17 exceptions to the duty to inform exception applicability is the controller's legal judgement with no
 software role. where an exception applies, hds supports documenting the
 reasoning as client-data so it is available for auditor questions.
-">
+" data-planned="0">
   <h3><code>Art.17</code> Exceptions to the duty to inform <span class="draft">draft</span></h3>
   <p class="text">The information duty may be waived where the subject already has the
 information, the processing is provided for by law, the controller is bound
@@ -1367,7 +1368,7 @@ by professional secrecy, or informing would be disproportionate.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b out-of-scope">out-of-scope</span></div>
+      <div class="lh">Pryv platform <span class="b out-of-scope">out-of-scope</span> </div>
       <p>Exception-applicability is the controller's legal judgement; no
 software role. Where the exception applies, the controller's
 reasoning is documentable in `account.clientData.art17_basis`
@@ -1375,7 +1376,7 @@ for auditor questions.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b out-of-scope">out-of-scope</span> <span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b out-of-scope">out-of-scope</span> <span class="rg">CH</span> </div>
       <p>Exception applicability is the controller's legal judgement with no
 software role. Where an exception applies, HDS supports documenting the
 reasoning as client-data so it is available for auditor questions.
@@ -1403,7 +1404,7 @@ stored alongside the account or notice artefacts for traceability.
 client-data or dedicated notice events. the cross-border element ties to
 art. 34 and the automated-decision element to art. 21; hds preserves what
 was presented.
-">
+" data-planned="0">
   <h3><code>Art.18</code> Information when collecting personal data — specific cases <span class="draft">draft</span></h3>
   <p class="text">Beyond the Art. 19 baseline, the controller must provide additional
 information when transferring abroad, when processing involves automated
@@ -1411,7 +1412,7 @@ decision-making, and in cases involving sensitive personal data.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Additional disclosures are
 stored alongside the baseline notice in
 `access.clientData.privacy_notice` (or as additional
@@ -1421,7 +1422,7 @@ Art. 21.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">CH</span> </div>
       <p>HDS stores the additional disclosures alongside the baseline notice as
 client-data or dedicated notice events. The cross-border element ties to
 Art. 34 and the automated-decision element to Art. 21; HDS preserves what
@@ -1452,21 +1453,21 @@ decisions and sensitive data, and record what was presented.
 adherence to a code may be cited as one of the appropriate-measures
 indicators on a deployment, but hds supplies no control specific to this
 article.
-">
+" data-planned="0">
   <h3><code>Art.11</code> Codes of conduct <span class="draft">draft</span></h3>
   <p class="text">Professional, sector or trade associations may submit codes of conduct to
 the Commissioner, who takes a position on the code.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b out-of-scope">out-of-scope</span></div>
+      <div class="lh">Pryv platform <span class="b out-of-scope">out-of-scope</span> </div>
       <p>Sector-level instrument; see GDPR Art. 40 for parallel framing.
 Adherence is recorded as one of the Art. 8 &quot;appropriate
 measures&quot; indicators on the deployment.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b out-of-scope">out-of-scope</span> <span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b out-of-scope">out-of-scope</span> <span class="rg">CH</span> </div>
       <p>Codes of conduct are a sector-level instrument with no software role.
 Adherence to a code may be cited as one of the appropriate-measures
 indicators on a deployment, but HDS supplies no control specific to this
@@ -1494,7 +1495,7 @@ controller matter outside the platform's scope.
 </article><article class="req" id="req-art-14" data-coverage="out-of-scope" data-personas="controller data-subject" data-text="art.14 representative in switzerland designating a swiss representative is a contractual and regulatory
 registration step for non-swiss controllers with no software role. hds
 supplies no control specific to this requirement.
-">
+" data-planned="0">
   <h3><code>Art.14</code> Representative in Switzerland <span class="draft">draft</span></h3>
   <p class="text">A controller established abroad whose processing concerns persons in
 Switzerland on a large scale, regularly and with high risk must designate a
@@ -1502,13 +1503,13 @@ representative in Switzerland.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b out-of-scope">out-of-scope</span></div>
+      <div class="lh">Pryv platform <span class="b out-of-scope">out-of-scope</span> </div>
       <p>Representative designation is a contractual / regulatory
 registration step for non-Swiss controllers; no software role.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b out-of-scope">out-of-scope</span> <span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b out-of-scope">out-of-scope</span> <span class="rg">CH</span> </div>
       <p>Designating a Swiss representative is a contractual and regulatory
 registration step for non-Swiss controllers with no software role. HDS
 supplies no control specific to this requirement.
@@ -1537,7 +1538,7 @@ required.
 contractual commitment under the dpa. hds uses the audit and access
 primitives to give the controller the scoping data needed for the
 notification and to cooperate on data-subject rights.
-">
+" data-planned="0">
   <h3><code>Art.15</code> Duty of the processor to inform the controller <span class="draft">draft</span></h3>
   <p class="text">The processor must inform the controller of all data security breaches
 without delay and cooperate with the controller in fulfilling its
@@ -1545,7 +1546,7 @@ obligations toward data subjects.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>When Pryv operator acts as
 processor, the breach-notification channel to the controller is
 the operator's contractual commitment. Pryv's audit +
@@ -1555,7 +1556,7 @@ is a structured channel when both sides run Pryv.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">CH</span> </div>
       <p>Where HDS acts as processor, breach notification to the controller is its
 contractual commitment under the DPA. HDS uses the audit and access
 primitives to give the controller the scoping data needed for the
@@ -1589,19 +1590,19 @@ data-subject obligations.
   </div>
 </article><article class="req" id="req-art-29" data-coverage="out-of-scope" data-personas="controller data-subject" data-text="art.29 information from official registers access to official public registers is a regulatory framing with no
 software role. hds supplies no control specific to this article.
-">
+" data-planned="0">
   <h3><code>Art.29</code> Information from official registers <span class="draft">draft</span></h3>
   <p class="text">Anyone may obtain information from official registers under the conditions
 set out in special legislation.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b out-of-scope">out-of-scope</span></div>
+      <div class="lh">Pryv platform <span class="b out-of-scope">out-of-scope</span> </div>
       <p>Public-register access is regulatory framing; no software role.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b out-of-scope">out-of-scope</span> <span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b out-of-scope">out-of-scope</span> <span class="rg">CH</span> </div>
       <p>Access to official public registers is a regulatory framing with no
 software role. HDS supplies no control specific to this Article.
 </p>
@@ -1626,7 +1627,7 @@ controller's own processing operations.
 </article></div>
     <script>
 (function(){
-  const q=document.getElementById('q'),cards=[...document.querySelectorAll('.req')],fc=document.getElementById('fcount');
+  const q=document.getElementById('q'),cards=[...document.querySelectorAll('.req')],fc=document.getElementById('fcount'),fp=document.getElementById('fplan');
   const covs=()=>[...document.querySelectorAll('#cov input:checked')].map(i=>i.value);
   const pers=()=>[...document.querySelectorAll('#persona input:checked')].map(i=>i.value);
   function apply(){const t=q.value.toLowerCase(),cv=covs(),pr=pers();let n=0;
@@ -1634,7 +1635,8 @@ controller's own processing operations.
       const cp=(c.dataset.personas||'').split(' ').filter(Boolean);
       const okp=cp.length===0||cp.some(p=>pr.includes(p));
       const okt=!t||(c.dataset.text||'').includes(t);
-      const show=okc&&okp&&okt;c.style.display=show?'':'none';if(show)n++;});
+      const okpl=!fp.checked||c.dataset.planned==='1';
+      const show=okc&&okp&&okt&&okpl;c.style.display=show?'':'none';if(show)n++;});
     fc.textContent=n+' / '+cards.length;}
   document.querySelector('.filters').addEventListener('input',apply);apply();
 })();

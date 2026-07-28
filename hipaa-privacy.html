@@ -44,13 +44,14 @@
   <span class="fgroup" id="persona">
     <label><input type="checkbox" value="partner" checked> partner</label><label><input type="checkbox" value="covered-entity" checked> covered-entity</label><label><input type="checkbox" value="business-associate" checked> business-associate</label><label><input type="checkbox" value="individual" checked> individual</label>
   </span>
+  <label class="fgroup"><input type="checkbox" id="fplan"> <span class="pl low">⏳ planned only</span></label>
   <span class="fcount" id="fcount"></span>
 </div>
     <div class="reqs"><article class="req" id="req-164-502" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.502 uses and disclosures of phi — general rules on top of pryv's permission model, hds operates the platform that
 enforces it: as a business associate, hds uses or discloses phi only as
 its baa and the covered entity's instructions permit. the substantive
 determination of which uses are permitted remains the covered entity's.
-">
+" data-planned="0">
   <h3><code>164.502</code> Uses and disclosures of PHI — general rules <span class="draft">draft</span></h3>
   <p class="text">A covered entity, or a business associate acting on its behalf, may use or
 disclose protected health information only as permitted or required by the
@@ -58,7 +59,7 @@ Privacy Rule.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Pryv's permission model
 is the technical enforcement layer for Article 502: an app or
 counterparty can only read or write streams its access permits.
@@ -69,7 +70,7 @@ decision; Pryv enforces whatever scope you grant.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>On top of Pryv's permission model, HDS operates the platform that
 enforces it: as a business associate, HDS uses or discloses PHI only as
 its BAA and the covered entity's instructions permit. The substantive
@@ -108,7 +109,7 @@ instructions permit.
 purpose, each independently revocable and auditable. the classification
 of any given workflow as tpo is the covered entity's judgement, which hds
 carries forward into the audit trail.
-">
+" data-planned="0">
   <h3><code>164.506</code> Uses and disclosures for treatment, payment, healthcare operations (TPO) <span class="draft">draft</span></h3>
   <p class="text">Use and disclosure of PHI is permitted for the entity's own treatment,
 payment and healthcare operations, and under defined conditions for another
@@ -116,7 +117,7 @@ entity's TPO.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>TPO is the largest category
 of permitted uses. Pryv lets you mint accesses tagged with the
 TPO purpose in `clientData` (e.g., `purpose: &quot;treatment&quot;`); the
@@ -126,7 +127,7 @@ judgement; Pryv carries it forward into the audit trail.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>HDS provides the means to mint per-purpose accesses tagged with the TPO
 purpose, each independently revocable and auditable. The classification
 of any given workflow as TPO is the covered entity's judgement, which HDS
@@ -163,14 +164,14 @@ accesses accordingly.
 grant) so the authorization captured when an individual grants an access
 is a versioned, immutable record binding the granted scope to the
 authorization text. withdrawal is a single api call.
-">
+" data-planned="0">
   <h3><code>164.508</code> Uses and disclosures requiring authorization <span class="draft">draft</span></h3>
   <p class="text">Uses and disclosures not otherwise permitted require a written
 authorization from the individual that meets defined content requirements.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b implemented">implemented</span></div>
+      <div class="lh">Pryv platform <span class="b implemented">implemented</span> </div>
       <p>The authorization Pryv mints when your subject grants an access IS
 the §164.508 authorization record — versioned, immutable per
 version, with the granted scope (permissions) and the authorization
@@ -180,7 +181,7 @@ authorizations, the CMC plugin carries the negotiation state.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>HDS exposes consent primitives (the @pryv/cmc consent flow and access
 grant) so the authorization captured when an individual grants an access
 is a versioned, immutable record binding the granted scope to the
@@ -221,7 +222,7 @@ is recorded.
 response as client-data on the relevant access or as a consent event, so
 the reasonable-inference standard rests on a record rather than
 recollection. the operational offer itself is the covered entity's.
-">
+" data-planned="0">
   <h3><code>164.510</code> Uses and disclosures requiring opportunity to agree or object <span class="draft">draft</span></h3>
   <p class="text">Disclosures to family or friends, or for facility-directory purposes, may
 proceed if the individual is given the opportunity to agree or object and
@@ -229,7 +230,7 @@ no objection is reasonably inferred.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>The opportunity-to-agree-or-
 object construct is operational. Pryv lets you record the
 offered choice and the individual's response as durable
@@ -239,7 +240,7 @@ reasonable-inference becomes a record rather than recollection.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>HDS provides durable storage for the offered choice and the individual's
 response as client-data on the relevant access or as a consent event, so
 the reasonable-inference standard rests on a record rather than
@@ -270,7 +271,7 @@ response.
 access and is captured in the audit log, and the §512 category and
 rationale can be recorded against the access. whether a disclosure
 qualifies is the covered entity's legal determination.
-">
+" data-planned="0">
   <h3><code>164.512</code> Uses and disclosures for which authorization or opportunity is not required <span class="draft">draft</span></h3>
   <p class="text">Twelve categories of disclosures are permitted without authorization
 (public health, law enforcement and others), each subject to specific
@@ -278,7 +279,7 @@ conditions.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Section 512 disclosures are
 operationally driven by the circumstances (subpoena, public-
 health request, etc.). Pryv's contribution is durability: every
@@ -289,7 +290,7 @@ justification recoverable later.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>HDS contributes durability: every §164.512 disclosure still rides on an
 access and is captured in the audit log, and the §512 category and
 rationale can be recorded against the access. Whether a disclosure
@@ -321,14 +322,14 @@ category and statutory basis.
 de-identified copies sit under separate permission scopes, simplifying
 §514(a) workflows. the de-identification determination and transformation
 are the covered entity's.
-">
+" data-planned="0">
   <h3><code>164.514(a)</code> De-identification of PHI <span class="draft">draft</span></h3>
   <p class="text">PHI de-identified by the Safe Harbor method or by Expert Determination is
 no longer subject to the Privacy Rule.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Pryv stores whatever event
 content you write; de-identification is a transformation you
 perform on the data before storage (or before disclosure).
@@ -338,7 +339,7 @@ scopes, simplifying §514(a) workflows.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>HDS stores whatever event content is written and lets identified and
 de-identified copies sit under separate permission scopes, simplifying
 §514(a) workflows. The de-identification determination and transformation
@@ -371,14 +372,14 @@ hds exposes: each access carries only the streams and levels its purpose
 needs, so by construction the holder cannot see more phi than granted.
 the granularity of &quot;minimum necessary&quot; follows the covered entity's
 stream and permission design.
-">
+" data-planned="0">
   <h3><code>164.514(d)</code> Minimum necessary use, disclosure and requests <span class="draft">draft</span></h3>
   <p class="text">Reasonable efforts must be made to limit PHI to the minimum necessary to
 accomplish the intended purpose.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b implemented">implemented</span></div>
+      <div class="lh">Pryv platform <span class="b implemented">implemented</span> </div>
       <p>Per-stream permissions are the minimum-necessary primitive: each
 access carries only the streams + levels needed for its purpose,
 so by construction the holder cannot see more PHI than granted.
@@ -388,7 +389,7 @@ technically.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>Per-stream, per-level access tokens are the minimum-necessary primitive
 HDS exposes: each access carries only the streams and levels its purpose
 needs, so by construction the holder cannot see more PHI than granted.
@@ -426,14 +427,14 @@ to the minimum necessary, and document the rationale.
 access client-data or as a dedicated event, so the exact words presented
 are recoverable per individual and per time. the notice content is the
 covered entity's editorial responsibility.
-">
+" data-planned="0">
   <h3><code>164.520</code> Notice of privacy practices <span class="draft">draft</span></h3>
   <p class="text">A notice must be provided that adequately describes the entity's uses and
 disclosures of PHI and the individual's rights.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>The notice itself is your
 editorial content. Pryv preserves the notice text shown to each
 subject — typically on `access.clientData.privacy_notice` or as
@@ -443,7 +444,7 @@ template is the surface where the notice typically appears.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>HDS preserves the notice text shown to each individual, on the relevant
 access client-data or as a dedicated event, so the exact words presented
 are recoverable per individual and per time. The notice content is the
@@ -475,7 +476,7 @@ relevant access, and the access version chain proves what state was in
 force before and from when the restriction applies. confidential-
 communication preferences are stored as account client-data or a
 dedicated event.
-">
+" data-planned="0">
   <h3><code>164.522</code> Right to request restriction; confidential communications <span class="draft">draft</span></h3>
   <p class="text">An individual may request restrictions on uses and disclosures and may
 request to receive confidential communications by alternative means or at
@@ -483,7 +484,7 @@ alternative locations.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b configurable">configurable</span></div>
+      <div class="lh">Pryv platform <span class="b configurable">configurable</span> </div>
       <p>A granted restriction is a scope-down on the relevant access
 (`accesses.update` to narrower permissions) or a revocation
 (`accesses.delete`). The access-version chain proves what state
@@ -493,7 +494,7 @@ live in `account.clientData` or a dedicated event.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b configurable">configurable</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b configurable">configurable</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>A granted restriction is configured as a scope-down or revocation of the
 relevant access, and the access version chain proves what state was in
 force before and from when the restriction applies. Confidential-
@@ -532,7 +533,7 @@ which are recorded against your account.
 personal token, reads everything through the standard api — events,
 streams, accesses with history, audit records and attachments. hds
 operates this access capability end-to-end across both regions.
-">
+" data-planned="0">
   <h3><code>164.524</code> Right of access by the individual <span class="draft">draft</span></h3>
   <p class="text">An individual has the right to inspect and obtain a copy of their PHI in a
 designated record set, in the form and format requested if readily
@@ -540,7 +541,7 @@ producible.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b implemented">implemented</span></div>
+      <div class="lh">Pryv platform <span class="b implemented">implemented</span> </div>
       <p>Your subject, holding a personal token, reads everything via the
 standard Pryv API — events, streams, accesses (with history),
 audit records, attachments — in the canonical event-type schemas.
@@ -550,7 +551,7 @@ not a software latency.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b implemented">implemented</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b implemented">implemented</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>Pryv is user-centric: the individual owns their data and, holding a
 personal token, reads everything through the standard API — events,
 streams, accesses with history, audit records and attachments. HDS
@@ -590,14 +591,14 @@ any requested non-native export format.
 versioning preserving prior content so the amendment trail is auditable.
 the §164.526 process of request, decision, action and notice is the
 covered entity's to run.
-">
+" data-planned="0">
   <h3><code>164.526</code> Right to amend <span class="draft">draft</span></h3>
   <p class="text">An individual has the right to have a covered entity amend PHI or a record
 about the individual in a designated record set.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b implemented">implemented</span></div>
+      <div class="lh">Pryv platform <span class="b implemented">implemented</span> </div>
       <p>`events.update` is the amendment primitive; event versioning
 preserves the prior content so the amendment trail is auditable.
 The §164.526 process (request → decision → action → notice) is
@@ -605,7 +606,7 @@ yours to run; the technical record-keeping is shipped.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>HDS exposes event update as the amendment primitive, with event
 versioning preserving prior content so the amendment trail is auditable.
 The §164.526 process of request, decision, action and notice is the
@@ -643,14 +644,14 @@ are preserved with version history.
 to an access and version is recorded, and filtering by access category
 lets the covered entity derive the accountable subset. six-year retention
 of the audit log is an hds-operated configuration on both regions.
-">
+" data-planned="0">
   <h3><code>164.528</code> Accounting of disclosures <span class="draft">draft</span></h3>
   <p class="text">An individual has the right to an accounting of disclosures of their PHI
 made in the six years prior to the request, with specified exceptions.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b implemented">implemented</span></div>
+      <div class="lh">Pryv platform <span class="b implemented">implemented</span> </div>
       <p>Pryv's audit log is the §164.528 substrate: every API method call
 attributed to an access (with version) is recorded. Filtering by
 access category — TPO accesses, §164.512 disclosures, etc. — lets
@@ -660,7 +661,7 @@ configuration.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>The audit log is the §164.528 substrate: every API method call attributed
 to an access and version is recorded, and filtering by access category
 lets the covered entity derive the accountable subset. Six-year retention
@@ -701,14 +702,14 @@ disclosure record.
 decision. hds's contribution is indirect: the audit log gives that
 official a concrete artefact to review when investigating complaints or
 internal use. hds maintains its own privacy contact under its ba role.
-">
+" data-planned="0">
   <h3><code>164.530(a)</code> Privacy officer / contact person <span class="draft">draft</span></h3>
   <p class="text">A covered entity must designate a privacy official and a contact person
 responsible for receiving complaints.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Designation is organizational.
 Pryv's contribution is indirect: the audit log gives the
 privacy official a concrete artifact to review when investigating
@@ -716,7 +717,7 @@ complaints or auditing internal use.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>Designation of a privacy official is the covered entity's organizational
 decision. HDS's contribution is indirect: the audit log gives that
 official a concrete artefact to review when investigating complaints or
@@ -746,14 +747,14 @@ programme element outside HDS's scope.
 its own workforce on its privacy and security policies as a business
 associate and retains the training records; the customer's programme is
 out of hds's scope.
-">
+" data-planned="0">
   <h3><code>164.530(b)</code> Training <span class="draft">draft</span></h3>
   <p class="text">A covered entity must train all workforce members on its privacy policies
 and procedures.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Training itself is your
 programme. Pryv's contribution to operationalizing it: the
 audit log + observability data make training-effectiveness
@@ -763,7 +764,7 @@ are yours.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>Workforce privacy training is the covered entity's programme. HDS trains
 its own workforce on its privacy and security policies as a business
 associate and retains the training records; the customer's programme is
@@ -800,14 +801,14 @@ administrative safeguards. hds supplies the technical and hosting
 safeguards documented in the hipaa-security scope — access control,
 audit, encryption in transit and at rest, regional residency — that
 partly answer §530(c) for an hds deployment.
-">
+" data-planned="0">
   <h3><code>164.530(c)</code> Safeguards <span class="draft">draft</span></h3>
   <p class="text">A covered entity must have appropriate administrative, technical and
 physical safeguards to protect the privacy of PHI.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Section 530(c) is the
 Privacy Rule's pointer to the Security Rule and to physical /
 administrative safeguards. See the HIPAA-Security rows for the
@@ -817,7 +818,7 @@ constitute the §530(c) answer for this Pryv deployment.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>Section 530(c) points to the Security Rule and to physical and
 administrative safeguards. HDS supplies the technical and hosting
 safeguards documented in the HIPAA-Security scope — access control,
@@ -850,7 +851,7 @@ physical safeguards meet §530(c).
 disclosed, to whom and when — the first step in any mitigation. hds
 provides access revocation and operates backup and restore should
 mitigation require rolling back data state.
-">
+" data-planned="0">
   <h3><code>164.530(f)</code> Mitigation <span class="draft">draft</span></h3>
   <p class="text">A covered entity must mitigate, to the extent practicable, any harmful
 effect of a use or disclosure in violation of its policies or the Privacy
@@ -858,7 +859,7 @@ Rule.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Audit log + access version
 chain let you scope what was disclosed to whom and when — the
 first step in any mitigation. `bin/backup.js --restore` is
@@ -868,7 +869,7 @@ offending counterparty.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>Audit log and access version chain let the covered entity scope what was
 disclosed, to whom and when — the first step in any mitigation. HDS
 provides access revocation and operates backup and restore should
@@ -905,7 +906,7 @@ BAA.
 §164.514(d): the holder cannot see more phi than the granted scope
 permits. the §502(b)(2) exceptions are programmatic, and the audit log
 records any broader access for accountability.
-">
+" data-planned="0">
   <h3><code>164.502(b)</code> Minimum necessary uses, disclosures and requests <span class="draft">draft</span></h3>
   <p class="text">Reasonable efforts must be made to limit PHI to the minimum necessary,
 subject to enumerated exceptions including treatment disclosures,
@@ -914,7 +915,7 @@ required by law.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b implemented">implemented</span></div>
+      <div class="lh">Pryv platform <span class="b implemented">implemented</span> </div>
       <p>Same primitive mapping as §164.514(d) minimum-necessary: per-
 stream permissions are the technical control; the holder cannot
 see more PHI than the granted scope permits. §502(b)(2)
@@ -924,7 +925,7 @@ log records the broader access for accountability.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>Per-stream permissions are the same minimum-necessary control as
 §164.514(d): the holder cannot see more PHI than the granted scope
 permits. The §502(b)(2) exceptions are programmatic, and the audit log
@@ -961,7 +962,7 @@ invoked.
 mechanism: a ba-specific access tagged with its role and contract
 reference, scoped to the subjects and streams the baa covers. hds itself
 signs a baa when it acts as the business associate.
-">
+" data-planned="0">
   <h3><code>164.502(e)(1)</code> Disclosures to business associates <span class="draft">draft</span></h3>
   <p class="text">A covered entity may disclose PHI to a business associate, and allow it to
 create, receive, maintain or transmit PHI on its behalf, only with
@@ -970,7 +971,7 @@ associate will appropriately safeguard the information.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>The technical disclosure is
 mediated by the access primitive — mint a BA-specific access
 with `clientData.role = &quot;business_associate&quot;` + `clientData.baa_id
@@ -981,7 +982,7 @@ account flow.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>HDS offers a Business Associate Agreement and the technical disclosure
 mechanism: a BA-specific access tagged with its role and contract
 reference, scoped to the subjects and streams the BAA covers. HDS itself
@@ -1018,7 +1019,7 @@ scope their access to what the BAA covers.
 stream with a disposition field, and the audit log captures the timestamp
 and actor on each disposition update. the complaint-handling process is
 the covered entity's.
-">
+" data-planned="0">
   <h3><code>164.530(d)</code> Complaints to the covered entity <span class="draft">draft</span></h3>
   <p class="text">A covered entity must provide a process for individuals to complain about
 its policies, procedures or compliance, and must document complaints
@@ -1026,7 +1027,7 @@ received and their disposition.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>A complaint-intake workflow
 stores each complaint as an event on a designated
 `complaints/*` stream with `clientData.disposition` tracking
@@ -1036,7 +1037,7 @@ requirement an automatic byproduct of normal record-keeping.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>HDS provides the means to store each complaint as an event on a dedicated
 stream with a disposition field, and the audit log captures the timestamp
 and actor on each disposition update. The complaint-handling process is
@@ -1067,7 +1068,7 @@ dispositions.
 decision layer. hds maintains its own workforce sanction policy as a
 business associate; the audit log supplies the underlying evidence that
 disciplinary processes evaluate.
-">
+" data-planned="0">
   <h3><code>164.530(e)</code> Sanctions <span class="draft">draft</span></h3>
   <p class="text">A covered entity must have and apply appropriate sanctions against
 workforce members who fail to comply with its privacy policies and
@@ -1075,7 +1076,7 @@ procedures.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b out-of-scope">out-of-scope</span></div>
+      <div class="lh">Pryv platform <span class="b out-of-scope">out-of-scope</span> </div>
       <p>Sanctions are an HR / disciplinary process. No software role at
 the sanction-decision layer; the audit log gives the underlying
 evidence (&quot;did this person actually access X?&quot;) that HR
@@ -1083,7 +1084,7 @@ processes evaluate.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>Sanctions are an HR and disciplinary process with no software role at the
 decision layer. HDS maintains its own workforce sanction policy as a
 business associate; the audit log supplies the underlying evidence that
@@ -1116,7 +1117,7 @@ enforcement.
   </div>
 </article><article class="req" id="req-164-530-g" data-coverage="out-of-scope" data-personas="covered-entity individual" data-text="164.530(g) refraining from intimidating and retaliatory acts anti-retaliation is an organizational policy and culture commitment with
 no software role. it rests entirely with the covered entity's programme.
-">
+" data-planned="0">
   <h3><code>164.530(g)</code> Refraining from intimidating and retaliatory acts <span class="draft">draft</span></h3>
   <p class="text">A covered entity may not intimidate, threaten, coerce, discriminate against
 or retaliate against an individual for exercising any right under the
@@ -1124,13 +1125,13 @@ Privacy Rule.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b out-of-scope">out-of-scope</span></div>
+      <div class="lh">Pryv platform <span class="b out-of-scope">out-of-scope</span> </div>
       <p>Anti-retaliation is an organizational policy + culture commitment;
 no software role.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b out-of-scope">out-of-scope</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b out-of-scope">out-of-scope</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>Anti-retaliation is an organizational policy and culture commitment with
 no software role. It rests entirely with the covered entity's programme.
 </p>
@@ -1157,14 +1158,14 @@ conduct obligation of the covered entity.
 means to hold policies as versioned, retained, audited data on a
 dedicated stream. the drafting, approval and review cycle is the privacy
 officer's, and hds maintains its own privacy policies as a ba.
-">
+" data-planned="0">
   <h3><code>164.530(i)</code> Policies and procedures <span class="draft">draft</span></h3>
   <p class="text">A covered entity must implement policies and procedures designed to comply
 with the standards and implementation specifications of the Privacy Rule.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Same pattern as HIPAA-
 Security §164.316(a): policies-as-data on a
 `compliance/policies/*` stream get versioning + retention +
@@ -1174,7 +1175,7 @@ Security Rule's parallel obligation.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>As with the Security Rule's documentation requirement, HDS provides the
 means to hold policies as versioned, retained, audited data on a
 dedicated stream. The drafting, approval and review cycle is the privacy
@@ -1211,7 +1212,7 @@ permissions narrowed to the directly-relevant streams and client-data
 capturing the relationship and the §510(b) basis. the directly-relevant
 determination and relationship verification are clinical-workflow
 concerns of the covered entity.
-">
+" data-planned="0">
   <h3><code>164.510(b)</code> Disclosures for involvement in care and for notification purposes <span class="draft">draft</span></h3>
   <p class="text">A covered entity may disclose to a family member, relative, close friend or
 other person identified by the individual PHI directly relevant to that
@@ -1219,7 +1220,7 @@ person's involvement in the individual's care or payment for care.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>The §510(b) &quot;directly
 relevant&quot; determination + relationship verification are
 clinical-workflow concerns. Pryv pattern: mint a time-bounded
@@ -1230,7 +1231,7 @@ individual's opportunity-to-object record).
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>HDS supports minting a time-bounded access for the involved person, with
 permissions narrowed to the directly-relevant streams and client-data
 capturing the relationship and the §510(b) basis. The directly-relevant
@@ -1267,7 +1268,7 @@ the disclosure basis.
 access, and the audit log anchors the disclosure to a timestamp and event
 range. the authorized-by-law determination is the covered entity's legal
 judgement.
-">
+" data-planned="0">
   <h3><code>164.512(b)</code> Uses and disclosures for public-health activities <span class="draft">draft</span></h3>
   <p class="text">A covered entity may disclose PHI for public-health activities to
 authorities authorized by law to collect or receive it, including disease
@@ -1275,7 +1276,7 @@ and injury reporting, vital-event reporting and public-health surveillance.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Public-health-authority
 recipient is recorded on the access's
 `clientData.recipient_authority` + `clientData.statute` for the
@@ -1285,7 +1286,7 @@ determination is the covered entity's legal judgement.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>HDS lets the recipient authority and statutory basis be recorded on the
 access, and the audit log anchors the disclosure to a timestamp and event
 range. The authorized-by-law determination is the covered entity's legal
@@ -1316,7 +1317,7 @@ disclosure.
 on a per-instance access that is minted and revoked around the
 disclosure, with the audit log preserving the chain. whether the request
 qualifies under §512(f) is legal counsel's decision.
-">
+" data-planned="0">
   <h3><code>164.512(f)</code> Uses and disclosures for law-enforcement purposes <span class="draft">draft</span></h3>
   <p class="text">A covered entity may disclose PHI for law-enforcement purposes under
 specific conditions, such as court order or warrant, administrative
@@ -1324,7 +1325,7 @@ request, identification and location, victim of crime, or decedent.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>§512(f) categories drive
 vocabulary for `clientData.law_enforcement_basis` (e.g.,
 `&quot;f_1_i_court_order&quot;`, `&quot;f_2_ii_subpoena&quot;`, `&quot;f_4_victim&quot;`).
@@ -1334,7 +1335,7 @@ qualifies under §512(f) is legal counsel's, not Pryv's.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>HDS supports recording the §512(f) category as the law-enforcement basis
 on a per-instance access that is minted and revoked around the
 disclosure, with the audit log preserving the chain. Whether the request
@@ -1367,7 +1368,7 @@ the operational cadence and decision remain the covered entity's; for
 individuals who can self-authenticate, the app-portability self-service
 tool bypasses the 30-day clock entirely (the individual obtains the data
 immediately, without a written-request intake).
-">
+" data-planned="0">
   <h3><code>164.524(b)</code> Right of access — requests and responses <span class="draft">draft</span></h3>
   <p class="text">A covered entity may require written access requests within reasonable
 limits and must act within 30 days, with one 30-day extension permitted on
@@ -1375,7 +1376,7 @@ written notice.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Request-intake workflow
 stores each request as an event on a designated
 `access-requests/*` stream with `clientData.due_by` computed
@@ -1386,7 +1387,7 @@ individual exercises §524 directly via the standard Pryv API
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>HDS supports storing each access request as an event on a dedicated
 stream with a computed due date, so the 30/30-day cadence is trackable.
 The operational cadence and decision remain the covered entity's; for
@@ -1428,7 +1429,7 @@ both regions. the app-portability self-service web app gives individuals
 a one-click zip download of their full phi dump; transformation to pdf
 or print and summary construction remain application-layer work on the
 same source events.
-">
+" data-planned="0">
   <h3><code>164.524(c)</code> Right of access — provision of access <span class="draft">draft</span></h3>
   <p class="text">A covered entity must provide access in the form and format requested if
 readily producible, otherwise in readable hard copy or another agreed form,
@@ -1436,7 +1437,7 @@ and must provide a summary if the individual agrees in advance.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b implemented">implemented</span></div>
+      <div class="lh">Pryv platform <span class="b implemented">implemented</span> </div>
       <p>The Pryv API delivers events in canonical JSON (data-types
 schemas) — &quot;readily producible&quot; in the §524(c) sense.
 Implementer's portal can transform to PDF / printed format
@@ -1445,7 +1446,7 @@ from the same source events.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b implemented">implemented</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b implemented">implemented</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>The HDS-operated API delivers events in canonical JSON validated against
 the data-type schemas — readily producible in the §524(c) sense — across
 both regions. The app-portability self-service web app gives individuals
@@ -1486,7 +1487,7 @@ with the appropriate scope — the technical &quot;treat as the individual&quot;
 permission — with the relationship and legal basis recorded as
 client-data. the abuse, neglect and endangerment exceptions are clinical
 and legal judgements of the covered entity.
-">
+" data-planned="0">
   <h3><code>164.502(g)</code> Personal representatives <span class="draft">draft</span></h3>
   <p class="text">A covered entity must treat a personal representative as the individual for
 uses and disclosures of PHI, subject to exceptions for abuse, neglect or
@@ -1494,7 +1495,7 @@ endangerment concerns.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Pryv pattern: the personal
 representative holds an `app` or `shared` access to the subject's
 data with full scope (the effective &quot;treat as individual&quot;
@@ -1507,7 +1508,7 @@ endangerment&quot; determination is clinical / legal judgement.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>HDS supports the representative holding an access to the individual's data
 with the appropriate scope — the technical &quot;treat as the individual&quot;
 permission — with the relationship and legal basis recorded as
@@ -1545,14 +1546,14 @@ basis.
 statutory basis be recorded so the audit chain ties the disclosure to its
 legal authority. the compliance burden of the cited law is the covered
 entity's.
-">
+" data-planned="0">
   <h3><code>164.512(a)</code> Uses and disclosures required by law <span class="draft">draft</span></h3>
   <p class="text">A covered entity may use or disclose PHI to the extent required by law,
 limited to the relevant requirements of that law.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>&quot;Required by law&quot; disclosures
 still ride on accesses; record the statutory basis in
 `clientData.statute` so the audit chain ties the disclosure to
@@ -1561,7 +1562,7 @@ separate.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>Required-by-law disclosures still ride on accesses, and HDS lets the
 statutory basis be recorded so the audit chain ties the disclosure to its
 legal authority. The compliance burden of the cited law is the covered
@@ -1597,7 +1598,7 @@ the basis.
 the covered entity. hds stores the output of either method as ordinary
 events on the de-identified streams and provides no de-identification
 determination of its own.
-">
+" data-planned="0">
   <h3><code>164.514(b)</code> De-identification — implementation specifications <span class="draft">draft</span></h3>
   <p class="text">De-identification may use Expert Determination that re-identification risk
 is very small, or Safe Harbor removal of the 18 enumerated identifiers with
@@ -1605,14 +1606,14 @@ no actual knowledge of residual re-identifiability.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b out-of-scope">out-of-scope</span></div>
+      <div class="lh">Pryv platform <span class="b out-of-scope">out-of-scope</span> </div>
       <p>Choice of method + execution are app-side. Pryv stores the
 output of either method as ordinary events on the de-identified
 streams.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>The choice of method and its execution are application-side decisions of
 the covered entity. HDS stores the output of either method as ordinary
 events on the de-identified streams and provides no de-identification
@@ -1649,7 +1650,7 @@ code-to-phi map, hds supports keeping it as a tightly scoped resource
 reachable only by the re-identification administrator role; the
 code-generation method must then not encode phi, which is the covered
 entity's editorial requirement.
-">
+" data-planned="0">
   <h3><code>164.514(c)</code> De-identification — re-identification <span class="draft">draft</span></h3>
   <p class="text">A covered entity may assign a re-identification code to de-identified
 information, provided the code is not derived from information about the
@@ -1657,7 +1658,7 @@ individual and is not used or disclosed for any other purpose.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>`accesses.create {randomAlias:true}` provides the re-identification
 code directly: it mints a platform-unique `r-XXXXXXXX` alias that is
 random by construction (does not encode PHI), so it satisfies
@@ -1672,7 +1673,7 @@ re-identification administrator role; the code generation method
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>The platform's alias primitive provides the re-identification code
 directly: `accesses.create {randomAlias:true}` (deployed on the HDS
 cores since 2026-07-28) mints a platform-unique `r-XXXXXXXX` alias that
@@ -1715,7 +1716,7 @@ operates the audit log that supplies these fields across both regions.
 the audit log is included verbatim in every app-portability backup
 (`audit_logs.json`), so individuals receive the raw §528 source data
 alongside their phi in a single self-service download.
-">
+" data-planned="0">
   <h3><code>164.528(b)</code> Accounting of disclosures — implementation specifications <span class="draft">draft</span></h3>
   <p class="text">Each accounting entry must include the disclosure date, the recipient, a
 brief description of the PHI disclosed, and a brief statement of purpose or
@@ -1723,7 +1724,7 @@ a copy of the written request.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b implemented">implemented</span></div>
+      <div class="lh">Pryv platform <span class="b implemented">implemented</span> </div>
       <p>Each §528(b)(2) field has a Pryv source (date / name / PHI
 description / purpose) — see the §164.528 parent row for the
 mapping. The pre-computed accounting report pattern (storing
@@ -1732,7 +1733,7 @@ tractable.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>Each §528(b)(2) field has an audit-log source — date, recipient, PHI
 description and purpose — as mapped in the parent accounting row. HDS
 operates the audit log that supplies these fields across both regions.
@@ -1775,7 +1776,7 @@ your records.
 business-associate access tagged with the contract reference and role,
 scoped to the covered subjects and streams, with full audit-log
 accountability. the contract content itself is contractual.
-">
+" data-planned="0">
   <h3><code>164.504(e)</code> Organizational requirements — business associate contracts <span class="draft">draft</span></h3>
   <p class="text">A covered entity may permit a business associate to create, receive,
 maintain or transmit PHI on its behalf only with satisfactory assurances
@@ -1784,7 +1785,7 @@ via a written contract meeting the BAA content requirements of
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>The §164.504(e) BAA content
 is contractual. Pryv-side support for executing the contract
 terms: BA access tagged with `clientData.baa_id` +
@@ -1794,7 +1795,7 @@ for every action under the BA access.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>HDS offers a BAA template and the technical means to execute its terms: a
 business-associate access tagged with the contract reference and role,
 scoped to the covered subjects and streams, with full audit-log
@@ -1830,7 +1831,7 @@ downstream processors.
 </article><article class="req" id="req-164-504-g" data-coverage="out-of-scope" data-personas="covered-entity individual" data-text="164.504(g) organizational requirements — group health plans group health plan and plan-sponsor arrangements are organizational and
 contractual, with no software role. hds provides no technical control
 specific to this requirement.
-">
+" data-planned="0">
   <h3><code>164.504(g)</code> Organizational requirements — group health plans <span class="draft">draft</span></h3>
   <p class="text">A group health plan may disclose PHI to a plan sponsor only after receiving
 certification that the plan documents have been amended to incorporate the
@@ -1838,13 +1839,13 @@ certification that the plan documents have been amended to incorporate the
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b out-of-scope">out-of-scope</span></div>
+      <div class="lh">Pryv platform <span class="b out-of-scope">out-of-scope</span> </div>
       <p>Group-health-plan / plan-sponsor arrangements are organizational
 / contractual. No software role.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b out-of-scope">out-of-scope</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b out-of-scope">out-of-scope</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>Group health plan and plan-sponsor arrangements are organizational and
 contractual, with no software role. HDS provides no technical control
 specific to this requirement.
@@ -1873,7 +1874,7 @@ sponsor.
 audit-trail evidence of a disclosing person's access may be cited in
 subsequent proceedings, but hds provides no control specific to this
 requirement.
-">
+" data-planned="0">
   <h3><code>164.502(j)</code> Disclosures by whistleblowers and workforce-member crime victims <span class="draft">draft</span></h3>
   <p class="text">A workforce member's or business associate's disclosure of PHI to a
 regulatory, oversight or law-enforcement authority is not a violation where
@@ -1882,14 +1883,14 @@ conditions.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b out-of-scope">out-of-scope</span></div>
+      <div class="lh">Pryv platform <span class="b out-of-scope">out-of-scope</span> </div>
       <p>Whistleblower protections are legal framing. No software role;
 the disclosing person's audit-trail evidence under their access
 may be cited in subsequent proceedings.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b out-of-scope">out-of-scope</span> <span class="rg">US</span><span class="rg">CH</span></div>
+      <div class="lh">HDS <span class="b out-of-scope">out-of-scope</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>Whistleblower protection is a legal framing with no software role. The
 audit-trail evidence of a disclosing person's access may be cited in
 subsequent proceedings, but HDS provides no control specific to this
@@ -1923,7 +1924,7 @@ handling.
 </article></div>
     <script>
 (function(){
-  const q=document.getElementById('q'),cards=[...document.querySelectorAll('.req')],fc=document.getElementById('fcount');
+  const q=document.getElementById('q'),cards=[...document.querySelectorAll('.req')],fc=document.getElementById('fcount'),fp=document.getElementById('fplan');
   const covs=()=>[...document.querySelectorAll('#cov input:checked')].map(i=>i.value);
   const pers=()=>[...document.querySelectorAll('#persona input:checked')].map(i=>i.value);
   function apply(){const t=q.value.toLowerCase(),cv=covs(),pr=pers();let n=0;
@@ -1931,7 +1932,8 @@ handling.
       const cp=(c.dataset.personas||'').split(' ').filter(Boolean);
       const okp=cp.length===0||cp.some(p=>pr.includes(p));
       const okt=!t||(c.dataset.text||'').includes(t);
-      const show=okc&&okp&&okt;c.style.display=show?'':'none';if(show)n++;});
+      const okpl=!fp.checked||c.dataset.planned==='1';
+      const show=okc&&okp&&okt&&okpl;c.style.display=show?'':'none';if(show)n++;});
     fc.textContent=n+' / '+cards.length;}
   document.querySelector('.filters').addEventListener('input',apply);apply();
 })();
