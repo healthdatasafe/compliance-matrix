@@ -2,7 +2,7 @@ id: ccpa
 title: California Consumer Privacy Act (as amended by CPRA)
 short: CCPA / CPRA
 type: regulation
-jurisdiction: US — California (extraterritorial via business-nexus thresholds)
+jurisdiction: US, California (extraterritorial via business-nexus thresholds)
 version: Cal. Civ. Code §§ 1798.100 - 1798.199.100 (CPRA amendments operative)
 version_date: "2023-01-01"
 canonical_url: https://leginfo.legislature.ca.gov/faces/codes_displayText.xhtml?division=3.&part=4.&lawCode=CIV&title=1.81.5
@@ -11,7 +11,7 @@ curated: false
 
 changelog:
   - date: "2026-05-19"
-    change: initial draft — section-level mapping. Heavy derives_from gdpr.Art.X where rights parallel; California-specific items (sale/sharing definition, opt-out of cross-context advertising, civil action statutory damages) get dedicated detail.
+    change: initial draft, section-level mapping. Heavy derives_from gdpr.Art.X where rights parallel; California-specific items (sale/sharing definition, opt-out of cross-context advertising, civil action statutory damages) get dedicated detail.
 
 requirements:
 
@@ -54,7 +54,7 @@ requirements:
       Same primitive as GDPR Art. 17: `system.users.delete` is the
       per-consumer erasure call. Backup-completeness of the deletion
       depends on the chosen storage engine (SQLite per-user file vs
-      PG row deletion) — same notes as gdpr.Art.17 apply. The
+      PG row deletion), same notes as gdpr.Art.17 apply. The
       §1798.105(d) statutory exceptions (warranty, security, legal
       compliance, etc.) are your programmatic determination; if an
       exception applies you suppress the deletion and document why.
@@ -79,7 +79,7 @@ requirements:
       shipped.
 
   - ref: "1798.110"
-    title: Right to know — categories and specific pieces
+    title: Right to know, categories and specific pieces
     text: |
       Consumer has the right to request specific categories of personal
       information and the specific pieces of personal information the
@@ -110,14 +110,14 @@ requirements:
     pryv_primitives: [access, clientData, audit, CMC]
     overview: |
       Every "sale" or "sharing"
-      you do — in CCPA's broad sense, which includes cross-context
-      behavioural advertising — happens through a Pryv access granted
+      you do, in CCPA's broad sense, which includes cross-context
+      behavioural advertising, happens through a Pryv access granted
       to the recipient. The access's `clientData` can carry the
       §1798.115 classification (sale vs share, category of third
       party); audit records anchor the transaction in time. What's
       not the software's job: deciding when a use qualifies as "sale"
       or "sharing" under the CCPA definition (Civ. Code §1798.140(ad)
-      +(ah)) — that's a contractual / classification decision you
+      +(ah)), that's a contractual / classification decision you
       record on the access.
     detail: |
       Pattern: when minting an access for a counterparty:
@@ -146,15 +146,15 @@ requirements:
     tests: [AA02, ACCP]
     overview: |
       Opt-out is implemented by revoking or narrowing the access
-      powering the sale/share — `accesses.delete` for full opt-out,
-      `accesses.update` for narrowing — both versioned and audit-
+      powering the sale/share, `accesses.delete` for full opt-out,
+      `accesses.update` for narrowing, both versioned and audit-
       anchored. A `consent/opt-out-sale-cmc` event (or custom
       `optout/*` event) gives the consumer-side artefact alongside
       the technical effect.
     detail: |
       Honoring Global Privacy Control signals (which CPPA regulations
       require treating as a §1798.120 opt-out request) is your
-      application-layer responsibility — detect the GPC header on the
+      application-layer responsibility, detect the GPC header on the
       consumer's browser session and trigger the access revoke flow
       automatically. Pryv has no opinion on the signal source.
 
@@ -190,8 +190,8 @@ requirements:
     coverage: out-of-scope
     draft: true
     overview: |
-      Non-discrimination is a business-policy commitment — pricing,
-      service levels, marketing eligibility — not a software control.
+      Non-discrimination is a business-policy commitment, pricing,
+      service levels, marketing eligibility, not a software control.
       Pryv has no role in pricing or product gating; if your app
       enforces tier-based feature access, the non-discrimination
       analysis happens at your app's pricing-policy layer.
@@ -211,7 +211,7 @@ requirements:
     overview: |
       Notice text lives on
       `access.clientData.privacy_notice` or on a dedicated
-      `consent/notice` event — preserved per consumer per time,
+      `consent/notice` event, preserved per consumer per time,
       recoverable later. The 45-day response window is your
       operational target. Pryv's read APIs respond in milliseconds,
       so the rate-limit on the response is your fulfilment workflow,
@@ -230,7 +230,7 @@ requirements:
     pryv_primitives: [access, clientData]
     overview: |
       The opt-out UI surface is
-      your app — a CCPA-required link or an automated GPC-signal
+      your app, a CCPA-required link or an automated GPC-signal
       handler. When the opt-out is exercised, the Pryv mechanism is
       the access revoke / narrow flow from §1798.120. Implementer's
       job: detect the opt-out, call the Pryv revoke flow, surface
@@ -257,7 +257,7 @@ requirements:
       subtrees for clean §1798.121 limit-use operation).
     detail: |
       Service-provider vs third-party (§1798.140(ag) vs (ai))
-      classification is contractual — record it on the access's
+      classification is contractual, record it on the access's
       `clientData.role` so the consumer-side §1798.115 response
       surfaces the right category.
 
@@ -290,7 +290,7 @@ requirements:
       security" claim. The "reasonable security" determination remains
       a fact-specific legal question; Pryv provides the substrate.
     detail: |
-      The §1798.150 trigger is narrow — encrypted-and-redacted PI
+      The §1798.150 trigger is narrow, encrypted-and-redacted PI
       that leaks doesn't ground a statutory-damages claim. Pryv's
       posture (TLS default + operator-side at-rest encryption + per-
       access access-control + audit) substantially constrains the
@@ -323,7 +323,7 @@ requirements:
       operator's.
 
   - ref: 1798.130(a)(5)
-    title: Notice — content elements
+    title: Notice, content elements
     text: |
       Privacy-policy notice must include categories of PI collected,
       categories of sources, business / commercial purposes, categories
@@ -344,7 +344,7 @@ requirements:
       remains the implementer's editorial work.
 
   - ref: 1798.135(a)
-    title: Methods for opt-out — Do Not Sell / Share + Limit Use links
+    title: Methods for opt-out, Do Not Sell / Share + Limit Use links
     text: |
       Business that sells or shares PI shall provide a clear and
       conspicuous link titled "Do Not Sell or Share My Personal
@@ -361,7 +361,7 @@ requirements:
       relevant access). Surface itself is app-layer.
 
   - ref: 1798.140(ad)
-    title: Definition — "Sale"
+    title: Definition, "Sale"
     text: |
       "Sale" / "Sell" includes selling, renting, releasing, disclosing,
       disseminating, making available, transferring, or otherwise
@@ -384,7 +384,7 @@ requirements:
       whatever classification you record.
 
   - ref: 1798.140(ae)
-    title: Definition — "Sensitive personal information"
+    title: Definition, "Sensitive personal information"
     text: |
       Enumerated categories: SSN, drivers license, account log-in
       with password, precise geolocation, racial / ethnic origin,
@@ -400,7 +400,7 @@ requirements:
     derives_from: [ccpa.1798.121, gdpr.Art.9]
     overview: |
       Sensitive-PI enumeration
-      drives stream-layout design — dedicate subtrees per sensitive
+      drives stream-layout design, dedicate subtrees per sensitive
       category (`sensitive/health/`, `sensitive/precise-location/`,
       etc.) for clean §1798.121 limit-use enforcement. The
       classification of whether a specific event qualifies as

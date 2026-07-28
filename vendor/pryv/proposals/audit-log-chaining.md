@@ -14,7 +14,7 @@ PIPEDA Principle 4.1).
 Per-user SQLite stores append-only-by-convention. There is no
 software-side tamper-detection signal: an administrator with root
 on the host can edit the SQLite file. **This is voluntarily missing
-today** — audit-log integrity rests on the operator's filesystem-
+today**, audit-log integrity rests on the operator's filesystem-
 hardening posture (immutable mounts / append-only flags / file-
 integrity monitoring / out-of-band SIEM forwarding).
 
@@ -28,11 +28,11 @@ in addition.
 Three composable layers (see the upstream backlog item for the full
 treatment):
 
-1. **Hash chain** — each audit row stores `prev_hash`; detects
+1. **Hash chain**: each audit row stores `prev_hash`; detects
    retroactive edit.
-2. **Periodic signed checkpoint** — operator-held key signs the
+2. **Periodic signed checkpoint**: operator-held key signs the
    latest row_hash every N rows; defeats post-hoc rewriting.
-3. **Per-row signature** (optional, heavier) — each row signed
+3. **Per-row signature** (optional, heavier), each row signed
    individually.
 
 For Pryv: (1) + (2) is the right pairing.
@@ -40,14 +40,14 @@ For Pryv: (1) + (2) is the right pairing.
 ## Precondition: per-core monotonic time
 
 The chain reconstructs **per-core only** because Pryv's data plane
-is core-affine — each user's audit lives on exactly one core
+is core-affine, each user's audit lives on exactly one core
 (see `context/core-affinity-architecture.md`). Cross-core
 audit-row ordering is not meaningful by design, so the chain
 requires *per-core* monotonic time, not cluster-wide clock
 agreement. Operator NTP keeps each core's clock well-behaved;
 the planned `CLOCK-SKEW-CLUSTER-CHECKS` proposal
 (`proposals/clock-skew-cluster-checks.md`) adds bootstrap-time
-+ pre-cert-load skew detection on top — useful pre-flight, not
++ pre-cert-load skew detection on top, useful pre-flight, not
 a hard prerequisite for the chain to verify (the hash links carry
 correctness; `time` is metadata).
 
@@ -71,10 +71,10 @@ The "voluntarily missing" framing should appear today in the
 the matrix is not surprised. The current matrix is silent on the
 tamper-resistance question; rows updated alongside this proposal:
 
-- `hipaa-security.164.312(c)(2)` — already mentions
+- `hipaa-security.164.312(c)(2)`: already mentions
   "Tamper detection beyond this … is on the implementer or an
-  extension" — extended to cite this backlog item.
-- `iso-27001.A.8.15` — note operator's filesystem-hardening + this
+  extension", extended to cite this backlog item.
+- `iso-27001.A.8.15`: note operator's filesystem-hardening + this
   proposal as future direction.
 
 ## Related

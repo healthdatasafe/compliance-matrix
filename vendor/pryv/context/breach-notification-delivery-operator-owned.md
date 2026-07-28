@@ -6,7 +6,7 @@ likely to result in a high risk to their rights and freedoms.
 Equivalent obligations: HIPAA-Breach §164.404 (notification to
 individuals, ≤60 calendar days), PIPEDA s.10.1 (notification to
 affected individuals + records for 24 months), Swiss nLPD Art.24
-(conditional subject notification — only when necessary for the
+(conditional subject notification, only when necessary for the
 subject's protection or upon FDPIC request), Cal Civ Code §1798.82
 (California breach-notification law, separate from CCPA proper).
 
@@ -21,7 +21,7 @@ tracking) → leave an audit trace, all "without undue delay".
 layer.** The platform splits cleanly into two surfaces, only one
 of which has a Pryv contribution:
 
-### Surface 1 — Identification (Pryv-shipped, with queued completeness work)
+### Surface 1: Identification (Pryv-shipped)
 
 The affected-subject list is **derivable today** from the audit
 log alone:
@@ -34,34 +34,39 @@ WHERE accessId = <breachedAccessId>
   AND time BETWEEN <windowStart> AND <windowEnd>
 ```
 
-The Q17 `BREACH-SCOPE-TOOL` backlog (GH
-[`#76`](https://github.com/pryv/open-pryv.io/issues/76))
-packages this into `bin/breach-scope.js` + adds the three
-completeness gaps surfaced in Q17:
+The shipped breach-scope toolchain (GH
+[`#76`](https://github.com/pryv/open-pryv.io/issues/76),
+open-pryv.io `0b2874e0`) packages this into
+`bin/breach-scope.js` and closes the three completeness gaps
+surfaced in Q17:
 
-- **Hard gap (Phase 1)**: global `accessId → userId` lookup via
-  PlatformDB reverse-index + `GET /system/accesses/<accessId>`.
-- **Medium gap (Phase 2)**: `recordCount` field on audit rows
-  for reads (`open-pryv.io/components/audit/`-side change) —
-  satisfies §164.404(c)(1) "approximate number of records
-  affected" element.
-- **Medium gap (Phase 3)**: `affectedStreamIds[]` field on
-  audit rows — satisfies the "types of unsecured PHI" element.
+- Global `accessId → userId` lookup via the PlatformDB
+  reverse-index + `GET /system/accesses/:accessId` (existing
+  deployments index pre-existing accesses once per core with
+  `bin/backfill-access-index.js`).
+- `recordCount` field on read audit rows, satisfies
+  §164.404(c)(1) "approximate number of records affected".
+- `scopedStreamIds` field on read audit rows: the query's
+  resolved SCOPE, an upper bound on exposure (not the streams
+  of the events actually returned). It feeds the "types of
+  unsecured PHI" element as raw material; mapping streams to
+  PHI categories stays editorial (event bodies never enter
+  the audit log).
 
-Once Phases 1-3 ship, identification produces an
-audit-defensible **per-subject + per-stream + per-record-count**
-roster ready for the delivery surface.
+Identification produces an audit-defensible **per-subject +
+per-stream-scope + per-record-count** report ready for the
+delivery surface.
 
-### Surface 2 — Delivery (voluntarily missing — operator-owned)
+### Surface 2: Delivery (voluntarily missing, operator-owned)
 
 The platform's existing mail surface is **transactional, not
 bulk**:
 
 - `components/api-server/src/methods/helpers/mailing.ts`
-  `sendmail()` — single-recipient, single-template, per-call.
+  `sendmail()`: single-recipient, single-template, per-call.
   Designed for welcome / password-reset / MFA-code emails.
 - `components/mail/src/Sender.ts` + `Template.ts` + `Template-
-  Repository.ts` — Pug templates seeded into PlatformDB,
+  Repository.ts`, Pug templates seeded into PlatformDB,
   refreshed via master broadcast. Per-template + per-language
   (welcome/reset/MFA support `lang` parameter).
 - Three delivery methods (`emailSettings.method`): `in-process`
@@ -91,22 +96,23 @@ bulk**:
 3. **The Art.34 §3 exemptions** (encryption made data
    unintelligible, subsequent measures eliminated high risk,
    disproportionate effort) are legal judgements the operator's
-   counsel makes — a platform primitive can't determine them.
+   counsel makes, a platform primitive can't determine them.
 
 ## The operator pattern (recommended)
 
-Composes the identification primitive (Q17 BREACH-SCOPE-TOOL
-once shipped) with the operator's existing comms stack:
+Composes the shipped identification primitive
+(`bin/breach-scope.js`, run on the subject's home core) with
+the operator's existing comms stack:
 
 ```
 # 1. Run identification.
 $ bin/breach-scope.js \
-    --access-id <breachedAccessId> \
-    --window-start <ISO8601> \
-    --window-end <ISO8601> \
+    --access <breachedAccessId> \
+    --since <ISO8601> \
+    --until <ISO8601> \
     --output affected.json
-# Produces: per-subject roster with userId + recordCount +
-# affectedStreamIds + audit-row hashes.
+# Produces: the scoping report with subject identity + methods
+# histogram + record counts + scopedStreamIds + audit-row hashes.
 
 # 2. Operator's CRM / mail pipeline ingests affected.json,
 #    joins against subscriber-contact records (email + lang +
@@ -118,7 +124,7 @@ $ bin/breach-scope.js \
 #    provider (SendGrid Events API, SES Notifications, etc.).
 #    Operator writes the per-recipient send-receipt record
 #    into a Pryv compliance/breach-notification/* event on a
-#    dedicated compliance system stream — that event chain
+#    dedicated compliance system stream: that event chain
 #    becomes the §164.414 burden-of-proof artefact.
 
 # 4. Operator's incident-response record on
@@ -128,7 +134,7 @@ $ bin/breach-scope.js \
 ```
 
 The `compliance/incidents/*` + `compliance/breach-notification/*`
-stream conventions are operator editorial — Pryv carries
+stream conventions are operator editorial, Pryv carries
 whatever schemas the implementer points
 `service.eventTypes` URL at (Q14 extension pattern).
 
@@ -136,7 +142,7 @@ whatever schemas the implementer points
 
 When the operator's external mail pipeline sends the breach
 notification, the **send action itself is not in Pryv's audit
-log** — Pryv knows the breach scope (audit log captured the
+log**, Pryv knows the breach scope (audit log captured the
 breached access's activity), but the operator's mail provider's
 send-receipt is where "sent to subject X at time Y via channel
 Z" lives.
@@ -162,7 +168,7 @@ Bridging the two surfaces:
   the per-incident roster of sent notifications is
   queryable as a tree.
 - **Post-incident audit**: an external auditor / regulator
-  asks "show me delivery proof to subject X" — operator runs
+  asks "show me delivery proof to subject X", operator runs
   `events.get streams=compliance/breach-notification/*
   recipient.userId=<X>` → the journal event → the operator's
   mail-provider send-receipt API (cross-referenced via
@@ -181,7 +187,7 @@ proof inside the Pryv audit + event chain (where it does).
   feasible"; California §1798.82 ≤45 days; Swiss nLPD Art.24
   "as soon as possible" + FDPIC discretion on subject side).
   The operator's notification template + the timing decision
-  needs jurisdiction-awareness — typically derived from the
+  needs jurisdiction-awareness, typically derived from the
   subject's `clientData.jurisdiction` claim recorded on the
   account or access.
 - **Per-core breach scope** (Q11 / Q12 core-affinity): a
@@ -194,7 +200,7 @@ proof inside the Pryv audit + event chain (where it does).
   (Q25 PlatformDB two-tier model): the Tier 1 identification
   + routing data IS cross-border, but event data is residency-
   pinned. Breach of a Tier 1 leak is a separate (smaller) scope
-  question than breach of a Tier 2 / event-data leak —
+  question than breach of a Tier 2 / event-data leak,
   operator's incident-response decision matrix should treat
   them differently.
 
@@ -203,20 +209,20 @@ proof inside the Pryv audit + event chain (where it does).
 If a regulator asks "how does your deployment satisfy Art.34
 subject-notification":
 
-1. **Cite the identification primitive** — Pryv's audit log
+1. **Cite the identification primitive**: Pryv's audit log
    gives per-subject scope of the breached access's reads /
-   writes; the Q17 BREACH-SCOPE-TOOL once shipped packages
-   this into a single-command artefact with the §164.404(c)
+   writes; the shipped `bin/breach-scope.js` packages this
+   into a single-command artefact feeding the §164.404(c)
    content elements.
-2. **Cite your delivery pipeline** — your CRM / mail / SMS
+2. **Cite your delivery pipeline**: your CRM / mail / SMS
    provider, its rate-limiting, its retry policy, its send-
    receipt API integration. This isn't a Pryv contribution.
-3. **Cite your audit-trace bridge** — the
+3. **Cite your audit-trace bridge**: the
    `compliance/breach-notification/sent-cmc` event pattern
    captures per-recipient send-receipt records inside Pryv's
    audit + event chain, satisfying the §164.414 burden-of-
    proof obligation.
-4. **Address the timing claim** — your incident-response
+4. **Address the timing claim**: your incident-response
    runbook should encode jurisdiction-aware send timing
    ("within X hours of confirmed high-risk determination per
    jurisdiction Y").
@@ -228,18 +234,19 @@ parentStreamId=compliance/incidents/<Y>`.
 
 ## See also
 
-- `proposals/breach-scope-tool.md` — Q17 identification
-  primitive (the surface this delivery pattern composes with).
-- `context/data-retention-operator-owned.md` — same
+- `proposals/breach-scope-tool.md`: Q17 identification
+  primitive, now shipped (the surface this delivery pattern
+  composes with).
+- `context/data-retention-operator-owned.md`: same
   "voluntarily missing + operator-owned" pattern from Q31
   retention; conceptual parallel.
-- `context/cmc-consent-primitives.md` — the
+- `context/cmc-consent-primitives.md`: the
   `compliance/breach-notification/sent-cmc` event family fits
   the `*-cmc` naming convention pattern (operator-authored
   formats via Q14 custom catalogue extension).
-- `docs/pryv-primitives.md` — `audit-event-stream` + `audit`
+- `docs/pryv-primitives.md`: `audit-event-stream` + `audit`
   + `system-streams` entries (the primitives the delivery-
   trace bridge composes).
 - HIPAA-Breach §164.404 / GDPR Art.33-34 / PIPEDA s.10.1 /
-  Swiss nLPD Art.24 / Cal Civ Code §1798.82 — the
+  Swiss nLPD Art.24 / Cal Civ Code §1798.82, the
   regulator-side notification regimes this pattern serves.

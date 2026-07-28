@@ -1,6 +1,6 @@
 # Audit archival + tiering via custom `@pryv/datastore`
 
-**Status:** architectural pattern — Pryv's answer to "audit grows
+**Status:** architectural pattern, Pryv's answer to "audit grows
 unboundedly over a 5-10 year deployment". No Pryv-shipped pruning
 primitive; the answer is "use the `@pryv/datastore` extension
 hook + write a custom audit storage tier". Recorded from the
@@ -25,7 +25,7 @@ Two reasons, captured here so future matrix authors don't confuse
 
 1. **Pryv is end-user "will enforcement"**: the platform respects
    user sovereignty. Operator tooling that reaches into a user's
-   own data — audit included — is deliberately minimal. There is
+   own data, audit included, is deliberately minimal. There is
    no operator "delete user X's audit rows older than Y" knob,
    because that would let the operator silently truncate evidence
    the user might one day want to audit.
@@ -36,9 +36,9 @@ Two reasons, captured here so future matrix authors don't confuse
    - MDR Art.10(8) requires **minimum** 10-year retention for
      device-history records.
    - GDPR Art.5(1)(e) storage limitation + PIPEDA Principle 4.5
-     + Swiss nLPD Art.6(4) all say "no longer than necessary" —
+     + Swiss nLPD Art.6(4) all say "no longer than necessary",
      but audit's lawful basis is typically GDPR Art.17(3)(b)
-     ("compliance with a legal obligation" — the §164.316
+     ("compliance with a legal obligation", the §164.316
      retention itself, or sectoral regs), which makes long
      retention legitimate ground.
 
@@ -56,7 +56,7 @@ exposes `streams` + `events` properties implementing the
 
 A tiered implementation has two flavours:
 
-### Flavour A — custom `auditStorage` engine plugin
+### Flavour A: custom `auditStorage` engine plugin
 
 (Available today, more involved but architecturally clean.)
 
@@ -80,10 +80,10 @@ The existing `auditDataStore` (the `_audit` Mall registration)
 doesn't change; the storage layer beneath it does. All audit
 APIs remain identical.
 
-### Flavour B — custom `@pryv/datastore` replacing `_audit`
+### Flavour B: custom `@pryv/datastore` replacing `_audit`
 
 (Cleaner config, but requires the `BUILTIN-STORE-OVERRIDE`
-backlog enhancement to ship first — today the load order
+backlog enhancement to ship first, today the load order
 silently overwrites the operator's custom entry. See the
 `BUILTIN-STORE-OVERRIDE` internal backlog slug for the
 `override: true` config-flag proposal.)
@@ -139,8 +139,8 @@ because the architectural extension hook IS the Pryv contribution:
 
 | Scope | Row | Today | Why no tier shift needed |
 |---|---|---|---|
-| hipaa-security | 164.316(b)(2)(i) | F: Storage \| Low | Pryv contributes the audit-write substrate + extension hook for archival; the 6-year-minimum retention SOP is the operator's. (Note: this row had earlier prose treating 6y as max, not min — corrected per Q16.) |
-| iso-27001 | A.8.15 Logging | Implemented \| High | "produced, stored, protected, analysed" — Pryv produces + stores; operator's tiering is the "stored for longer than the hot tier" stage. |
+| hipaa-security | 164.316(b)(2)(i) | F: Storage \| Low | Pryv contributes the audit-write substrate + extension hook for archival; the 6-year-minimum retention SOP is the operator's. (Note: this row had earlier prose treating 6y as max, not min, corrected per Q16.) |
+| iso-27001 | A.8.15 Logging | Implemented \| High | "produced, stored, protected, analysed"; Pryv produces + stores; operator's tiering is the "stored for longer than the hot tier" stage. |
 | iso-27001 | A.5.24 Incident management | F: Evidence \| Med | Cold-tier audit remains queryable for forensic review years later. |
 | gdpr | Art.30 Records of processing | Implemented \| High | Records survive in the cold tier through the operator's chosen retention window; the Art.17(3)(b) lawful basis covers retention. |
 
@@ -148,13 +148,13 @@ because the architectural extension hook IS the Pryv contribution:
 
 In their DPIA / ISMS:
 
-- **Audit retention policy** — how long the hot tier keeps rows,
+- **Audit retention policy**: how long the hot tier keeps rows,
   when migration to cold fires, when (if ever) cold rows are
   destroyed. Pryv-side: the audit write path is permanent until
   the operator explicitly migrates / deletes.
-- **Tiering implementation** — which Flavour (A or B), which
+- **Tiering implementation**: which Flavour (A or B), which
   cold backend, what encryption at rest.
-- **Lawful basis for retention beyond strictly-necessary** —
+- **Lawful basis for retention beyond strictly-necessary**,
   typically Art.17(3)(b) "compliance with a legal obligation"
   (HIPAA / MDR retention regimes) or Art.17(3)(e) "legal
   claims" (audit defense in litigation).
@@ -163,10 +163,10 @@ In their DPIA / ISMS:
 
 - Internal backlog slug `BUILTIN-STORE-OVERRIDE` (DX
   enhancement to make Flavour B usable via config alone).
-- `proposals/audit-on-user-delete.md` (Q8 — the
+- `proposals/audit-on-user-delete.md` (Q8, the
   `audit.onUserDelete: keep` mode + this tiering pattern are
   the two halves of "operator-controlled audit retention").
-- `proposals/audit-log-chaining.md` (Q2 — when chained audit
+- `proposals/audit-log-chaining.md` (Q2, when chained audit
   ships, tiering must preserve `prev_hash` continuity across
   the hot/cold boundary; a checkpoint at the boundary is the
   natural way to do this).

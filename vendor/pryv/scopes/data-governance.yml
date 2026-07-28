@@ -12,7 +12,7 @@ curated: false
 changelog:
   - date: "2026-06-19"
     change: |
-      Initial first-cut — first scope of type `discipline`. A discipline is
+      Initial first-cut, first scope of type `discipline`. A discipline is
       an organizational framework where Pryv contributes uniquely but no single
       regulator owns the requirements. Maps the 11 DAMA-DMBOK knowledge areas;
       the 5 areas where Pryv provides concrete primitives are authored
@@ -32,18 +32,18 @@ requirements:
       - qms/pryv/01-policies/quality-policy.md
       - qms/pryv/01-policies/information-security-policy.md
     overview: |
-      Pryv gives you the governance substrate — every datum is owned by a
+      Pryv gives you the governance substrate, every datum is owned by a
       user (per-user storage isolation), every privileged action is auditable,
       and cross-organization sharing is consent-managed (CMC). What Pryv does
       NOT give you is the governance *program*: the policies, stewardship
-      roles, decision rights and oversight cadence. Those are organizational —
+      roles, decision rights and oversight cadence. Those are organizational,
       start from the QMS templates and the ISO/IEC 38505 Evaluate-Direct-
       Monitor model.
     detail: |
       ISO/IEC 38505-1 frames governance as accountability for the value, risk
       and constraints of data. Pryv's primitives map to the "constraints"
       pillar (ownership, access, audit); value and risk decisions remain the
-      governing body's. The matrix itself is a governance artefact — it makes
+      governing body's. The matrix itself is a governance artefact, it makes
       "which control covers which obligation" mechanical.
 
   - ref: DG-04
@@ -72,7 +72,7 @@ requirements:
       per-stream permissions, privileged-data separation via system streams,
       and an audit trail are the enforcement primitives. You still own the
       classification-to-control policy (which streams are sensitive, who may
-      hold which access) — Pryv enforces the decisions you encode.
+      hold which access), Pryv enforces the decisions you encode.
     detail: |
       Cross-references the regulation scopes: the same primitives back
       gdpr.Art.32, iso-27001 Annex A.5/A.8 access-control rows, and
@@ -86,7 +86,7 @@ requirements:
     pryv_effort_saved: medium
     pryv_primitives: [CMC, webhooks, data-types]
     overview: |
-      Pryv moves data between parties through consented channels — CMC for
+      Pryv moves data between parties through consented channels, CMC for
       controller-to-controller sharing with a consent record, webhooks for
       event propagation, and a shared event-type catalogue (data-types) for
       semantic interoperability. Pipeline orchestration, transformation

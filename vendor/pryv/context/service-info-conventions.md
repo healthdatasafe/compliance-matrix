@@ -1,4 +1,4 @@
-# `serviceInfo` conventions — operator metadata propagation to client apps
+# `serviceInfo` conventions: operator metadata propagation to client apps
 
 `GET /service/info` is the platform's **operator-controlled
 metadata surface** for client apps + SDKs + the auth UI. The
@@ -17,8 +17,8 @@ Schema (verified at
   access: string,      // auth UI URL
   register: string,    // registration server URL
   name: string,        // operator-chosen platform name
-  home: string,        // operator home URL — controller identity surface
-  support: string,     // operator support URL — DPO contact, support, contact-point
+  home: string,        // operator home URL, controller identity surface
+  support: string,     // operator support URL, DPO contact, support, contact-point
   terms: string,       // terms of service URL
   eventTypes: string,  // event-types catalogue URL (Q14 extension)
   assets: object,      // optional UI assets manifest
@@ -33,15 +33,15 @@ Schema (verified at
 
 ## Compliance-relevant uses of the existing fields
 
-### Art.13(1)(a) + Art.14(1)(a) — controller identity
+### Art.13(1)(a) + Art.14(1)(a): controller identity
 
 The `home` URL is operator-controlled and propagates to every
 client app. Operators put their **controller identity page**
-behind `home` — legal entity name, postal address, registered
+behind `home`, legal entity name, postal address, registered
 office, contact details. Client apps render the link without
 operator-side coding.
 
-### Art.13(1)(b) + Art.38(4) — DPO contact
+### Art.13(1)(b) + Art.38(4): DPO contact
 
 The `support` URL is the natural anchor for the **DPO
 contact-point obligation**. Per Art.38(4): *"Data subjects
@@ -53,25 +53,25 @@ protection officer, where applicable"*.
 
 Implementation patterns (operator's choice):
 
-- **Easiest** — operator's support page (the page `support`
+- **Easiest**: operator's support page (the page `support`
   points at) includes a "Data Protection Officer" section with
   the DPO name + email + postal address. Client apps display
   the standard "Support" link in their UI; subject clicks it
   and finds the DPO information. Zero extra Pryv surface
   required. Same posture as `serviceInfo.terms` for ToS.
-- **Dedicated** — operator publishes a separate `dpo` URL
+- **Dedicated**: operator publishes a separate `dpo` URL
   (e.g., `https://operator.example.com/dpo`) and embeds it
   in their support page header. Still uses the existing
   `support` field as the anchor; the dedicated DPO page is
   one click away.
-- **Future enhancement** (not currently needed) — extend
+- **Future enhancement** (not currently needed), extend
   `serviceInfo` schema with an optional `dpo` field. Would
   require open-pryv.io schema change + SDK + `app-web-auth3`
   to render. Filed as backlog only if a critical mass of
   operators want a dedicated field beyond the `support`-URL
   convention.
 
-### Art.13(1)(d) + Art.14(2)(b) — legitimate-interests recipients
+### Art.13(1)(d) + Art.14(2)(b): legitimate-interests recipients
 
 The `home` URL's privacy policy is the natural place to disclose
 recipients. Pryv-side per-access metadata
@@ -80,7 +80,7 @@ recipients. Pryv-side per-access metadata
 machine-readable record; the human-readable disclosure lives on
 the operator's home / privacy URL.
 
-### Art.13(2)(f) — automated decision-making
+### Art.13(2)(f): automated decision-making
 
 If the deployment runs automated decisions (Q26), the operator
 discloses the "logic involved, significance, envisaged
@@ -88,7 +88,7 @@ consequences" via the home / privacy URL; per-access machine-
 readable basis lives on `clientData.processing_purpose` +
 `art22_basis` (Q26).
 
-### Art.7 transparency — consent context
+### Art.7 transparency: consent context
 
 The `terms` URL is the operator-controlled Terms of Service
 anchor. Combined with `support` and `home`, the three URLs
@@ -100,7 +100,7 @@ the auth UI surfaces by default.
 - Set in operator config (currently YAML; a planned change migrates the
   `service.*` keys to PlatformDB so they're cluster-
   wide editable via admin panel).
-- Returned by `GET /service/info` on every core — every client
+- Returned by `GET /service/info` on every core, every client
   reads it.
 - Cached on app-web-auth3 startup and rendered in the consent
   UI (footer / header link block).
@@ -144,11 +144,11 @@ THIS specific processing on THIS subject".
 
 ## See also
 
-- `context/client-data-conventions.md` — the complementary
+- `context/client-data-conventions.md`: the complementary
   per-access convention layer.
-- `context/privacy-by-design-and-default.md` — the
+- `context/privacy-by-design-and-default.md`: the
   privacy-by-default UI pattern in `app-web-auth3`.
-- `gdpr.Art.13`, `gdpr.Art.14`, `gdpr.Art.38` — matrix rows
+- `gdpr.Art.13`, `gdpr.Art.14`, `gdpr.Art.38`, matrix rows
   citing this surface.
-- `dev-site/src/guides/consent.md` — operator-facing consent
+- `dev-site/src/guides/consent.md`: operator-facing consent
   implementation guide.

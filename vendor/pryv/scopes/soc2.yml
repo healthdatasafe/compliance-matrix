@@ -1,5 +1,5 @@
 id: soc2
-title: SOC 2 — AICPA Trust Services Criteria (Security, Availability, Confidentiality, Processing Integrity, Privacy)
+title: SOC 2, AICPA Trust Services Criteria (Security, Availability, Confidentiality, Processing Integrity, Privacy)
 short: SOC 2
 type: standard
 jurisdiction: United States (AICPA)
@@ -12,30 +12,30 @@ curated: false
 changelog:
   - date: "2026-06-15"
     change: |
-      initial draft — full Trust Services Criteria point set. Security
+      initial draft, full Trust Services Criteria point set. Security
       (Common Criteria CC1-CC9) is mandatory; Availability (A1),
       Confidentiality (C1), Processing Integrity (PI1) and Privacy
       (P1-P8) categories all authored because Pryv implementers
       typically attest against the full TSC scope. The Common Criteria
-      map closely onto ISO/IEC 27001 Annex A — coverage prose and
+      map closely onto ISO/IEC 27001 Annex A, coverage prose and
       primitive citations cross-link to the iso-27001 rows via
       derives_from rather than re-deriving. Privacy criteria cross-link
       to gdpr + iso-27701 + hipaa-privacy. SOC 2 is an attestation
       framework, not a regulation: an implementer's report is produced
-      by their auditor against controls THEY operate — Pryv supplies the
+      by their auditor against controls THEY operate, Pryv supplies the
       technical control substrate + the audit evidence, never the
       management assertion or the control narrative.
 
 requirements:
 
   # ───────────────────────────────────────────────────────────────
-  # CC1 — Control Environment (COSO Principle 1-5)
+  # CC1 Control Environment (COSO Principle 1-5)
   # Governance layer: almost entirely the service organization's own
   # management activity. Pryv's role is accountability evidence only.
   # ───────────────────────────────────────────────────────────────
 
   - ref: CC1.1
-    title: CC1.1 — Commitment to integrity and ethical values
+    title: CC1.1 Commitment to integrity and ethical values
     text: |
       The entity demonstrates a commitment to integrity and ethical
       values.
@@ -49,7 +49,7 @@ requirements:
       document.
 
   - ref: CC1.2
-    title: CC1.2 — Board independence and oversight
+    title: CC1.2 Board independence and oversight
     text: |
       The board of directors demonstrates independence from management
       and exercises oversight of the development and performance of
@@ -62,7 +62,7 @@ requirements:
       but the oversight function is yours.
 
   - ref: CC1.3
-    title: CC1.3 — Management structures, reporting lines, authorities
+    title: CC1.3 Management structures, reporting lines, authorities
     text: |
       Management establishes, with board oversight, structures,
       reporting lines, and appropriate authorities and responsibilities
@@ -76,7 +76,7 @@ requirements:
       reporting-line design itself is yours.
 
   - ref: CC1.4
-    title: CC1.4 — Commitment to competence
+    title: CC1.4 Commitment to competence
     text: |
       The entity demonstrates a commitment to attract, develop, and
       retain competent individuals in alignment with objectives.
@@ -87,7 +87,7 @@ requirements:
       role.
 
   - ref: CC1.5
-    title: CC1.5 — Accountability for internal control responsibilities
+    title: CC1.5 Accountability for internal control responsibilities
     text: |
       The entity holds individuals accountable for their internal
       control responsibilities in the pursuit of objectives.
@@ -106,11 +106,11 @@ requirements:
       activity; Pryv supplies the evidence trail.
 
   # ───────────────────────────────────────────────────────────────
-  # CC2 — Communication and Information (COSO Principle 13-15)
+  # CC2 Communication and Information (COSO Principle 13-15)
   # ───────────────────────────────────────────────────────────────
 
   - ref: CC2.1
-    title: CC2.1 — Quality information to support internal control
+    title: CC2.1 Quality information to support internal control
     text: |
       The entity obtains or generates and uses relevant, quality
       information to support the functioning of internal control.
@@ -127,7 +127,7 @@ requirements:
       your programme; Pryv supplies the quality data.
 
   - ref: CC2.2
-    title: CC2.2 — Internal communication of objectives and responsibilities
+    title: CC2.2 Internal communication of objectives and responsibilities
     text: |
       The entity internally communicates information, including
       objectives and responsibilities for internal control, necessary
@@ -139,7 +139,7 @@ requirements:
       software role at the communication-content layer.
 
   - ref: CC2.3
-    title: CC2.3 — External communication on internal control matters
+    title: CC2.3 External communication on internal control matters
     text: |
       The entity communicates with external parties regarding matters
       affecting the functioning of internal control.
@@ -157,11 +157,11 @@ requirements:
       your own customer / subprocessor / auditor communications on top.
 
   # ───────────────────────────────────────────────────────────────
-  # CC3 — Risk Assessment (COSO Principle 6-9)
+  # CC3 Risk Assessment (COSO Principle 6-9)
   # ───────────────────────────────────────────────────────────────
 
   - ref: CC3.1
-    title: CC3.1 — Specifies objectives with sufficient clarity
+    title: CC3.1 Specifies objectives with sufficient clarity
     text: |
       The entity specifies objectives with sufficient clarity to enable
       the identification and assessment of risks relating to objectives.
@@ -173,7 +173,7 @@ requirements:
       risk-to-control mapping once your objectives exist.
 
   - ref: CC3.2
-    title: CC3.2 — Identifies and analyzes risk
+    title: CC3.2 Identifies and analyzes risk
     text: |
       The entity identifies risks to the achievement of its objectives
       across the entity and analyzes risks as a basis for determining
@@ -188,13 +188,13 @@ requirements:
       Your risk-assessment methodology and the specific findings are
       yours. Pryv contributes the inventory of technical controls (this
       matrix, particularly the CC6 access + CC6.6/6.7 boundary +
-      cryptography rows) — when you identify a confidentiality /
+      cryptography rows), when you identify a confidentiality /
       integrity / availability risk, the matrix surfaces which Pryv
       primitive addresses it, so control applicability is mechanical
       rather than judgemental.
 
   - ref: CC3.3
-    title: CC3.3 — Considers the potential for fraud
+    title: CC3.3 Considers the potential for fraud
     text: |
       The entity considers the potential for fraud in assessing risks
       to the achievement of objectives.
@@ -207,11 +207,11 @@ requirements:
       Pryv's audit log + observability metrics are the detection
       substrate for insider-misuse and anomalous-access fraud scenarios
       (every access is attributable; unusual read/write patterns
-      surface). The fraud-risk analysis itself — which scenarios matter,
-      what thresholds trigger review — is your assessment.
+      surface). The fraud-risk analysis itself, which scenarios matter,
+      what thresholds trigger review, is your assessment.
 
   - ref: CC3.4
-    title: CC3.4 — Identifies and assesses changes affecting internal control
+    title: CC3.4 Identifies and assesses changes affecting internal control
     text: |
       The entity identifies and assesses changes that could
       significantly impact the system of internal control.
@@ -228,11 +228,11 @@ requirements:
       change-impact assessment process is yours.
 
   # ───────────────────────────────────────────────────────────────
-  # CC4 — Monitoring Activities (COSO Principle 16-17)
+  # CC4 Monitoring Activities (COSO Principle 16-17)
   # ───────────────────────────────────────────────────────────────
 
   - ref: CC4.1
-    title: CC4.1 — Performs ongoing and separate evaluations
+    title: CC4.1 Performs ongoing and separate evaluations
     text: |
       The entity selects, develops, and performs ongoing and/or
       separate evaluations to ascertain whether the components of
@@ -251,7 +251,7 @@ requirements:
       sampling method.
 
   - ref: CC4.2
-    title: CC4.2 — Evaluates and communicates deficiencies
+    title: CC4.2 Evaluates and communicates deficiencies
     text: |
       The entity evaluates and communicates internal control
       deficiencies in a timely manner to those parties responsible for
@@ -269,11 +269,11 @@ requirements:
       evaluation + communication workflow is your procedure.
 
   # ───────────────────────────────────────────────────────────────
-  # CC5 — Control Activities (COSO Principle 10-12)
+  # CC5 Control Activities (COSO Principle 10-12)
   # ───────────────────────────────────────────────────────────────
 
   - ref: CC5.1
-    title: CC5.1 — Selects and develops control activities
+    title: CC5.1 Selects and develops control activities
     text: |
       The entity selects and develops control activities that
       contribute to the mitigation of risks to the achievement of
@@ -293,7 +293,7 @@ requirements:
       you build.
 
   - ref: CC5.2
-    title: CC5.2 — General control activities over technology
+    title: CC5.2 General control activities over technology
     text: |
       The entity also selects and develops general control activities
       over technology to support the achievement of objectives.
@@ -304,15 +304,15 @@ requirements:
     pryv_primitives: [access, permissions, audit, letsEncrypt-integration, multi-core-mTLS, encryption-at-rest-secrets]
     derives_from: [iso-27001.A.8.3, iso-27001.A.8.24]
     overview: |
-      The technology general controls SOC 2 examines — logical access,
+      The technology general controls SOC 2 examines, logical access,
       authentication, encryption in transit + at rest for secrets,
-      audit logging, secure inter-core transport — are shipped Pryv
+      audit logging, secure inter-core transport, are shipped Pryv
       primitives, enforced at the API surface rather than left to your
       configuration discipline. The CC6 + CC7 rows below detail each.
       Your role is selecting and operating them.
 
   - ref: CC5.3
-    title: CC5.3 — Deploys control activities through policies and procedures
+    title: CC5.3 Deploys control activities through policies and procedures
     text: |
       The entity deploys control activities through policies that
       establish what is expected and procedures that put policies into
@@ -325,12 +325,12 @@ requirements:
       policy text and the operating procedures are yours.
 
   # ───────────────────────────────────────────────────────────────
-  # CC6 — Logical and Physical Access Controls
+  # CC6 Logical and Physical Access Controls
   # The core Pryv-contribution surface for SOC 2 Security.
   # ───────────────────────────────────────────────────────────────
 
   - ref: CC6.1
-    title: CC6.1 — Logical access security over protected information assets
+    title: CC6.1 Logical access security over protected information assets
     text: |
       The entity implements logical access security software,
       infrastructure, and architectures over protected information
@@ -368,7 +368,7 @@ requirements:
       exact string match with a single loopback-port carve-out
       (RFC 8252 / 9700) and fragment-bearing redirect URIs are rejected
       (`open-pryv.io/components/oauth2/src/clientRegistry.ts`). Client
-      registration is curated-only — the operator promotes an account
+      registration is curated-only, the operator promotes an account
       to an OAuth client via `bin/oauth-client.js`; open self-service
       registration (`POST /oauth2/register`) is deliberately disabled.
 
@@ -377,17 +377,21 @@ requirements:
       (`open-pryv.io/components/shared-secrets/`) replace URL-embedded
       tokens with a one-time random key: redeemable exactly once (with
       atomic single-winner semantics under concurrent redemption),
-      mandatory TTL, only the key's SHA-256 stored server-side, payload
-      scrubbed once consumed, optional passphrase / HMAC signature on
-      redemption. Browser history, referrer headers, and access logs
+      mandatory TTL, only the SHA-256 of the key's random half stored
+      server-side, payload scrubbed when the item leaves the pending
+      state (on redemption, on a signature mismatch, and on the first
+      retrieval attempt after the TTL; expiry is enforced on access,
+      not by a background sweeper, so an untouched expired secret keeps
+      its payload until something reaches it or you delete it),
+      optional passphrase / HMAC signature on redemption. Browser history, referrer headers, and access logs
       therefore stop carrying live credentials. A
-      `secretSharing: forbidden` feature permission — inherited by
-      child accesses and not strippable via `accesses.update` — lets
+      `secretSharing: forbidden` feature permission, inherited by
+      child accesses and not strippable via `accesses.update`, lets
       you exclude designated access classes from minting shared
       secrets at all.
 
   - ref: CC6.2
-    title: CC6.2 — User registration, credential issuance, and de-provisioning
+    title: CC6.2 User registration, credential issuance, and de-provisioning
     text: |
       Prior to issuing system credentials and granting system access,
       the entity registers and authorizes new internal and external
@@ -411,11 +415,11 @@ requirements:
     detail: |
       **OAuth2 client credential issuance is curated.** For
       delegated-app credentials, Pryv issues OAuth2 client identities
-      only through the operator CLI (`bin/oauth-client.js` — register /
+      only through the operator CLI (`bin/oauth-client.js`, register /
       rotate-secret / list), not through open dynamic registration: the
       discovery document advertises no registration endpoint and
       `POST /oauth2/register` (RFC 7591 open mode) is intentionally
-      deferred — `oauth.clientRegistration.mode: curated` is the only
+      deferred, `oauth.clientRegistration.mode: curated` is the only
       supported value and `open` is rejected. Each client carries an
       exact-match set of registered redirect URIs and, for confidential
       clients, a rotatable `client_secret`. The authorization decision
@@ -425,7 +429,7 @@ requirements:
       2.0.0-rc.8).
 
   - ref: CC6.3
-    title: CC6.3 — Role-based access, least privilege, segregation of duties
+    title: CC6.3 Role-based access, least privilege, segregation of duties
     text: |
       The entity authorizes, modifies, or removes access to data,
       software, functions, and other protected information assets based
@@ -451,7 +455,7 @@ requirements:
     detail: |
       For workforce / role-scale deployments, Pryv composes with an
       external IdP / IGA system rather than implementing roles + groups
-      itself — two integration patterns (group access + callerId audit
+      itself, two integration patterns (group access + callerId audit
       suffix; seed access + sub-access derivation) are documented in
       context/workforce-access-patterns.md. The IdP stays the source of
       truth for identity; Pryv records the access state + per-individual
@@ -460,7 +464,7 @@ requirements:
       **OAuth2 revoke + refresh-chain teardown.** For delegated apps,
       the durable consent behind an OAuth2 grant is a cross-account CMC
       data-grant; revoking it (deleting the counterparty access) kills
-      the refresh chain — the next `refresh_token` exchange sees the
+      the refresh chain, the next `refresh_token` exchange sees the
       data-grant gone and fails `invalid_grant`, so no fresh access is
       minted (`open-pryv.io/components/oauth2/src/grants/refresh_token.ts`,
       open-pryv.io 2.0.0-rc.8). Access modification propagates the same
@@ -473,7 +477,7 @@ requirements:
       merely blocks new grants while issued tokens live out their TTL:
       it writes a platform-wide tombstone and every core rejects that
       client's existing access tokens at validation time within
-      `oauth.clientRevokeCheckSeconds` (default 30 s) — open socket.io
+      `oauth.clientRevokeCheckSeconds` (default 30 s), open socket.io
       connections are swept and dropped too. So "remove access for app
       X, everywhere, now" is one operator command with a bounded
       propagation window (open-pryv.io `7b6321aa`). For DPoP-bound apps
@@ -481,7 +485,7 @@ requirements:
       open-pryv.io `4c0a5ade`).
 
   - ref: CC6.4
-    title: CC6.4 — Physical access to facilities and protected assets
+    title: CC6.4 Physical access to facilities and protected assets
     text: |
       The entity restricts physical access to facilities and protected
       information assets (for example, data center facilities, back-up
@@ -492,12 +496,12 @@ requirements:
     overview: |
       Physical access control (data-center entry, badge systems, media
       vaults) is facility scope, outside Pryv's software boundary. Your
-      hosting provider carries this — an HDS- or ISO 27001-certified
+      hosting provider carries this, an HDS- or ISO 27001-certified
       hoster typically inherits it from the underlying CSP and provides
       the attestation you reference.
 
   - ref: CC6.5
-    title: CC6.5 — Logical and physical protections over data destruction
+    title: CC6.5 Logical and physical protections over data destruction
     text: |
       The entity discontinues logical and physical protections over
       physical assets only after the ability to read or recover data
@@ -514,14 +518,14 @@ requirements:
       Logical destruction is per-user: system.users.delete removes the
       user's data from the live store; event- and stream-level deletion
       cover per-record needs. Whether destruction extends to backups is
-      engine-dependent — SQLite stores one file per user (unlink =
+      engine-dependent, SQLite stores one file per user (unlink =
       gone), PostgreSQL deletes rows but historical pg_dump artefacts
       retain them until rotated. Choose the engine that matches your
       destruction policy; physical media sanitisation is your hosting
       procedure.
 
   - ref: CC6.6
-    title: CC6.6 — Boundary protection against external threats
+    title: CC6.6 Boundary protection against external threats
     text: |
       The entity implements logical access security measures to protect
       against threats from sources outside its system boundaries.
@@ -538,10 +542,10 @@ requirements:
       no plaintext path. Inter-core traffic in a cluster runs over mTLS
       on a private CA, separating the control plane from the user-facing
       plane. Edge controls (WAF, firewall, rate limiting) sit in your
-      reverse proxy by design — see context/rate-limiting-and-dos-protection.md.
+      reverse proxy by design, see context/rate-limiting-and-dos-protection.md.
 
   - ref: CC6.7
-    title: CC6.7 — Restriction and encryption of information in transmission and movement
+    title: CC6.7 Restriction and encryption of information in transmission and movement
     text: |
       The entity restricts the transmission, movement, and removal of
       information to authorized internal and external users and
@@ -556,14 +560,14 @@ requirements:
     overview: |
       Transmission is TLS 1.3 end-to-end (client ↔ core direct, no
       Pryv-shipped intermediary that could log or cache). Movement is
-      restricted by the permission model — a credential only moves the
+      restricted by the permission model, a credential only moves the
       data its scope permits. Operator secrets at rest use AES-256-GCM
       (HKDF-derived per-key); bootstrap bundles for core-to-core movement
       are AES-256-GCM (scrypt). Bulk event-data at-rest encryption is an
       operator-side storage-layer choice (LUKS / SSE-KMS / customer keys).
 
   - ref: CC6.8
-    title: CC6.8 — Prevention and detection of unauthorized or malicious software
+    title: CC6.8 Prevention and detection of unauthorized or malicious software
     text: |
       The entity implements controls to prevent or detect and act upon
       the introduction of unauthorized or malicious software to meet
@@ -583,11 +587,11 @@ requirements:
       application-allowlisting on the hosts is your operator scope.
 
   # ───────────────────────────────────────────────────────────────
-  # CC7 — System Operations
+  # CC7 System Operations
   # ───────────────────────────────────────────────────────────────
 
   - ref: CC7.1
-    title: CC7.1 — Detection of configuration changes and vulnerabilities
+    title: CC7.1 Detection of configuration changes and vulnerabilities
     text: |
       To meet its objectives, the entity uses detection and monitoring
       procedures to identify (1) changes to configurations that result
@@ -615,7 +619,7 @@ requirements:
       to upgrade, how to verify) sits on top.
 
   - ref: CC7.2
-    title: CC7.2 — Monitoring for anomalies indicative of security events
+    title: CC7.2 Monitoring for anomalies indicative of security events
     text: |
       The entity monitors system components and the operation of those
       components for anomalies that are indicative of malicious acts,
@@ -636,7 +640,7 @@ requirements:
       extension you build; the raw signal is shipped.
 
   - ref: CC7.3
-    title: CC7.3 — Evaluation of security events
+    title: CC7.3 Evaluation of security events
     text: |
       The entity evaluates security events to determine whether they
       could or have resulted in a failure of the entity to meet its
@@ -650,12 +654,12 @@ requirements:
     derives_from: [iso-27001.A.5.25]
     overview: |
       Event-vs-incident classification is your decision. Pryv supplies
-      the evaluation inputs — audit row patterns, observability
-      anomalies — but the categorisation rule and the response trigger
+      the evaluation inputs, audit row patterns, observability
+      anomalies, but the categorisation rule and the response trigger
       are your policy.
 
   - ref: CC7.4
-    title: CC7.4 — Incident response program
+    title: CC7.4 Incident response program
     text: |
       The entity responds to identified security incidents by executing
       a defined incident response program to understand, contain,
@@ -681,12 +685,12 @@ requirements:
       is published in `SECURITY.md` (coordinated disclosure policy:
       private GHSA flow + `security-dev@` mailbox + SLA + scope +
       safe harbor; private vulnerability reporting enabled on the
-      published repositories). The incident-response program itself —
-      roles, escalation, communications, lessons-learned — is yours
+      published repositories). The incident-response program itself,
+      roles, escalation, communications, lessons-learned, is yours
       to define and rehearse.
 
   - ref: CC7.5
-    title: CC7.5 — Recovery from identified security incidents
+    title: CC7.5 Recovery from identified security incidents
     text: |
       The entity identifies, develops, and implements activities to
       recover from identified security incidents.
@@ -704,11 +708,11 @@ requirements:
       drill cadence are your policy.
 
   # ───────────────────────────────────────────────────────────────
-  # CC8 — Change Management
+  # CC8 Change Management
   # ───────────────────────────────────────────────────────────────
 
   - ref: CC8.1
-    title: CC8.1 — Authorized changes to infrastructure, data, software, procedures
+    title: CC8.1 Authorized changes to infrastructure, data, software, procedures
     text: |
       The entity authorizes, designs, develops or acquires, configures,
       documents, tests, approves, and implements changes to
@@ -731,11 +735,11 @@ requirements:
       change-approval workflow (windows, sign-off, rollback) sits on top.
 
   # ───────────────────────────────────────────────────────────────
-  # CC9 — Risk Mitigation
+  # CC9 Risk Mitigation
   # ───────────────────────────────────────────────────────────────
 
   - ref: CC9.1
-    title: CC9.1 — Risk mitigation for business disruptions
+    title: CC9.1 Risk mitigation for business disruptions
     text: |
       The entity identifies, selects, and develops risk mitigation
       activities for risks arising from potential business disruptions.
@@ -754,7 +758,7 @@ requirements:
       yours.
 
   - ref: CC9.2
-    title: CC9.2 — Vendor and business partner risk management
+    title: CC9.2 Vendor and business partner risk management
     text: |
       The entity assesses and manages risks associated with vendors and
       business partners.
@@ -772,16 +776,16 @@ requirements:
       criteria, SLA reviews, subprocessor inventory) sits on top.
     detail: |
       Supply-chain risk on the Pryv substrate is tracked under the
-      supply-chain-scanning-pipeline proposal — committed lockfile +
+      supply-chain-scanning-pipeline proposal, committed lockfile +
       Dependabot today; CI npm-audit gate + SBOM + image scanning +
       signing planned. See CC7.1.
 
   # ───────────────────────────────────────────────────────────────
-  # A1 — Availability (additional category)
+  # A1, Availability (additional category)
   # ───────────────────────────────────────────────────────────────
 
   - ref: A1.1
-    title: A1.1 — Capacity management
+    title: A1.1, Capacity management
     text: |
       The entity maintains, monitors, and evaluates current processing
       capacity and use of system components (infrastructure, data, and
@@ -801,7 +805,7 @@ requirements:
       automation are yours.
 
   - ref: A1.2
-    title: A1.2 — Environmental protections, backup, and recovery infrastructure
+    title: A1.2, Environmental protections, backup, and recovery infrastructure
     text: |
       The entity authorizes, designs, develops or acquires, implements,
       operates, approves, maintains, and monitors environmental
@@ -818,12 +822,12 @@ requirements:
       per-user backups, multi-core topology gives in-line Raft
       replication, TLS certs replicate across the cluster so a surviving
       core stays user-facing. Environmental protections (power, cooling,
-      fire suppression) are facility-side — your hoster's certification
+      fire suppression) are facility-side; your hoster's certification
       covers them. Backup cadence, retention, and offsite policy are
       yours.
 
   - ref: A1.3
-    title: A1.3 — Recovery plan testing
+    title: A1.3, Recovery plan testing
     text: |
       The entity tests recovery plan procedures supporting system
       recovery to meet its objectives.
@@ -836,15 +840,15 @@ requirements:
     overview: |
       Pryv gives you a testable recovery path (restore a user from a
       backup file into a clean core; fail a core and confirm a peer keeps
-      serving). The recovery drill — scheduling it, evidencing the result,
-      feeding gaps back into the plan — is your operating procedure.
+      serving). The recovery drill, scheduling it, evidencing the result,
+      feeding gaps back into the plan, is your operating procedure.
 
   # ───────────────────────────────────────────────────────────────
-  # C1 — Confidentiality (additional category)
+  # C1, Confidentiality (additional category)
   # ───────────────────────────────────────────────────────────────
 
   - ref: C1.1
-    title: C1.1 — Identification and maintenance of confidential information
+    title: C1.1, Identification and maintenance of confidential information
     text: |
       The entity identifies and maintains confidential information to
       meet the entity's objectives related to confidentiality.
@@ -868,11 +872,11 @@ requirements:
       reachable only by credentials granted them. System streams add a
       privileged tier independent of your scheme; clientData / event
       type can carry machine-readable classification labels. Masking is
-      by projection (stream + permissions), not value transformation —
+      by projection (stream + permissions), not value transformation,
       see context/data-masking-projection-vs-transformation.md.
 
   - ref: C1.2
-    title: C1.2 — Disposal of confidential information
+    title: C1.2, Disposal of confidential information
     text: |
       The entity disposes of confidential information to meet the
       entity's objectives related to confidentiality.
@@ -887,15 +891,15 @@ requirements:
       Confidential-data disposal uses the same per-user erasure path as
       CC6.5: system.users.delete for whole-account, event/stream
       deletion for per-record. Backup reach is engine-dependent (SQLite
-      per-user file vs PostgreSQL row + pg_dump rotation) — pick the
+      per-user file vs PostgreSQL row + pg_dump rotation), pick the
       engine that matches your disposal commitment.
 
   # ───────────────────────────────────────────────────────────────
-  # PI1 — Processing Integrity (additional category)
+  # PI1, Processing Integrity (additional category)
   # ───────────────────────────────────────────────────────────────
 
   - ref: PI1.1
-    title: PI1.1 — Quality information about processing objectives
+    title: PI1.1 Quality information about processing objectives
     text: |
       The entity obtains or generates, uses, and communicates relevant,
       quality information regarding the objectives related to processing,
@@ -909,13 +913,13 @@ requirements:
     overview: |
       The canonical event-type schemas (class/format JSON Schemas in the
       data-types repo) are the machine-readable definition of "data
-      processed" — what each event type means and what shape it takes.
+      processed", what each event type means and what shape it takes.
       You extend the catalogue with your own types via the
       service.eventTypes URL. The processing-objective specifications
       themselves are your product definitions.
 
   - ref: PI1.2
-    title: PI1.2 — Completeness and accuracy of inputs
+    title: PI1.2 Completeness and accuracy of inputs
     text: |
       The entity implements policies and procedures over system inputs,
       including controls over completeness and accuracy, to result in
@@ -929,15 +933,15 @@ requirements:
     overview: |
       Input accuracy is enforced structurally at ingest: events.create
       and events.update run every payload through the event type's JSON
-      Schema (ajv-draft-04) — unknown types and schema violations are
+      Schema (ajv-draft-04), unknown types and schema violations are
       rejected with HTTP 400, no silent truncation or downgrade. This is
       the structural-accuracy layer; semantic accuracy (is this the
       *right* blood-pressure reading) stays in your application. Tighten
       structural strictness by declaring min/max/pattern in a custom
-      catalogue — see context/data-accuracy-structural-vs-semantic.md.
+      catalogue, see context/data-accuracy-structural-vs-semantic.md.
 
   - ref: PI1.3
-    title: PI1.3 — Completeness and accuracy of processing
+    title: PI1.3 Completeness and accuracy of processing
     text: |
       The entity implements policies and procedures over system
       processing to result in products and services that meet the
@@ -957,7 +961,7 @@ requirements:
       control responsibility.
 
   - ref: PI1.4
-    title: PI1.4 — Completeness, accuracy, and timeliness of outputs
+    title: PI1.4 Completeness, accuracy, and timeliness of outputs
     text: |
       The entity implements policies and procedures to make available or
       deliver output completely, accurately, and timely in accordance
@@ -972,13 +976,13 @@ requirements:
       canonical serialisations; the audit log carries an integrity
       checksum of the affected event when a method mutates one, so
       output can be tied back to a verified state. Webhooks notify
-      subscribers of change (signal-only — the receiver fetches the
+      subscribers of change (signal-only, the receiver fetches the
       authoritative state via authenticated GET, so the delivered output
       is always the current canonical value). Delivery SLAs to your end
       recipients are your specification.
 
   - ref: PI1.5
-    title: PI1.5 — Completeness and accuracy of stored information
+    title: PI1.5 Completeness and accuracy of stored information
     text: |
       The entity implements policies and procedures to store inputs,
       items in processing, and outputs completely, accurately, and
@@ -995,16 +999,16 @@ requirements:
       the audit log can carry a per-event integrity checksum, and
       backup-restore provides a recoverable copy. Together these give an
       accuracy + completeness signal for stored data. Tamper-evidence on
-      the audit log itself (hash chaining) is a future primitive — see
+      the audit log itself (hash chaining) is a future primitive, see
       the CC7.4 chain proposal.
 
   # ───────────────────────────────────────────────────────────────
-  # P1-P8 — Privacy (additional category)
+  # P1-P8, Privacy (additional category)
   # Heavy overlap with GDPR + ISO 27701 + HIPAA-Privacy; cross-linked.
   # ───────────────────────────────────────────────────────────────
 
   - ref: P1.1
-    title: P1.1 — Notice of privacy practices
+    title: P1.1, Notice of privacy practices
     text: |
       The entity provides notice to data subjects about its privacy
       practices to meet the entity's objectives related to privacy. The
@@ -1025,7 +1029,7 @@ requirements:
       carries it through the consent flow and records what was presented.
 
   - ref: P2.1
-    title: P2.1 — Choice and consent
+    title: P2.1, Choice and consent
     text: |
       The entity communicates choices available regarding the
       collection, use, retention, disclosure, and disposal of personal
@@ -1047,7 +1051,7 @@ requirements:
       the choices; Pryv records and enforces them.
 
   - ref: P3.1
-    title: P3.1 — Collection consistent with objectives
+    title: P3.1, Collection consistent with objectives
     text: |
       Personal information is collected consistent with the entity's
       objectives related to privacy.
@@ -1058,14 +1062,14 @@ requirements:
     pryv_primitives: [access, permissions, stream]
     derives_from: [gdpr.Art.5, gdpr.Art.6]
     overview: |
-      Collection scope is bounded by the access's permissions — an app
+      Collection scope is bounded by the access's permissions, an app
       can only write to the streams + levels it was granted (e.g.
       create-only on a specific subtree), so collection cannot silently
       exceed the agreed purpose. Defining the purpose and the minimal
       stream set is your data-model design; the boundary is enforced.
 
   - ref: P3.2
-    title: P3.2 — Explicit consent for sensitive personal information
+    title: P3.2, Explicit consent for sensitive personal information
     text: |
       Explicit consent for the collection, use, retention, disclosure,
       and disposal of sensitive personal information is obtained from
@@ -1085,7 +1089,7 @@ requirements:
       grant rather than folding it into general consent.
 
   - ref: P4.1
-    title: P4.1 — Use limited to identified purposes
+    title: P4.1, Use limited to identified purposes
     text: |
       The entity limits the use of personal information to the purposes
       identified in the entity's objectives related to privacy.
@@ -1103,7 +1107,7 @@ requirements:
       design; the enforcement is technical, not policy-on-paper.
 
   - ref: P4.2
-    title: P4.2 — Retention of personal information
+    title: P4.2, Retention of personal information
     text: |
       The entity retains personal information consistent with the
       entity's objectives related to privacy.
@@ -1116,13 +1120,13 @@ requirements:
     overview: |
       Retention metadata (period, basis, scheduled disposal date) can
       ride on event / access clientData so each record carries its own
-      retention contract. Pryv ships no automatic TTL / expiry primitive
-      — enforcement of the retention schedule is an operator job today
+      retention contract. Pryv ships no automatic TTL / expiry primitive,
+      enforcement of the retention schedule is an operator job today
       (a scheduled sweep calling events/streams delete). The retention
       policy itself is yours; treat the absence of auto-expiry as an
       operator responsibility when you attest P4.2.
     detail: |
-      This is **voluntarily missing + operator-owned** by design — the
+      This is **voluntarily missing + operator-owned** by design, the
       same classification as GDPR Art.5(1)(e) storage limitation. Pryv
       stays retention-policy-neutral: no TTL / auto-delete / scheduler
       primitive ships, so automatic disposal is the operator's external
@@ -1135,7 +1139,7 @@ requirements:
       `context/data-retention-operator-owned.md`.
 
   - ref: P4.3
-    title: P4.3 — Disposal of personal information
+    title: P4.3, Disposal of personal information
     text: |
       The entity securely disposes of personal information to meet the
       entity's objectives related to privacy.
@@ -1150,11 +1154,11 @@ requirements:
       Disposal uses the per-user erasure path: system.users.delete for
       whole-account, event/stream deletion for per-record. Backup reach
       is engine-dependent (SQLite per-user file unlink vs PostgreSQL row
-      + pg_dump rotation) — choose the engine that matches your disposal
+      + pg_dump rotation), choose the engine that matches your disposal
       commitment, same as GDPR Art.17.
 
   - ref: P5.1
-    title: P5.1 — Data subject access to personal information
+    title: P5.1, Data subject access to personal information
     text: |
       The entity grants identified and authenticated data subjects the
       ability to access their stored personal information for review and,
@@ -1171,18 +1175,18 @@ requirements:
       Subject access is subject-runnable: the data subject holds their
       own credentials, so events.get / streams.get return their data
       directly, and the pryv-account-backup CLI produces a complete
-      portable export — account, profiles, app profiles, streams,
+      portable export, account, profiles, app profiles, streams,
       accesses (incl. revoked / expired + opt-in per-access version
       history), events (chunked + incremental), audit log, HF series
       data points, webhooks, and attachments, with a per-file sha256
-      integrity manifest — with no operator dependency for routine
+      integrity manifest, with no operator dependency for routine
       requests. The browser-based webapp flavour covers the read-side
       text resources only; route subjects who need attachments / HF
       series / webhooks to the CLI. See
       context/account-backup-coverage.md.
 
   - ref: P5.2
-    title: P5.2 — Correction, amendment, or appending of personal information
+    title: P5.2, Correction, amendment, or appending of personal information
     text: |
       The entity corrects, amends, or appends personal information based
       on information provided by data subjects and communicates such
@@ -1203,7 +1207,7 @@ requirements:
       correction request is your process.
 
   - ref: P6.1
-    title: P6.1 — Disclosure to third parties for identified purposes with consent
+    title: P6.1, Disclosure to third parties for identified purposes with consent
     text: |
       The entity discloses personal information to third parties for the
       purposes identified in the entity's objectives related to privacy
@@ -1216,14 +1220,14 @@ requirements:
     derives_from: [gdpr.Art.6, hipaa-privacy.164.502, iso-27701.A.7.3.4]
     overview: |
       Third-party disclosure happens by issuing a scoped shared / CMC
-      access — the disclosure is exactly the permissions granted,
+      access, the disclosure is exactly the permissions granted,
       nothing more, and the access's clientData records the purpose +
       consent basis. There is no out-of-band data-dump path; disclosure
       is always a tracked, revocable grant. Deciding the lawful purpose
       is yours.
 
   - ref: P6.2
-    title: P6.2 — Record of authorized disclosures
+    title: P6.2, Record of authorized disclosures
     text: |
       The entity creates and retains a complete, accurate, and timely
       record of authorized disclosures of personal information to meet
@@ -1237,7 +1241,7 @@ requirements:
     overview: |
       Every disclosure is a read against a shared / CMC access, and the
       per-user audit log records each access invocation with the
-      accessId + accessSerial that made it — a complete, attributable
+      accessId + accessSerial that made it, a complete, attributable
       record of who accessed what, when. Since open-pryv.io `07b6d3b6`
       the *authorization* of a disclosure is recorded too: OAuth2
       `oauth.*` audit events capture the consent grant, the code
@@ -1248,7 +1252,7 @@ requirements:
       policy.
 
   - ref: P6.3
-    title: P6.3 — Record of detected unauthorized disclosures
+    title: P6.3, Record of detected unauthorized disclosures
     text: |
       The entity creates and retains a complete, accurate, and timely
       record of detected or reported unauthorized disclosures (including
@@ -1268,7 +1272,7 @@ requirements:
       authorized) is your assessment; Pryv supplies the raw trail.
 
   - ref: P6.4
-    title: P6.4 — Third-party commitments for privacy
+    title: P6.4, Third-party commitments for privacy
     text: |
       The entity obtains privacy commitments from vendors and other
       third parties who have access to personal information to meet the
@@ -1277,13 +1281,13 @@ requirements:
     draft: true
     overview: |
       Vendor / subprocessor privacy commitments are contractual
-      artefacts (DPAs, BAAs). No software role — though when the third
+      artefacts (DPAs, BAAs). No software role, though when the third
       party's technical access is a Pryv shared/CMC access, the
       permission scope is a concrete, enforced bound on what they were
       given, which your DPA can reference.
 
   - ref: P6.5
-    title: P6.5 — Third-party unauthorized disclosure response
+    title: P6.5, Third-party unauthorized disclosure response
     text: |
       The entity obtains commitments from vendors and other third
       parties with access to personal information to notify the entity
@@ -1297,23 +1301,18 @@ requirements:
       the vendor-commitment layer.
 
   - ref: P6.6
-    title: P6.6 — Notice of breaches and incidents to affected parties
+    title: P6.6, Notice of breaches and incidents to affected parties
     text: |
       The entity provides notification of breaches and incidents to
       affected data subjects, regulators, and others to meet the
       entity's objectives related to privacy.
     coverage: facilitated
-    pryv_effort_saved: medium
+    pryv_effort_saved: high
     facilitation_mode: evidence
     draft: true
     pryv_primitives: [audit, access]
     derives_from: [gdpr.Art.33, gdpr.Art.34, hipaa-breach.164.404]
     planned:
-      - kind: feature
-        summary: "Breach-scope tool (accessId → userId reverse-index + audit recordCount + affectedStreamIds) turns the audit trail into a who-was-affected answer for breach notices"
-        proposal: proposals/breach-scope-tool.md
-        tracking_url: https://github.com/orgs/pryv/projects/5?pane=issue&itemId=190467808&issue=pryv%7Copen-pryv.io%7C76
-        impact: high
       - kind: feature
         summary: "Chained audit log raises forensic confidence in the breach-scope determination"
         proposal: proposals/audit-log-chaining.md
@@ -1321,15 +1320,16 @@ requirements:
         tracking_url: https://github.com/orgs/pryv/projects/5?pane=issue&itemId=190467766&issue=pryv%7Copen-pryv.io%7C74
         impact: low
     overview: |
-      Pryv contributes the scoping evidence a breach notice needs — the
-      audit log ties a compromised access to the users + data it
-      touched. Today that reverse-index is manual; the breach-scope tool
-      proposal automates "which subjects were affected, how many records,
-      which streams". Drafting and sending the notifications within the
-      regulatory deadline is your process.
+      Pryv contributes the scoping evidence a breach notice needs, the
+      audit log ties a compromised access to the user + data it
+      touched. The shipped `bin/breach-scope.js` (accessId → user
+      reverse-index + audit `recordCount` + `scopedStreamIds` query
+      scope) automates "who was affected, how many records, which
+      streams in scope" in one command. Drafting and sending the
+      notifications within the regulatory deadline is your process.
 
   - ref: P6.7
-    title: P6.7 — Accounting of disclosures to data subjects
+    title: P6.7, Accounting of disclosures to data subjects
     text: |
       The entity provides data subjects with an accounting of the
       personal information held and disclosure of the data subjects'
@@ -1350,7 +1350,7 @@ requirements:
       attributable.
 
   - ref: P7.1
-    title: P7.1 — Data quality — accuracy, completeness, relevance
+    title: P7.1, Data quality, accuracy, completeness, relevance
     text: |
       The entity collects and maintains accurate, up-to-date, complete,
       and relevant personal information to meet the entity's objectives
@@ -1365,12 +1365,12 @@ requirements:
       Structural data quality is enforced at ingest by event-type schema
       validation (HTTP 400 on malformed input); subjects keep their data
       up-to-date via events.update / account.update (with version
-      history). "Relevant" — collecting no more than the purpose needs —
+      history). "Relevant", collecting no more than the purpose needs,
       is bounded by the permission scope you grant. Judging semantic
       accuracy of a specific value is your application's responsibility.
 
   - ref: P8.1
-    title: P8.1 — Privacy complaint management and compliance monitoring
+    title: P8.1, Privacy complaint management and compliance monitoring
     text: |
       The entity implements a process for receiving, addressing,
       resolving, and communicating the resolution of inquiries,

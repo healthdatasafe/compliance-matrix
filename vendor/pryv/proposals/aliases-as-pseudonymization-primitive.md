@@ -25,7 +25,7 @@ not exposed via the aliased access.
 ## Why the matrix cares
 
 Multiple rows currently land at `facilitated` because Pryv does not
-ship a native pseudonymization primitive — the implementer is left to
+ship a native pseudonymization primitive, the implementer is left to
 build a code-to-real-identifier mapping themselves on a designated
 stream subtree. Once aliases ship, these rows could move toward
 `configurable` (config key `auth.randomAlias`) or even `implemented`
@@ -33,12 +33,12 @@ stream subtree. Once aliases ship, these rows could move toward
 
 | Scope | Row | Current | Could become |
 |---|---|---|---|
-| `gdpr` | Art.4 — Definitions (pseudonymisation entry in the term table) | `facilitated` (storage) | `configurable` — alias IS the pseudonym |
-| `gdpr` | Art.32 §1(a) — pseudonymisation as a security measure | `facilitated` (multi-aspect infrastructure) | `configurable` per-row would name `auth.randomAlias` as the on switch |
-| `hipaa-privacy` | §164.514(c) — re-identification code | `facilitated` (storage(low)) | `configurable` — alias satisfies §514(c)(1)(ii) "not derived from / related to information about the individual" by construction (alias is random) |
-| `iso-27001` | A.8.11 — Data masking | `facilitated` (stream/system-streams) | `configurable` — alias masks the real username at the access layer |
-| `iso-27701` | A.7.4.5 — De-identification + deletion | `configurable` (current) | unchanged (deletion is already the primary mechanism), but stronger derives_from |
-| `ccpa` | §1798.140(ae) — Sensitive PI | `facilitated` (stream-isolation) | unchanged at row level, but the deployment-pattern recommendation shifts: don't store linkable identifiers — store aliases |
+| `gdpr` | Art.4, Definitions (pseudonymisation entry in the term table) | `facilitated` (storage) | `configurable`, alias IS the pseudonym |
+| `gdpr` | Art.32 §1(a), pseudonymisation as a security measure | `facilitated` (multi-aspect infrastructure) | `configurable` per-row would name `auth.randomAlias` as the on switch |
+| `hipaa-privacy` | §164.514(c), re-identification code | `facilitated` (storage(low)) | `configurable`, alias satisfies §514(c)(1)(ii) "not derived from / related to information about the individual" by construction (alias is random) |
+| `iso-27001` | A.8.11, Data masking | `facilitated` (stream/system-streams) | `configurable`, alias masks the real username at the access layer |
+| `iso-27701` | A.7.4.5, De-identification + deletion | `configurable` (current) | unchanged (deletion is already the primary mechanism), but stronger derives_from |
+| `ccpa` | §1798.140(ae), Sensitive PI | `facilitated` (stream-isolation) | unchanged at row level, but the deployment-pattern recommendation shifts: don't store linkable identifiers, store aliases |
 
 ## What this proposal does not propose
 
@@ -62,7 +62,7 @@ stream subtree. Once aliases ship, these rows could move toward
    `aliases` entry to `docs/pryv-primitives.md` so future rows can
    cite it via `pryv_primitives: [aliases]`.
 3. **Cross-link this proposal** from the affected rows' `detail` (not
-   `overview` — proposals aren't decisions yet) so the matrix records
+   `overview`: proposals aren't decisions yet) so the matrix records
    the open question without overcommitting today.
 
 ## Upstream backlog item, verbatim

@@ -14,7 +14,7 @@ single canonical statement.
 
 ## Two models
 
-### SQLite engine — physical isolation
+### SQLite engine: physical isolation
 
 Each Pryv user has a **dedicated SQLite file** (and a per-user data
 directory under the operator-configured `dataRoot`). Reading user
@@ -22,11 +22,11 @@ A's events means opening user A's file; reading user B's means
 opening a different file.
 
 - A bug in the API-surface permission check still cannot cause
-  cross-user reads — the wrong API call would never open the wrong
+  cross-user reads, the wrong API call would never open the wrong
   user's file because the user resolver locks the file path before
   the SQL runs.
 - Erasure (GDPR Art. 17 / HIPAA §164.310(d)(1)) is `rm` of the
-  per-user folder — removes the user from filesystem-level backups
+  per-user folder, removes the user from filesystem-level backups
   as well, depending on the operator's backup tool semantics.
 - Audit log per-user SQLite under `components/audit/` follows the
   same model regardless of base-storage engine choice.
@@ -35,7 +35,7 @@ This is **physical filesystem-level isolation.** Cross-user reads
 require either an OS-level read of another user's file (root
 required) or a Pryv-side bug that mis-resolves the user identity.
 
-### PostgreSQL engine — logical isolation
+### PostgreSQL engine: logical isolation
 
 Every user's data sits in **shared tables** (e.g., `events`,
 `streams`, `accesses`) with a `userId` column on every row.
@@ -121,8 +121,8 @@ Pryv-the-software today):
    separate namespaces. Stronger than RLS, weaker than per-DB.
    Medium ops cost. Scales to thousands.
 3. **Per-account DB isolation** *(low-cardinality only)*. One
-   PostgreSQL database per Pryv user / tenant. DB-level isolation
-   — connections are scoped to one DB, so a missing `userId`
+   PostgreSQL database per Pryv user / tenant. DB-level isolation,
+   connections are scoped to one DB, so a missing `userId`
    filter can't bridge across users. Closer to SQLite's per-user-
    file model.
 
@@ -143,7 +143,7 @@ Pryv-the-software today):
 4. **Per-tenant Pryv deployment.** Run **N Pryv deployments** (one
    per tenant) using the multi-hosting + data-residency primitive.
    Strongest isolation, highest ops cost. Each deployment is a
-   complete Pryv cluster — separate API, separate users, separate
+   complete Pryv cluster, separate API, separate users, separate
    DBs. Useful when tenants are independent legal entities (e.g.,
    distinct healthcare providers in a federation).
 
@@ -178,10 +178,10 @@ inherit the framing without needing the cross-link in every cell.
 
 ## Related primitives
 
-- `stream`, `system-streams` — the data containers whose isolation
+- `stream`, `system-streams`, the data containers whose isolation
   this note characterises.
-- `access`, `permissions` — the API-surface enforcement layer (which
+- `access`, `permissions`, the API-surface enforcement layer (which
   on PG is the only enforcement layer).
-- `audit` — per-user SQLite regardless of base-storage engine.
-- `backup-restore` — engine-specific erasure semantics tie back to
+- `audit`: per-user SQLite regardless of base-storage engine.
+- `backup-restore`: engine-specific erasure semantics tie back to
   the isolation model.

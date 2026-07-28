@@ -1,5 +1,5 @@
 id: iso-27701
-title: ISO/IEC 27701 — Extension to ISO/IEC 27001 for Privacy Information Management
+title: ISO/IEC 27701, Extension to ISO/IEC 27001 for Privacy Information Management
 short: ISO 27701
 type: standard
 jurisdiction: International (ISO/IEC)
@@ -13,16 +13,16 @@ layered_on: [iso-27001]
 changelog:
   - date: "2026-05-19"
     change: |
-      initial draft — 9 rows focused on Annex A (PII controller
+      initial draft, 9 rows focused on Annex A (PII controller
       controls) and Annex B (PII processor controls) where Pryv-the-
-      software contributes. 27701 cannot be certified standalone —
+      software contributes. 27701 cannot be certified standalone,
       requires a 27001 ISMS first (layered_on: [iso-27001]). Source
       text paywalled; maps by clause ID + paraphrase.
 
 requirements:
 
   - ref: "5"
-    title: Clause 5 — PIMS-specific requirements extending ISO 27001
+    title: Clause 5 PIMS-specific requirements extending ISO 27001
     text: |
       Organization shall apply the requirements of ISO/IEC 27001
       treating privacy as an information-security concern; PII
@@ -42,11 +42,11 @@ requirements:
       risk treatment and statement of applicability sit on top.
 
   # ───────────────────────────────────────────────────────────────
-  # Annex A — PII controller controls (selected)
+  # Annex A, PII controller controls (selected)
   # ───────────────────────────────────────────────────────────────
 
   - ref: A.7.2.1
-    title: A.7.2.1 — Identify and document purpose
+    title: A.7.2.1 Identify and document purpose
     text: |
       Organization shall identify and document the specific purposes
       for which PII will be processed.
@@ -64,7 +64,7 @@ requirements:
       editorial work; Pryv carries each instance forward.
 
   - ref: A.7.2.2
-    title: A.7.2.2 — Identify lawful basis
+    title: A.7.2.2 Identify lawful basis
     text: |
       Organization shall determine, document, and comply with the
       relevant lawful basis for processing of PII.
@@ -83,7 +83,7 @@ requirements:
       audit chain.
 
   - ref: A.7.3.1
-    title: A.7.3.1 — Determining and fulfilling obligations to PII principals
+    title: A.7.3.1 Determining and fulfilling obligations to PII principals
     text: |
       Organization shall determine and document its legal, regulatory,
       and business obligations to PII principals related to the
@@ -103,7 +103,7 @@ requirements:
       response) is the policy half; Pryv responds in milliseconds.
 
   - ref: A.7.3.4
-    title: A.7.3.4 — Providing mechanism to modify or withdraw consent
+    title: A.7.3.4 Providing mechanism to modify or withdraw consent
     text: |
       Organization shall provide a mechanism for PII principals to
       modify or withdraw their consent.
@@ -121,7 +121,7 @@ requirements:
       `consent/revoke-cmc` for symmetric teardown.
 
   - ref: A.7.4.1
-    title: A.7.4.1 — Limit collection
+    title: A.7.4.1 Limit collection
     text: |
       Organization shall limit the collection of PII to the minimum
       relevant, proportionate and necessary for the identified
@@ -139,7 +139,7 @@ requirements:
       the limit-collection enforcement, expressed in `permissions[]`.
 
   - ref: A.7.4.7
-    title: A.7.4.7 — Records of PII processing
+    title: A.7.4.7 Records of PII processing
     text: |
       Organization shall determine and securely maintain the necessary
       records in support of its obligations for the processing of PII.
@@ -158,11 +158,11 @@ requirements:
       window.
 
   # ───────────────────────────────────────────────────────────────
-  # Annex B — PII processor controls (selected)
+  # Annex B, PII processor controls (selected)
   # ───────────────────────────────────────────────────────────────
 
   - ref: B.8.4.1
-    title: B.8.4.1 — Confidentiality
+    title: B.8.4.1, Confidentiality
     text: |
       Persons under the processor's authority who have access to PII
       shall be subject to a confidentiality commitment.
@@ -179,7 +179,7 @@ requirements:
       (any breach is attributable to an access tied to a person).
 
   - ref: B.8.5.4
-    title: B.8.5.4 — Records related to processing PII
+    title: B.8.5.4, Records related to processing PII
     text: |
       Processor shall determine and maintain necessary records related
       to the processing of PII to support compliance with applicable
@@ -199,7 +199,7 @@ requirements:
       register) are operator-side artefacts.
 
   - ref: A.7.4.2
-    title: A.7.4.2 — Limit processing
+    title: A.7.4.2 Limit processing
     text: |
       Organization shall limit the processing of PII to that which is
       adequate, relevant and necessary for the identified purposes.
@@ -210,14 +210,14 @@ requirements:
     derives_from: [iso-27701.A.7.4.1, gdpr.Art.5]
     tests: [AA01, ACCP]
     overview: |
-      Same primitive as A.7.4.1 limit collection — per-stream
+      Same primitive as A.7.4.1 limit collection, per-stream
       permissions are the technical limit on what processing each
       access can perform. The "adequate / relevant / necessary"
       assessment per purpose is the controller's; the technical
       enforcement is permission-shaped.
 
   - ref: A.7.4.3
-    title: A.7.4.3 — Accuracy and quality
+    title: A.7.4.3 Accuracy and quality
     text: |
       Organization shall ensure and document that PII is as accurate,
       complete and up-to-date as is necessary for the purposes for
@@ -235,7 +235,7 @@ requirements:
       determination + correction workflow is the controller's.
 
   - ref: A.7.4.5
-    title: A.7.4.5 — PII de-identification and deletion at end of processing
+    title: A.7.4.5 PII de-identification and deletion at end of processing
     text: |
       Organization shall either delete PII or render it in a form which
       does not permit identification or re-identification of PII
@@ -250,12 +250,12 @@ requirements:
     tests: [USAD]
     overview: |
       Per-user deletion via `system.users.delete` (engine-dependent
-      backup behaviour — same notes as GDPR Art. 17). Per-event /
+      backup behaviour, same notes as GDPR Art. 17). Per-event /
       per-stream deletion lives alongside for partial-deletion needs.
       De-identification (Safe Harbor / Expert Determination methods) is
       an application-layer transformation; Pryv stores the result.
       "**Soon as the original PII is no longer necessary**" is the
-      operator's scheduled-retention obligation — Pryv ships no
+      operator's scheduled-retention obligation; Pryv ships no
       TTL primitive; the operator composes `events.get toTime=` +
       `events.delete` + audit-log inactivity oracle in an external
       retention job (`context/data-retention-operator-owned.md`).
@@ -266,7 +266,7 @@ requirements:
       the principal or cross-match them against another access.
 
   - ref: A.7.4.6
-    title: A.7.4.6 — Temporary files
+    title: A.7.4.6 Temporary files
     text: |
       Organization shall ensure that temporary files created as a
       result of processing of PII are disposed of (e.g., erased,
@@ -281,7 +281,7 @@ requirements:
       addresses any temp-file footprints the runtime produces.
 
   - ref: A.7.4.9
-    title: A.7.4.9 — Records of transfer of PII
+    title: A.7.4.9 Records of transfer of PII
     text: |
       Organization shall record transfers of PII to or from third
       parties and ensure cooperation with those parties to support
@@ -301,7 +301,7 @@ requirements:
       for transfers specifically.
 
   - ref: A.7.5.1
-    title: A.7.5.1 — Identify basis for PII transfer between jurisdictions
+    title: A.7.5.1 Identify basis for PII transfer between jurisdictions
     text: |
       Organization shall identify and document the relevant basis for
       transfers of PII between jurisdictions.
@@ -313,7 +313,7 @@ requirements:
     derives_from: [gdpr.Art.44, gdpr.Art.46, gdpr.Art.49]
     overview: |
       Per GDPR Art. 44 /
-      Swiss nLPD Art. 34 mapping — the data-residency primitive
+      Swiss nLPD Art. 34 mapping, the data-residency primitive
       constrains where data lives; cross-jurisdictional transfers
       record the legal basis on the transferring access's
       `clientData.transfer_basis`. The jurisdiction-mapping
@@ -321,7 +321,7 @@ requirements:
       which transfer regime applies to each pair) is operator-side.
 
   - ref: A.7.5.2
-    title: A.7.5.2 — Countries and international organizations to which PII can be transferred
+    title: A.7.5.2 Countries and international organizations to which PII can be transferred
     text: |
       Organization shall specify and document the countries and
       international organizations to which PII can possibly be
@@ -341,7 +341,7 @@ requirements:
       `auth.hostings` config as the technical artefact.
 
   - ref: B.8.5.6
-    title: B.8.5.6 — Disclosure of subcontractors used to process PII
+    title: B.8.5.6, Disclosure of subcontractors used to process PII
     text: |
       Processor shall disclose to the customer in advance the use of
       subcontractors before such subcontractors process PII; processor
@@ -355,7 +355,7 @@ requirements:
     derives_from: [gdpr.Art.28]
     overview: |
       Pryv-the-software has one
-      optional subprocessor surface — the observability provider (New
+      optional subprocessor surface, the observability provider (New
       Relic adapter; default disabled). The operator's subcontractor
       list typically includes: hosting provider, observability
       provider when enabled, any backup-storage provider used by
@@ -363,7 +363,7 @@ requirements:
       their B.8.5.6 commitment.
 
   - ref: A.7.2.3
-    title: A.7.2.3 — Determine when and how notice should be provided
+    title: A.7.2.3 Determine when and how notice should be provided
     text: |
       Organization shall determine when and how notice shall be
       provided to PII principals concerning processing of their PII.
@@ -381,7 +381,7 @@ requirements:
       principal per time.
 
   - ref: A.7.2.4
-    title: A.7.2.4 — Obtain and record consent
+    title: A.7.2.4 Obtain and record consent
     text: |
       Organization shall obtain and record consent from PII principals
       according to the documented processes.
@@ -395,11 +395,11 @@ requirements:
       Consent recording = `accesses.create` with permissions +
       clientData carrying the consent text; cross-account consent =
       `consent/request-cmc` events. Both are immutable per their
-      primitive semantics — the §7 demonstrability requirement is
+      primitive semantics, the §7 demonstrability requirement is
       structural.
 
   - ref: A.7.2.5
-    title: A.7.2.5 — Privacy impact assessment
+    title: A.7.2.5 Privacy impact assessment
     text: |
       Organization shall assess the need for + implement a privacy
       impact assessment whenever new processing of PII or changes to
@@ -418,7 +418,7 @@ requirements:
       + swiss-nlpd.Art.22 for the regulator-specific DPIA mappings.
 
   - ref: A.7.2.6
-    title: A.7.2.6 — Contracts with PII processors
+    title: A.7.2.6 Contracts with PII processors
     text: |
       Organization shall have a written contract with any PII processor
       that it uses, requiring the processor to implement appropriate
@@ -431,7 +431,7 @@ requirements:
       §164.314(a)(1).
 
   - ref: A.7.2.7
-    title: A.7.2.7 — Joint PII controller
+    title: A.7.2.7 Joint PII controller
     text: |
       Organization shall determine respective roles + responsibilities
       where it acts jointly with one or more PII controllers.
@@ -449,7 +449,7 @@ requirements:
       controller runs their own Pryv deployment.
 
   - ref: B.8.2.1
-    title: B.8.2.1 — Customer agreement
+    title: B.8.2.1, Customer agreement
     text: |
       Customer agreement between processor and PII controller shall
       address the processor's processing of PII consistent with
@@ -461,7 +461,7 @@ requirements:
       Customer agreement = the DPA. Contractual, no software role.
 
   - ref: B.8.3.1
-    title: B.8.3.1 — Obligations to PII principals
+    title: B.8.3.1, Obligations to PII principals
     text: |
       Processor shall provide the customer (PII controller) with the
       means to comply with its obligations to PII principals (right of
@@ -480,7 +480,7 @@ requirements:
       processor (Pryv operator) doesn't intermediate.
 
   - ref: B.8.4
-    title: B.8.4 — Privacy by design and by default
+    title: B.8.4, Privacy by design and by default
     text: |
       Processor shall ensure privacy + data-protection design + default
       principles are implemented in processing of PII.
@@ -499,7 +499,7 @@ requirements:
       detailed primitive mapping.
 
   - ref: B.8.5.2
-    title: B.8.5.2 — Records of PII disclosures to third parties
+    title: B.8.5.2, Records of PII disclosures to third parties
     text: |
       Processor shall record disclosures of PII to third parties,
       including what PII has been disclosed, to whom, and at what time.

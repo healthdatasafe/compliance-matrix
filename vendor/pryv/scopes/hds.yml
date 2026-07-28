@@ -3,7 +3,7 @@ title: Hébergement de Données de Santé (Health Data Hosting Certification)
 short: HDS
 type: hosting-cert
 jurisdiction: France
-version: HDS Référentiel — current consolidated edition
+version: HDS Référentiel, current consolidated edition
 version_date: "2018-06-19"
 canonical_url: https://esante.gouv.fr/produits-services/hds
 matrix_language: EN
@@ -12,17 +12,17 @@ curated: false
 changelog:
   - date: "2026-05-19"
     change: |
-      initial draft — first hosting-cert type scope. 10 rows covering
+      initial draft, first hosting-cert type scope. 10 rows covering
       the 6 HDS activities + 3 cross-cutting concerns (data residency,
-      ISO references baseline, HDS-vs-GDPR nuance). HDS is operator-side
-      — the Pryv operator running infrastructure pursues the
+      ISO references baseline, HDS-vs-GDPR nuance). HDS is operator-side,
+      the Pryv operator running infrastructure pursues the
       certification; the device manufacturer and the data controller
       (implementer) have separate compliance burdens.
 
 requirements:
 
   - ref: Activity.1
-    title: Activity 1 — Provision of physical infrastructure
+    title: Activity 1, Provision of physical infrastructure
     text: |
       Provision of physical computing infrastructure (servers, storage,
       network equipment) used to host health data.
@@ -31,12 +31,12 @@ requirements:
     overview: |
       Physical infrastructure provisioning is the data-centre operator's
       certification scope, not Pryv's. Pryv-as-software doesn't ship a
-      data centre — when an HDS-certified hoster deploys Pryv on their
+      data centre, when an HDS-certified hoster deploys Pryv on their
       certified infrastructure, this activity is covered by their cert,
       not by anything Pryv contributes.
 
   - ref: Activity.2
-    title: Activity 2 — Provision of virtual infrastructure
+    title: Activity 2, Provision of virtual infrastructure
     text: |
       Provision of virtual computing infrastructure (VMs, container
       hosts, virtual storage) used to host health data.
@@ -49,7 +49,7 @@ requirements:
       hoster's (typically a CSP that itself holds HDS Activity 2).
 
   - ref: Activity.3
-    title: Activity 3 — Platform-as-a-service for health data
+    title: Activity 3, Platform-as-a-service for health data
     text: |
       Provision of a software platform on which health-data applications
       are deployed and operated (runtime, libraries, middleware,
@@ -70,7 +70,7 @@ requirements:
       operator still does the operational + organizational work the
       HDS audit checks (governance, incident response, ISMS).
     detail: |
-      The HDS audit verifies the platform's actual operational state —
+      The HDS audit verifies the platform's actual operational state,
       audit logs available, vulnerability management, change control,
       etc. Pryv-side artefacts feeding the audit: CHANGELOG-v2 +
       CHANGELOG-v2-back (change control evidence); audit-log per-user
@@ -79,7 +79,7 @@ requirements:
       (configuration management evidence).
 
   - ref: Activity.4
-    title: Activity 4 — Sysadmin and operations of the information system
+    title: Activity 4, Sysadmin and operations of the information system
     text: |
       Administration of the platform: patching, configuration, change
       management, incident response, operational monitoring.
@@ -92,7 +92,7 @@ requirements:
       operator's ITSM practices (typically ISO 20000-1 aligned).
 
   - ref: Activity.5
-    title: Activity 5 — Outsourced backup
+    title: Activity 5, Outsourced backup
     text: |
       Outsourced backup of health data: backup planning, execution,
       retention, restoration.
@@ -107,7 +107,7 @@ requirements:
       Multi-core cluster topology gives in-line Raft replication of
       platform data. The backup tool can **encrypt its output on demand**
       so plaintext PHI never touches the destination disk: a recipient
-      public key (RSA-OAEP-wrapped per-backup data key — the backup host
+      public key (RSA-OAEP-wrapped per-backup data key, the backup host
       holds no decryption secret) or a passphrase, with per-file
       authenticated AES-256-GCM. This covers backup-archive at-rest
       encryption directly; the operator may still layer
@@ -117,7 +117,7 @@ requirements:
       backup-generation, payload-encryption, and restoration primitives.
 
   - ref: Activity.6
-    title: Activity 6 — Archival of health data
+    title: Activity 6, Archival of health data
     text: |
       Long-term archival of health data with verifiable integrity over
       the archival period (typically 20+ years for medical records).
@@ -131,13 +131,13 @@ requirements:
       retained `class/format` semantics (data-types schemas) and
       per-event version history. For long-term archival, the operator
       typically combines Pryv's event store with an external archival
-      system (WORM storage, blockchain-anchored hashes etc.) — Pryv
+      system (WORM storage, blockchain-anchored hashes etc.), Pryv
       is not an archival product itself but feeds it. Integrity
       verification across long timescales is a separate certified
       archival service.
 
   - ref: cross.data-residency
-    title: Cross-cutting — data residency in France
+    title: Cross-cutting, data residency in France
     text: |
       Health data subject to HDS must remain on infrastructure located
       in France (or in a country offering equivalent protection per
@@ -166,7 +166,7 @@ requirements:
           you can prove residency in audit responses.
 
   - ref: cross.iso-references
-    title: Cross-cutting — ISO 27001 + 27018 + 20000-1 baseline
+    title: Cross-cutting, ISO 27001 + 27018 + 20000-1 baseline
     text: |
       HDS certification requires the hoster to demonstrate alignment
       with ISO/IEC 27001 (ISMS), ISO/IEC 27018 (PII in public clouds),
@@ -191,13 +191,13 @@ requirements:
       rows below name the specific A.5/A.8 controls.
     detail: |
       The detailed control-by-control mapping will land in the
-      `iso-27001` scope (Phase D continuation). HDS audit pack
+      `iso-27001` scope. HDS audit pack
       references the ISO 27001 certificate(s) the hoster holds; the
       Pryv-side contribution is the same set of primitive evidence
       either way.
 
   - ref: cross.hds-vs-gdpr
-    title: Cross-cutting — HDS ≠ GDPR compliance
+    title: Cross-cutting, HDS ≠ GDPR compliance
     text: |
       HDS certifies the hosting infrastructure; GDPR compliance for
       consent, data-subject rights, breach notification, lawful basis,
@@ -219,11 +219,11 @@ requirements:
     detail: |
       Reference content for this point: Pryv published
       "pourquoi-la-certification-hds-ne-garantit-pas-votre-conformite-au-rgpd"
-      in `www`. The matrix expresses the same point structurally —
+      in `www`. The matrix expresses the same point structurally,
       separate scopes, no scope is the other's proxy.
 
   - ref: cross.subcontracting
-    title: Cross-cutting — subcontracting chain
+    title: Cross-cutting, subcontracting chain
     text: |
       Where the HDS-certified hoster subcontracts any HDS activity,
       the subcontractor must also be HDS-certified for that activity
@@ -233,15 +233,15 @@ requirements:
     draft: true
     overview: |
       Subcontracting + certification chain are organizational. Pryv as
-      a software supplier sits below the hoster's certification scope
-      — the hoster's contract with the Pryv operator (often the same
+      a software supplier sits below the hoster's certification scope,
+      the hoster's contract with the Pryv operator (often the same
       entity) declares the scope, but Pryv-the-software isn't itself
       certified.
 
-  # ─── Activity 3 sub-controls — Pryv-side mapping to ISO 27001 ───
+  # ─── Activity 3 sub-controls, Pryv-side mapping to ISO 27001 ───
 
   - ref: Activity.3.access
-    title: Activity 3 — Access control (sub-control)
+    title: Activity 3, Access control (sub-control)
     text: |
       Logical access to ePHI shall be restricted to authorized users
       via authentication + authorization controls; access shall be
@@ -260,7 +260,7 @@ requirements:
       HIPAA-Security for the parallel control rows.
 
   - ref: Activity.3.audit
-    title: Activity 3 — Audit logging (sub-control)
+    title: Activity 3, Audit logging (sub-control)
     text: |
       All access to ePHI shall be logged with sufficient detail for
       forensic investigation; logs shall be retained per the
@@ -278,7 +278,7 @@ requirements:
       review cadence are operator policy per the HDS audit pack.
 
   - ref: Activity.3.cryptography
-    title: Activity 3 — Use of cryptography (sub-control)
+    title: Activity 3, Use of cryptography (sub-control)
     text: |
       ePHI in transit shall be protected via TLS; cryptographic key
       management shall follow the operator's documented procedures.

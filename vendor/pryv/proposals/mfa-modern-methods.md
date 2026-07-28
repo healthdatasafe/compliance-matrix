@@ -1,4 +1,4 @@
-# Proposal: MFA — document the extension point + ship reference plugins
+# Proposal: MFA: document the extension point + ship reference plugins
 
 **Status:** future. Mirror of the macroPryv backlog item
 `_plans/XXX-Backlog/COMPLIANCE-MFA-MODERN-METHODS.md`, in the perspective of
@@ -10,12 +10,12 @@ auth-modernisation plan).
 The matrix's `Implemented | High` rows on authentication strength
 (`hipaa-security.164.312(d)`, `iso-27001.A.8.5`, `diga.A1.2.4`,
 `pipeda.Principle.4.7` multi-aspect) are **defensible against regulator
-text** — HIPAA, ISO, DiGA don't prescribe specific MFA factors. The
+text**, HIPAA, ISO, DiGA don't prescribe specific MFA factors. The
 shipped code base supports MFA via a pluggable abstraction:
 
-- `components/business/src/mfa/Service.ts` — abstract base class with
+- `components/business/src/mfa/Service.ts`: abstract base class with
   `challenge()` and `verify()` methods that subclasses override.
-- `ChallengeVerifyService` + `SingleService` — two shipped subclasses
+- `ChallengeVerifyService` + `SingleService`, two shipped subclasses
   targeting HTTP-based external MFA providers (SMS by convention but
   the abstraction is generic).
 - Configuration in `services.mfa` plugs in any HTTP-callable provider
@@ -30,7 +30,7 @@ What's understated:
 - No statement of which NIST AAL the shipped subclasses can achieve
   when configured with which providers.
 - No reference plugin for in-process methods (server-side TOTP,
-  WebAuthn) — those require either a third-party HTTP provider or
+  WebAuthn), those require either a third-party HTTP provider or
   an operator writing a `Service` subclass.
 
 ## Three-step modernisation
@@ -58,7 +58,7 @@ See upstream backlog for the full treatment.
 ## Matrix impact
 
 Today's `Implemented | High` rows on authentication-strength are not
-incorrect — they're under-explained. Adding a one-paragraph caveat
+incorrect, they're under-explained. Adding a one-paragraph caveat
 to the `detail` blocks of:
 
 - `hipaa-security.164.312(d)`

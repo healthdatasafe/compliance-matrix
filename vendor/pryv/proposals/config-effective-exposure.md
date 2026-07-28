@@ -1,6 +1,6 @@
 # Read-only effective-configuration endpoint
 
-**Proposal mirror of**: no standalone backlog file — the work is absorbed by the
+**Proposal mirror of**: no standalone backlog file, the work is absorbed by the
 operator bootstrap + admin-panel effort (macroPryv-side plan), which owns the
 delivery. This mirror exists so the affected rows can carry `planned:` chips.
 **Filed during:** DPIA Section (d) safeguards-inventory gap-probing (2026-05-21).

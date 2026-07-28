@@ -1,5 +1,5 @@
 id: iso-13485
-title: ISO 13485 — Medical devices — Quality Management Systems — Requirements for regulatory purposes
+title: ISO 13485, Medical devices, Quality Management Systems, Requirements for regulatory purposes
 short: ISO 13485
 type: standard
 jurisdiction: International (ISO)
@@ -12,50 +12,50 @@ curated: true
 changelog:
   - date: "2026-05-19"
     change: |
-      initial draft — first curated scope. ISO 13485 is an organizational
+      initial draft, first curated scope. ISO 13485 is an organizational
       QMS standard; only clauses where Pryv-the-software contributes
       directly are authored. The bulk of the standard (organizational
       processes, design controls, sterilization, production process
       control, etc.) is enumerated in excluded_items[] with one-line
-      rationale per excluded clause — audit-traceability preserved.
+      rationale per excluded clause, audit-traceability preserved.
 
 excluded_items:
   - ref: "4.1.1"
     reason: |
-      Top-management QMS scope + boundary definition — organizational.
+      Top-management QMS scope + boundary definition, organizational.
       Pryv has no software role at the scope-setting layer.
   - ref: "4.1.3"
     reason: |
       QMS process documentation requirements (sequence, interactions,
-      criteria, methods) — organizational, drafted by the device
+      criteria, methods), organizational, drafted by the device
       manufacturer.
   - ref: "5"
     reason: |
       Management responsibility (commitment, customer focus, quality
       policy, planning, responsibility + authority, communication,
-      management review) — entirely organizational.
+      management review), entirely organizational.
   - ref: "6"
     reason: |
       Resource management (provision, human resources, infrastructure,
-      work environment, contamination control) — physical / HR /
+      work environment, contamination control), physical / HR /
       facility scope, outside Pryv's software boundary.
   - ref: "7.4"
     reason: |
-      Purchasing process (controls on suppliers + purchased product) —
+      Purchasing process (controls on suppliers + purchased product),
       organizational. Pryv may be a purchased component but the
       manufacturer's purchasing controls are not Pryv-side.
   - ref: "7.5"
     reason: |
       Production and service provision (control, cleanliness, installation
       activities, servicing, particular requirements for sterile devices,
-      labelling, etc.) — physical / process scope.
+      labelling, etc.), physical / process scope.
   - ref: "8.2.6"
     reason: |
       Monitoring and measurement of product (release activities, identity
-      check, status, records) — physical inspection scope.
+      check, status, records), physical inspection scope.
   - ref: "8.3"
     reason: |
-      Control of nonconforming product — process scope; Pryv's audit log
+      Control of nonconforming product, process scope; Pryv's audit log
       may document data anomalies but the nonconforming-product control
       itself is the manufacturer's CAPA process.
 
@@ -87,7 +87,7 @@ requirements:
     title: Control of documents
     qms_docs: [qms/pryv/02-procedures/document-control.md]
     text: |
-      Documents required by the QMS shall be controlled — review,
+      Documents required by the QMS shall be controlled, review,
       approval, identification of changes, current revision status,
       legibility, identification of external-origin documents,
       prevention of obsolete-document misuse.
@@ -139,7 +139,7 @@ requirements:
     overview: |
       When the device under
       development uses Pryv as backend, the verification activity
-      ("output meets input") generates verification records — these
+      ("output meets input") generates verification records, these
       can be stored as Pryv events on a designated
       `design-verification/*` stream with attachments for reports.
       Audit log provides the timestamp + actor evidence the record
@@ -160,7 +160,7 @@ requirements:
     derives_from: [mdr.Art.61]
     overview: |
       Same Pryv contribution as
-      7.3.7 — validation records stored as events with attachments;
+      7.3.7, validation records stored as events with attachments;
       audit chain proves authenticity over time. Clinical validation
       (the typical method for medical-device design validation)
       cross-references the MDR Art. 61 clinical-evaluation row.

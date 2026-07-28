@@ -1,4 +1,4 @@
-# CMC + `consent/*` event types — what the primary consent record is
+# CMC + `consent/*` event types: what the primary consent record is
 
 Source-of-truth for matrix claims about how Pryv carries consent across
 accounts. Findings from reading `open-pryv.io/components/cmc/` and
@@ -65,17 +65,17 @@ that established it**.
 
 ## What the access carries (as consent record)
 
-Per [`access-versioning.md`](./access-versioning.md) — fully snapshotted on
+Per [`access-versioning.md`](./access-versioning.md), fully snapshotted on
 every update, including `clientData`. So:
 
 - `permissions` = legally enforced scope at each version
 - `clientData` = relationship metadata (counterparty, app, originating
   `consent/request-cmc` event id, optionally a copy of the consent text
-  shown — by convention)
+  shown, by convention)
 - `serial` chain = full audit of scope changes
 
 `accesses.update` via composite-id (per `access-versioning.md`) is what
-`consent/scope-update-cmc` triggers under the hood — the access's history
+`consent/scope-update-cmc` triggers under the hood, the access's history
 chain mirrors the negotiation history.
 
 ## Same-account / non-cross-account consent
@@ -98,20 +98,20 @@ consent texts to the authorization UI inside a signed state parameter
 permissions to downgrade the grant; on accept, the kept subset
 (`grantedPermissions`) is validated ⊆ the signed offer and Pryv mints the app
 access from it (`components/oauth2/src/routes/accept.ts`). The **durable
-consent record is the same primitive as CMC** — a cross-account data-grant
+consent record is the same primitive as CMC**, a cross-account data-grant
 access, versioned and revocable (revoking it collapses the app's refresh
-chain) — so demonstrability and withdrawability rest on the access + its
+chain), so demonstrability and withdrawability rest on the access + its
 history exactly as for the flows above.
 
 Note on evidence surface: audit-event emission for the OAuth2 grant paths is
 defined (`components/oauth2/src/audit.ts` names the event catalogue) but **not
-yet wired** — the helper is a no-op stub. The citable consent evidence today is
+yet wired**, the helper is a no-op stub. The citable consent evidence today is
 therefore the data-grant access + the signed offer material, not an event log.
 
 ## Gates on access-state-mutating consent triggers
 
 CMC's access-state-mutating lifecycle triggers are gated server-side. Two
-distinct gate shapes — chosen per trigger by what's at stake:
+distinct gate shapes, chosen per trigger by what's at stake:
 
 - **`consent/accept-cmc` (mint a new data-grant access)** and
   **`consent/scope-update-cmc` (widen an existing data-grant)** require a
@@ -125,7 +125,7 @@ distinct gate shapes — chosen per trigger by what's at stake:
   carrying stream-write permission, which opened a scope-escalation path
   where an app holding a narrow `:_cmc:apps:<app>:*` permission could
   drive the orchestration to mint an arbitrarily broader data-grant
-  access on the user's account from a colluding requester's offer — without
+  access on the user's account from a colluding requester's offer, without
   a consent UI ever being shown to the user.
 
 - **`consent/revoke-cmc` (delete a data-grant access)** uses the standard
@@ -137,12 +137,12 @@ distinct gate shapes — chosen per trigger by what's at stake:
   - the relationship's data-grant access can self-revoke (default
     `selfRevoke: allow`), so an app holding only the relationship-access
     can terminate the relationship without bouncing through Pryv's auth
-    pages — matching the natural access-management model;
+    pages, matching the natural access-management model;
   - app tokens that created the target can revoke it;
   - anything else fails with
     `error.data.id === 'cmc-revoke-forbidden'`.
 
-  Revoke is a contraction, not an escalation — the access being deleted
+  Revoke is a contraction, not an escalation, the access being deleted
   bounds the impact, so user-presence at the moment of revocation is not
   needed for the security property to hold. Operators who set
   `selfRevoke: forbidden` on counterparty accesses at mint time keep the
@@ -159,46 +159,46 @@ trigger is written with the fresh personal token, and the result is
 returned to the calling app. The authoritative consent UI lives on
 `app-web-auth3` (the pages render the offer / scope-change details
 client-side), so a compromised or malicious app cannot fake what the user
-is consenting to. **Revoke needs no hand-off** — the access-permission
+is consenting to. **Revoke needs no hand-off**, the access-permission
 gate accepts the relationship's own data-grant access directly.
 
 ## Consequences for compliance claims (consent-related)
 
-- **GDPR Art.7 (Conditions for consent — demonstrability + withdrawability)**
+- **GDPR Art.7 (Conditions for consent, demonstrability + withdrawability)**
   - Demonstrability: `accesses.get` (with `includeHistory=true`) returns the
     full version chain; the original `consent/request-cmc` event preserves
     what was asked.
   - **User-presence at the moment of consent**: the personal-token gate on
     `consent/accept-cmc` proves the user was signed in when the trigger was
-    written — not merely that an app authorized for stream-write performed
+    written, not merely that an app authorized for stream-write performed
     the write. This strengthens the demonstrability claim: the access pair
     + history chain is backed by an auditable user-authentication event.
   - Withdrawability: `accesses.delete` (full revoke) or `accesses.update`
-    (scope-down) — both versioned. For cross-account: `consent/revoke-cmc`
+    (scope-down), both versioned. For cross-account: `consent/revoke-cmc`
     event triggers the access revocation transactionally on both sides.
-    Revoke is access-permission-gated (`AccessLogic.canDeleteAccess` —
+    Revoke is access-permission-gated (`AccessLogic.canDeleteAccess`,
     honours `selfRevoke`), so the relationship's own data-grant access
-    can self-revoke without an auth-page bounce — preserving the
+    can self-revoke without an auth-page bounce, preserving the
     practical withdrawability guarantee while keeping the security
     property (the access being deleted bounds the impact).
   - **Coverage: `implemented`** for cross-account flows; **`implemented`**
     for same-account flows.
 
-- **GDPR Art.30 (Records of processing)** — the access pair + its history
+- **GDPR Art.30 (Records of processing)**: the access pair + its history
   + the originating `consent/request-cmc` event jointly IS the per-purpose
   processing record. Coverage: `implemented` (where CMC is in use) or
   `facilitated` (where implementer must carry consent text in clientData
   themselves).
 
-- **GDPR Art.7(3) (Right to withdraw)** — `implemented` via
+- **GDPR Art.7(3) (Right to withdraw)**: `implemented` via
   `accesses.delete` + (cross-account) `consent/revoke-cmc`; CMC bidirectionality
   ensures the counterparty is notified.
 
-- **HIPAA-Privacy §164.508 (Authorizations)** — same primitive maps;
+- **HIPAA-Privacy §164.508 (Authorizations)**: same primitive maps;
   authorization is an access with the appropriate scope; revocation is
   symmetric.
 
-- **GDPR Art.26 (Joint controllers) — does NOT apply to CMC by
+- **GDPR Art.26 (Joint controllers), does NOT apply to CMC by
   default** (Q18 finding, 2026-05-20). CMC requires subject
   validation: User A's `consent/accept-cmc` event is what
   authorises any cross-account flow to User B's operator. Each
@@ -208,7 +208,7 @@ gate accepts the relationship's own data-grant access directly.
   controller-to-controller agreement. This is controller-to-
   controller transmission *via subject consent* (Art.20(2)
   lineage). Real Art.26 only fires when two operators decide on
-  joint processing independently of subject choices — outside
+  joint processing independently of subject choices, outside
   the CMC primitive.
 
 ## Distinction the matrix must surface
@@ -220,19 +220,19 @@ gate accepts the relationship's own data-grant access directly.
   responsible for writing the `consent/request-cmc` event with the full
   consent text in `.request.consent`. When NOT using CMC, the implementer
   must carry the consent text in `clientData` themselves (or in a custom
-  event-type) — the matrix's `documented` / `facilitated` distinction
+  event-type), the matrix's `documented` / `facilitated` distinction
   depends on which path they take.
 
 ## Code references (current master)
 
-- `components/cmc/README.md` — canonical design document. CMC plugin is on
+- `components/cmc/README.md`: canonical design document. CMC plugin is on
   master in `2.0.0-pre.3`.
-- `components/cmc/IMPLEMENTERS-GUIDE.md` — customer-facing wire shape.
-- `components/cmc/INTERNALS.md` — plugin-side flow diagrams.
-- `components/cmc/src/accessesUpdateHook.ts` — post-hook that fires when
+- `components/cmc/IMPLEMENTERS-GUIDE.md`: customer-facing wire shape.
+- `components/cmc/INTERNALS.md`: plugin-side flow diagrams.
+- `components/cmc/src/accessesUpdateHook.ts`: post-hook that fires when
   `accesses.update` runs (links scope changes to outbound notification).
-- `data-types/src/consent.json` — the 8 `consent/*` formats.
-- `data-types/dist/event-types.json` — built artefact consumed at runtime
+- `data-types/src/consent.json`: the 8 `consent/*` formats.
+- `data-types/dist/event-types.json`: built artefact consumed at runtime
   via `service.eventTypes` config.
 
 ## Reviewer follow-ups
@@ -240,5 +240,5 @@ gate accepts the relationship's own data-grant access directly.
 - Find + cite CMC test codes (`components/cmc/test/`).
 - Verify CMC plugin loading mechanism: is it shipped enabled by default in
   `2.0.0-pre.3`, or is operator-opt-in required?
-- Confirm `clientData` convention for non-CMC consent capture — is there a
+- Confirm `clientData` convention for non-CMC consent capture, is there a
   documented schema, or is it implementer-defined?

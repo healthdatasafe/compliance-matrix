@@ -1,4 +1,4 @@
-# Webhooks — signal-only by design
+# Webhooks: signal-only by design
 
 A note on Pryv's webhook semantics, recorded during the
 implementer-perspective gap-probing session (Q7, 2026-05-19) because
@@ -9,7 +9,7 @@ implications worth surfacing.
 
 Pryv's `webhooks.*` API methods let an access subscribe to a
 notification URL. When something changes for the subscribing
-access — new event, modified stream, access mutation, etc. — Pryv
+access, new event, modified stream, access mutation, etc., Pryv
 POSTs a small notification to the URL.
 
 **The notification body does not contain the changed data.** It
@@ -18,14 +18,14 @@ access you subscribed for; come fetch via authenticated GET if you
 want the new state".
 
 To consume the change, the receiver makes an authenticated GET
-back to Pryv using the access token it already holds — exercising
+back to Pryv using the access token it already holds, exercising
 the same `events.get` / `streams.get` paths a polling client would
 use.
 
 ## Why this design
 
-The implementer would expect — based on Stripe / GitHub / Slack
-webhook conventions — that Pryv would POST the event payload to
+The implementer would expect, based on Stripe / GitHub / Slack
+webhook conventions, that Pryv would POST the event payload to
 the receiver, with HMAC-SHA256 signing + delivery id + replay-
 window timestamping to make the push surface tamper-resistant
 and replay-resistant.
@@ -68,26 +68,26 @@ The following still apply:
   caps mitigate. This is an operator concern; Pryv-side defaults
   should be sane.
 - **GET-side authentication.** The receiver's GET back to Pryv
-  uses the access token + permission chain — the same path used
+  uses the access token + permission chain, the same path used
   for any other read. All the GDPR Art.15 / §164.524 / §1798.100
   protections apply.
 
-## Scoped delivery — narrows the signal even further (2026-06)
+## Scoped delivery: narrows the signal even further (2026-06)
 
 Webhooks (and socket.io real-time notifications) can now be filtered to
-**named scopes** — each an `events.get`-shaped query of one resource kind
+**named scopes**: each an `events.get`-shaped query of one resource kind
 (`events` / `streams` / `accesses`). This strengthens the signal-only posture
 on two compliance-relevant axes:
 
 - **Still signal-only, even thinner.** The delivery carries only the **matched
-  scope key names** the subscriber itself chose (e.g. `"chat"`, `"diary"`) — no
+  scope key names** the subscriber itself chose (e.g. `"chat"`, `"diary"`), no
   ids, no content, not even which stream changed. A webhook learns "the slice you
   named X changed", nothing more. The receiver still fetches via the authenticated
   GET path. So every row above holds; the wire payload is now subscriber-opaque
   names rather than a coarse marker.
 - **The change-detection oracle is bounded by permissions.** The one residual
-  concern under "What still matters" — that the *existence* of a signal leaks
-  change-detection on a private account — is narrowed: a scope is bound at
+  concern under "What still matters", that the *existence* of a signal leaks
+  change-detection on a private account, is narrowed: a scope is bound at
   registration to what the subscribing token can read (the same permission +
   recursive stream-expansion `events.get` performs), and an unreadable stream is
   rejected. A scope can therefore never fire for data the token couldn't already
@@ -125,16 +125,16 @@ log path; no tokens go through the log path. Logging hygiene
 expectations on the receiver shrink accordingly.
 
 Under push-with-content webhooks the receiver's log would have
-captured the full event payload — a real data-leak surface that
+captured the full event payload, a real data-leak surface that
 needs the receiver to discriminate "log this header / don't log
 this body" carefully.
 
 ## Related primitives
 
-- `webhooks` — see `docs/pryv-primitives.md`.
-- `access` — the GET path the receiver uses to fetch the changed
+- `webhooks`: see `docs/pryv-primitives.md`.
+- `access`: the GET path the receiver uses to fetch the changed
   data.
-- `permissions` — scope the receiver's GET to only what the access
+- `permissions`: scope the receiver's GET to only what the access
   token allows.
-- `audit` — both the signal-send + the receiver's GET show up in
+- `audit`: both the signal-send + the receiver's GET show up in
   the audit log (the latter under the receiver's access id).

@@ -10,7 +10,7 @@ Pryv-the-software's posture is unusually clean here: **zero
 mandatory subprocessors**. Every external service the platform can
 talk to is opt-in through configuration. The default deployment
 talking to "the operator's cloud provider only" (which Pryv treats
-as opaque — operator's choice) has no third-party subprocessors
+as opaque, operator's choice) has no third-party subprocessors
 from the platform's perspective.
 
 ## Optional integrations enumerated
@@ -19,7 +19,7 @@ Each is a real subprocessor relationship under Art.28(4) when
 activated. The operator names them in their DPA register +
 discloses them per Art.13(1)(f) where recipients exist.
 
-### Let's Encrypt — TLS certificate issuance
+### Let's Encrypt: TLS certificate issuance
 
 - **Config gate**: `letsEncrypt.enabled: true` (default `false`).
   Operators opting in get automated ACME issuance, renewal,
@@ -27,10 +27,10 @@ discloses them per Art.13(1)(f) where recipients exist.
 - **What flows out**: the deployment's hostnames (for the ACME
   DNS-01 / HTTP-01 challenge). **No user personal data.**
 - **Posture**: Let's Encrypt ships as a **dev-platform
-  facilitator** — the easy on-ramp for `*.pryv.me`-style
+  facilitator**, the easy on-ramp for `*.pryv.me`-style
   development clusters where the certificate-issuance friction
   would otherwise dominate setup. **Production deployments
-  should treat CA choice as an operator decision** — keep LE
+  should treat CA choice as an operator decision**, keep LE
   if its compliance posture matches yours, or swap to a
   commercial CA, internal CA, or air-gapped issuance pipeline.
   The platform's ACME orchestrator (`AcmeOrchestrator`) reads
@@ -41,13 +41,13 @@ discloses them per Art.13(1)(f) where recipients exist.
 - **Code anchor**: `components/business/src/acme/` module
   (8 files); `default-config.yml` `letsEncrypt:` block.
 
-### SMTP — transactional mail (per-core configurable)
+### SMTP: transactional mail (per-core configurable)
 
 - **Config gate**: `services.email.smtp.*` (host, port, auth,
   from). Built into open-pryv.io v2 as an in-process module
   (the former standalone service-mail component is now part of
   the unified binary).
-- **What flows out**: rendered templated bodies — typically
+- **What flows out**: rendered templated bodies, typically
   user's email address + name + a one-time token (password
   reset, account verification, MFA setup mail). The body
   template is operator-owned (manageable via the planned admin
@@ -55,7 +55,7 @@ discloses them per Art.13(1)(f) where recipients exist.
   relay sees.
 - **Posture**: **operator must configure**. No default SMTP
   endpoint ships. The operator's relay choice IS the
-  subprocessor relationship — naming it in the DPA + Art.30
+  subprocessor relationship, naming it in the DPA + Art.30
   register is on them.
 - **Pryv recommends per-core SMTP configuration** for
   residency-sensitive deployments: the `services.email.smtp.*`
@@ -63,12 +63,12 @@ discloses them per Art.13(1)(f) where recipients exist.
   through an EU SMTP relay independently of a US core's relay.
   Use this when "EU subjects' password-reset emails must not
   touch a US-jurisdiction relay" is a hard requirement. Same
-  pattern applies to the SMS endpoints — the
+  pattern applies to the SMS endpoints, the
   `services.mfa.sms.endpoints.*` config block is per-core too.
 - **Code anchor**: `components/business/src/mail/` module;
   `default-config.yml` `services.email:` block.
 
-### SMS endpoints — MFA delivery
+### SMS endpoints: MFA delivery
 
 - **Config gate**: `services.mfa.sms.endpoints.*` (URL,
   bearer-token-style auth, per-region routing). Built into
@@ -120,7 +120,7 @@ discloses them per Art.13(1)(f) where recipients exist.
   CLI). Default: disabled, and enabled-without-an-endpoint emits
   nothing. Local `observability.enabled: false` always overrides
   PlatformDB, which is the operator's emergency kill switch.
-- **What flows out — the complete list.** Metrics: per-API-method
+- **What flows out, the complete list.** Metrics: per-API-method
   call counts, duration histograms and error counts. Their only
   labels are `method.id` (an identifier from the platform's own API
   method registry, re-checked against that registry at emit time),
@@ -170,7 +170,7 @@ discloses them per Art.13(1)(f) where recipients exist.
   is a property of traffic volume, not of the schema, and the
   operator reduces it by widening the reporting interval. A
   reviewer should read the claim as *anonymous by construction,
-  with a residual correlation risk at very low traffic volumes* —
+  with a residual correlation risk at very low traffic volumes*,
   we do not assert an unqualified guarantee.
   Where the residual applies, treat the telemetry as personal data
   and keep the processor relationship in scope; pointing the
@@ -198,7 +198,7 @@ discloses them per Art.13(1)(f) where recipients exist.
 - **Config gate**: `service.eventTypes` URL (default points at
   `https://raw.github.com/pryv/data-types/master/dist/event-
   types.json`).
-- **What flows OUT**: nothing — this is a **read-only fetch of
+- **What flows OUT**: nothing; this is a **read-only fetch of
   schemas INTO the core**. The catalogue payload is JSON Schema
   fragments, not personal data.
 - **What flows IN**: the deployed catalogue from the URL the
@@ -207,7 +207,7 @@ discloses them per Art.13(1)(f) where recipients exist.
   infra, they break the dependency on the upstream
   `pryv/data-types` repo entirely. Production deployments
   concerned about supply-chain coupling typically self-host.
-- **Posture**: **fetch is dependency, not subprocessor** — no
+- **Posture**: **fetch is dependency, not subprocessor**, no
   personal data crosses the boundary. Still worth disclosing in
   the operator's DPIA / Art.30 if upstream-pinning matters to
   the audit narrative.
@@ -223,11 +223,11 @@ that constrain what data crosses the boundary:
 ### 1. Audit-by-construction (Q9)
 
 The audit log captures method + access reference + URL query +
-integrity hash — **never the request body**, with `auth=` query
+integrity hash, **never the request body**, with `auth=` query
 parameters stripped. So when audit ships to a tiered audit store
 (per the Q16 custom-datastore pattern), the destination sees
 metadata, not content. Nuance: content-query search values sent
-over HTTP GET are part of the URL query and travel with it — see
+over HTTP GET are part of the URL query and travel with it, see
 `content-query-audit-semantics.md`.
 
 Code anchor: `components/audit/src/Audit.ts:151-166`.
@@ -244,10 +244,10 @@ mechanisms:
   (line 289-290).
 - **String-value regex strip** (`hideSensitiveValues`,
   line 301-312):
-  - `auth=c[a-z0-9-]*` → `auth=(hidden)` — strips personal-token
+  - `auth=c[a-z0-9-]*` → `auth=(hidden)`, strips personal-token
     wire shape.
   - `"(password|passwordHash|newPassword)":"..."` →
-    `$1=(hidden)` — strips password values in serialised JSON.
+    `$1=(hidden)`: strips password values in serialised JSON.
 
 Applied at the Logger class layer (line 201-216): every
 `logger.log()` call runs `message` through `hideSensitiveValues`
@@ -267,7 +267,7 @@ test.js:533` asserts the `(hidden password)` substitution on
 
 **Honest scope**: `inspectAndHide` redacts **credentials**, not
 PII broadly. Email addresses, usernames, phone numbers, names,
-event payloads — these can still appear in log lines if a
+event payloads, these can still appear in log lines if a
 caller explicitly logs them. The guarantee is "no credentials
 leak via logs", not "no PII whatsoever leaks via logs". The
 operator's log-aggregator destination + their broader PII-in-
@@ -327,28 +327,28 @@ consume it directly.
   subprocessor framing + per-integration enumeration + the
   LE-as-dev-facilitator distinction + the three data-flow
   guarantees + the future inventory pipeline.
-- `gdpr.Art.30` row stays as-is — the existing register-field
+- `gdpr.Art.30` row stays as-is, the existing register-field
   mapping table is already strong; the subprocessor question
   is sub-Art.30(1)(f) "categories of recipients" and the
   context note covers it.
 - `pryv-primitives.md` `observability-provider` entry covers
   the PII filter detail; this note cross-references rather
   than duplicates.
-- No backlog filed (the future improvement — machine-readable
-  subprocessor inventory — is absorbed by the planned
+- No backlog filed (the future improvement, machine-readable
+  subprocessor inventory, is absorbed by the planned
   bootstrap-admin-panel work).
-- No `planned:` chips — Q20's chips against
+- No `planned:` chips, Q20's chips against
   `CONFIG-EFFECTIVE-EXPOSURE` already capture the future
   matrix updates.
 
 ## See also
 
-- `docs/pryv-primitives.md` — `letsEncrypt-integration`,
+- `docs/pryv-primitives.md`: `letsEncrypt-integration`,
   `observability-provider`, `audit-event-stream` primitive
   entries.
-- `context/data-masking-projection-vs-transformation.md` —
+- `context/data-masking-projection-vs-transformation.md`,
   audit-by-construction (Q9 finding cross-referenced from
   layer 1 above).
-- `compliance-matrix/UPDATE-TRIGGERS.md` — `CONFIG-EFFECTIVE-
+- `compliance-matrix/UPDATE-TRIGGERS.md`: `CONFIG-EFFECTIVE-
   EXPOSURE` Section A entry (future subprocessor inventory
   pipeline).

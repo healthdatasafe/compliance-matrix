@@ -11,7 +11,7 @@ curated: false
 
 changelog:
   - date: "2026-05-19"
-    change: initial draft — article-level mapping. Many articles parallel GDPR; derives_from gdpr.Art.X used where the Swiss provision tracks the EU regime, with overrides where Swiss specifics diverge (Art. 24 breach timeline, Art. 5 broader sensitive-data definition, Art. 22 DPIA numbering).
+    change: initial draft, article-level mapping. Many articles parallel GDPR; derives_from gdpr.Art.X used where the Swiss provision tracks the EU regime, with overrides where Swiss specifics diverge (Art. 24 breach timeline, Art. 5 broader sensitive-data definition, Art. 22 DPIA numbering).
 
 requirements:
 
@@ -20,7 +20,7 @@ requirements:
     text: |
       Defines key terms, including personal data, sensitive personal data,
       processing, controller, processor. Sensitive personal data under
-      revFADP is broader than GDPR Art. 9 — includes social-assistance
+      revFADP is broader than GDPR Art. 9, includes social-assistance
       measures and administrative or criminal proceedings + sanctions.
     coverage: facilitated
     pryv_effort_saved: medium
@@ -42,7 +42,7 @@ requirements:
       data category (e.g., `health/`, `social-assistance/`,
       `criminal-record/`), and grant accesses with `permissions[]`
       restricted to the smallest necessary subtree. Sensitive-data
-      classification of a category is a written editorial decision —
+      classification of a category is a written editorial decision,
       Pryv carries the classification but doesn't assign it.
 
   - ref: Art.6
@@ -89,7 +89,7 @@ requirements:
     overview: |
       Pryv's architecture is
       designed to satisfy Art. 7's "from planning through
-      implementation" directive — per-user storage isolation, stream-
+      implementation" directive, per-user storage isolation, stream-
       scoped permissions, separate personal/app/shared access types,
       system streams for privileged data, audit-by-default. What
       stays on the implementer is the per-deployment default
@@ -142,7 +142,7 @@ requirements:
     detail: |
       revFADP Art. 19 unifies the GDPR Art. 13 (direct collection) and
       Art. 14 (indirect collection) into a single information duty.
-      The Pryv artefact set is the same — `access.clientData` +
+      The Pryv artefact set is the same, `access.clientData` +
       provenance metadata on event.clientData when data didn't come
       from the subject directly.
 
@@ -199,23 +199,18 @@ requirements:
       subject only when necessary for their protection or upon FDPIC
       request.
     coverage: facilitated
-    pryv_effort_saved: medium
+    pryv_effort_saved: high
     facilitation_mode: evidence
     draft: true
     pryv_primitives: [audit, encryption-at-rest-secrets, access]
     derives_from: [gdpr.Art.33]
-    planned:
-      - kind: feature
-        summary: "bin/breach-scope.js inherits from gdpr.Art.33 — same scoping artefact serves the FDPIC 'as soon as possible' regime"
-        proposal: proposals/breach-scope-tool.md
-        tracking_url: https://github.com/orgs/pryv/projects/5?pane=issue&itemId=190467808&issue=pryv%7Copen-pryv.io%7C76
-        impact: medium
     overview: |
       Same Pryv contribution as
-      GDPR Art. 33: audit data + access-version chain let you scope
-      the breach (which subjects, which streams, by which access).
+      GDPR Art. 33: the shipped `bin/breach-scope.js` toolchain +
+      audit data + access-version chain let you scope the breach
+      (which subject, which streams in scope, by which access).
       The Swiss-specific point: revFADP Art. 24 says "as soon as
-      possible" rather than GDPR's 72-hour hard cap — but the FDPIC
+      possible" rather than GDPR's 72-hour hard cap, but the FDPIC
       2025-02-06 guideline still expects "immediately" for high-risk
       breaches. Plan your incident-response cadence to match either
       regime if you face both.
@@ -249,7 +244,7 @@ requirements:
       accesses with history, audit, attachments) in the canonical
       data-types JSON shape. revFADP Art. 25 §2 lists an extended
       minimum-information set (purpose, categories, recipients,
-      retention, source, automated decisions) — same artefacts as
+      retention, source, automated decisions), same artefacts as
       GDPR + a Swiss-specific "source" duty that maps to
       `event.clientData.source` when data wasn't from the subject
       directly.
@@ -298,7 +293,7 @@ requirements:
       vocabulary your implementer uses for the `legal_ground` values.
 
   - ref: Art.32
-    title: Communicating personal data — general rules
+    title: Communicating personal data, general rules
     text: |
       Controller must take appropriate measures to ensure personal data
       remain accurate; subject may request rectification, erasure, or
@@ -357,7 +352,7 @@ requirements:
       records the Art.34 legal basis on the access.
 
   - ref: Art.35
-    title: Disclosure of personal data abroad — particular cases
+    title: Disclosure of personal data abroad, particular cases
     text: |
       Disclosure abroad without adequate protection requires one of
       defined exceptions (subject consent, contract performance,
@@ -413,11 +408,11 @@ requirements:
       depends on whether processing affects CH data subjects, not on
       where infrastructure lives. Pryv's data-residency primitive lets
       you bind subjects to CH hostings explicitly when CH jurisdiction
-      is the chosen regime — see Art. 34 for the cross-border transfer
+      is the chosen regime, see Art. 34 for the cross-border transfer
       side.
 
   - ref: Art.16
-    title: Disclosure of personal data abroad — principles (cross-link)
+    title: Disclosure of personal data abroad, principles (cross-link)
     text: |
       Personal data may be disclosed abroad only where the Federal
       Council has determined adequate protection or appropriate
@@ -446,7 +441,7 @@ requirements:
     pryv_primitives: [access, clientData]
     derives_from: [gdpr.Art.6]
     overview: |
-      Same pattern as GDPR Art. 6 —
+      Same pattern as GDPR Art. 6,
       justification basis is recorded on the access's
       `clientData.legal_basis` (Swiss-specific vocabulary drawn from
       Art. 30 §2 list). Determination of which basis applies is your
@@ -465,7 +460,7 @@ requirements:
       The FDPIC is a regulator; no software role. When an FDPIC
       investigation involves a Pryv deployment, the audit log +
       access-version chain are the evidence layer the controller
-      provides — but interaction with the FDPIC is the controller's
+      provides, but interaction with the FDPIC is the controller's
       legal / regulatory process.
 
   - ref: Art.23
@@ -582,7 +577,7 @@ requirements:
       for auditor questions.
 
   - ref: Art.18
-    title: Information when collecting personal data — specific cases
+    title: Information when collecting personal data, specific cases
     text: |
       In addition to Art. 19 baseline, controller shall provide
       additional information when transferring abroad, when processing

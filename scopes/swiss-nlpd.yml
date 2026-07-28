@@ -359,10 +359,11 @@ requirements:
       planned:
         - kind: platform
           summary: >-
-            The upstream breach-scope tool (automated scoping report from
-            audit + access-version data for a compromised access) is queued;
-            once shipped and deployed by HDS it turns the Commissioner-
-            notification scoping into an emitted artefact.
+            The upstream breach-scope tool SHIPPED 2026-07-28 (#76 closed) —
+            automated scoping report for a compromised access. Becomes
+            claimable on the Commissioner-notification scoping here once an
+            open-pryv.io release carrying it is deployed to all HDS cores
+            (the current HDS deployment predates it).
           impact: medium
           upstream_proposal: vendor/pryv/proposals/breach-scope-tool.md
           tracking_url: https://github.com/pryv/open-pryv.io/issues/76

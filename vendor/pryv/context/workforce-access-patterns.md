@@ -1,24 +1,24 @@
-# Workforce access patterns — group access + sub-access derivation
+# Workforce access patterns: group access + sub-access derivation
 
 Several matrix rows describe Pryv's access-control surface as
 "per-stream permissions; access is the unit of authorization":
 
-- `hipaa-security.164.308(a)(3)(ii)(C)` — Termination procedures
-- `hipaa-security.164.308(a)(4)(ii)(B)` — Access Authorization
-- `hipaa-security.164.308(a)(4)(ii)(C)` — Access Establishment +
+- `hipaa-security.164.308(a)(3)(ii)(C)`: Termination procedures
+- `hipaa-security.164.308(a)(4)(ii)(B)`: Access Authorization
+- `hipaa-security.164.308(a)(4)(ii)(C)`: Access Establishment +
   Modification
-- `iso-27001.A.5.16` — Identity management
-- `iso-27001.A.5.18` — Access rights
+- `iso-27001.A.5.16`: Identity management
+- `iso-27001.A.5.18`: Access rights
 
 An implementer evaluating Pryv for a workforce-oriented deployment
 (hospital with 100 nurses + 30 attending physicians + 10 admin
 staff, etc.) will ask how Pryv handles **role / group abstractions**
 on top of the per-access model. Pryv does not ship roles + groups
-*inside* the platform — group membership is deliberately external —
+*inside* the platform, group membership is deliberately external,
 but provides **two composable patterns** that cover the realistic
 workforce-control needs.
 
-## Pattern 1 — Group access + per-caller audit
+## Pattern 1: Group access + per-caller audit
 
 A single access token can be granted to a group (e.g., "nurses"),
 with the group membership managed *outside* Pryv by the
@@ -37,7 +37,7 @@ the group identity (via the access id) AND the acting individual
 
 **Trust model:** Pryv trusts the access-token holder (the
 implementer's app / IdP) to forward a truthful caller id. Caller
-id is not separately authenticated by Pryv — it's a label the app
+id is not separately authenticated by Pryv, it's a label the app
 provides. The chain of trust is:
 1. The external IdP authenticates the individual.
 2. The implementer's app calls Pryv with the group token + the
@@ -50,9 +50,9 @@ is itself audited / hardened / under the same compliance regime as
 the Pryv deployment.
 
 **Code (open-pryv.io):**
-- `components/business/src/MethodContext.ts` `parseAuth()` —
+- `components/business/src/MethodContext.ts` `parseAuth()`,
   splits the auth header on the first space character.
-- `components/business/src/accesses/refs.ts` `composeStoredRef()` —
+- `components/business/src/accesses/refs.ts` `composeStoredRef()`,
   composes the `<accessId> <callerId>` storage form.
 
 **When to use this pattern:**
@@ -65,12 +65,12 @@ the Pryv deployment.
 
 **Compliance benefit:** per-individual audit accountability without
 the cost of provisioning per-individual accesses in Pryv. HIPAA-
-Security §164.308(a)(3)(ii)(C) Termination — terminating an
+Security §164.308(a)(3)(ii)(C) Termination, terminating an
 individual means removing them from the external group; no Pryv-
 side action needed. ISO 27001 A.5.16 identity lifecycle delegates
 to the external IdP.
 
-## Pattern 2 — Seed access for sub-account derivation
+## Pattern 2: Seed access for sub-account derivation
 
 An "app" access can be the seed for sub-accesses. The app holding
 the seed can create individual sub-accesses for each group member
@@ -86,7 +86,7 @@ list them (`accesses.get` filtered by `createdBy`), modify them
 (`accesses.delete`).
 
 **Code (open-pryv.io):**
-- `components/api-server/src/methods/accesses.ts` —
+- `components/api-server/src/methods/accesses.ts`,
   `query.createdBy = currentAccess.id` filters on listing /
   modification; `isManaged = createdByBase === context.access.id`
   gate on management operations.
@@ -96,7 +96,7 @@ list them (`accesses.get` filtered by `createdBy`), modify them
   yanked without affecting the rest of the group).
 - Group-level operations need to compose (revoking the seed
   cascades to all children; updating the seed's permission scope
-  doesn't auto-propagate — the role-engine refreshes children
+  doesn't auto-propagate, the role-engine refreshes children
   on a schedule or on-demand).
 - The implementer wants Pryv to be the source of truth for
   per-individual access state (audit, expiry, scope).
@@ -104,7 +104,7 @@ list them (`accesses.get` filtered by `createdBy`), modify them
 **Trade-off:** higher Pryv-side state cost (N sub-accesses for N
 group members), but full per-individual control.
 
-**Compliance benefit:** clean §164.308(a)(3)(ii)(C) termination —
+**Compliance benefit:** clean §164.308(a)(3)(ii)(C) termination,
 individual sub-access deleted, others untouched, audit row
 records the revocation timestamp. ISO 27001 A.5.18 access-rights
 lifecycle is per-individual + the seed allows efficient bulk
@@ -118,7 +118,7 @@ The patterns are complementary:
 |---|---|
 | Large transient group with external IdP | 1 (group token + caller id) |
 | Small stable team with strict per-person revocation | 2 (seed + sub-accesses) |
-| Large group with both — group-level rev + per-person audit + occasional per-person revocation | 1 + 2 (seed access used by the IdP to provision sub-accesses on first access; per-call `callerId` adds the audit detail) |
+| Large group with both, group-level rev + per-person audit + occasional per-person revocation | 1 + 2 (seed access used by the IdP to provision sub-accesses on first access; per-call `callerId` adds the audit detail) |
 
 ## What this is not
 
@@ -156,11 +156,11 @@ question explicitly.
 
 ## Related primitives
 
-- `access` — the unit of authorization; pattern 1 shares one across
+- `access`: the unit of authorization; pattern 1 shares one across
   a group, pattern 2 derives many from a seed.
-- `audit` — captures both `accessId` and `callerId` per call.
-- `permissions` — per-stream + per-level scope carried by every
+- `audit`: captures both `accessId` and `callerId` per call.
+- `permissions`: per-stream + per-level scope carried by every
   access (seed or shared).
-- `system-streams` — for sensitive workforce metadata (role labels,
+- `system-streams`: for sensitive workforce metadata (role labels,
   IdP-side group memberships) the implementer can keep on a
   privileged subtree.

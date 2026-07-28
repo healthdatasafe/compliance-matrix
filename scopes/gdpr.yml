@@ -1249,10 +1249,11 @@ requirements:
       planned:
         - kind: platform
           summary: >-
-            The upstream breach-scope tool (automated Art.33(1)(b-d) scoping
-            report from audit + access-version data for a compromised access)
-            is queued; once shipped and deployed by HDS it turns the manual
-            scoping queries into an emitted artefact.
+            The upstream breach-scope tool SHIPPED 2026-07-28 (merged upstream,
+            #76 closed): automated Art.33(1)(b-d) scoping report, access
+            reverse-lookup and scoped-exposure audit fields. Becomes claimable
+            on this row once an open-pryv.io release carrying it is deployed
+            to all HDS cores — the current HDS deployment (rc.12) predates it.
           impact: medium
           upstream_proposal: vendor/pryv/proposals/breach-scope-tool.md
           tracking_url: https://github.com/pryv/open-pryv.io/issues/76

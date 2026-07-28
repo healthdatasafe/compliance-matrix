@@ -6,7 +6,7 @@ single-tiered. The simplified narrative "Pryv is core-affine" is
 true for the data mass but incomplete for the identification +
 routing layer. This note carries the verified picture.
 
-## Tier 1 — Identification + routing layer (cluster-replicated)
+## Tier 1: Identification + routing layer (cluster-replicated)
 
 PlatformDB is the rqlite-backed key-value store replicated
 **cluster-wide** via Raft across every cluster member. In a
@@ -21,7 +21,7 @@ PlatformDB.ts:120-244`):
 
 | Keyspace | Contents | Personal-data class |
 |---|---|---|
-| `user-core/<username>` | username → coreId mapping (residency anchor — Q12) | **PII** (username identifies a person) |
+| `user-core/<username>` | username → coreId mapping (residency anchor, Q12) | **PII** (username identifies a person) |
 | User unique fields (`setUserUniqueField`) | system-stream-driven uniqueness check: typically **username**, **email**, optionally phone / employee-id / SSN-equivalent per `customExtensions.systemStreams` config | **PII**, possibly sensitive |
 | User indexed fields (`setUserIndexedField`) | deployment-configured non-unique fields (country code, language, etc.) | typically PII |
 | `dns/<subdomain>` | per-user subdomain → core address mapping (subdomain == username in standard deployments) | **PII** |
@@ -35,10 +35,10 @@ PlatformDB.ts:120-244`):
 Per-user steady state: ~50-200 bytes (username + email + 1
 user-core mapping + 1 DNS record). For 100k users, ~5-20 MB
 cluster-wide. Small compared to event data (which can be GBs per
-user); but **quantity doesn't change the legal analysis** — it's
+user); but **quantity doesn't change the legal analysis**, it's
 still personal data crossing borders.
 
-## Tier 2 — Content + audit layer (residency-pinned)
+## Tier 2: Content + audit layer (residency-pinned)
 
 **NOT replicated** by PlatformDB; stays on home core only:
 
@@ -75,7 +75,7 @@ in combination, not as substitutes.
 forfeiture, decommissioned-hardware exposure, filesystem-level
 breach. Runtime + replication path unchanged.
 
-**Legal status**: same as today — Art.46 mechanism still required
+**Legal status**: same as today, Art.46 mechanism still required
 for the live replication of personal data. Doesn't change the
 classification.
 
@@ -88,7 +88,7 @@ scenarios. Cheap (~1 day).
 
 **What it changes**: persisted rows are HMAC-derived hashes; live
 request paths unchanged; pepper shared cluster-wide. Operator
-opts into `platform.piiMode: hashed` (or `minimised` — see below).
+opts into `platform.piiMode: hashed` (or `minimised`, see below).
 
 **Legal status under EDPB / WP29 Opinion 05/2014**: classified as
 **pseudonymisation**, NOT anonymisation. Re-identification by
@@ -106,11 +106,11 @@ replication of HMAC-pseudonymised rows.
 
 **Value**:
 
-- Material defence-in-depth — SSD-dump / backup-tape scenarios
+- Material defence-in-depth, SSD-dump / backup-tape scenarios
   yield hashes (brute force is feasible but **detectable**);
   cleartext is silent to extract.
 - Strengthens **Art.32(1)(a)** "pseudonymisation" security
-  measure evidence — explicitly named in the regulation as a
+  measure evidence, explicitly named in the regulation as a
   recognised technique.
 - Strengthens the **combined Art.46 + Art.32 + Art.30**
   narrative: "SCCs in place AND PII pseudonymised at the
@@ -131,7 +131,7 @@ Effort: ~3-5 days. **Backlog**: internal slug
 
 **What it changes**: at registration, the home core generates a
 random opaque token (256-bit secret). The `username ↔ token`
-mapping persists **only on the home core's local storage** —
+mapping persists **only on the home core's local storage**,
 NEVER replicated to PlatformDB. Cluster-replicated rows reference
 the token, not the username:
 
@@ -141,7 +141,7 @@ the token, not the username:
   requires the home core.
 
 **Legal status**: closer to **true anonymisation from the foreign
-core's perspective** — the cluster-shared identifier is a random
+core's perspective**, the cluster-shared identifier is a random
 string with no derivable link to a natural person without
 breaching the home core (which is a separate-jurisdiction's worth
 of legal/technical control).
@@ -151,16 +151,16 @@ of legal/technical control).
 - DNS subdomains are tokens (`tk_a8f9c2.pryv.me`). Either the
   operator's UI translates client-side (`alice.pryv.me` ↔
   token), or the operator accepts opaque subdomain UX.
-- Account recovery "I forgot my username, here's my email" —
+- Account recovery "I forgot my username, here's my email",
   needs the home core (right answer under data-minimisation
   anyway).
 - Cross-region admin operations gain a federated lookup hop
   (small latency impact).
-- Pepper rotation maps to token re-issuance per user — bigger
+- Pepper rotation maps to token re-issuance per user, bigger
   operation but bounded by user count.
 
 **Effort**: many weeks. Bigger architectural lift than A or B.
-Pairs naturally with the `ALIASES` backlog — random-token IS
+Pairs naturally with the `ALIASES` backlog, random-token IS
 the alias from the user's perspective; their human-chosen
 username need never enter PlatformDB.
 
@@ -202,16 +202,16 @@ justifies the investment).
 
 ## See also
 
-- `context/transfer-basis-convention.md` — access-bound
+- `context/transfer-basis-convention.md`: access-bound
   `clientData.transfer_basis` convention; the access-level
   parallel to this PlatformDB-level note.
-- `context/subprocessor-posture-and-data-flow.md` — the third
+- `context/subprocessor-posture-and-data-flow.md`: the third
   cross-border surface (vendor integrations).
-- `context/core-affinity-architecture.md` — the Tier 2 residency
+- `context/core-affinity-architecture.md`: the Tier 2 residency
   guarantee.
-- Internal backlog slug `PLATFORMDB-AT-REST-ENCRYPTION` —
+- Internal backlog slug `PLATFORMDB-AT-REST-ENCRYPTION`,
   option A backlog.
-- Internal backlog slug `PLATFORMDB-PII-HASHING` — option B
+- Internal backlog slug `PLATFORMDB-PII-HASHING`, option B
   backlog.
-- Internal backlog slug `ALIASES` — pairs with option C
+- Internal backlog slug `ALIASES`, pairs with option C
   tokenisation path.

@@ -12,7 +12,7 @@ updated.
 matching `encrypted/aes-256-gcm` and `encrypted/ecies-aes-256-gcm`
 formats specified language-neutrally in data-types
 (`feature/encrypted-formats`). For opted-in events the core stores
-only ciphertext (content AND attachments) and never holds a key —
+only ciphertext (content AND attachments) and never holds a key,
 application-layer, client-managed keys, including asymmetric
 share-to-a-public-key (ECIES P-256). This is NOT the E2E primitive
 this proposal tracks: key distribution/recovery, re-keying for new
@@ -30,9 +30,9 @@ Several matrix rows around "encryption at rest" land at
 itself does **not** encrypt event content at rest. The implementer
 gets there via operator-side filesystem encryption (LUKS / dm-crypt
 on disks) or DB-engine TDE (PostgreSQL TDE, MongoDB encrypted
-storage engine). That's the **correct deliberate choice** for v2 —
+storage engine). That's the **correct deliberate choice** for v2,
 infrastructure-layer encryption is the right place for at-rest
-encryption of bulk event data — but it means **Pryv-managed
+encryption of bulk event data, but it means **Pryv-managed
 customer keys (CMEK / BYOK)** are not on the table today.
 
 The user clarified this on 2026-05-19 during the implementer-
@@ -43,7 +43,7 @@ it.
 
 The longer-term direction in `_plans/XXX-Backlog/COMPLIANCE-E2E-ENCRYPTION.md`
 is **end-to-end encryption**, where the server itself never holds
-plaintext — research direction is proxy re-encryption (see the
+plaintext, research direction is proxy re-encryption (see the
 upstream backlog item for references). That is a substantively
 different primitive from CMEK and would change the matrix more
 deeply: rows about server-side processing (audit, analytics, type
@@ -78,7 +78,7 @@ layer today, E2E would help when shipped":
   prod into staging for QA without re-identification risk is today
   the implementer's clone-and-transform script. A key-per-user E2E
   scheme would make the non-prod clone cryptographically opaque
-  without the original keys — the clone is simply unreadable in
+  without the original keys, the clone is simply unreadable in
   the non-prod environment, no field-by-field rewriting required.
 
 - **Field-level encryption at the schema layer.** A data-types
@@ -112,12 +112,12 @@ flavour use cases.
 
 - Upstream backlog: `_plans/XXX-Backlog/COMPLIANCE-E2E-ENCRYPTION.md`
 - Sibling proposal: `proposals/aliases-as-pseudonymization-primitive.md`
-  (covers a different pseudonymization angle — username aliases).
-- Content queries SHIPPED (open-pryv.io `1295c0b`, 2026-06-11 —
+  (covers a different pseudonymization angle, username aliases).
+- Content queries SHIPPED (open-pryv.io `1295c0b`, 2026-06-11,
   `events.get` `content`/`clientData` conditions + PG index
   acceleration; plan archive: macroPryv
   `_plans/_archives/87-content-indexing-done/`). Paired concern
   stands: content-query evaluation requires server-side plaintext,
-  so search semantics under E2E need their own design — see
+  so search semantics under E2E need their own design, see
   `context/content-query-audit-semantics.md` for the shipped
   semantics any E2E design must reconcile with.

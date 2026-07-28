@@ -29,8 +29,8 @@ infrastructure.
 **But the picture changes sharply** when the deployment is run by
 an operator who controls *both ends*: the Pryv core itself AND the
 clients writing to it AND the stream-tree design AND the
-event-type catalogue. In that shape — typical for vertically-
-integrated health platforms — Pryv exposes enough composable
+event-type catalogue. In that shape, typical for vertically-
+integrated health platforms, Pryv exposes enough composable
 primitives that the operator builds a strong Art.9 enforcement
 layer **without Pryv shipping one for them**.
 
@@ -40,11 +40,11 @@ layer **without Pryv shipping one for them**.
 |---|---|---|
 | Who runs the core | The same org that ships the user-facing app | Operator runs the platform; third-party app developers register |
 | Who designs the stream tree | Operator (often baked into `customExtensions.systemStreams`) | Operator + each third-party app contributes scopes |
-| Who controls the clients writing data | Operator (`app-web-auth3` rebrand + their mobile/web apps) | Mix — operator's UI + third-party apps the operator doesn't author |
+| Who controls the clients writing data | Operator (`app-web-auth3` rebrand + their mobile/web apps) | Mix, operator's UI + third-party apps the operator doesn't author |
 | Who curates the event-type catalogue | Operator (`service.eventTypes` URL → operator-maintained data-model repo) | Built-in catalogue + maybe operator-extended |
-| Pryv-facilitation strength for Art.9 | **High** — operator composes every lever below | **Medium** — operator can enforce at the boundary, third-party app code is opaque |
+| Pryv-facilitation strength for Art.9 | **High**, operator composes every lever below | **Medium**, operator can enforce at the boundary, third-party app code is opaque |
 
-The Q22 framing — "voluntarily missing + highly facilitated" — is
+The Q22 framing, "voluntarily missing + highly facilitated", is
 specifically about the **left column**. Most regulated health
 deployments built on open-pryv.io live in the left column by
 design.
@@ -62,7 +62,7 @@ judgement, produces the enforcement.
 The operator dedicates top-level (or near-top-level) subtrees per
 Art.9(1) category: `health/`, `biometrics/`, `genetics/`,
 `mental-health/`, `sexual-health/`, etc. Pryv's permissions are
-**per-stream and inherited down the subtree** — granting an access
+**per-stream and inherited down the subtree**: granting an access
 `{streamId: "health", level: "read"}` gives access to everything
 under `health/*` and nothing else.
 
@@ -79,7 +79,7 @@ AccessLogic.ts` for permission-resolution semantics.
 
 ### 2. `clientData.special_category_basis` recording
 
-Every access carries `clientData` — arbitrary operator-owned
+Every access carries `clientData`, arbitrary operator-owned
 metadata that travels with the access through its lifetime, is
 audit-traceable, and survives version updates (per
 `context/access-versioning.md`). The operator stores the relied-on
@@ -100,7 +100,7 @@ subtree:
 
 When a regulator asks "under what Art.9(2) basis did this access
 process health data on day X?", the operator answers by quoting
-the access's `clientData` at version-as-of-day-X — the access
+the access's `clientData` at version-as-of-day-X, the access
 history is the durable, queryable record.
 
 ### 3. Custom event-type catalogue with sensitivity annotations
@@ -125,7 +125,7 @@ operator can author:
 }
 ```
 
-Pryv doesn't *enforce* these annotations server-side — but the
+Pryv doesn't *enforce* these annotations server-side, but the
 operator's client code reads them and gates writes accordingly;
 their export tooling uses them to drive a "you're exporting Art.9
 data, confirm exception applies" warning; their DPIA tooling
@@ -163,7 +163,7 @@ the storage engine per stream tier via the engine-selection plumbing
 (storages-as-plugins architecture). For example, a sensitive subtree
 can be backed by a different PostgreSQL database (with `pg_dump`
 encryption, separate WAL retention, separate replicas) than
-ordinary data — same Pryv API, different physical isolation.
+ordinary data, same Pryv API, different physical isolation.
 
 Code anchor: `storages/engines/<engine>/` SPI; `default-config.yml`
 `storages.engines.*` config tree.
@@ -184,17 +184,17 @@ custom-auth-step extension point; `default-config.yml`
 
 ### 7. Audit log automatic capture
 
-The audit primitive is invariant — every API call against every
+The audit primitive is invariant, every API call against every
 stream is audited, regardless of sensitivity. The operator gets
 the audit trail "for free" for sensitive streams; nothing extra to
 configure. The audit-minimality posture (Q9: no request body
-captured) is a feature here, not a limitation — audit captures
+captured) is a feature here, not a limitation, audit captures
 *which* event was written, not the field values, so the audit
 itself is safer to retain than the events would be.
 
 ### 8. Backup encryption (operator-side, per Q15)
 
-`bin/backup.js` is unencrypted by design (Q15) — operator wraps
+`bin/backup.js` is unencrypted by design (Q15), operator wraps
 the dump with their own encryption layer. For Art.9 data, this is
 where the operator applies the stricter tier: separate
 encryption key, separate off-site copy, separate retention policy.
@@ -206,7 +206,7 @@ When a sensitive stream is shared cross-account via CMC, the
 explicit-consent record for the cross-account flow. The
 `request-cmc` offer event MUST include the consent text the
 subject is asked to accept (clear plain language, distinguishable
-per Art.7) — the operator drives this text in their `app-web-auth3`
+per Art.7), the operator drives this text in their `app-web-auth3`
 rebrand. See `context/cmc-consent-primitives.md` for the lifecycle.
 
 ## How to compose the toolkit into a concrete deployment claim
@@ -227,18 +227,18 @@ per Q20), produce a concrete claim like:
 > encrypted with a separate KMS key with quarterly rotation."*
 
 Every clause cites a Pryv-side primitive the deployment composes;
-none of the clauses is "Pryv enforces Art.9" — they are all
+none of the clauses is "Pryv enforces Art.9"; they are all
 "the operator's deployment of Pryv enforces Art.9, using these
 specific Pryv primitives".
 
-## Honest limits — when the toolkit doesn't reach
+## Honest limits: when the toolkit doesn't reach
 
 The toolkit works when the operator controls both ends. It weakens
 when:
 
 - The deployment hosts **third-party apps** the operator doesn't
   author. Pryv enforces the stream-permission boundary, but the
-  third-party app's client code is opaque — the operator can't
+  third-party app's client code is opaque, the operator can't
   guarantee the third-party respects the `x-art9-category`
   annotation. Mitigation: the access-permission scope IS the
   enforcement boundary; if a third-party app's access is scoped
@@ -260,27 +260,27 @@ when:
 
 - `gdpr.Art.9` row keeps `coverage: facilitated` + `facilitation_
   mode: primitive` + `pryv_effort_saved: medium`. The
-  deployment-topology distinction is in the `detail:` block — it
+  deployment-topology distinction is in the `detail:` block, it
   explains *when* the facilitation is high and *when* it's
   medium. No tier shift; just enriched prose.
 - `swiss-nlpd.Art.5` and `hipaa-privacy.164.502` (PHI uses +
   disclosures) point at this note as the canonical operator-
   toolkit treatment via `derives_from` and prose
   cross-references.
-- No backlog, no proposal, no `planned:` chips — the platform
+- No backlog, no proposal, no `planned:` chips, the platform
   posture is right; the matrix needed prose tightening to
   surface the deployment-topology nuance.
 
 ## See also
 
-- `context/custom-event-type-catalogues.md` — the Q14 extension
+- `context/custom-event-type-catalogues.md`: the Q14 extension
   pattern that backs lever 3.
-- `context/audit-archival-via-custom-datastore.md` — the Q16
+- `context/audit-archival-via-custom-datastore.md`: the Q16
   pattern that backs lever 4.
-- `context/cmc-consent-primitives.md` — the cross-account-share
+- `context/cmc-consent-primitives.md`: the cross-account-share
   cousin (lever 9).
-- `context/data-accuracy-structural-vs-semantic.md` — the Q21
+- `context/data-accuracy-structural-vs-semantic.md`: the Q21
   pattern showing the same "platform agnostic / operator
   composes" architecture for accuracy.
-- `docs/pryv-primitives.md` — every lever cited above is one of
+- `docs/pryv-primitives.md`: every lever cited above is one of
   the 20 primitives in the catalogue.

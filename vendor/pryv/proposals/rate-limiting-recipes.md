@@ -4,7 +4,7 @@
 (macroPryv-side backlog file).
 **Filed during:** Q6 implementer-perspective gap-probing session (follow-up).
 **Tracking card:** https://github.com/orgs/pryv/projects/5?pane=issue&itemId=219705775&issue=pryv%7Copen-pryv.io%7C117
-**Surfacing question:** *"Pryv doesn't rate-limit in-process. Fine — but then
+**Surfacing question:** *"Pryv doesn't rate-limit in-process. Fine, but then
 what exactly should I put in front of it? Where are the reference configs?"*
 
 ## Today's state (verified)

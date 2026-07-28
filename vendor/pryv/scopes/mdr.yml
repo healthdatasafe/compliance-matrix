@@ -12,7 +12,7 @@ layered_on: [gdpr]
 
 changelog:
   - date: "2026-05-19"
-    change: initial draft — 11 software-anchor rows (10 articles + Annex I §17). Pryv contributes as backend infrastructure; the medical-device classification + conformity assessment + clinical evaluation tasks are the device manufacturer's responsibility. Most rows facilitated; per-aspect Pryv contributions called out (audit, backup, encryption, HA, data residency).
+    change: initial draft, 11 software-anchor rows (10 articles + Annex I §17). Pryv contributes as backend infrastructure; the medical-device classification + conformity assessment + clinical evaluation tasks are the device manufacturer's responsibility. Most rows facilitated; per-aspect Pryv contributions called out (audit, backup, encryption, HA, data residency).
 
 requirements:
 
@@ -35,7 +35,7 @@ requirements:
       sub-processes draw on (audit log for design controls +
       post-market data; observability for system-status evidence;
       backup-restore for data-integrity controls). The QMS itself is
-      the manufacturer's organizational artefact — see ISO 13485
+      the manufacturer's organizational artefact, see ISO 13485
       scope for that side.
     detail: |
       §10(1) compliance "with the requirements of this Regulation" is a
@@ -43,7 +43,7 @@ requirements:
       regulatory compliance, risk management, clinical evaluation, design
       and manufacturing, post-market surveillance, communication,
       vigilance reporting, management of CAPAs, monitoring + measurement
-      of output. Pryv contributes inputs to several of these — none can
+      of output. Pryv contributes inputs to several of these, none can
       be discharged by Pryv alone.
 
   - ref: Art.51
@@ -58,7 +58,7 @@ requirements:
     overview: |
       Classification is a regulatory decision by the manufacturer (with
       Notified Body involvement from class IIa upwards). Pryv is not a
-      medical device itself — when an implementer builds a device on
+      medical device itself, when an implementer builds a device on
       Pryv, the device's classification is determined by its own
       intended purpose. Pryv has no contribution and no implementer
       obligation arises from this Article alone.
@@ -96,7 +96,7 @@ requirements:
       manufacturer's regulatory artefact. Pryv's contribution is
       operational: if your device collects clinical data during the
       evaluation, Pryv stores it (events with stable class/format
-      from data-types) and audit-logs its processing — making the
+      from data-types) and audit-logs its processing, making the
       clinical data set inspectable and reproducible.
     detail: |
       The post-market clinical follow-up (PMCF) plan under Annex XIV B
@@ -119,7 +119,7 @@ requirements:
     overview: |
       Subject protection in
       clinical investigations rides on the same Pryv primitives that
-      carry GDPR Art. 32 — per-subject storage isolation, access
+      carry GDPR Art. 32, per-subject storage isolation, access
       control, audit, encryption at rest, restoration. "Reliable and
       robust" data is the manufacturer's burden; audit-logged +
       version-preserved Pryv events are the substrate.
@@ -147,7 +147,7 @@ requirements:
       Pryv's audit log gives you the "what was processed, by whom,
       when" timeline for the backend layer of the device. The
       observability adapter (when enabled) gives system-availability
-      + error-rate metrics — useful PMS indicators. For device-side
+      + error-rate metrics, useful PMS indicators. For device-side
       incident events (user-reported issues, on-device errors etc.),
       the device pushes them as Pryv events on a dedicated stream.
 
@@ -202,13 +202,13 @@ requirements:
       The reporting decision + the
       report itself are manufacturer-side. Pryv's audit log +
       observability data make root-cause analysis tractable when
-      investigating an incident — particularly when the incident's
+      investigating an incident, particularly when the incident's
       chain of causation touches the backend (e.g., a latency spike
       correlated to a clinical decision). The 15-day / 10-day / 2-day
       reporting timelines are operational.
 
   - ref: A1.17
-    title: Annex I §17 — Electronic programmable systems / software
+    title: Annex I §17 Electronic programmable systems / software
     text: |
       Devices that incorporate electronic programmable systems, including
       software, or software that are devices in themselves, shall be
@@ -225,25 +225,25 @@ requirements:
       to software medical devices. Pryv as the backend contributes to
       several §17 sub-clauses: §17.2 (development and manufacture in
       accordance with state-of-the-art principles), §17.4 (verification
-      and validation — audit log enables it), §17.5 (interaction with
-      mobile platforms — out of Pryv scope, app-side).
+      and validation, audit log enables it), §17.5 (interaction with
+      mobile platforms, out of Pryv scope, app-side).
     detail: |
       Per §17 sub-clause:
-        - §17.1 Repeatability/reliability/performance — Pryv's audit log
+        - §17.1 Repeatability/reliability/performance, Pryv's audit log
           + reproducible-deployment posture (Docker image + multi-core
           HA) supports the manufacturer's V+V evidence.
-        - §17.2 State-of-the-art SDLC — IEC 62304 alignment is
+        - §17.2 State-of-the-art SDLC, IEC 62304 alignment is
           manufacturer-side. Pryv's own release process (Dockerfile,
           test matrix, CHANGELOGs) feeds the manufacturer's supplier
           assessment.
-        - §17.3 Risk management throughout the software lifecycle —
+        - §17.3 Risk management throughout the software lifecycle,
           ISO 14971-aligned; manufacturer-side. Pryv-side risk artefacts
           (e.g., this matrix + the QMS) inform supplier assessment.
-        - §17.4 Verification and validation — audit log + the
+        - §17.4 Verification and validation, audit log + the
           compliance-matrix test-citation chain are concrete evidence.
 
   - ref: A1.18
-    title: Annex I §18 — Active devices / connected devices
+    title: Annex I §18 Active devices / connected devices
     text: |
       Active devices and devices connected to them shall be designed in
       such a way as to remove or reduce as far as possible the risks
@@ -251,15 +251,15 @@ requirements:
     coverage: out-of-scope
     draft: true
     overview: |
-      Annex I §18 covers physical electrical/mechanical/thermal hazards
-      — outside Pryv's scope as a backend service. When the device
+      Annex I §18 covers physical electrical/mechanical/thermal hazards,
+      outside Pryv's scope as a backend service. When the device
       depends on Pryv for safe operation (e.g., a connected clinical
       monitor), §18.4 + §18.7 (interoperability + connection-loss
       safety) become operational concerns the manufacturer addresses
       at the device + integration layer.
 
   - ref: A1.23
-    title: Annex I §23 — Information supplied with the device
+    title: Annex I §23 Information supplied with the device
     text: |
       The instructions for use and label of a device shall comply with
       defined requirements (§23.1 labels, §23.2 IFU content, §23.3
@@ -271,7 +271,7 @@ requirements:
       artefact. Pryv has no role at the IFU-content layer. For
       software medical devices that present the IFU in-app, the IFU
       versioning + acknowledgement record can ride on Pryv events
-      with `clientData.ifu_version` — but the IFU content is
+      with `clientData.ifu_version`, but the IFU content is
       manufacturer-side.
 
   - ref: Art.27
@@ -352,7 +352,7 @@ requirements:
       manufacturer-side.
 
   - ref: A2.5
-    title: Annex II §5 — Information supplied by the manufacturer
+    title: Annex II §5 Information supplied by the manufacturer
     text: |
       Technical documentation shall include a complete set of information
       supplied with the device (labels, IFU, design history file
@@ -421,7 +421,7 @@ requirements:
       Implant cards are physical artefacts (or digital equivalents
       issued at implantation). If a digital implant-card record lives
       in Pryv, the manufacturer puts it on a designated
-      `implant-card/*` stream — but the regulatory burden remains
+      `implant-card/*` stream, but the regulatory burden remains
       manufacturer-side.
 
   - ref: Art.14

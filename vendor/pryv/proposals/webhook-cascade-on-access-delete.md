@@ -7,7 +7,7 @@
 **(historical proposal preserved below)**
 
 **Status (when open):** **bug fix queued.** Small dev. Mirror of the upstream
-backlog item (filed 2026-05-20 from the gap-probing session —
+backlog item (filed 2026-05-20 from the gap-probing session,
 Q13 on webhook subscription lifecycle).
 
 ## Today's posture
@@ -32,7 +32,7 @@ A dangling webhook continues POSTing to its target URL but the
 recipient can't fetch the data (their access token is now
 invalid; 401 on the GET back). So the data exposure is limited
 to **leaking the existence of a change**. The target URL itself
-remains an active outbound channel — non-zero severity in a
+remains an active outbound channel, non-zero severity in a
 breach scenario where the original webhook URL was attacker-
 controlled.
 
@@ -49,8 +49,8 @@ Three small additions:
 1. **Repository**: add `deleteByAccess(user, accessId)` next to
    the existing `deleteOne` / `deleteForUser`.
 2. **`deleteAccesses` middleware**: walk `idsToDelete` and call
-   `webhooksRepository.deleteByAccess(user, accessId)` for each
-   — **before** the access-storage delete, so partial failure
+   `webhooksRepository.deleteByAccess(user, accessId)` for each,
+   **before** the access-storage delete, so partial failure
    leaves a retryable state rather than orphaned webhooks.
 3. **Belt-and-braces fire-time check**: `Webhook.send()` looks
    up the parent access via `cache.getAccessLogicForId`; on
@@ -77,5 +77,5 @@ proposal.
 - Q7 context: `context/webhooks-signal-only.md` (the
   signal-only design bounds the breach impact today).
 - Q13 entry in `docs/implementer-faq.md`.
-- Sibling bug-class: `proposals/audit-on-user-delete.md` —
+- Sibling bug-class: `proposals/audit-on-user-delete.md`,
   same family of incomplete-cascade-on-delete defects.

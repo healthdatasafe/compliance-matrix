@@ -1,6 +1,6 @@
-# container-encrypted-volume — user-data encryption at rest
+# container-encrypted-volume: user-data encryption at rest
 
-**Status: shipped** — `pryv/container-encrypted-volume` v0.1.0 (2026-06-23).
+**Status: shipped**: `pryv/container-encrypted-volume` v0.1.0 (2026-06-23).
 **Repo**: https://github.com/pryv/container-encrypted-volume
 **Primitive**: `encryption-at-rest-user-data`
 **Matrix rows**: `hipaa-security:164.312(a)(2)(iv)`, `gdpr:Art.32`
@@ -9,7 +9,7 @@
 
 A modular encryption-at-rest facility for the **full user-data surface**
 (events, attachments, series, audit, platform DB) of a containerised
-open-pryv.io deployment. It is **layered onto the stock image** at build time —
+open-pryv.io deployment. It is **layered onto the stock image** at build time,
 no fork, no application code change, opt-in via one switch (`CEV_ENABLED`).
 On boot it provisions and mounts an encrypted volume inside the container and
 points the data roots at it, so the application stores ciphertext at rest.
@@ -24,21 +24,21 @@ conformance harness:
 - **Key provider** (`CEV_KEY_PROVIDER`): where the unlock key comes from at boot.
   Ships `env`, `file`, `exec` (wrap any cloud secret CLI), `clevis`
   (TPM2 / Tang / PKCS#11 / Shamir threshold), and `aws-kms` (envelope: unwrap a
-  KMS-wrapped data key via the container's identity — IAM role / IAM Roles
-  Anywhere — so no copyable key is held).
+  KMS-wrapped data key via the container's identity, IAM role / IAM Roles
+  Anywhere, so no copyable key is held).
 
 ## Threat model & regulatory fit
 
 Protects data on the storage medium (stolen / decommissioned disks, off-host
-backups, snapshots). It does not defend a *running* container — that is access
+backups, snapshots). It does not defend a *running* container, that is access
 control's job, and it is the scope these controls cover:
 
-- **HIPAA** §164.312(a)(2)(iv) "mechanism to encrypt and decrypt ePHI" — now a
+- **HIPAA** §164.312(a)(2)(iv) "mechanism to encrypt and decrypt ePHI", now a
   switch-on Pryv-delivered mechanism (was operator-implements). Volume
   encryption also grounds the breach-notification safe harbor (NIST SP 800-111).
 - **GDPR** Art.32(1)(a) encryption-of-personal-data measure; Art.34(3)(a) relief.
 
-Coverage rationale: `configurable` on the HIPAA encryption row — Pryv's software
+Coverage rationale: `configurable` on the HIPAA encryption row, Pryv's software
 performs the encryption once enabled; the operator only switches it on and
 supplies a key source (a key is intrinsic to any at-rest control, so this is not
 a Pryv gap). With `aws-kms` / `clevis`, key custody is identity/hardware-bound
@@ -48,11 +48,11 @@ bulk re-encryption).
 ## Coverage caveats
 
 - **External PostgreSQL** (separate container/host) writes to its own data dir
-  outside the encrypted mount — encrypt that operator-side. SQLite-base
+  outside the encrypted mount, encrypt that operator-side. SQLite-base
   deployments are fully covered.
-- **Remote object storage** (S3) — use the bucket's server-side encryption.
+- **Remote object storage** (S3), use the bucket's server-side encryption.
 - LUKS requires `--privileged` (or granular caps); restricted Kubernetes Pod
-  Security profiles may forbid it — those targets fall back to host/operator FDE.
+  Security profiles may forbid it, those targets fall back to host/operator FDE.
 
 ## Evidence
 

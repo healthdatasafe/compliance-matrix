@@ -15,7 +15,7 @@ rejected for two reasons:
    balancer, each core sees only its share of the traffic. A
    per-core counter sees `1/N` of the actual incoming rate; a
    "true" cross-core rate-limit needs shared state (Redis,
-   PostgreSQL row, rqlite key — all of which add a hot-path
+   PostgreSQL row, rqlite key, all of which add a hot-path
    dependency that itself becomes a DoS target). Cross-region
    multi-hosting (Pryv's data-residency feature) makes a shared
    counter even more pathological.
@@ -27,7 +27,7 @@ rejected for two reasons:
    100 events/sec. Pryv-side defaults would mis-fire for both.
 
 The right place for traffic shaping is **the layer that already
-sees all traffic before sharding** — the reverse proxy / API
+sees all traffic before sharding**, the reverse proxy / API
 gateway / WAF. Those tools (Cloudflare, AWS WAF, nginx `limit_req`,
 HAProxy, etc.) are purpose-built for this, already deployed by the
 operator for other reasons (TLS termination, geo-routing,
@@ -38,29 +38,29 @@ profile.
 
 Standard operator-side protections that compose with Pryv:
 
-- **Per-IP rate limits** — nginx `limit_req_zone`, HAProxy
+- **Per-IP rate limits**: nginx `limit_req_zone`, HAProxy
   `stick-table`, Cloudflare Rate Limiting Rules.
-- **Per-token rate limits** — same tools, keyed on the
+- **Per-token rate limits**: same tools, keyed on the
   `Authorization` header value rather than the source IP.
-- **Per-route rate limits** — heavier limits on
+- **Per-route rate limits**: heavier limits on
   `/auth/login`, `/reg/access`, `events.create` than on read
   endpoints.
-- **WAF rules** — OWASP CRS, custom rules blocking known abuse
+- **WAF rules**: OWASP CRS, custom rules blocking known abuse
   signatures (e.g., paths Pryv doesn't expose; user-agent
   blocklist).
-- **Account-lockout policies** — `fail2ban` watching audit logs +
+- **Account-lockout policies**: `fail2ban` watching audit logs +
   banning IPs that exceed N auth failures in T minutes. Pryv's
   audit log feeds this (every failed `auth.login` is a row);
   fail2ban is the trigger + banner.
-- **DDoS scrubbing** — Cloudflare, AWS Shield, etc., at the edge
+- **DDoS scrubbing**: Cloudflare, AWS Shield, etc., at the edge
   CDN layer.
-- **Burst / cost protection** — request size limits, max-events-
+- **Burst / cost protection**: request size limits, max-events-
   per-batch caps, slow-loris timeouts. Already in nginx /
   Cloudflare defaults; operator tunes per workload.
 
 Multi-core deployments behind a single edge layer (single Cloudflare
 zone, single load balancer) handle the "where to keep the counter"
-problem cleanly — the edge sees all traffic.
+problem cleanly, the edge sees all traffic.
 
 ## What Pryv contributes
 
@@ -129,7 +129,7 @@ under internal backlog slug `RATE-LIMITING-RECIPES`.
 
 ## Related primitives
 
-- `audit` — feeds operator-side rate-limit + fail2ban tooling.
-- `observability-provider` — surfaces request-rate metrics for the
+- `audit`: feeds operator-side rate-limit + fail2ban tooling.
+- `observability-provider`: surfaces request-rate metrics for the
   operator's monitoring.
-- `access` — the revocation primitive when abuse is detected.
+- `access`: the revocation primitive when abuse is detected.
