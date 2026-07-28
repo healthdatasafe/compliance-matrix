@@ -5,31 +5,34 @@ import { listFacilitationModes, type ModeSummary, type FacilitationMode } from '
 const MODE_DETAIL: Record<FacilitationMode, { label: string; description: string }> = {
   primitive: {
     label: 'Primitive',
-    description: 'Pryv\'s access/permissions enforce the obligation at the API surface.'
+    description: 'The platform\'s access/permissions enforce the obligation at the API surface.'
   },
   evidence: {
     label: 'Evidence',
-    description: 'Pryv\'s audit log + access-version chain feed the implementer\'s artefact.'
+    description: 'The audit log + access-version chain feed the implementer\'s artefact.'
   },
   storage: {
     label: 'Storage',
-    description: 'Pryv stores the text / records the implementer creates (notice, consent text, …).'
+    description: 'HDS stores the text / records the implementer creates (notice, consent text, …).'
   },
   infrastructure: {
     label: 'Infrastructure',
-    description: 'Pryv runs the technical layer (TLS, HA, encryption-at-rest, mTLS).'
+    description: 'HDS runs the technical layer (TLS, HA, encryption-at-rest).'
   },
   awareness: {
     label: 'Awareness',
-    description: 'Framing row — Pryv contributes minimally; the matrix is the surface.'
+    description: 'Framing row — HDS contributes minimally; the matrix is the surface.'
+  },
+  operations: {
+    label: 'Operations',
+    description: 'HDS-as-operator runs the process (monitoring, backups, deploys, restores).'
   }
 };
 
 /**
- * Browse rows by how Pryv contributes. The five facilitation modes
- * are the second axis of the matrix (besides coverage tier) — they
- * answer "is this a real technical control or just an evidence
- * trail?"
+ * Browse rows by how HDS contributes. The facilitation modes are the
+ * second axis of the matrix (besides coverage tier) — they answer
+ * "is this a real technical control or just an evidence trail?"
  */
 export function ModeList () {
   const [modes, setModes] = useState<ModeSummary[] | null>(null);
@@ -47,10 +50,10 @@ export function ModeList () {
       <section className='mb-6'>
         <h2 className='text-lg font-semibold text-slate-700 mb-1'>Facilitation modes</h2>
         <p className='text-sm text-slate-500'>
-          When Pryv "facilitates" rather than "implements", the mode says <em>how</em>. Five
-          modes total — pre-empts the "is it just docs?" question by surfacing where Pryv is
-          a technical control, where it's evidence emission, where it's storage, where it's
-          infrastructure, where it's framing-only.
+          When HDS "facilitates" rather than "implements", the mode says <em>how</em> —
+          pre-empting the "is it just docs?" question by surfacing where HDS is a technical
+          control, where it's evidence emission, where it's storage, where it's
+          infrastructure, where it's operator-run process, where it's framing-only.
         </p>
       </section>
 

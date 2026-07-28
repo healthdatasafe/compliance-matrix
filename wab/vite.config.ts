@@ -6,7 +6,11 @@ import backloop from 'vite-plugin-backloop.dev';
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
-  const config: any = {
+  const plugins: import('vite').PluginOption[] = [react(), tailwindcss()];
+  // Enable backloop.dev (HTTPS + proper hostname) by default in dev mode.
+  // Use `npm run dev:raw` to bypass it (plain http://localhost).
+  if (mode !== 'raw') plugins.push(backloop('compliance-matrix'));
+  const config: import('vite').UserConfig = {
     // Relative base so the same build works at GH-Pages root, sub-path, or custom domain.
     base: './',
     envPrefix: ['VITE_'],
@@ -14,10 +18,7 @@ export default defineConfig(({ mode }) => {
       host: '::',
       port: 8095
     },
-    plugins: [
-      react(),
-      tailwindcss()
-    ],
+    plugins,
     resolve: {
       alias: {
         '@': path.resolve(__dirname, './src')
@@ -31,11 +32,6 @@ export default defineConfig(({ mode }) => {
       emptyOutDir: false
     }
   };
-  // Enable backloop.dev (HTTPS + proper hostname) by default in dev mode.
-  // Use `npm run dev:raw` to bypass it (plain http://localhost).
-  if (mode !== 'raw') {
-    config.plugins.push(backloop('compliance-matrix'));
-  }
   return {
     ...config,
     test: {

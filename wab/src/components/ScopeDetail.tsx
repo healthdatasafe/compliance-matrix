@@ -1,18 +1,18 @@
-import { useEffect, useState, type ReactNode } from 'react';
+import { Fragment, useEffect, useState, type ReactNode } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import {
   getScope,
   listRequirements,
   coverageHistogram,
-  requirementLinks,
+  requirementEvidence,
   type Scope,
   type Requirement,
   type Coverage,
-  type RequirementLinks
+  type RequirementEvidence
 } from '../db';
-import { DraftBadge, PlannedBadge, RequirementBadge } from './CoverageBadge';
+import { DraftBadge, PlannedBadge, RequirementBadge, CoverageBadge } from './CoverageBadge';
 
-type PlannedFilter = 'all' | 'planned' | 'bugs';
+type PlannedFilter = 'all' | 'planned';
 type TierFilter = Coverage | 'all';
 
 const COVERAGE_ORDER: Coverage[] = [
@@ -31,10 +31,10 @@ export function ScopeDetail () {
   const { id } = useParams<{ id: string }>();
   const [scope, setScope] = useState<Scope | null>(null);
   const [reqs, setReqs] = useState<Requirement[]>([]);
-  const [histogram, setHistogram] = useState<Record<Coverage, number>>({} as any);
+  const [histogram, setHistogram] = useState<Record<Coverage, number>>({} as Record<Coverage, number>);
   const [error, setError] = useState<string | null>(null);
   const [openRef, setOpenRef] = useState<string | null>(null);
-  const [links, setLinks] = useState<RequirementLinks | null>(null);
+  const [evidence, setEvidence] = useState<RequirementEvidence | null>(null);
   const [plannedFilter, setPlannedFilter] = useState<PlannedFilter>('all');
   const [tierFilter, setTierFilter] = useState<TierFilter>('all');
 
@@ -50,8 +50,8 @@ export function ScopeDetail () {
   }, [id]);
 
   useEffect(() => {
-    if (!id || !openRef) { setLinks(null); return; }
-    requirementLinks(id, openRef).then(setLinks).catch(() => setLinks(null));
+    if (!id || !openRef) { setEvidence(null); return; }
+    requirementEvidence(id, openRef).then(setEvidence).catch(() => setEvidence(null));
   }, [id, openRef]);
 
   if (error) return <div className='p-6 text-red-600'>Failed to load scope: {error}</div>;
@@ -71,6 +71,9 @@ export function ScopeDetail () {
             </a>
           </>
         )}
+        {scope.layered_on_pryv && (
+          <> · layered on platform scope <span className='font-mono text-xs'>{scope.layered_on_pryv}</span></>
+        )}
       </div>
 
       <CoverageDistribution
@@ -82,9 +85,6 @@ export function ScopeDetail () {
 
       {(() => {
         const plannedTotal = reqs.reduce((n, r) => n + r.planned.length, 0);
-        const bugsTotal = reqs.reduce(
-          (n, r) => n + r.planned.filter((p) => p.kind === 'bug').length, 0
-        );
         const hasUtility = plannedTotal > 0;
         const hasTier = tierFilter !== 'all';
         if (!hasUtility && !hasTier) return null;
@@ -102,13 +102,8 @@ export function ScopeDetail () {
                   All ({reqs.length})
                 </UtilityFilterPill>
                 <UtilityFilterPill active={plannedFilter === 'planned'} onClick={() => setPlannedFilter('planned')}>
-                  Planned ({plannedTotal})
+                  ⏳ Planned ({plannedTotal})
                 </UtilityFilterPill>
-                {bugsTotal > 0 && (
-                  <UtilityFilterPill active={plannedFilter === 'bugs'} onClick={() => setPlannedFilter('bugs')}>
-                    Bug ({bugsTotal})
-                  </UtilityFilterPill>
-                )}
               </>
             )}
           </div>
@@ -117,7 +112,7 @@ export function ScopeDetail () {
 
       {reqs.length === 0 && (
         <div className='mt-6 text-slate-500'>
-          No requirements authored yet. See [INPUT.md](https://github.com/pryv/compliance-matrix) for status.
+          No requirements authored yet.
         </div>
       )}
 
@@ -135,103 +130,118 @@ export function ScopeDetail () {
               .filter((r) => {
                 if (tierFilter !== 'all' && r.coverage !== tierFilter) return false;
                 if (plannedFilter === 'planned') return r.planned.length > 0;
-                if (plannedFilter === 'bugs') return r.planned.some((p) => p.kind === 'bug');
                 return true;
               })
               .map((r) => (
-              <>
-                <tr
-                  key={`${r.ref}-row`}
-                  className='border-t border-slate-200 hover:bg-slate-50 cursor-pointer'
-                  onClick={() => setOpenRef(openRef === r.ref ? null : r.ref)}
-                >
-                  <td className='p-2 font-mono text-xs'>{r.ref}</td>
-                  <td className='p-2'>
-                    <div className='flex flex-wrap items-center gap-2'>
-                      <span>{r.title}</span>
-                      {r.draft && <DraftBadge />}
-                      {r.planned.map((p, i) => (
-                        <PlannedBadge key={`${r.ref}-pl-${i}`} change={p} />
-                      ))}
-                    </div>
-                  </td>
-                  <td className='p-2'>
-                    <RequirementBadge
-                      coverage={r.coverage}
-                      mode={r.facilitation_mode}
-                      effort={r.pryv_effort_saved}
-                    />
-                  </td>
-                </tr>
-                {openRef === r.ref && (
-                  <tr key={`${r.ref}-det`} className='bg-slate-50'>
-                    <td colSpan={3} className='p-4 text-sm space-y-4'>
-                      {r.planned.length > 0 && (
-                        <section>
-                          <div className='text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1'>
-                            Planned changes
-                          </div>
-                          <ul className='space-y-1'>
-                            {r.planned.map((p, i) => (
-                              <li key={`pl-${i}`} className='flex items-start gap-2'>
-                                <PlannedBadge change={p} />
-                                <div className='text-xs'>
-                                  <div>{p.summary}</div>
-                                  <div className='text-slate-500 mt-0.5 font-mono'>
-                                    {p.proposal}
-                                    {p.backlog && <> · backlog: {p.backlog}</>}
-                                    {p.eta_release && <> · eta {p.eta_release}</>}
-                                  </div>
-                                </div>
-                              </li>
-                            ))}
-                          </ul>
-                        </section>
-                      )}
-                      {r.overview && (
-                        <section>
-                          <div className='text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1'>
-                            Overview
-                          </div>
-                          <div className='text-base leading-relaxed whitespace-pre-wrap'>{r.overview}</div>
-                        </section>
-                      )}
-                      {r.detail && (
-                        <section>
-                          <div className='text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1'>
-                            Detail
-                          </div>
-                          <div className='whitespace-pre-wrap'>{r.detail}</div>
-                        </section>
-                      )}
-                      {r.technical && (
-                        <section>
-                          <div className='text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1'>
-                            Technical
-                          </div>
-                          <div className='whitespace-pre-wrap font-mono text-xs text-slate-700 bg-white border border-slate-200 rounded p-2'>{r.technical}</div>
-                        </section>
-                      )}
-                      {links && (
-                        <section>
-                          <div className='text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1'>
-                            Evidence
-                          </div>
-                          <div className='grid grid-cols-1 md:grid-cols-2 gap-3'>
-                            <LinkSection title='Tests' items={links.tests} urlFor={testUrl} />
-                            <LinkSection title='Docs' items={links.docs} />
-                            <LinkSection title='QMS' items={links.qms} />
-                            <LinkSection title='Config keys' items={links.configs} mono />
-                            <LinkSection title='Functional specs' items={links.specs} mono urlFor={specUrl} />
-                            <LinkSection title='Derives from' items={links.derives} mono />
-                          </div>
-                        </section>
-                      )}
+                <Fragment key={r.ref}>
+                  <tr
+                    className='border-t border-slate-200 hover:bg-slate-50 cursor-pointer'
+                    onClick={() => setOpenRef(openRef === r.ref ? null : r.ref)}
+                  >
+                    <td className='p-2 font-mono text-xs'>{r.ref}</td>
+                    <td className='p-2'>
+                      <div className='flex flex-wrap items-center gap-2'>
+                        <span>{r.title}</span>
+                        {r.draft && <DraftBadge />}
+                        {r.planned.map((p, i) => (
+                          <PlannedBadge key={`${r.ref}-pl-${i}`} change={p} />
+                        ))}
+                      </div>
+                    </td>
+                    <td className='p-2'>
+                      <RequirementBadge
+                        coverage={r.coverage}
+                        mode={r.facilitation_mode}
+                        effort={r.effort_saved}
+                      />
                     </td>
                   </tr>
-                )}
-              </>
-            ))}
+                  {openRef === r.ref && (
+                    <tr className='bg-slate-50'>
+                      <td colSpan={3} className='p-4 text-sm space-y-4'>
+                        {r.planned.length > 0 && (
+                          <section>
+                            <div className='text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1'>
+                              Planned changes
+                            </div>
+                            <ul className='space-y-1'>
+                              {r.planned.map((p, i) => (
+                                <li key={`pl-${i}`} className='flex items-start gap-2'>
+                                  <PlannedBadge change={p} />
+                                  <div className='text-xs'>
+                                    <div>{p.summary}</div>
+                                    <div className='text-slate-500 mt-0.5 font-mono'>
+                                      {p.internal_doc && <>🔒 {p.internal_doc} (on request)</>}
+                                      {p.eta && <> · eta {p.eta}</>}
+                                    </div>
+                                  </div>
+                                </li>
+                              ))}
+                            </ul>
+                          </section>
+                        )}
+                        {r.overview && (
+                          <section>
+                            <div className='text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1'>
+                              HDS layer
+                            </div>
+                            <div className='text-base leading-relaxed whitespace-pre-wrap'>{r.overview}</div>
+                          </section>
+                        )}
+                        {r.detail && (
+                          <section>
+                            <div className='text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1'>
+                              Detail
+                            </div>
+                            <div className='whitespace-pre-wrap'>{r.detail}</div>
+                          </section>
+                        )}
+                        {r.technical && (
+                          <section>
+                            <div className='text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1'>
+                              Technical
+                            </div>
+                            <div className='whitespace-pre-wrap font-mono text-xs text-slate-700 bg-white border border-slate-200 rounded p-2'>{r.technical}</div>
+                          </section>
+                        )}
+                        {r.implementer.length > 0 && (
+                          <section>
+                            <div className='text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1'>
+                              Implementer layer
+                            </div>
+                            <div className='space-y-2'>
+                              {r.implementer.map((o) => (
+                                <div key={o.persona} className='flex items-start gap-2'>
+                                  <span className='text-xs font-medium text-slate-700 whitespace-nowrap'>{o.persona}</span>
+                                  <CoverageBadge coverage={o.coverage} />
+                                  <div className='text-xs text-slate-600'>
+                                    {o.overview}
+                                    {o.templates.length > 0 && (
+                                      <span className='ml-1 font-mono'>📄 {o.templates.join(', ')}</span>
+                                    )}
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </section>
+                        )}
+                        {evidence && (
+                          <section>
+                            <div className='text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1'>
+                              Evidence
+                            </div>
+                            <div className='grid grid-cols-1 md:grid-cols-2 gap-3'>
+                              <LinkSection title='Tests' items={evidence.tests} mono />
+                              <LinkSection title='Public docs' items={evidence.docs} urlFor={docUrl} />
+                              <LinkSection title='Internal docs (🔒 on request)' items={evidence.internal_docs} mono />
+                            </div>
+                          </section>
+                        )}
+                      </td>
+                    </tr>
+                  )}
+                </Fragment>
+              ))}
           </tbody>
         </table>
       )}
@@ -242,15 +252,11 @@ export function ScopeDetail () {
 /**
  * Coverage breakdown as equal-width count tiles per tier. Each tile
  * is a clickable filter button. No proportional bar — that visual
- * implies "Pryv covers X% of total project work", which misleads:
+ * implies "HDS covers X% of total project work", which misleads:
  * matrix rows aren't equal-weight units of compliance effort, and
- * the operator-side scope on each row (especially out-of-scope rows)
- * is unbounded. The tiles count rows present in the matrix, full
- * stop.
- *
- * Active state: filled tile with tier-color accent border; siblings
- * dim slightly so the filter direction is obvious. Empty tiers
- * (count = 0) are omitted.
+ * the implementer-side scope on each row (especially out-of-scope
+ * rows) is unbounded. The tiles count rows present in the matrix,
+ * full stop.
  */
 function CoverageDistribution ({
   histogram,
@@ -329,8 +335,7 @@ function UtilityFilterPill ({
   );
 }
 
-const testUrl = (code: string) => `https://pryv.github.io/tests/#${code}`;
-const specUrl = (code: string) => `https://pryv.github.io/functional-specifications/#REQ_${code.replace(/\./g, '_')}`;
+const docUrl = (item: string) => (item.startsWith('http') ? item : undefined);
 
 function LinkSection ({
   title,
@@ -341,7 +346,7 @@ function LinkSection ({
   title: string;
   items: string[];
   mono?: boolean;
-  urlFor?: (item: string) => string;
+  urlFor?: (item: string) => string | undefined;
 }) {
   if (items.length === 0) return null;
   return (

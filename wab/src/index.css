@@ -55,12 +55,13 @@ body {
   font-weight: 700;
 }
 
-/* Planned-change chips — flag rows whose claim depends on a queued bug fix or
-   backlog feature. Hue = kind (bug = red, feature = indigo, enhancement = slate).
+/* Planned-change chips — flag rows whose claim depends on queued HDS-side work,
+   each entry backed by delivery evidence (internal doc code or public tracker).
+   Hue = kind (feature = indigo, doc/procedure pending = amber).
    Impact tunes intensity at-a-glance. */
-.planned-bug          { background-color: #fee2e2; color: #991b1b; border: 1px solid #ef4444; }
 .planned-feature      { background-color: #e0e7ff; color: #3730a3; border: 1px solid #6366f1; }
-.planned-enhancement  { background-color: #f1f5f9; color: #334155; border: 1px solid #94a3b8; }
+.planned-doc          { background-color: #fef3c7; color: #92400e; border: 1px solid #f59e0b; }
+.planned-procedure    { background-color: #fef3c7; color: #92400e; border: 1px solid #f59e0b; }
 
 .planned-impact-high   { font-weight: 700; }
 .planned-impact-medium { font-weight: 600; }

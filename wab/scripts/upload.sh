@@ -1,37 +1,12 @@
 #!/bin/sh
 #
-# upload.sh — publish the current dist/ contents to the `gh-pages` branch
-# on `pryv/compliance-matrix`. Run AFTER `npm run build`.
+# upload.sh — DEPLOY DISABLED (HDS adaptation, 2026-07-28).
 #
-# Mirrors app-web-auth3/scripts/upload.sh: a single commit message is
-# required so the gh-pages history stays readable.
+# Inherited from pryv/compliance-matrix, where it pushed wab/dist/ to that
+# repo's gh-pages. Disabled here: this repo's gh-pages serves the static
+# reference site (compliance.datasafe.dev) and must not be clobbered by the
+# SPA build. See wab/scripts/setup.sh header for the re-enable path.
 
-set -e
-
-scriptsFolder=$(cd "$(dirname "$0")"; pwd)
-cd "$scriptsFolder/.."
-
-if [ $# -eq 0 ]; then
-  echo "Usage: scripts/upload.sh \"<commit message>\""
-  echo "No commit message was provided — refusing to push an unlabeled deploy."
-  exit 1
-fi
-
-if [ ! -d dist/.git ]; then
-  echo "dist/.git not found — run scripts/setup.sh first."
-  exit 1
-fi
-
-cd dist
-
-# `add -A` covers additions + modifications + deletions, so vite-emitted
-# hashed filenames don't accumulate stale assets in the gh-pages history.
-git add -A .
-
-if git diff --cached --quiet; then
-  echo "Nothing to publish — dist/ matches the deployed gh-pages already."
-  exit 0
-fi
-
-git commit -m "$1"
-git push origin gh-pages
+echo "WAB deploy is disabled — see wab/scripts/setup.sh for why and how to"
+echo "re-enable. Local dev: npm install && npm run dev"
+exit 1

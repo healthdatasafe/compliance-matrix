@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { listScopes, plannedCountsByScope, type Scope } from '../db';
+import { listScopes, plannedCountsByScope, type PlannedKind, type Scope } from '../db';
 
 const TYPE_GROUPS: Array<{ key: Scope['type']; label: string }> = [
   { key: 'regulation', label: 'Regulations' },
@@ -10,7 +10,7 @@ const TYPE_GROUPS: Array<{ key: Scope['type']; label: string }> = [
 
 export function ScopeList () {
   const [scopes, setScopes] = useState<Scope[] | null>(null);
-  const [planned, setPlanned] = useState<Record<string, { planned: number; bugs: number }>>({});
+  const [planned, setPlanned] = useState<Record<string, { planned: number; byKind: Record<PlannedKind, number> }>>({});
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -43,28 +43,21 @@ export function ScopeList () {
                       <span className='text-xs text-slate-500'>{s.requirement_count} req</span>
                     </div>
                     <div className='text-xs text-slate-500 mt-1'>{s.jurisdiction}</div>
-                    {s.curated && (
-                      <span className='text-xs text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded mt-2 inline-block'>
-                        curated
-                      </span>
-                    )}
-                    {s.layered_on.length > 0 && (
+                    {s.regions.length > 0 && (
                       <div className='text-xs text-slate-500 mt-1'>
-                        layered on: {s.layered_on.join(', ')}
+                        regions: {s.regions.map((r) => r.toUpperCase()).join(', ')}
                       </div>
                     )}
-                    {planned[s.id] && (
+                    {s.layered_on_pryv && (
+                      <div className='text-xs text-slate-500 mt-1'>
+                        layered on platform scope: {s.layered_on_pryv}
+                      </div>
+                    )}
+                    {planned[s.id] && planned[s.id].planned > 0 && (
                       <div className='mt-2 flex flex-wrap gap-1'>
-                        {planned[s.id].bugs > 0 && (
-                          <span className='planned-bug planned-impact-medium text-xs px-1.5 py-0.5 rounded'>
-                            {planned[s.id].bugs} queued bug{planned[s.id].bugs > 1 ? 's' : ''}
-                          </span>
-                        )}
-                        {(planned[s.id].planned - planned[s.id].bugs) > 0 && (
-                          <span className='planned-feature planned-impact-medium text-xs px-1.5 py-0.5 rounded'>
-                            {planned[s.id].planned - planned[s.id].bugs} planned
-                          </span>
-                        )}
+                        <span className='planned-feature planned-impact-medium text-xs px-1.5 py-0.5 rounded'>
+                          ⏳ {planned[s.id].planned} planned item{planned[s.id].planned > 1 ? 's' : ''}
+                        </span>
                       </div>
                     )}
                   </Link>

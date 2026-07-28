@@ -44,8 +44,8 @@ vendor/pryv/    Vendored snapshot of pryv/compliance-matrix (the platform layer)
 references/      (under vendor/pryv) canonical regulation sources
 schemas/, docs/ Methodology: coverage taxonomy, effort axis, glossary, how-to
 scripts/        build.js (YAML → dist/compliance.sqlite), validate.js (CI gate)
-wab/            The web app to browse the matrix (React + Vite) — inherited from
-                Pryv; HDS adaptation pending
+wab/            The web app to browse the matrix (React + Vite) — adapted to the
+                HDS three-layer sqlite (2026-07-28); local-only (npm run dev), no deploy yet
 dist/           Build output (gitignored): compliance.sqlite + wab build
 ```
 

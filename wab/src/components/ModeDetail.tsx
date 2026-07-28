@@ -4,7 +4,7 @@ import {
   listScopes,
   listModeCoverage,
   type FacilitationMode,
-  type PrimitiveCoverageRow,
+  type CoverageRow,
   type Scope
 } from '../db';
 import { RequirementGroupedTable, ScopeFocusPicker } from './RequirementGroupedTable';
@@ -12,30 +12,34 @@ import { RequirementGroupedTable, ScopeFocusPicker } from './RequirementGroupedT
 const MODE_DETAIL: Record<FacilitationMode, { label: string; description: string }> = {
   primitive: {
     label: 'Primitive',
-    description: 'Pryv\'s access/permissions enforce the obligation at the API surface.'
+    description: 'The platform\'s access/permissions enforce the obligation at the API surface.'
   },
   evidence: {
     label: 'Evidence',
-    description: 'Pryv\'s audit log + access-version chain feed the implementer\'s artefact.'
+    description: 'The audit log + access-version chain feed the implementer\'s artefact.'
   },
   storage: {
     label: 'Storage',
-    description: 'Pryv stores the text / records the implementer creates (notice, consent text, …).'
+    description: 'HDS stores the text / records the implementer creates (notice, consent text, …).'
   },
   infrastructure: {
     label: 'Infrastructure',
-    description: 'Pryv runs the technical layer (TLS, HA, encryption-at-rest, mTLS).'
+    description: 'HDS runs the technical layer (TLS, HA, encryption-at-rest).'
   },
   awareness: {
     label: 'Awareness',
-    description: 'Framing row — Pryv contributes minimally; the matrix is the surface.'
+    description: 'Framing row — HDS contributes minimally; the matrix is the surface.'
+  },
+  operations: {
+    label: 'Operations',
+    description: 'HDS-as-operator runs the process (monitoring, backups, deploys, restores).'
   }
 };
 
 export function ModeDetail () {
   const { mode } = useParams<{ mode: FacilitationMode }>();
   const [scopes, setScopes] = useState<Scope[]>([]);
-  const [rows, setRows] = useState<PrimitiveCoverageRow[]>([]);
+  const [rows, setRows] = useState<CoverageRow[]>([]);
   const [selectedScopes, setSelectedScopes] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
 

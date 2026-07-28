@@ -34,7 +34,7 @@ vendor/pryv/    Pinned snapshot of pryv/compliance-matrix (platform layer input)
 schemas/        JSON Schemas — the row format contract
 docs/           Methodology: coverage taxonomy, effort axis, glossary, how-to
 scripts/        build.js (YAML → dist/compliance.sqlite), validate.js (CI gate)
-wab/            Web app (React + Vite) — inherited from Pryv, HDS adaptation pending
+wab/            Web app (React + Vite) — adapted to the HDS sqlite schema; local-only, no deploy yet
 ```
 
 ## Commands

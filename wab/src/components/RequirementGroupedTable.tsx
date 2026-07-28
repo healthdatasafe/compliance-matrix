@@ -1,16 +1,14 @@
 import { Link } from 'react-router-dom';
 import { DraftBadge, RequirementBadge } from './CoverageBadge';
-import type { PrimitiveCoverageRow, Scope } from '../db';
+import type { CoverageRow, Scope } from '../db';
 
 /**
  * Reusable scope-grouped requirements table. Used by every "what
- * does X cover?" detail view (PrimitiveDetail, BacklogDetail,
- * ModeDetail, GlobalCoverage, ContextNoteDetail) so the rendering
- * stays consistent.
+ * does X cover?" detail view (ModeDetail, GlobalCoverage) so the
+ * rendering stays consistent.
  *
  * Rows must include scope_id + scope_short + ref + title + the
- * coverage triple. Optional extras (e.g. backlog kind / impact /
- * summary) can be appended via `extraColumn`.
+ * coverage triple. Optional extras can be appended via `extraColumn`.
  */
 export function RequirementGroupedTable ({
   rows,
@@ -19,17 +17,17 @@ export function RequirementGroupedTable ({
   extraColumnRender,
   emptyMessage = 'No requirements match the current filter.'
 }: {
-  rows: PrimitiveCoverageRow[];
+  rows: CoverageRow[];
   scopes: Scope[];
   extraColumnHeader?: string;
-  extraColumnRender?: (row: PrimitiveCoverageRow) => React.ReactNode;
+  extraColumnRender?: (row: CoverageRow) => React.ReactNode;
   emptyMessage?: string;
 }) {
   if (rows.length === 0) {
     return <div className='mt-6 text-slate-500'>{emptyMessage}</div>;
   }
 
-  const grouped = new Map<string, PrimitiveCoverageRow[]>();
+  const grouped = new Map<string, CoverageRow[]>();
   for (const r of rows) {
     const arr = grouped.get(r.scope_id) ?? [];
     arr.push(r);
@@ -77,7 +75,7 @@ export function RequirementGroupedTable ({
                       <RequirementBadge
                         coverage={r.coverage}
                         mode={r.facilitation_mode}
-                        effort={r.pryv_effort_saved}
+                        effort={r.effort_saved}
                       />
                     </td>
                     {extraColumnRender && <td className='p-2'>{extraColumnRender(r)}</td>}

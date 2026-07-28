@@ -24,9 +24,9 @@ const EFFORT_DOTS: Record<EffortSaved, number> = {
 };
 
 const EFFORT_LABELS_FULL: Record<EffortSaved, string> = {
-  high: 'Engineering + operational effort: Pryv carries most (legal / editorial / process work not counted; see docs/effort-axis.md)',
-  medium: 'Engineering + operational effort: roughly shared between Pryv and implementer',
-  low: 'Engineering + operational effort: implementer carries most; Pryv contributes a small technical substrate'
+  high: 'Engineering + operational effort: HDS carries most (legal / editorial / process work not counted)',
+  medium: 'Engineering + operational effort: roughly shared between HDS and implementer',
+  low: 'Engineering + operational effort: implementer carries most; HDS contributes a small technical substrate'
 };
 
 const MODE_LABELS: Record<FacilitationMode, string> = {
@@ -34,30 +34,28 @@ const MODE_LABELS: Record<FacilitationMode, string> = {
   evidence: 'Evidence',
   storage: 'Storage',
   infrastructure: 'Infrastructure',
-  awareness: 'Awareness'
+  awareness: 'Awareness',
+  operations: 'Operations'
 };
 
 const MODE_LABELS_FULL: Record<FacilitationMode, string> = {
-  primitive: 'Pryv\'s access/permissions enforce the obligation',
-  evidence: 'Pryv\'s audit log feeds the implementer\'s artefact',
-  storage: 'Pryv stores text/records the implementer creates',
-  infrastructure: 'Pryv runs the technical layer (TLS, HA, encryption)',
-  awareness: 'Framing row; Pryv contributes minimally'
+  primitive: 'The platform\'s access/permissions enforce the obligation',
+  evidence: 'The audit log / platform artefacts feed the implementer\'s evidence',
+  storage: 'HDS stores text/records the implementer creates',
+  infrastructure: 'HDS runs the technical layer (TLS, HA, encryption)',
+  awareness: 'Framing row; HDS contributes minimally',
+  operations: 'HDS-as-operator runs the process (monitoring, backups, deploys)'
 };
 
 /**
- * Per-requirement Coverage cell. Verb-first reading: how Pryv addresses
- * the obligation + a 3-dot meter for Pryv's effort share.
+ * Per-requirement Coverage cell. Verb-first reading: how HDS addresses
+ * the obligation + a 3-dot meter for HDS's effort share.
  *
  *   Implements             ●●●
  *   Configurable           ●●○
  *   Facilitates · Storage  ●●○
  *   Documents              ●○○
  *   Out of scope               (no meter — definitional)
- *
- * Verb in slate-700, mode suffix in slate-500 (muted). Filled dots in
- * teal-600 (single accent), hollow in slate-300. Tooltip carries the
- * full mode + effort explanations for hover details.
  */
 export function RequirementBadge ({
   coverage,
@@ -90,10 +88,10 @@ export function RequirementBadge ({
   );
 }
 
-/** 3-dot meter: filled dots = Pryv's share of effort (3=high, 2=med, 1=low). */
+/** 3-dot meter: filled dots = HDS's share of effort (3=high, 2=med, 1=low). */
 function DotMeter ({ level }: { level: number }) {
   return (
-    <span className='inline-flex items-center gap-0.5' aria-label={`Pryv effort: ${level}/3`}>
+    <span className='inline-flex items-center gap-0.5' aria-label={`HDS effort: ${level}/3`}>
       {[1, 2, 3].map((i) => (
         <span
           key={i}
@@ -118,42 +116,42 @@ export function DraftBadge () {
 }
 
 const PLANNED_KIND_LABELS: Record<PlannedKind, string> = {
-  bug: 'BUG',
   feature: 'PLANNED',
-  enhancement: 'ENH'
+  doc: 'DOC PENDING',
+  procedure: 'PROC PENDING'
 };
 
 /**
- * Compact chip that flags a row as depending on planned work.
- *   - bug   → red       (a known defect; today's claim is partially incorrect)
- *   - feature → indigo  (backlog feature whose shipping would tighten the claim)
- *   - enhancement → grey (smaller refinement)
+ * Compact chip that flags a row as depending on queued HDS-side work,
+ * each entry backed by evidence of pending delivery:
+ *   - feature   → indigo  (capability queued for delivery)
+ *   - doc       → amber   (internal document drafted, moving through review/approval)
+ *   - procedure → amber   (operational procedure being stood up)
  *
  * `impact` controls intensity (high = filled bold, low = outlined). Tooltip
- * surfaces the summary + impact + proposal/backlog references.
+ * surfaces the summary + impact + the delivery evidence (internal doc code
+ * and/or public tracker).
  */
 export function PlannedBadge ({ change }: { change: PlannedChange }) {
   const labelKind = PLANNED_KIND_LABELS[change.kind];
   const impact = change.impact ?? 'medium';
   const titleParts = [
-    `${labelKind} (${impact} impact): ${change.summary}`,
-    `Proposal: ${change.proposal}`
+    `${labelKind} (${impact} impact): ${change.summary}`
   ];
-  if (change.backlog) titleParts.push(`Backlog: ${change.backlog}`);
-  if (change.eta_release) titleParts.push(`ETA: ${change.eta_release}`);
+  if (change.internal_doc) titleParts.push(`Internal doc: 🔒 ${change.internal_doc} (on request)`);
+  if (change.eta) titleParts.push(`ETA: ${change.eta}`);
   if (change.tracking_url) titleParts.push(`Tracker: ${change.tracking_url}`);
 
   const className = `planned-${change.kind} planned-impact-${impact} inline-block px-2 py-0.5 rounded text-xs font-semibold whitespace-nowrap`;
   const content = (
     <>
-      {labelKind}
+      ⏳ {labelKind}
       {change.impact && <span className='ml-1 opacity-80'>· {change.impact}</span>}
     </>
   );
 
-  // When `tracking_url` is populated (GitHub issue / project link), render
-  // as a clickable anchor so the operator can jump straight to the tracker.
-  // Otherwise render the static span as before.
+  // When `tracking_url` is populated (public GitHub issue / project link),
+  // render as a clickable anchor so the operator can jump to the tracker.
   if (change.tracking_url) {
     return (
       <a

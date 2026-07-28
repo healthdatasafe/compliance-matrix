@@ -23,7 +23,7 @@ const COVERAGE_LABELS_SHORT: Record<Coverage, string> = {
 
 /**
  * Global coverage view — cuts across every scope. Default question:
- * "across all regulations + standards, what does Pryv implement
+ * "across all regulations + standards, what does HDS implement
  * (or facilitate, or leave out-of-scope, …)?"
  *
  * Tier tile selects a single coverage tier; scope focus picker
@@ -31,7 +31,7 @@ const COVERAGE_LABELS_SHORT: Record<Coverage, string> = {
  */
 export function GlobalCoverage () {
   const [scopes, setScopes] = useState<Scope[]>([]);
-  const [histogram, setHistogram] = useState<Record<Coverage, number>>({} as any);
+  const [histogram, setHistogram] = useState<Record<Coverage, number>>({} as Record<Coverage, number>);
   const [tier, setTier] = useState<Coverage | null>(null);
   const [selectedScopes, setSelectedScopes] = useState<string[]>([]);
   const [rows, setRows] = useState<GlobalRow[]>([]);
