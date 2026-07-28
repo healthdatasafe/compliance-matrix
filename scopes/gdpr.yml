@@ -13,6 +13,11 @@ regions: [ch, us]
 changelog:
   - date: "2026-07-28"
     change: >
+      Art.30: first hds.planned chip — the processor-side RoPA register doc
+      exists internally but is not yet populated; chip carries the internal
+      doc code as delivery evidence (new schema mechanism, this date).
+  - date: "2026-07-28"
+    change: >
       Art.4, Art.17, Art.32: the platform pseudonymisation primitive
       (accesses.create {randomAlias:true}, vendored c2cd9b2) is deployed on all
       HDS cores (open-pryv.io 2.0.0-rc.12). Art.17 stays partial — the
@@ -1095,6 +1100,14 @@ requirements:
         to clientData and access expiry. The controller assembles and maintains
         the formal register; HDS provides the derivable inputs and keeps its own.
       regions: [ch, us]
+      planned:
+        - kind: doc
+          summary: >-
+            HDS's own processor-side RoPA register exists in the internal doc
+            set but is not yet populated with live processing activities;
+            population is the tracked remediation.
+          impact: medium
+          internal_doc: gdpr/registers/records-of-processing
       evidence:
         internal_docs:
           - gdpr/registers/records-of-processing

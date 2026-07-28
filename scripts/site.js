@@ -119,12 +119,13 @@ const filterBar = `
     ${['partner', 'covered-entity', 'business-associate', 'individual'].map((p) =>
       `<label><input type="checkbox" value="${p}" checked> ${p}</label>`).join('')}
   </span>
+  <label class="fgroup"><input type="checkbox" id="fplan"> <span class="pl low">⏳ planned only</span></label>
   <span class="fcount" id="fcount"></span>
 </div>`;
 
 const filterJS = `<script>
 (function(){
-  const q=document.getElementById('q'),cards=[...document.querySelectorAll('.req')],fc=document.getElementById('fcount');
+  const q=document.getElementById('q'),cards=[...document.querySelectorAll('.req')],fc=document.getElementById('fcount'),fp=document.getElementById('fplan');
   const covs=()=>[...document.querySelectorAll('#cov input:checked')].map(i=>i.value);
   const pers=()=>[...document.querySelectorAll('#persona input:checked')].map(i=>i.value);
   function apply(){const t=q.value.toLowerCase(),cv=covs(),pr=pers();let n=0;
@@ -132,7 +133,8 @@ const filterJS = `<script>
       const cp=(c.dataset.personas||'').split(' ').filter(Boolean);
       const okp=cp.length===0||cp.some(p=>pr.includes(p));
       const okt=!t||(c.dataset.text||'').includes(t);
-      const show=okc&&okp&&okt;c.style.display=show?'':'none';if(show)n++;});
+      const okpl=!fp.checked||c.dataset.planned==='1';
+      const show=okc&&okp&&okt&&okpl;c.style.display=show?'':'none';if(show)n++;});
     fc.textContent=n+' / '+cards.length;}
   document.querySelector('.filters').addEventListener('input',apply);apply();
 })();
@@ -252,6 +254,9 @@ h1{font-size:1.5rem}.short{font-weight:400;color:var(--muted);font-size:.9rem}
 .req code{background:#eef1f5;padding:.05rem .3rem;border-radius:.3rem;font-size:.85em}
 .text{color:#374151;font-size:.88rem;background:#fafbfc;border-left:3px solid var(--line);padding:.4rem .7rem;margin:.4rem 0}
 .draft{background:#fef3c7;color:#b45309;font-size:.62rem;text-transform:uppercase;padding:.1rem .4rem;border-radius:999px;vertical-align:middle}
+.pl{font-size:.62rem;padding:.1rem .45rem;border-radius:999px;vertical-align:middle;text-decoration:none;display:inline-block;white-space:nowrap;cursor:default}
+a.pl{cursor:pointer}
+.pl.high{background:#fee2e2;color:#b91c1c}.pl.medium{background:#fef3c7;color:#b45309}.pl.low{background:#e0f2fe;color:#0369a1}
 .layers{display:grid;grid-template-columns:1fr 1.2fr 1.2fr;gap:.8rem;margin-top:.6rem}
 @media(max-width:800px){.layers{grid-template-columns:1fr}}
 .layer{border:1px solid var(--line);border-radius:.5rem;padding:.6rem .7rem;font-size:.84rem}

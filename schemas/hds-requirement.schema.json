@@ -61,6 +61,47 @@
           "items": { "enum": ["ch", "us"] },
           "uniqueItems": true
         },
+        "planned": {
+          "type": "array",
+          "description": "Queued HDS-side work whose delivery would change this row's claim, each entry backed by evidence it is actually coming (a compliance-internal document moving through review, or a public tracking issue). Rendered as one chip per entry alongside the coverage badge; scope pages filter on it. THIS REPO IS PUBLIC: reference only internal document CODES or public URLs — never private workspace paths or plan numbers.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["kind", "summary", "impact"],
+            "anyOf": [
+              { "required": ["internal_doc"] },
+              { "required": ["tracking_url"] }
+            ],
+            "properties": {
+              "kind": {
+                "enum": ["feature", "doc", "procedure"],
+                "description": "feature = HDS app/infra capability queued for delivery; doc = a compliance-internal document drafted and moving through review/approval (name its code in internal_doc); procedure = an operational procedure being stood up (first verified execution pending)."
+              },
+              "summary": {
+                "type": "string",
+                "minLength": 1,
+                "description": "One-line description of what's queued (rendered in the chip tooltip)."
+              },
+              "impact": {
+                "enum": ["high", "medium", "low"],
+                "description": "How much this row's claim shifts when delivered. high = coverage tier likely changes; medium = effort/facilitation upgrade; low = wording / evidence refinement."
+              },
+              "internal_doc": {
+                "type": "string",
+                "description": "CODE of the compliance-internal document evidencing the pending delivery (e.g. 'gdpr/registers/records-of-processing'), same convention as evidence.internal_docs[]. The code is public; the content is released only on request."
+              },
+              "tracking_url": {
+                "type": "string",
+                "format": "uri",
+                "description": "PUBLIC tracker only (GitHub issue / public project card). Never a private workspace path."
+              },
+              "eta": {
+                "type": "string",
+                "description": "Optional coarse, honest target (e.g. '2026-Q4'). Omit rather than guess."
+              }
+            }
+          }
+        },
         "evidence": {
           "type": "object",
           "additionalProperties": false,

@@ -10,6 +10,25 @@ export const badge = (cov) =>
 export const regions = (arr) =>
   (arr && arr.length) ? arr.map((r) => `<span class="rg">${esc(r.toUpperCase())}</span>`).join('') : '';
 
+/**
+ * Planned-work chips for a layer. Works for both shapes:
+ * vendor rows (kind: bug|feature|enhancement, proposal/backlog/eta_release)
+ * and HDS rows (kind: feature|doc|procedure, internal_doc/tracking_url/eta).
+ * Chip text = kind (+ eta); tooltip = summary + delivery evidence.
+ */
+export function plannedChips (planned = []) {
+  return planned.map((p) => {
+    const eta = p.eta || p.eta_release;
+    const tip = [p.summary, p.internal_doc ? `🔒 ${p.internal_doc}` : '', eta ? `target: ${eta}` : '']
+      .filter(Boolean).join(' — ');
+    const body = `⏳ ${esc(p.kind)}${eta ? ` · ${esc(eta)}` : ''}`;
+    const cls = `pl ${esc(p.impact || 'low')}`;
+    return p.tracking_url
+      ? `<a class="${cls}" href="${esc(p.tracking_url)}" title="${esc(tip)}">${body}</a>`
+      : `<span class="${cls}" title="${esc(tip)}">${body}</span>`;
+  }).join('');
+}
+
 export function evidenceList (ev = {}) {
   return [
     ...(ev.tests || []).map((x) => `test: ${esc(x)}`),
@@ -34,16 +53,17 @@ export function requirementCard (r, pryvRow = {}) {
   const personas = (r.implementer || []).map((o) => o.persona);
   const text = `${r.ref} ${r.title} ${hds.overview || ''}`.toLowerCase();
   const ev = evidenceList(hds.evidence);
-  return `<article class="req" id="${refAnchorId(r.ref)}" data-coverage="${esc(hds.coverage || '')}" data-personas="${esc(personas.join(' '))}" data-text="${esc(text)}">
+  const hasPlanned = (hds.planned || []).length || (pryvRow.planned || []).length;
+  return `<article class="req" id="${refAnchorId(r.ref)}" data-coverage="${esc(hds.coverage || '')}" data-personas="${esc(personas.join(' '))}" data-text="${esc(text)}" data-planned="${hasPlanned ? '1' : '0'}">
   <h3><code>${esc(r.ref)}</code> ${esc(r.title)} ${r.draft !== false ? '<span class="draft">draft</span>' : ''}</h3>
   ${r.text ? `<p class="text">${esc(r.text)}</p>` : ''}
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform ${badge(pryvRow.coverage)}</div>
+      <div class="lh">Pryv platform ${badge(pryvRow.coverage)} ${plannedChips(pryvRow.planned)}</div>
       <p>${esc(pryvRow.overview) || '<span class="muted">— not covered by the platform layer —</span>'}</p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS ${badge(hds.coverage)} ${regions(hds.regions)}</div>
+      <div class="lh">HDS ${badge(hds.coverage)} ${regions(hds.regions)} ${plannedChips(hds.planned)}</div>
       <p>${esc(hds.overview)}</p>
       ${hds.detail ? `<details><summary>detail</summary><p>${esc(hds.detail)}</p></details>` : ''}
       ${ev.length ? `<ul class="ev">${ev.map((x) => `<li>${x}</li>`).join('')}</ul>` : ''}
