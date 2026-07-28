@@ -62,10 +62,10 @@ security violations.
       <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>The Security Management
 Process is a programme you run as the covered entity / business
-associate — risk analysis, risk-management decisions, sanctions,
+associate, risk analysis, risk-management decisions, sanctions,
 activity review. Pryv supplies the technical raw material
 (audit log, system-level observability) that several of those
-activities draw on — particularly the §164.308(a)(1)(ii)(D)
+activities draw on, particularly the §164.308(a)(1)(ii)(D)
 Information System Activity Review specification. The umbrella
 programme itself remains yours to define and run.
 </p>
@@ -460,7 +460,7 @@ malicious software.
   <div class="layers">
     <div class="layer pryv">
       <div class="lh">Pryv platform <span class="b out-of-scope">out-of-scope</span> </div>
-      <p>Anti-malware is a host / endpoint / network-layer control —
+      <p>Anti-malware is a host / endpoint / network-layer control,
 Pryv-the-software doesn't include AV. Same out-of-scope reasoning
 as ISO 27001 A.8.7. The operator's hosting environment carries
 this control.
@@ -571,7 +571,7 @@ password-management posture.
       <p>Pryv stores credentials on a privileged `system-stream`, separate
 from ordinary content. Password rules (complexity, rotation) are
 operator-configured. Adding `services.mfa.mode` raises the
-authentication strength beyond a password alone — see §164.312(d).
+authentication strength beyond a password alone, see §164.312(d).
 </p>
     </div>
     <div class="layer hds">
@@ -913,7 +913,7 @@ cyclical assessment. Pryv-side inputs: audit log (control-
 effectiveness sample), observability (operational stability
 data), this matrix (control inventory to evaluate against),
 Pryv's test matrix (~2351 PG and SQLite, matched baseline, passing on every
-commit — concrete §164.308(a)(8) effectiveness evidence),
+commit, concrete §164.308(a)(8) effectiveness evidence),
 Pryv's supply-chain pipeline (Q24 backlog `SUPPLY-CHAIN-
 SCANNING-PIPELINE` once shipped), Pryv's vulnerability
 disclosure program + GHSA advisory history (coordinated
@@ -1270,7 +1270,7 @@ programs granted access rights under §164.308(a)(4).
       <div class="lh">Pryv platform <span class="b implemented">implemented</span> </div>
       <p>Per-stream permissions are enforced at every API call; an access
 can read or write only the streams its `permissions[]` lists, at
-the level granted. There is no &quot;bypass on trust&quot; path — the
+the level granted. There is no &quot;bypass on trust&quot; path, the
 enforcement is the API surface, not a downstream policy layer.
 System streams (account, password, MFA) sit on a separately
 controlled namespace.
@@ -1442,7 +1442,7 @@ predetermined time of inactivity.
       <p>Two configurables: personal-token session lifetime
 (`auth.sessionMaxAge`) and per-access expiry (`access.expires`).
 The latter is per-grant (the access is automatically inert after
-the timestamp passes) — useful for clinical-workflow accesses
+the timestamp passes), useful for clinical-workflow accesses
 whose validity is bounded by the case.
 </p>
     </div>
@@ -1504,7 +1504,7 @@ for the residual).
 switch-on Pryv software. User PHI/PII at rest (events,
 attachments, series, audit, platform DB) is encrypted by the
 `container-encrypted-volume` companion
-(`encryption-at-rest-user-data`) — layered onto the image, it
+(`encryption-at-rest-user-data`), layered onto the image, it
 mounts an encrypted volume on boot so the application stores
 ciphertext at rest. The operator enables it (`CEV_ENABLED`) and
 chooses a key source. Pryv additionally encrypts operator-supplied
@@ -1576,7 +1576,7 @@ examine activity in information systems containing or using ePHI.
   <div class="layers">
     <div class="layer pryv">
       <div class="lh">Pryv platform <span class="b implemented">implemented</span> <a class="pl low" href="https://github.com/orgs/pryv/projects/5?pane=issue&amp;itemId=190467766&amp;issue=pryv%7Copen-pryv.io%7C74" title="Chained / signed audit log strengthens tamper-resistance evidence">⏳ feature</a></div>
-      <p>Pryv's per-user audit log records every API method invocation —
+      <p>Pryv's per-user audit log records every API method invocation,
 timestamp, user, access reference, method, success / error. The
 `audit.get` API method surfaces it for examination. The optional
 audit-event-stream channel additionally emits audit records into
@@ -1695,7 +1695,7 @@ or destroyed in an unauthorized manner.
       <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> <a class="pl medium" href="https://github.com/orgs/pryv/projects/5?pane=issue&amp;itemId=190467766&amp;issue=pryv%7Copen-pryv.io%7C74" title="Chained / signed audit log authenticates audit data (row moves F:Evidence|Low → F:Evidence|Med)">⏳ feature</a></div>
       <p>Event versioning preserves
 the prior content on every update, so &quot;is this the original?&quot;
-is a tractable question — compare against the history. The
+is a tractable question, compare against the history. The
 audit row references the access that performed the update,
 anchoring the change to an authenticated actor. Tamper
 detection beyond this (e.g., end-to-end content hashing under
@@ -1755,7 +1755,7 @@ is the one claimed.
       <div class="lh">Pryv platform <span class="b implemented">implemented</span> <a class="pl medium" href="https://github.com/orgs/pryv/projects/5?pane=issue&amp;itemId=190467852&amp;issue=pryv%7Copen-pryv.io%7C78" title="Reference MFA plugins (TOTP / WebAuthn) + primitive-catalogue doc surface the pluggability">⏳ enhancement</a></div>
       <p>Authentication is mediated by the access-token primitive: the
 bearer of a valid token has been authenticated. Strength of
-that authentication is layered — username + password by default;
+that authentication is layered, username + password by default;
 MFA via `mfa.*` API methods when `services.mfa.mode` is set.
 Recovery paths preserve account ownership when a second-factor
 device is lost.
@@ -1866,7 +1866,7 @@ not improperly modified without detection until disposed of.
       <div class="lh">Pryv platform <span class="b implemented">implemented</span> </div>
       <p>TLS 1.3 provides cryptographic integrity (AEAD) on every byte in
 transit. End-to-end transmission integrity is therefore a
-property of the connection — modification in transit is
+property of the connection, modification in transit is
 cryptographically detectable. Endpoint-to-endpoint integrity
 across multiple hops (e.g., proxy chains) requires the
 implementer's chain to preserve this property.
@@ -1921,7 +1921,7 @@ at-rest encryption is addressed under §164.312(a)(2)(iv).
       <div class="lh">Pryv platform <span class="b implemented">implemented</span> </div>
       <p>TLS 1.3 in transit is default-on via the built-in ACME
 integration; mTLS between cores is the inter-node default once
-a cluster is bootstrapped. &quot;Whenever deemed appropriate&quot; — Pryv's
+a cluster is bootstrapped. &quot;Whenever deemed appropriate&quot;, Pryv's
 default for ePHI transit is: always.
 </p>
     </div>
@@ -1976,7 +1976,7 @@ transmits on the covered entity's behalf.
   <div class="layers">
     <div class="layer pryv">
       <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
-      <p>The BAA itself is a contract —
+      <p>The BAA itself is a contract,
 the covered entity drafts it with legal counsel. What Pryv
 contributes when you operate as a business associate: the audit
 log makes &quot;implement administrative, physical and technical
@@ -2097,7 +2097,7 @@ aware, including breaches of unsecured ePHI.
 incident is the BA's operational concern (audit-log review +
 observability). Reporting to the CE is the contractual flow.
 Pryv's CMC plugin provides a structured cross-account
-messaging substrate when both sides run Pryv — otherwise the
+messaging substrate when both sides run Pryv, otherwise the
 report channel is email / API / portal at the BA's choice.
 The audit log supplies the forensic evidence the report cites.
 </p>
@@ -2151,7 +2151,7 @@ written contract, to comply with the applicable Security Rule requirements.
   <div class="layers">
     <div class="layer pryv">
       <div class="lh">Pryv platform <span class="b out-of-scope">out-of-scope</span> </div>
-      <p>Subcontracting chains are contractual — no software role. The
+      <p>Subcontracting chains are contractual; no software role. The
 only built-in subprocessor Pryv-the-software carries is the
 observability-provider adapter (default disabled); when enabled,
 the BA's subcontractor list adds the observability provider as

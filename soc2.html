@@ -577,7 +577,7 @@ entity and analyzes them as a basis for deciding how they should be managed.
       <p>Your risk-assessment methodology and the specific findings are
 yours. Pryv contributes the inventory of technical controls (this
 matrix, particularly the CC6 access + CC6.6/6.7 boundary +
-cryptography rows) — when you identify a confidentiality /
+cryptography rows), when you identify a confidentiality /
 integrity / availability risk, the matrix surfaces which Pryv
 primitive addresses it, so control applicability is mechanical
 rather than judgemental.
@@ -637,8 +637,8 @@ achievement of its objectives.
       <p>Pryv's audit log + observability metrics are the detection
 substrate for insider-misuse and anomalous-access fraud scenarios
 (every access is attributable; unusual read/write patterns
-surface). The fraud-risk analysis itself — which scenarios matter,
-what thresholds trigger review — is your assessment.
+surface). The fraud-risk analysis itself, which scenarios matter,
+what thresholds trigger review, is your assessment.
 </p>
     </div>
     <div class="layer hds">
@@ -923,9 +923,9 @@ support the achievement of its objectives.
   <div class="layers">
     <div class="layer pryv">
       <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
-      <p>The technology general controls SOC 2 examines — logical access,
+      <p>The technology general controls SOC 2 examines, logical access,
 authentication, encryption in transit + at rest for secrets,
-audit logging, secure inter-core transport — are shipped Pryv
+audit logging, secure inter-core transport, are shipped Pryv
 primitives, enforced at the API surface rather than left to your
 configuration discipline. The CC6 + CC7 rows below detail each.
 Your role is selecting and operating them.
@@ -1236,7 +1236,7 @@ assets to authorized personnel.
       <div class="lh">Pryv platform <span class="b out-of-scope">out-of-scope</span> </div>
       <p>Physical access control (data-center entry, badge systems, media
 vaults) is facility scope, outside Pryv's software boundary. Your
-hosting provider carries this — an HDS- or ISO 27001-certified
+hosting provider carries this, an HDS- or ISO 27001-certified
 hoster typically inherits it from the underlying CSP and provides
 the attestation you reference.
 </p>
@@ -1298,7 +1298,7 @@ diminished and is no longer required.
       <p>Logical destruction is per-user: system.users.delete removes the
 user's data from the live store; event- and stream-level deletion
 cover per-record needs. Whether destruction extends to backups is
-engine-dependent — SQLite stores one file per user (unlink =
+engine-dependent, SQLite stores one file per user (unlink =
 gone), PostgreSQL deletes rows but historical pg_dump artefacts
 retain them until rotated. Choose the engine that matches your
 destruction policy; physical media sanitisation is your hosting
@@ -1364,7 +1364,7 @@ cluster-replicated rotation), token-gated access on every request,
 no plaintext path. Inter-core traffic in a cluster runs over mTLS
 on a private CA, separating the control plane from the user-facing
 plane. Edge controls (WAF, firewall, rate limiting) sit in your
-reverse proxy by design — see context/rate-limiting-and-dos-protection.md.
+reverse proxy by design, see context/rate-limiting-and-dos-protection.md.
 </p>
     </div>
     <div class="layer hds">
@@ -1424,7 +1424,7 @@ or removal.
       <div class="lh">Pryv platform <span class="b implemented">implemented</span> </div>
       <p>Transmission is TLS 1.3 end-to-end (client ↔ core direct, no
 Pryv-shipped intermediary that could log or cache). Movement is
-restricted by the permission model — a credential only moves the
+restricted by the permission model, a credential only moves the
 data its scope permits. Operator secrets at rest use AES-256-GCM
 (HKDF-derived per-key); bootstrap bundles for core-to-core movement
 are AES-256-GCM (scrypt). Bulk event-data at-rest encryption is an
@@ -1671,8 +1671,8 @@ have resulted, in a failure to meet its objectives, and takes action.
     <div class="layer pryv">
       <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Event-vs-incident classification is your decision. Pryv supplies
-the evaluation inputs — audit row patterns, observability
-anomalies — but the categorisation rule and the response trigger
+the evaluation inputs, audit row patterns, observability
+anomalies, but the categorisation rule and the response trigger
 are your policy.
 </p>
     </div>
@@ -1733,8 +1733,8 @@ The external intake channel for substrate-vulnerability reports
 is published in `SECURITY.md` (coordinated disclosure policy:
 private GHSA flow + `security-dev@` mailbox + SLA + scope +
 safe harbor; private vulnerability reporting enabled on the
-published repositories). The incident-response program itself —
-roles, escalation, communications, lessons-learned — is yours
+published repositories). The incident-response program itself,
+roles, escalation, communications, lessons-learned, is yours
 to define and rehearse.
 </p>
     </div>
@@ -2109,7 +2109,7 @@ recovery infrastructure to meet its objectives.
 per-user backups, multi-core topology gives in-line Raft
 replication, TLS certs replicate across the cluster so a surviving
 core stays user-facing. Environmental protections (power, cooling,
-fire suppression) are facility-side — your hoster's certification
+fire suppression) are facility-side; your hoster's certification
 covers them. Backup cadence, retention, and offsite policy are
 yours.
 </p>
@@ -2170,8 +2170,8 @@ meet its objectives.
       <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Pryv gives you a testable recovery path (restore a user from a
 backup file into a clean core; fail a core and confirm a peer keeps
-serving). The recovery drill — scheduling it, evidencing the result,
-feeding gaps back into the plan — is your operating procedure.
+serving). The recovery drill, scheduling it, evidencing the result,
+feeding gaps back into the plan, is your operating procedure.
 </p>
     </div>
     <div class="layer hds">
@@ -2232,7 +2232,7 @@ with a distinct permission scope, so confidential streams are
 reachable only by credentials granted them. System streams add a
 privileged tier independent of your scheme; clientData / event
 type can carry machine-readable classification labels. Masking is
-by projection (stream + permissions), not value transformation —
+by projection (stream + permissions), not value transformation,
 see context/data-masking-projection-vs-transformation.md.
 </p>
     </div>
@@ -2293,7 +2293,7 @@ related to confidentiality.
       <p>Confidential-data disposal uses the same per-user erasure path as
 CC6.5: system.users.delete for whole-account, event/stream
 deletion for per-record. Backup reach is engine-dependent (SQLite
-per-user file vs PostgreSQL row + pg_dump rotation) — pick the
+per-user file vs PostgreSQL row + pg_dump rotation), pick the
 engine that matches your disposal commitment.
 </p>
     </div>
@@ -2353,7 +2353,7 @@ definitions of data processed and service specifications.
       <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>The canonical event-type schemas (class/format JSON Schemas in the
 data-types repo) are the machine-readable definition of &quot;data
-processed&quot; — what each event type means and what shape it takes.
+processed&quot;, what each event type means and what shape it takes.
 You extend the catalogue with your own types via the
 service.eventTypes URL. The processing-objective specifications
 themselves are your product definitions.
@@ -2410,12 +2410,12 @@ completeness and accuracy, to result in services that meet its objectives.
       <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Input accuracy is enforced structurally at ingest: events.create
 and events.update run every payload through the event type's JSON
-Schema (ajv-draft-04) — unknown types and schema violations are
+Schema (ajv-draft-04), unknown types and schema violations are
 rejected with HTTP 400, no silent truncation or downgrade. This is
 the structural-accuracy layer; semantic accuracy (is this the
 *right* blood-pressure reading) stays in your application. Tighten
 structural strictness by declaring min/max/pattern in a custom
-catalogue — see context/data-accuracy-structural-vs-semantic.md.
+catalogue, see context/data-accuracy-structural-vs-semantic.md.
 </p>
     </div>
     <div class="layer hds">
@@ -2533,7 +2533,7 @@ meet its objectives.
 canonical serialisations; the audit log carries an integrity
 checksum of the affected event when a method mutates one, so
 output can be tied back to a verified state. Webhooks notify
-subscribers of change (signal-only — the receiver fetches the
+subscribers of change (signal-only, the receiver fetches the
 authoritative state via authenticated GET, so the delivered output
 is always the current canonical value). Delivery SLAs to your end
 recipients are your specification.
@@ -2593,7 +2593,7 @@ specifications to meet its objectives.
 the audit log can carry a per-event integrity checksum, and
 backup-restore provides a recoverable copy. Together these give an
 accuracy + completeness signal for stored data. Tamper-evidence on
-the audit log itself (hash chaining) is a future primitive — see
+the audit log itself (hash chaining) is a future primitive, see
 the CC7.4 chain proposal.
 </p>
     </div>
@@ -2766,7 +2766,7 @@ related to privacy.
   <div class="layers">
     <div class="layer pryv">
       <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
-      <p>Collection scope is bounded by the access's permissions — an app
+      <p>Collection scope is bounded by the access's permissions, an app
 can only write to the streams + levels it was granted (e.g.
 create-only on a specific subtree), so collection cannot silently
 exceed the agreed purpose. Defining the purpose and the minimal
@@ -2938,8 +2938,8 @@ related to privacy.
       <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Retention metadata (period, basis, scheduled disposal date) can
 ride on event / access clientData so each record carries its own
-retention contract. Pryv ships no automatic TTL / expiry primitive
-— enforcement of the retention schedule is an operator job today
+retention contract. Pryv ships no automatic TTL / expiry primitive,
+enforcement of the retention schedule is an operator job today
 (a scheduled sweep calling events/streams delete). The retention
 policy itself is yours; treat the absence of auto-expiry as an
 operator responsibility when you attest P4.2.
@@ -2999,7 +2999,7 @@ related to privacy.
       <p>Disposal uses the per-user erasure path: system.users.delete for
 whole-account, event/stream deletion for per-record. Backup reach
 is engine-dependent (SQLite per-user file unlink vs PostgreSQL row
-+ pg_dump rotation) — choose the engine that matches your disposal
++ pg_dump rotation), choose the engine that matches your disposal
 commitment, same as GDPR Art.17.
 </p>
     </div>
@@ -3059,11 +3059,11 @@ provides copies to meet its objectives related to privacy.
       <p>Subject access is subject-runnable: the data subject holds their
 own credentials, so events.get / streams.get return their data
 directly, and the pryv-account-backup CLI produces a complete
-portable export — account, profiles, app profiles, streams,
+portable export, account, profiles, app profiles, streams,
 accesses (incl. revoked / expired + opt-in per-access version
 history), events (chunked + incremental), audit log, HF series
 data points, webhooks, and attachments, with a per-file sha256
-integrity manifest — with no operator dependency for routine
+integrity manifest, with no operator dependency for routine
 requests. The browser-based webapp flavour covers the read-side
 text resources only; route subjects who need attachments / HF
 series / webhooks to the CLI. See
@@ -3185,7 +3185,7 @@ consent of the data subject, if required.
     <div class="layer pryv">
       <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Third-party disclosure happens by issuing a scoped shared / CMC
-access — the disclosure is exactly the permissions granted,
+access, the disclosure is exactly the permissions granted,
 nothing more, and the access's clientData records the purpose +
 consent basis. There is no out-of-band data-dump path; disclosure
 is always a tracked, revocable grant. Deciding the lawful purpose
@@ -3244,7 +3244,7 @@ related to privacy.
       <div class="lh">Pryv platform <span class="b implemented">implemented</span> </div>
       <p>Every disclosure is a read against a shared / CMC access, and the
 per-user audit log records each access invocation with the
-accessId + accessSerial that made it — a complete, attributable
+accessId + accessSerial that made it, a complete, attributable
 record of who accessed what, when. Since open-pryv.io `07b6d3b6`
 the *authorization* of a disclosure is recorded too: OAuth2
 `oauth.*` audit events capture the consent grant, the code
@@ -3364,7 +3364,7 @@ privacy.
     <div class="layer pryv">
       <div class="lh">Pryv platform <span class="b out-of-scope">out-of-scope</span> </div>
       <p>Vendor / subprocessor privacy commitments are contractual
-artefacts (DPAs, BAAs). No software role — though when the third
+artefacts (DPAs, BAAs). No software role, though when the third
 party's technical access is a Pryv shared/CMC access, the
 permission scope is a concrete, enforced bound on what they were
 given, which your DPA can reference.
@@ -3476,17 +3476,18 @@ subjects, regulators, and others to meet its objectives related to privacy.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> <a class="pl high" href="https://github.com/orgs/pryv/projects/5?pane=issue&amp;itemId=190467808&amp;issue=pryv%7Copen-pryv.io%7C76" title="Breach-scope tool (accessId → userId reverse-index + audit recordCount + affectedStreamIds) turns the audit trail into a who-was-affected answer for breach notices">⏳ feature</a><a class="pl low" href="https://github.com/orgs/pryv/projects/5?pane=issue&amp;itemId=190467766&amp;issue=pryv%7Copen-pryv.io%7C74" title="Chained audit log raises forensic confidence in the breach-scope determination">⏳ feature</a></div>
-      <p>Pryv contributes the scoping evidence a breach notice needs — the
-audit log ties a compromised access to the users + data it
-touched. Today that reverse-index is manual; the breach-scope tool
-proposal automates &quot;which subjects were affected, how many records,
-which streams&quot;. Drafting and sending the notifications within the
-regulatory deadline is your process.
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> <a class="pl low" href="https://github.com/orgs/pryv/projects/5?pane=issue&amp;itemId=190467766&amp;issue=pryv%7Copen-pryv.io%7C74" title="Chained audit log raises forensic confidence in the breach-scope determination">⏳ feature</a></div>
+      <p>Pryv contributes the scoping evidence a breach notice needs, the
+audit log ties a compromised access to the user + data it
+touched. The shipped `bin/breach-scope.js` (accessId → user
+reverse-index + audit `recordCount` + `scopedStreamIds` query
+scope) automates &quot;who was affected, how many records, which
+streams in scope&quot; in one command. Drafting and sending the
+notifications within the regulatory deadline is your process.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> <a class="pl medium" href="https://github.com/pryv/open-pryv.io/issues/76" title="The upstream breach-scope tool would automate exactly the manual step this row states — the reverse-index from a compromised access to affected subjects — once shipped and deployed by HDS. — upstream: proposals/breach-scope-tool.md">⏳ platform</a></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> <a class="pl medium" href="https://github.com/pryv/open-pryv.io/issues/76" title="The upstream breach-scope tool SHIPPED 2026-07-28 (#76 closed) and automates exactly the manual step this row states — the reverse-index from a compromised access to affected subjects. Becomes claimable here once an open-pryv.io release carrying it is deployed to all HDS cores (the current HDS deployment predates it). — upstream: proposals/breach-scope-tool.md">⏳ platform</a></div>
       <p>The platform supplies the scoping evidence a breach notice needs — the
 audit log ties a compromised access to the users and data it touched — and
 HDS operates the monitoring and incident-response programme that detects
@@ -3594,7 +3595,7 @@ relevant personal information to meet its objectives related to privacy.
       <p>Structural data quality is enforced at ingest by event-type schema
 validation (HTTP 400 on malformed input); subjects keep their data
 up-to-date via events.update / account.update (with version
-history). &quot;Relevant&quot; — collecting no more than the purpose needs —
+history). &quot;Relevant&quot;, collecting no more than the purpose needs,
 is bounded by the permission scope you grant. Judging semantic
 accuracy of a specific value is your application's responsibility.
 </p>

@@ -188,7 +188,7 @@ organisational measures, with privacy-protective default settings.
       <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Pryv's architecture is
 designed to satisfy Art. 7's &quot;from planning through
-implementation&quot; directive — per-user storage isolation, stream-
+implementation&quot; directive, per-user storage isolation, stream-
 scoped permissions, separate personal/app/shared access types,
 system streams for privileged data, audit-by-default. What
 stays on the implementer is the per-deployment default
@@ -468,19 +468,20 @@ Commissioner's request.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> <a class="pl medium" href="https://github.com/orgs/pryv/projects/5?pane=issue&amp;itemId=190467808&amp;issue=pryv%7Copen-pryv.io%7C76" title="bin/breach-scope.js inherits from gdpr.Art.33 — same scoping artefact serves the FDPIC 'as soon as possible' regime">⏳ feature</a></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Same Pryv contribution as
-GDPR Art. 33: audit data + access-version chain let you scope
-the breach (which subjects, which streams, by which access).
+GDPR Art. 33: the shipped `bin/breach-scope.js` toolchain +
+audit data + access-version chain let you scope the breach
+(which subject, which streams in scope, by which access).
 The Swiss-specific point: revFADP Art. 24 says &quot;as soon as
-possible&quot; rather than GDPR's 72-hour hard cap — but the FDPIC
+possible&quot; rather than GDPR's 72-hour hard cap, but the FDPIC
 2025-02-06 guideline still expects &quot;immediately&quot; for high-risk
 breaches. Plan your incident-response cadence to match either
 regime if you face both.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">CH</span> <a class="pl medium" href="https://github.com/pryv/open-pryv.io/issues/76" title="The upstream breach-scope tool (automated scoping report from audit + access-version data for a compromised access) is queued; once shipped and deployed by HDS it turns the Commissioner- notification scoping into an emitted artefact. — upstream: proposals/breach-scope-tool.md">⏳ platform</a></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">CH</span> <a class="pl medium" href="https://github.com/pryv/open-pryv.io/issues/76" title="The upstream breach-scope tool SHIPPED 2026-07-28 (#76 closed) — automated scoping report for a compromised access. Becomes claimable on the Commissioner-notification scoping here once an open-pryv.io release carrying it is deployed to all HDS cores (the current HDS deployment predates it). — upstream: proposals/breach-scope-tool.md">⏳ platform</a></div>
       <p>HDS operates the audit log and access version chain that let the
 controller scope a breach — which subjects, which streams, by which
 access. The nLPD's &quot;as soon as possible&quot; timeline is the controller's to
@@ -540,7 +541,7 @@ token reads everything via the standard Pryv API (events, streams,
 accesses with history, audit, attachments) in the canonical
 data-types JSON shape. revFADP Art. 25 §2 lists an extended
 minimum-information set (purpose, categories, recipients,
-retention, source, automated decisions) — same artefacts as
+retention, source, automated decisions), same artefacts as
 GDPR + a Swiss-specific &quot;source&quot; duty that maps to
 `event.clientData.source` when data wasn't from the subject
 directly.
@@ -934,7 +935,7 @@ initiated abroad.
 depends on whether processing affects CH data subjects, not on
 where infrastructure lives. Pryv's data-residency primitive lets
 you bind subjects to CH hostings explicitly when CH jurisdiction
-is the chosen regime — see Art. 34 for the cross-border transfer
+is the chosen regime, see Art. 34 for the cross-border transfer
 side.
 </p>
     </div>
@@ -1020,7 +1021,7 @@ subject's consent, an overriding private or public interest, or by law.
   <div class="layers">
     <div class="layer pryv">
       <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
-      <p>Same pattern as GDPR Art. 6 —
+      <p>Same pattern as GDPR Art. 6,
 justification basis is recorded on the access's
 `clientData.legal_basis` (Swiss-specific vocabulary drawn from
 Art. 30 §2 list). Determination of which basis applies is your
@@ -1074,7 +1075,7 @@ recommendations and orders.
       <p>The FDPIC is a regulator; no software role. When an FDPIC
 investigation involves a Pryv deployment, the audit log +
 access-version chain are the evidence layer the controller
-provides — but interaction with the FDPIC is the controller's
+provides, but interaction with the FDPIC is the controller's
 legal / regulatory process.
 </p>
     </div>

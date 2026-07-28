@@ -63,9 +63,9 @@ Privacy Rule.
       <p>Pryv's permission model
 is the technical enforcement layer for Article 502: an app or
 counterparty can only read or write streams its access permits.
-The &quot;permitted or required by the Privacy Rule&quot; determination —
+The &quot;permitted or required by the Privacy Rule&quot; determination,
 which use cases are TPO, when authorization is required, what
-minimum-necessary means in your workflow — is your programmatic
+minimum-necessary means in your workflow, is your programmatic
 decision; Pryv enforces whatever scope you grant.
 </p>
     </div>
@@ -173,7 +173,7 @@ authorization from the individual that meets defined content requirements.
     <div class="layer pryv">
       <div class="lh">Pryv platform <span class="b implemented">implemented</span> </div>
       <p>The authorization Pryv mints when your subject grants an access IS
-the §164.508 authorization record — versioned, immutable per
+the §164.508 authorization record, versioned, immutable per
 version, with the granted scope (permissions) and the authorization
 text (clientData or a `consent/request-cmc` event) inseparable.
 Withdrawal is a single API call. For cross-account / cross-entity
@@ -437,8 +437,8 @@ disclosures of PHI and the individual's rights.
       <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>The notice itself is your
 editorial content. Pryv preserves the notice text shown to each
-subject — typically on `access.clientData.privacy_notice` or as
-a dedicated event — so the same words presented are recoverable
+subject, typically on `access.clientData.privacy_notice` or as
+a dedicated event, so the same words presented are recoverable
 per subject per time. The customer-facing `app-web-auth3`
 template is the surface where the notice typically appears.
 </p>
@@ -543,8 +543,8 @@ producible.
     <div class="layer pryv">
       <div class="lh">Pryv platform <span class="b implemented">implemented</span> </div>
       <p>Your subject, holding a personal token, reads everything via the
-standard Pryv API — events, streams, accesses (with history),
-audit records, attachments — in the canonical event-type schemas.
+standard Pryv API, events, streams, accesses (with history),
+audit records, attachments, in the canonical event-type schemas.
 Wrap that in a subject-portal app and you have §164.524 covered
 end-to-end. The 30-day response timeline is your process target,
 not a software latency.
@@ -654,7 +654,7 @@ made in the six years prior to the request, with specified exceptions.
       <div class="lh">Pryv platform <span class="b implemented">implemented</span> </div>
       <p>Pryv's audit log is the §164.528 substrate: every API method call
 attributed to an access (with version) is recorded. Filtering by
-access category — TPO accesses, §164.512 disclosures, etc. — lets
+access category, TPO accesses, §164.512 disclosures, etc., lets
 you derive the §164.528-eligible subset (which excludes TPO).
 Six-year retention of the audit log is your operator-side
 configuration.
@@ -869,7 +869,7 @@ Rule.
     <div class="layer pryv">
       <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Audit log + access version
-chain let you scope what was disclosed to whom and when — the
+chain let you scope what was disclosed to whom and when, the
 first step in any mitigation. `bin/backup.js --restore` is
 available if mitigation involves rolling back data state;
 `accesses.delete` is the primitive to revoke access from the
@@ -927,7 +927,7 @@ required by law.
       <p>Same primitive mapping as §164.514(d) minimum-necessary: per-
 stream permissions are the technical control; the holder cannot
 see more PHI than the granted scope permits. §502(b)(2)
-exceptions are programmatic — the implementer leaves those
+exceptions are programmatic, the implementer leaves those
 accesses unscoped per the exception's permission, and the audit
 log records the broader access for accountability.
 </p>
@@ -981,7 +981,7 @@ associate will appropriately safeguard the information.
     <div class="layer pryv">
       <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>The technical disclosure is
-mediated by the access primitive — mint a BA-specific access
+mediated by the access primitive, mint a BA-specific access
 with `clientData.role = &quot;business_associate&quot;` + `clientData.baa_id
 = &quot;&lt;contract-ref&gt;&quot;`, scoped to the subjects / streams covered
 by the BAA. Cross-platform BA arrangements (where the BA runs
@@ -1040,7 +1040,7 @@ received and their disposition.
 stores each complaint as an event on a designated
 `complaints/*` stream with `clientData.disposition` tracking
 outcome. The audit log captures the timestamp + actor on each
-disposition update — making the §530(d)(2) documentation
+disposition update, making the §530(d)(2) documentation
 requirement an automatic byproduct of normal record-keeping.
 </p>
     </div>
@@ -1447,7 +1447,7 @@ and must provide a summary if the individual agrees in advance.
     <div class="layer pryv">
       <div class="lh">Pryv platform <span class="b implemented">implemented</span> </div>
       <p>The Pryv API delivers events in canonical JSON (data-types
-schemas) — &quot;readily producible&quot; in the §524(c) sense.
+schemas), &quot;readily producible&quot; in the §524(c) sense.
 Implementer's portal can transform to PDF / printed format
 where requested. Summaries are application-layer constructions
 from the same source events.
@@ -1671,7 +1671,7 @@ individual and is not used or disclosed for any other purpose.
 code directly: it mints a platform-unique `r-XXXXXXXX` alias that is
 random by construction (does not encode PHI), so it satisfies
 §514(c)(1)(ii) out of the box. The platform holds the alias-to-user
-mapping and the aliased access exposes only the alias — the covered
+mapping and the aliased access exposes only the alias, the covered
 entity re-identifies by resolving the alias, and the code is used for
 no other purpose. When the workflow instead needs an explicit
 code-to-PHI map, keep it on a dedicated `re-id-map/*` system-
@@ -1734,7 +1734,7 @@ a copy of the written request.
     <div class="layer pryv">
       <div class="lh">Pryv platform <span class="b implemented">implemented</span> </div>
       <p>Each §528(b)(2) field has a Pryv source (date / name / PHI
-description / purpose) — see the §164.528 parent row for the
+description / purpose), see the §164.528 parent row for the
 mapping. The pre-computed accounting report pattern (storing
 results on a dedicated stream) keeps the §528 response window
 tractable.

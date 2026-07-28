@@ -63,12 +63,12 @@ information.
     <div class="layer pryv">
       <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Subpart D applies only
-to &quot;unsecured&quot; PHI — PHI that has not been rendered unusable
+to &quot;unsecured&quot; PHI, PHI that has not been rendered unusable
 through encryption or destruction per HHS guidance (NIST SP
 800-111 / SP 800-88). Pryv's posture (TLS in transit by default,
 operator-side encryption-at-rest, per-user backup files
 transportable as encrypted bundles) lets you put PHI inside the
-safe-harbor where you choose to — narrowing what §400 actually
+safe-harbor where you choose to, narrowing what §400 actually
 reaches in your deployment.
 </p>
     </div>
@@ -128,7 +128,7 @@ PHI under Subpart E, assessed against four risk factors) and &quot;unsecured PHI
       <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Two Pryv contributions to
 applying the §164.402 definitions: (1) the audit log is the data
-source for the §402 risk-assessment factors — nature of PHI
+source for the §402 risk-assessment factors, nature of PHI
 involved, unauthorized person, whether PHI was actually acquired,
 mitigation extent; and (2) Pryv's access + permission model
 makes &quot;acquisition / access / use / disclosure not permitted
@@ -335,9 +335,9 @@ notify each affected individual without unreasonable delay and no later than
     <div class="layer pryv">
       <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>The notification process splits into **identification**
-(Pryv-shipped — audit-log-driven per-subject roster, packaged
-by Q17 BREACH-SCOPE-TOOL once shipped) and **delivery**
-(voluntarily missing + operator-owned — Pryv's transactional
+(Pryv-shipped, audit-log-driven per-subject roster, packaged
+into the one-command `bin/breach-scope.js` report) and **delivery**
+(voluntarily missing + operator-owned, Pryv's transactional
 mail surface isn't bulk-send; operators compose with their
 existing CRM / mail / SMS pipeline). The per-recipient
 audit-trace bridge uses operator-authored
@@ -388,21 +388,22 @@ shortens the data-gathering portion of that window: the audit log and
 access-version chain answer &quot;what was accessed, by whom, when&quot; quickly, so
 the timeline is dominated by editorial and decision work rather than
 investigation.
-" data-planned="1">
+" data-planned="0">
   <h3><code>164.404(b)</code> Timeliness of notification <span class="draft">draft</span></h3>
   <p class="text">The required individual notification must be provided without unreasonable
 delay and in no case later than 60 calendar days after discovery of a breach.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> <a class="pl medium" href="https://github.com/orgs/pryv/projects/5?pane=issue&amp;itemId=190467808&amp;issue=pryv%7Copen-pryv.io%7C76" title="bin/breach-scope.js compresses the scoping step so the 60-day clock is dominated by editorial work, not data-gathering">⏳ feature</a></div>
-      <p>The 60-day clock is procedural
-— the covered entity owns the incident-response cadence. Pryv-
-side data accelerates the &quot;discovery&quot; + &quot;scoping&quot; steps that
-dominate the timeline: audit log + access-version chain answer
-&quot;what was accessed, by whom, when&quot; in seconds. The discipline
-of acting on that data within the 60-day window is the
-operator's process.
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
+      <p>The 60-day clock is procedural,
+the covered entity owns the incident-response cadence. The
+shipped `bin/breach-scope.js` compresses the &quot;discovery&quot; +
+&quot;scoping&quot; steps that dominate the timeline: one command on the
+subject's home core answers &quot;what was accessed, by whom, when,
+how many records&quot;, so the clock is dominated by editorial work,
+not data-gathering. The discipline of acting on that data
+within the 60-day window is the operator's process.
 </p>
     </div>
     <div class="layer hds">
@@ -447,7 +448,7 @@ contributes to one content element — the description of the phi involved —
 which is derivable from the audit-log scoping performed for the risk
 assessment. the remaining elements are operational and authored by the
 covered entity.
-" data-planned="1">
+" data-planned="0">
   <h3><code>164.404(c)</code> Content of notification <span class="draft">draft</span></h3>
   <p class="text">The individual notification must describe what happened (including the dates
 of breach and discovery), the types of PHI involved, steps individuals should
@@ -455,12 +456,18 @@ take, what the entity is doing in response, and contact procedures.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b out-of-scope">out-of-scope</span> <a class="pl medium" href="https://github.com/orgs/pryv/projects/5?pane=issue&amp;itemId=190467808&amp;issue=pryv%7Copen-pryv.io%7C76" title="bin/breach-scope.js produces the §404(c) PHI-involved description machine-derivably from audit + access-version data">⏳ feature</a></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Content of the notification is the covered entity's editorial
-artefact. Pryv has no opinion on the wording. The PHI-involved
-description is derivable from the audit-log scoping done under
-Art. 402 risk assessment (see hipaa-breach.164.402 row), but
-composing the prose remains operator-side.
+artefact; Pryv has no opinion on the wording. The shipped
+`bin/breach-scope.js` report machine-derives inputs to two of
+the five §404(c) content elements: the what-happened
+description (time window, methods invoked, record counts) and
+raw material for the PHI-involved description (streams in the
+compromised access's query scope). The stream list is an upper
+bound on exposure, mapping streams to &quot;types of PHI&quot; is
+editorial, and the remaining elements (steps individuals
+should take, what the entity is doing, contact procedures)
+stay operator-side.
 </p>
     </div>
     <div class="layer hds">
@@ -722,7 +729,7 @@ for the period specified (with a 30-day cap for oral statements).
   <div class="layers">
     <div class="layer pryv">
       <div class="lh">Pryv platform <span class="b out-of-scope">out-of-scope</span> </div>
-      <p>Procedural — depends on receipt of the law-enforcement
+      <p>Procedural, depends on receipt of the law-enforcement
 statement (oral with 30-day cap, or written with the official's
 time-limit). No software role beyond preserving the audit log
 across the delay period (which happens by default).
@@ -776,11 +783,13 @@ an impermissible use or disclosure did not constitute a reportable breach.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> <a class="pl medium" href="https://github.com/orgs/pryv/projects/5?pane=issue&amp;itemId=190467766&amp;issue=pryv%7Copen-pryv.io%7C74" title="Chained audit log IS the burden-of-proof artefact (row could shift F:Evidence|Med → F:Evidence|High)">⏳ feature</a><a class="pl medium" href="https://github.com/orgs/pryv/projects/5?pane=issue&amp;itemId=190467808&amp;issue=pryv%7Copen-pryv.io%7C76" title="bin/breach-scope.js bundles the §164.414 demonstration artefact (audit-walk + integrity hashes for the affected window)">⏳ feature</a></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> <a class="pl medium" href="https://github.com/orgs/pryv/projects/5?pane=issue&amp;itemId=190467766&amp;issue=pryv%7Copen-pryv.io%7C74" title="Chained audit log IS the burden-of-proof artefact (row could shift F:Evidence|Med → F:Evidence|High)">⏳ feature</a></div>
       <p>&quot;Burden of proof&quot; is met
 with evidence; Pryv's audit + access-version chain is the
 technical evidence layer (&quot;we know exactly what was accessed by
-which credential at what time&quot;). The organizational
+which credential at what time&quot;), and the shipped
+`bin/breach-scope.js` bundles the audit walk + integrity hashes
+for the affected window into one artefact. The organizational
 documentation (incident response records, notification records,
 decisions to not notify with rationale) sits on top of that
 data.
