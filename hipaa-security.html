@@ -506,14 +506,14 @@ outside HDS.
 audit log, and hds's operational monitoring aggregates rate and anomaly
 signals across both data-residency options. discrepancy-reporting
 thresholds and the response cadence are operator-side procedure.
-" data-planned="0">
+" data-planned="1">
   <h3><code>164.308(a)(5)(ii)(C)</code> Log-in monitoring — Addressable <span class="draft">draft</span></h3>
   <p class="text">Implement procedures for monitoring log-in attempts and reporting
 discrepancies.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> <a class="pl low" href="https://github.com/orgs/pryv/projects/5?pane=issue&amp;itemId=219705775&amp;issue=pryv%7Copen-pryv.io%7C117" title="Reference reverse-proxy rate-limiting configurations add an enforcement companion to log-in monitoring on the authentication endpoints">⏳ enhancement</a></div>
       <p>Login + authentication-
 failure events are captured in the audit log (per `auth.*` API
 method calls). Observability data aggregates rate + anomaly
@@ -567,7 +567,7 @@ password-management posture.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b configurable">configurable</span> <a class="pl low" href="https://github.com/pryv/open-pryv.io/issues/78" title="Reference TOTP / WebAuthn plugins reduce dependence on SMS-OTP for the second factor">⏳ enhancement</a></div>
+      <div class="lh">Pryv platform <span class="b configurable">configurable</span> <a class="pl low" href="https://github.com/orgs/pryv/projects/5?pane=issue&amp;itemId=190467852&amp;issue=pryv%7Copen-pryv.io%7C78" title="Reference TOTP / WebAuthn plugins reduce dependence on SMS-OTP for the second factor">⏳ enhancement</a></div>
       <p>Pryv stores credentials on a privileged `system-stream`, separate
 from ordinary content. Password rules (complexity, rotation) are
 operator-configured. Adding `services.mfa.mode` raises the
@@ -899,7 +899,7 @@ records.
 the audit log, operational monitoring, this matrix as a control inventory,
 and the platform's test results as control-effectiveness evidence. the
 evaluation write-up is held internally and shared on request.
-" data-planned="0">
+" data-planned="1">
   <h3><code>164.308(a)(8)</code> Evaluation — standard <span class="draft">draft</span></h3>
   <p class="text">Perform periodic technical and nontechnical evaluation, in response to
 environmental or operational changes, to confirm that security policies and
@@ -907,7 +907,7 @@ procedures continue to meet the requirements of this subpart.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> <a class="pl medium" href="https://github.com/orgs/pryv/projects/5?pane=issue&amp;itemId=219705795&amp;issue=pryv%7Copen-pryv.io%7C118" title="Read-only effective-configuration endpoint supplies the technical baseline snapshot the periodic evaluation is measured against">⏳ feature</a></div>
       <p>Evaluation is the operator's
 cyclical assessment. Pryv-side inputs: audit log (control-
 effectiveness sample), observability (operational stability
@@ -1499,7 +1499,7 @@ for the residual).
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b configurable">configurable</span> <a class="pl medium" href="https://github.com/pryv/open-pryv.io/issues/34" title="End-to-end (server-blind) encryption via proxy re-encryption brings CMEK / BYOK to the Pryv layer">⏳ feature</a></div>
+      <div class="lh">Pryv platform <span class="b configurable">configurable</span> <a class="pl medium" href="https://github.com/orgs/pryv/projects/5?pane=issue&amp;itemId=180707914&amp;issue=pryv%7Copen-pryv.io%7C34" title="End-to-end (server-blind) encryption via proxy re-encryption brings CMEK / BYOK to the Pryv layer">⏳ feature</a></div>
       <p>The &quot;mechanism to encrypt and decrypt ePHI&quot; is delivered as
 switch-on Pryv software. User PHI/PII at rest (events,
 attachments, series, audit, platform DB) is encrypted by the
@@ -1575,7 +1575,7 @@ examine activity in information systems containing or using ePHI.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b implemented">implemented</span> <a class="pl low" href="https://github.com/pryv/open-pryv.io/issues/74" title="Chained / signed audit log strengthens tamper-resistance evidence">⏳ feature</a></div>
+      <div class="lh">Pryv platform <span class="b implemented">implemented</span> <a class="pl low" href="https://github.com/orgs/pryv/projects/5?pane=issue&amp;itemId=190467766&amp;issue=pryv%7Copen-pryv.io%7C74" title="Chained / signed audit log strengthens tamper-resistance evidence">⏳ feature</a></div>
       <p>Pryv's per-user audit log records every API method invocation —
 timestamp, user, access reference, method, success / error. The
 `audit.get` API method surfaces it for examination. The optional
@@ -1633,7 +1633,7 @@ destruction.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> <a class="pl medium" href="https://github.com/pryv/open-pryv.io/issues/74" title="Chained / signed audit log enforces log integrity at the primitive layer">⏳ feature</a></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> <a class="pl medium" href="https://github.com/orgs/pryv/projects/5?pane=issue&amp;itemId=190467766&amp;issue=pryv%7Copen-pryv.io%7C74" title="Chained / signed audit log enforces log integrity at the primitive layer">⏳ feature</a></div>
       <p>Integrity is multi-
 layered: write authorization gated by `permissions`, event
 versioning preserves the prior value on every update, audit
@@ -1692,7 +1692,7 @@ or destroyed in an unauthorized manner.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> <a class="pl medium" href="https://github.com/pryv/open-pryv.io/issues/74" title="Chained / signed audit log authenticates audit data (row moves F:Evidence|Low → F:Evidence|Med)">⏳ feature</a></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> <a class="pl medium" href="https://github.com/orgs/pryv/projects/5?pane=issue&amp;itemId=190467766&amp;issue=pryv%7Copen-pryv.io%7C74" title="Chained / signed audit log authenticates audit data (row moves F:Evidence|Low → F:Evidence|Med)">⏳ feature</a></div>
       <p>Event versioning preserves
 the prior content on every update, so &quot;is this the original?&quot;
 is a tractable question — compare against the history. The
@@ -1752,7 +1752,7 @@ is the one claimed.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b implemented">implemented</span> <a class="pl medium" href="https://github.com/pryv/open-pryv.io/issues/78" title="Reference MFA plugins (TOTP / WebAuthn) + primitive-catalogue doc surface the pluggability">⏳ enhancement</a></div>
+      <div class="lh">Pryv platform <span class="b implemented">implemented</span> <a class="pl medium" href="https://github.com/orgs/pryv/projects/5?pane=issue&amp;itemId=190467852&amp;issue=pryv%7Copen-pryv.io%7C78" title="Reference MFA plugins (TOTP / WebAuthn) + primitive-catalogue doc surface the pluggability">⏳ enhancement</a></div>
       <p>Authentication is mediated by the access-token primitive: the
 bearer of a valid token has been authenticated. Strength of
 that authentication is layered — username + password by default;
