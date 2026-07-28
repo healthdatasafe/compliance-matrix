@@ -11,6 +11,12 @@ layered_on_pryv: hipaa-security
 regions: [us]
 
 changelog:
+  - date: "2026-07-28"
+    change: >
+      §164.308(a)(6)(i) and §164.308(a)(8): cite the upstream open-pryv.io
+      coordinated vulnerability disclosure program (shipped 2026-07-28) as the
+      substrate-vulnerability intake channel and as a periodic-evaluation
+      input.
   - date: "2026-06-15"
     change: >
       Initial draft of the HDS layer over the HIPAA Security Rule
@@ -434,6 +440,11 @@ requirements:
       or scope reduction. HDS documents its incident-handling and notification
       flow, which feeds the breach-reporting obligations a partner carries under
       their BAA. Partners run their own incident programme for their workload.
+      For vulnerabilities in the platform substrate itself, the upstream
+      open-pryv.io project publishes a coordinated vulnerability disclosure
+      program (private GitHub Security Advisories plus a security mailbox, with
+      GHSA/CVE issuance); a published advisory affecting the deployed release
+      enters HDS's incident procedure as a provider notification.
     regions: [us, ch]
     evidence:
       internal_docs:
@@ -625,9 +636,12 @@ requirements:
     detail: |
       Inputs to the evaluation include audit-log samples, operational-stability
       data, this layered matrix as the inventory of controls to assess against,
-      and the platform's automated test suite as ongoing effectiveness evidence.
-      HDS documents the cadence and findings; a partner runs its own periodic
-      evaluation for its own programme.
+      the platform's automated test suite as ongoing effectiveness evidence, and
+      the upstream project's published security-advisory history (open-pryv.io's
+      coordinated vulnerability disclosure program with GHSA/CVE issuance),
+      checked against the release HDS deploys. HDS documents the cadence and
+      findings; a partner runs its own periodic evaluation for its own
+      programme.
     regions: [us, ch]
     evidence:
       internal_docs:
