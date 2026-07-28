@@ -228,7 +228,7 @@ operate downstream.
 software role. hds runs and documents its own competence programme for the
 workforce operating the platform; formal, verified security-awareness
 training is a known gap being matured. the service organization runs its own.
-" data-planned="0">
+" data-planned="1">
   <h3><code>CC1.4</code> CC1.4 — Commitment to competence <span class="draft">draft</span></h3>
   <p class="text">The entity demonstrates a commitment to attract, develop, and retain competent
 individuals in alignment with its objectives.
@@ -241,7 +241,7 @@ role.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span> </div>
+      <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span> <span class="pl medium" title="A standing security-awareness / competence programme is being stood up: the workforce-training procedure and its completion-record template are drafted in the internal pipeline; onboarding delivery and tracked completions are the outstanding remainder. — 🔒 hipaa/procedures/workforce-training">⏳ procedure</span></div>
       <p>Hiring, training and retention of competent staff is an HR programme with no
 software role. HDS runs and documents its own competence programme for the
 workforce operating the platform; formal, verified security-awareness
@@ -566,7 +566,7 @@ known gap being matured. what hds contributes is the inventory of technical
 controls (this matrix, especially the cc6 access and cc6.6/6.7 boundary and
 cryptography rows), so when a confidentiality, integrity or availability risk
 is identified, the control that addresses it is mechanical to locate.
-" data-planned="0">
+" data-planned="1">
   <h3><code>CC3.2</code> CC3.2 — Identification and analysis of risk <span class="draft">draft</span></h3>
   <p class="text">The entity identifies risks to the achievement of its objectives across the
 entity and analyzes them as a basis for deciding how they should be managed.
@@ -584,7 +584,7 @@ rather than judgemental.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span> </div>
+      <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span> <span class="pl high" title="The formal risk analysis is drafted in the internal pipeline (scope inventory and risk table authored, assessment values outstanding) and its completion is the top item on the risk-management treatment register; completing it would change this row's claim. — 🔒 hipaa/risk/risk-analysis">⏳ doc</span></div>
       <p>A formal risk assessment is each organization's own methodology and findings.
 HDS is honest that its own formal risk assessment is not yet conducted — a
 known gap being matured. What HDS contributes is the inventory of technical
@@ -944,8 +944,9 @@ mechanisms are in place.
 control and authentication are enforced on every request, transmission is
 TLS by default, the audit log is always-on, and inter-core transport is
 mutually authenticated. HDS operates this stack across both data-residency
-options. At-rest encryption of bulk event data is the one general control not
-yet shipped (see CC6.7) and is noted honestly. A partner selects, configures
+options. At-rest encryption of event data is in force at the hosting layer
+in both regions (full-volume encryption, since 2026-06-26; see CC6.7 for
+the provider-managed-key residual). A partner selects, configures
 and operates these controls; it does not build them.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/access-control</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/policies/audit-controls</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/policies/transmission-security</span> <span class="onreq">available on request</span></li></ul>
@@ -956,8 +957,8 @@ and operates these controls; it does not build them.
         <strong>service-organization</strong> <span class="b documented">documented</span>
         
         <p>Select, configure and operate the platform general IT controls; document
-the configuration and assess the at-rest encryption gap in your risk
-analysis.
+the configuration and weigh the provider-managed-key at-rest residual in
+your risk analysis.
 </p>
       </div><div class="persona">
         <strong>user-entity</strong> <span class="b out-of-scope">out-of-scope</span>
@@ -1409,8 +1410,9 @@ edge controls (WAF, rate limits) your risk analysis calls for.
 hds-shipped intermediary that could log or cache), and movement is restricted
 by the permission model — a credential only moves the data its scope permits.
 operator secrets at rest and bootstrap bundles for core-to-core movement are
-encrypted with authenticated encryption. bulk event-data at-rest encryption
-is an operator-side storage-layer choice and is not yet platform-provided.
+encrypted with authenticated encryption. bulk event data is encrypted at
+rest at the hosting/storage layer in both regions (since 2026-06-26),
+with provider-managed keys as the documented residual.
 " data-planned="0">
   <h3><code>CC6.7</code> CC6.7 — Restriction and protection of information in transmission and movement <span class="draft">draft</span></h3>
   <p class="text">The entity restricts the transmission, movement, and removal of information to
@@ -1435,28 +1437,29 @@ operator-side storage-layer choice (LUKS / SSE-KMS / customer keys).
 HDS-shipped intermediary that could log or cache), and movement is restricted
 by the permission model — a credential only moves the data its scope permits.
 Operator secrets at rest and bootstrap bundles for core-to-core movement are
-encrypted with authenticated encryption. Bulk event-data at-rest encryption
-is an operator-side storage-layer choice and is not yet platform-provided.
+encrypted with authenticated encryption. Bulk event data is encrypted at
+rest at the hosting/storage layer in both regions (since 2026-06-26),
+with provider-managed keys as the documented residual.
 </p>
       <details><summary>detail</summary><p>The transmission half is default-on TLS with no plaintext path; the movement
 half is bounded by the access permission model, so data only moves where a
 scope permits and there is no out-of-band dump path. Operator secrets and
-core-to-core bootstrap material use authenticated encryption at rest. HDS is
-honest that platform-managed at-rest encryption of bulk event data is not yet
-shipped — at-rest protection is applied at the infrastructure/storage layer
-in each region, and an organization assesses the residual gap in its risk
-analysis.
+core-to-core bootstrap material use authenticated encryption at rest. Event
+data at rest is protected by hosting-layer full-volume encryption in each
+region; keys are provider-managed, so platform-managed content encryption
+(operator-held-key volumes or end-to-end) remains an optional
+strengthening an organization weighs in its risk analysis.
 </p></details>
-      <ul class="ev"><li><span class="lock">🔒 hipaa/policies/transmission-security</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/policies/encryption</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/risk/at-rest-encryption-gap</span> <span class="onreq">available on request</span></li></ul>
+      <ul class="ev"><li><span class="lock">🔒 hipaa/policies/transmission-security</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/policies/encryption</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/risk/at-rest-encryption</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/evidence/at-rest-encryption-verification</span> <span class="onreq">available on request</span></li></ul>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
       <div class="persona">
         <strong>service-organization</strong> <span class="b configurable">configurable</span>
         
-        <p>Rely on default-on TLS and the permission-bounded movement model; apply
-infrastructure at-rest encryption and assess the bulk-data at-rest gap in
-your risk analysis.
+        <p>Rely on default-on TLS and the permission-bounded movement model; weigh
+the provider-managed-key at-rest residual in your risk analysis and add
+application-side encryption where your assessment requires it.
 </p>
       </div><div class="persona">
         <strong>user-entity</strong> <span class="b out-of-scope">out-of-scope</span>
@@ -1845,7 +1848,7 @@ public ci test matrix; separate environments are supported via independent
 deployments, and the audit log records config-driven behaviour change. hds is
 honest, though, that its own formalised change-management programme (windows,
 sign-off, rollback) is still being matured — a known gap.
-" data-planned="0">
+" data-planned="1">
   <h3><code>CC8.1</code> CC8.1 — Authorized changes to infrastructure, data, software, and procedures <span class="draft">draft</span></h3>
   <p class="text">The entity authorizes, designs, develops or acquires, configures, documents,
 tests, approves, and implements changes to infrastructure, data, software, and
@@ -1865,7 +1868,7 @@ change-approval workflow (windows, sign-off, rollback) sits on top.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span> </div>
+      <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span> <span class="pl medium" title="A written change-management process (ticketed approvals, documented test evidence per change, rollback) is drafted in the internal pipeline; its formalisation is the tracked remediation. — 🔒 soc2/policies/change-management">⏳ doc</span></div>
       <p>Platform-side change evidence is strong: tagged releases, SHA-pinned images,
 per-release change notes, a forward-only schema-migration framework, and a
 public CI test matrix; separate environments are supported via independent
@@ -1970,7 +1973,7 @@ set it references. hds maintains a subprocessor register for its own
 downstream vendors. hds is honest that a formalised vendor-management
 programme (assessment criteria, sla reviews) is still being matured — a known
 gap.
-" data-planned="0">
+" data-planned="1">
   <h3><code>CC9.2</code> CC9.2 — Vendor and business-partner risk management <span class="draft">draft</span></h3>
   <p class="text">The entity assesses and manages risks associated with its vendors and business
 partners.
@@ -1986,7 +1989,7 @@ criteria, SLA reviews, subprocessor inventory) sits on top.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span> </div>
+      <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span> <span class="pl medium" title="A formal vendor-management programme (assessment criteria, scored risk tiers, scheduled re-assessment and SLA review) is drafted in the internal pipeline; its formalisation is the tracked remediation. — 🔒 soc2/policies/vendor-management">⏳ doc</span></div>
       <p>Where the platform is an organization's vendor, the public release process,
 change notes and this compliance matrix are the vendor-monitoring artefact
 set it references. HDS maintains a subprocessor register for its own
@@ -2093,7 +2096,7 @@ so a surviving core stays user-facing. environmental protections (power,
 cooling, fire suppression) are inherited from the certified hosting
 provider per region. automated, regularly verified backups are still being
 formalised, so this is facilitated rather than fully implemented.
-" data-planned="0">
+" data-planned="1">
   <h3><code>A1.2</code> A1.2 — Environmental protections, backup, and recovery infrastructure <span class="draft">draft</span></h3>
   <p class="text">The entity authorizes, designs, implements, operates, maintains, and
 monitors environmental protections, software, data back-up processes, and
@@ -2112,7 +2115,7 @@ yours.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> <span class="pl medium" title="Automated, restore-verified backups are the tracked remediation: the backup-plan procedure and a backup-run record template are in the internal pipeline, the automated-tooling defect is on the risk-management treatment register, and the first verified restore-tested run is outstanding. — 🔒 hipaa/procedures/data-backup-plan">⏳ procedure</span></div>
       <p>The platform ships per-user backup and restore and a replicated multi-core
 topology, and HDS operates these on a schedule with cluster-replicated TLS
 so a surviving core stays user-facing. Environmental protections (power,
@@ -2157,7 +2160,7 @@ backup into a clean core; fail a core and confirm a peer keeps serving),
 and hds documents the intended recovery-test cadence. regular, verified
 execution of the drill is a known gap being matured, so hds facilitates
 this rather than evidencing a fully operated test programme.
-" data-planned="0">
+" data-planned="1">
   <h3><code>A1.3</code> A1.3 — Recovery plan testing <span class="draft">draft</span></h3>
   <p class="text">The entity tests recovery plan procedures supporting system recovery to
 meet its objectives.
@@ -2172,7 +2175,7 @@ feeding gaps back into the plan — is your operating procedure.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> <span class="pl medium" title="The contingency-test procedure and its execution-record template are drafted in the internal pipeline; the first verified, recorded drill with retained evidence is the tracked remainder. — 🔒 hipaa/procedures/contingency-plan-testing">⏳ procedure</span></div>
       <p>The platform provides a testable recovery path (restore a user from a
 backup into a clean core; fail a core and confirm a peer keeps serving),
 and HDS documents the intended recovery-test cadence. Regular, verified
@@ -2279,7 +2282,7 @@ event- and stream-level deletion) from the live store, which hds operates.
 whether disposal reaches backups is storage-engine-dependent, and formal,
 scheduled data-disposal automation is not yet shipped — so hds facilitates
 this and documents the boundary rather than claiming full disposal.
-" data-planned="0">
+" data-planned="1">
   <h3><code>C1.2</code> C1.2 — Disposal of confidential information <span class="draft">draft</span></h3>
   <p class="text">The entity disposes of confidential information to meet its objectives
 related to confidentiality.
@@ -2295,7 +2298,7 @@ engine that matches your disposal commitment.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> <span class="pl low" title="A documented retention-and-disposal schedule with verified backup pruning is drafted in the internal pipeline; its formalisation is the tracked remediation. — 🔒 soc2/procedures/data-retention-and-disposal">⏳ doc</span></div>
       <p>The platform provides per-user erasure (whole-account deletion, plus
 event- and stream-level deletion) from the live store, which HDS operates.
 Whether disposal reaches backups is storage-engine-dependent, and formal,
@@ -2925,7 +2928,7 @@ ships no automatic expiry primitive — enforcing the schedule is an operator
 job today. hds documents this gap honestly: automated retention enforcement
 is not yet shipped, so the control is facilitated and the absence of
 auto-expiry is called out.
-" data-planned="0">
+" data-planned="1">
   <h3><code>P4.2</code> P4.2 — Retention of personal information <span class="draft">draft</span></h3>
   <p class="text">The entity retains personal information consistent with its objectives
 related to privacy.
@@ -2943,7 +2946,7 @@ operator responsibility when you attest P4.2.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> <span class="pl low" title="The retention-and-disposal procedure (documented retention schedule over the per-record metadata) is drafted in the internal pipeline; its formalisation is the tracked remediation. — 🔒 soc2/procedures/data-retention-and-disposal">⏳ doc</span></div>
       <p>Retention metadata (period, basis, scheduled disposal date) can ride on
 each record so it carries its own retention contract, but the platform
 ships no automatic expiry primitive — enforcing the schedule is an operator
@@ -2985,7 +2988,7 @@ plus event- and stream-level deletion) from the live store, which hds
 operates. backup reach is storage-engine-dependent and scheduled disposal
 automation is not yet shipped, so hds facilitates this and documents the
 boundary rather than claiming full secure disposal.
-" data-planned="0">
+" data-planned="1">
   <h3><code>P4.3</code> P4.3 — Disposal of personal information <span class="draft">draft</span></h3>
   <p class="text">The entity securely disposes of personal information to meet its objectives
 related to privacy.
@@ -3001,7 +3004,7 @@ commitment, same as GDPR Art.17.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> <span class="pl low" title="The retention-and-disposal procedure (documented schedule, verified backup pruning) is drafted in the internal pipeline; its formalisation is the tracked remediation for the disposal half of this row. — 🔒 soc2/procedures/data-retention-and-disposal">⏳ doc</span></div>
       <p>Disposal uses the platform's per-user erasure path (whole-account deletion,
 plus event- and stream-level deletion) from the live store, which HDS
 operates. Backup reach is storage-engine-dependent and scheduled disposal
@@ -3293,7 +3296,7 @@ detected unauthorized disclosure has a contemporaneous evidentiary record.
 determining that a disclosure was unauthorized, and maintaining the formal
 record, is the service organization's assessment. note that logs may
 contain pii, which hds documents as a known handling consideration.
-" data-planned="0">
+" data-planned="1">
   <h3><code>P6.3</code> P6.3 — Record of detected unauthorized disclosures <span class="draft">draft</span></h3>
   <p class="text">The entity creates and retains a complete, accurate, and timely record of
 detected or reported unauthorized disclosures, including breaches, to meet
@@ -3310,7 +3313,7 @@ authorized) is your assessment; Pryv supplies the raw trail.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> <a class="pl medium" href="https://github.com/pryv/open-pryv.io/issues/60" title="PHI-safe log handling for operator telemetry is the tracked remediation: HDS-authored services are moving to an allow-list observability library feeding a self-hosted collector, replacing the deny-list scrubbing over a vendor agent; the live exception is recorded in the subprocessor register. — 🔒 hipaa/registers/subprocessor-register">⏳ feature</a></div>
       <p>The audit log captures access patterns including failed and out-of-scope
 attempts, and HDS's infrastructure monitoring surfaces anomalies, so a
 detected unauthorized disclosure has a contemporaneous evidentiary record.

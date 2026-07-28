@@ -34,7 +34,7 @@
     <h1>HIPAA Security Rule <span class="short">HIPAA-Security</span></h1>
     <p class="meta">regulation · US · 45 CFR Part 164 Subpart C (as amended through the HITECH 2013 Omnibus Final Rule) <span class="rg">US</span>
       · layered on Pryv <code>hipaa-security</code></p>
-    <div class="covbar"><span class="seg implemented" style="width:31.7%" title="implemented: 13"></span><span class="seg configurable" style="width:4.9%" title="configurable: 2"></span><span class="seg facilitated" style="width:31.7%" title="facilitated: 13"></span><span class="seg documented" style="width:31.7%" title="documented: 13"></span></div>
+    <div class="covbar"><span class="seg implemented" style="width:34.1%" title="implemented: 14"></span><span class="seg configurable" style="width:4.9%" title="configurable: 2"></span><span class="seg facilitated" style="width:31.7%" title="facilitated: 13"></span><span class="seg documented" style="width:29.3%" title="documented: 12"></span></div>
     
 <div class="filters">
   <input type="search" id="q" placeholder="Search requirements…" aria-label="search">
@@ -86,7 +86,7 @@ more concrete. For a partner acting as Covered Entity or upstream BA, this
 is a programme they must run themselves; HDS supplies the technical
 raw material and its own programme as evidence of operator diligence.
 </p></details>
-      <ul class="ev"><li><span class="lock">🔒 hipaa/policies/security-management-process</span> <span class="onreq">available on request</span></li></ul>
+      <ul class="ev"><li><span class="lock">🔒 hipaa/policies/security-management-process</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 shared/registers/technology-stack</span> <span class="onreq">available on request</span></li></ul>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -112,9 +112,13 @@ process, citing HDS substrate where it carries part of the control.
 </article><article class="req" id="req-164-308-a-1-ii-d" data-coverage="implemented" data-personas="covered-entity business-associate individual" data-text="164.308(a)(1)(ii)(d) information system activity review — required on top of the platform's per-user audit log, hds operates the review
 substrate: system-level activity is collected and monitored across both
 us and switzerland data-residency options, with alerting on crash,
-error-rate and silence conditions. the written review cadence remains the
-implementer's responsibility.
-" data-planned="0">
+error-rate and silence conditions. the platform telemetry channel is
+mid-transition (see the planned chip): the in-process vendor agent was
+removed 2026-07-28 in favour of an allow-list, aggregate-only emitter;
+until the self-hosted collector and rebuilt alert chain are verified,
+platform-core detection leans on synthetic and liveness checks. the
+written review cadence remains the implementer's responsibility.
+" data-planned="1">
   <h3><code>164.308(a)(1)(ii)(D)</code> Information system activity review — Required <span class="draft">draft</span></h3>
   <p class="text">Implement procedures to regularly review records of information system
 activity, such as audit logs, access reports, and security incident
@@ -131,12 +135,16 @@ procedure.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b implemented">implemented</span> <span class="rg">US</span><span class="rg">CH</span> </div>
+      <div class="lh">HDS <span class="b implemented">implemented</span> <span class="rg">US</span><span class="rg">CH</span> <a class="pl medium" href="https://github.com/pryv/open-pryv.io/issues/60" title="Platform telemetry is moving from a vendor in-process agent (removed 2026-07-28) to a self-hosted OTLP collector fed by the platform's allow-list aggregate emitter; collector deployment, alert-chain rebuild and end-to-end delivery verification are the tracked remainder. — 🔒 hipaa/registers/subprocessor-register">⏳ feature</a></div>
       <p>On top of the platform's per-user audit log, HDS operates the review
 substrate: system-level activity is collected and monitored across both
 US and Switzerland data-residency options, with alerting on crash,
-error-rate and silence conditions. The written review cadence remains the
-implementer's responsibility.
+error-rate and silence conditions. The platform telemetry channel is
+mid-transition (see the planned chip): the in-process vendor agent was
+removed 2026-07-28 in favour of an allow-list, aggregate-only emitter;
+until the self-hosted collector and rebuilt alert chain are verified,
+platform-core detection leans on synthetic and liveness checks. The
+written review cadence remains the implementer's responsibility.
 </p>
       <details><summary>detail</summary><p>Per-API-call audit records (platform layer) plus infrastructure telemetry
 (HDS layer) together give both subject-level and system-level activity
@@ -168,10 +176,11 @@ process, drawing on the audit and monitoring substrate HDS exposes.
       </div>
     </div>
   </div>
-</article><article class="req" id="req-164-308-a-2" data-coverage="documented" data-personas="covered-entity business-associate individual" data-text="164.308(a)(2) assigned security responsibility — standard hds designates a named security official accountable for its security
-programme over the platform; the designation is recorded internally and
-disclosed on request. each partner must designate their own official for
-their own programme.
+</article><article class="req" id="req-164-308-a-2" data-coverage="implemented" data-personas="covered-entity business-associate individual" data-text="164.308(a)(2) assigned security responsibility — standard hds has designated its security official: appointed by the ceo on behalf
+of the hds foundation, effective 2026-07-15, recorded in the designated-
+roles register and the governing policy (both disclosed on request; the
+source documents are still moving through internal approval). each
+partner must designate their own official for their own programme.
 " data-planned="0">
   <h3><code>164.308(a)(2)</code> Assigned security responsibility — standard <span class="draft">draft</span></h3>
   <p class="text">Identify the security official who is responsible for developing and
@@ -187,18 +196,21 @@ draw on.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span> </div>
-      <p>HDS designates a named security official accountable for its security
-programme over the platform; the designation is recorded internally and
-disclosed on request. Each partner must designate their own official for
-their own programme.
+      <div class="lh">HDS <span class="b implemented">implemented</span> <span class="rg">US</span><span class="rg">CH</span> </div>
+      <p>HDS has designated its Security Official: appointed by the CEO on behalf
+of the HDS Foundation, effective 2026-07-15, recorded in the designated-
+roles register and the governing policy (both disclosed on request; the
+source documents are still moving through internal approval). Each
+partner must designate their own official for their own programme.
 </p>
-      <details><summary>detail</summary><p>This is an organisational designation, not a software control. HDS holds
-the designation as an operator artefact; the assigned official draws on
-the audit log, monitoring and this matrix as operational substrate. A
-partner running ePHI on HDS names their own security official.
+      <details><summary>detail</summary><p>This is an organisational designation, not a software control. The
+designation is made and recorded as an operator artefact; the assigned
+official draws on the audit log, monitoring and this matrix as
+operational substrate. A distinct Privacy Official is designated
+separately (see hipaa-privacy §164.530(a)(1)). A partner running ePHI on
+HDS names their own security official.
 </p></details>
-      <ul class="ev"><li><span class="lock">🔒 hipaa/policies/assigned-security-responsibility</span> <span class="onreq">available on request</span></li></ul>
+      <ul class="ev"><li><span class="lock">🔒 hipaa/policies/assigned-security-responsibility</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/registers/designated-roles</span> <span class="onreq">available on request</span></li></ul>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -390,7 +402,7 @@ process on HDS.
 control with no software role. hds runs reminders for its own workforce
 and documents the programme; the artefact is available on request but
 training delivery itself is not yet formalised as a verified programme.
-" data-planned="0">
+" data-planned="1">
   <h3><code>164.308(a)(5)(ii)(A)</code> Security reminders — Addressable <span class="draft">draft</span></h3>
   <p class="text">Implement periodic security updates and reminders for the workforce.
 </p>
@@ -402,7 +414,7 @@ at the awareness-content layer.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> <span class="pl medium" title="A verified security-awareness training programme is being stood up: the workforce-training procedure and its completion-record template are drafted in the internal pipeline; onboarding training, reminder cadence and completion tracking are the tracked remainder. — 🔒 hipaa/procedures/workforce-training">⏳ procedure</span></div>
       <p>Security-reminder cadence and content are an organisational awareness
 control with no software role. HDS runs reminders for its own workforce
 and documents the programme; the artefact is available on request but
@@ -671,7 +683,7 @@ attachments) with a matching restore path, so the backup unit matches the
 natural ephi unit. hds operates a backup schedule on top; automated,
 regularly verified backups are still being formalised, so this is
 facilitated rather than fully implemented.
-" data-planned="0">
+" data-planned="1">
   <h3><code>164.308(a)(7)(ii)(A)</code> Data backup plan — Required <span class="draft">draft</span></h3>
   <p class="text">Establish and implement procedures to create and maintain retrievable exact
 copies of ePHI.
@@ -686,7 +698,7 @@ schedule; the underlying primitive is shipped.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> <span class="pl medium" title="Automated, restore-verified backups are the tracked remediation: the backup-plan procedure and a backup-run record template are in the internal pipeline, the automated tooling defect is on the risk- management treatment register, and the first verified restore-tested run is outstanding. — 🔒 hipaa/procedures/data-backup-plan">⏳ procedure</span></div>
       <p>The platform produces per-user backup files (events, streams, accesses,
 attachments) with a matching restore path, so the backup unit matches the
 natural ePHI unit. HDS operates a backup schedule on top; automated,
@@ -834,7 +846,7 @@ workload.
 exercises the platform's backup-restore path. hds is formalising a regular
 test-and-revise cadence; the procedure is documented internally and
 regular verified execution remains a known gap.
-" data-planned="0">
+" data-planned="1">
   <h3><code>164.308(a)(7)(ii)(D)</code> Testing and revision procedures — Addressable <span class="draft">draft</span></h3>
   <p class="text">Implement procedures for periodic testing and revision of contingency plans.
 </p>
@@ -848,7 +860,7 @@ the testing programme itself is the operator's.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span> </div>
+      <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span> <span class="pl medium" title="The contingency-test procedure and its execution-record template are drafted in the internal pipeline; the first verified, recorded drill (backup restore + DR walkthrough, RTO/RPO to be set from results) is the tracked remainder. — 🔒 hipaa/procedures/contingency-plan-testing">⏳ procedure</span></div>
       <p>Contingency-plan testing is an operational drill whose restore phase
 exercises the platform's backup-restore path. HDS is formalising a regular
 test-and-revise cadence; the procedure is documented internally and
@@ -1181,7 +1193,7 @@ hosting provider's media-sanitisation controls, which hds selects and
 documents. for per-subject ephi movement, the platform's per-user export unit
 is the natural medium so a single subject's data can be transferred or
 archived discretely.
-" data-planned="0">
+" data-planned="1">
   <h3><code>164.310(d)(1)</code> Device and media controls — standard <span class="draft">draft</span></h3>
   <p class="text">Implement policies and procedures governing the receipt and removal of
 hardware and electronic media containing ePHI into and out of a facility, and
@@ -1200,7 +1212,7 @@ is the operator's.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> <span class="pl low" title="The hosting-provider attestation register exists but the attestation documents themselves are not yet collected and filed (dates/expiry are placeholders); collection is the tracked remediation. — 🔒 hipaa/registers/hosting-provider-attestations">⏳ doc</span></div>
       <p>Media disposal and re-use at the server tier are handled by the certified
 hosting provider's media-sanitisation controls, which HDS selects and
 documents. For per-subject ePHI movement, the platform's per-user export unit
@@ -1211,12 +1223,14 @@ archived discretely.
 media re-use, sanitisation) is satisfied by the hosting provider's attested
 controls, recorded in the HDS hosting-provider register. At the application
 tier, open-pryv.io's per-user data model means an individual subject's ePHI
-can be exported and moved as a discrete unit. Note: platform at-rest
-encryption of bulk event data is not yet shipped, so media leaving the
-production environment must be encrypted by the implementer's own at-rest
-layer before transport — HDS documents this boundary explicitly.
+can be exported and moved as a discrete unit. Production volumes are
+encrypted at rest (hosting-layer full-volume encryption, both regions,
+since 2026-06-26), so decommissioned server media are protected by
+construction; a per-subject export leaving the platform is a fresh
+plaintext artefact, and encrypting it in transport/storage remains the
+mover's responsibility — HDS documents this boundary explicitly.
 </p></details>
-      <ul class="ev"><li><span class="lock">🔒 hipaa/registers/hosting-provider-attestations</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/procedures/media-controls</span> <span class="onreq">available on request</span></li></ul>
+      <ul class="ev"><li><span class="lock">🔒 hipaa/registers/hosting-provider-attestations</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/procedures/media-controls</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/evidence/at-rest-encryption-verification</span> <span class="onreq">available on request</span></li></ul>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -1477,7 +1491,7 @@ ch1/switzerland); aws ebs volume encryption is enabled on the us core
 (aes-256, us1). verified 2026-06-26. keys are provider-managed (aws / exoscale,
 both baa subprocessors) — this satisfies the addressable mechanism and grounds
 the §164.402(2) breach safe-harbor for lost/stolen media, but is not
-operator-held-key or end-to-end encryption (see hipaa/risk/at-rest-encryption-gap
+operator-held-key or end-to-end encryption (see hipaa/risk/at-rest-encryption
 for the residual).
 " data-planned="1">
   <h3><code>164.312(a)(2)(iv)</code> Encryption and decryption — Addressable <span class="draft">draft</span></h3>
@@ -1507,7 +1521,7 @@ ch1/Switzerland); AWS EBS volume encryption is enabled on the US core
 (AES-256, us1). Verified 2026-06-26. Keys are provider-managed (AWS / Exoscale,
 both BAA subprocessors) — this satisfies the addressable mechanism and grounds
 the §164.402(2) breach safe-harbor for lost/stolen media, but is not
-operator-held-key or end-to-end encryption (see hipaa/risk/at-rest-encryption-gap
+operator-held-key or end-to-end encryption (see hipaa/risk/at-rest-encryption
 for the residual).
 </p>
       <details><summary>detail</summary><p>Both production cores store ePHI on encrypted volumes. ch1 (Exoscale, ch-dk-2)
@@ -1524,7 +1538,7 @@ encryption (the container-encrypted-volume facility, CEV_ENABLED, shipped in the
 open-pryv.io rc.5 encrypted image and LUKS-verified on HDS hosts) or end-to-end
 encryption remain optional strengthenings, not required for this addressable spec.
 </p></details>
-      <ul class="ev"><li><span class="lock">🔒 hipaa/policies/encryption</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/risk/at-rest-encryption-gap</span> <span class="onreq">available on request</span></li></ul>
+      <ul class="ev"><li><span class="lock">🔒 hipaa/policies/encryption</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/risk/at-rest-encryption</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/evidence/at-rest-encryption-verification</span> <span class="onreq">available on request</span></li></ul>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>

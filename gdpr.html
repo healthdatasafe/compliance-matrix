@@ -34,7 +34,7 @@
     <h1>General Data Protection Regulation <span class="short">GDPR</span></h1>
     <p class="meta">regulation · EU + EEA (extraterritorial via Art. 3) · Regulation (EU) 2016/679 (consolidated) <span class="rg">CH</span><span class="rg">US</span>
       · layered on Pryv <code>gdpr</code></p>
-    <div class="covbar"><span class="seg implemented" style="width:6.4%" title="implemented: 3"></span><span class="seg configurable" style="width:6.4%" title="configurable: 3"></span><span class="seg facilitated" style="width:66.0%" title="facilitated: 31"></span><span class="seg documented" style="width:6.4%" title="documented: 3"></span><span class="seg out-of-scope" style="width:14.9%" title="out-of-scope: 7"></span></div>
+    <div class="covbar"><span class="seg implemented" style="width:8.5%" title="implemented: 4"></span><span class="seg configurable" style="width:6.4%" title="configurable: 3"></span><span class="seg facilitated" style="width:66.0%" title="facilitated: 31"></span><span class="seg documented" style="width:6.4%" title="documented: 3"></span><span class="seg out-of-scope" style="width:12.8%" title="out-of-scope: 6"></span></div>
     
 <div class="filters">
   <input type="search" id="q" placeholder="Search requirements…" aria-label="search">
@@ -1647,7 +1647,7 @@ PlatformDB PII is HMAC-pseudonymised (platform.piiMode=hashed). HDS as operator
 runs CI test matrices and a monitored, alert-wired production environment; the
 controller runs its own organisational testing regime.
 </p></details>
-      <ul class="ev"><li><span class="lock">🔒 hipaa/policies/encryption</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/policies/transmission-security</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/policies/access-control</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/risk/at-rest-encryption-gap</span> <span class="onreq">available on request</span></li></ul>
+      <ul class="ev"><li><span class="lock">🔒 hipaa/policies/encryption</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/policies/transmission-security</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/policies/access-control</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/risk/at-rest-encryption</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/evidence/at-rest-encryption-verification</span> <span class="onreq">available on request</span></li></ul>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -1669,8 +1669,9 @@ the infrastructure layer.
 </article><article class="req" id="req-art-33" data-coverage="facilitated" data-personas="controller processor" data-text="art.33 notification of personal data breach to the supervisory authority the audit log helps scope a breach — which data, which subjects, by which
 access — and hds as operator runs the monitoring and incident-response
 procedure that feeds the 72-hour decision. the notification itself, and
-the risk-likelihood judgement, are the controller's. at-rest encryption,
-a known gap, would otherwise narrow the &quot;unsecured data&quot; definition.
+the risk-likelihood judgement, are the controller's. at-rest volume
+encryption (in place since 2026-06-26) narrows the exposure of a leaked
+at-rest artefact and feeds the risk-likelihood assessment.
 " data-planned="1">
   <h3><code>Art.33</code> Notification of personal data breach to the supervisory authority <span class="draft">draft</span></h3>
   <p class="text">The controller must notify the supervisory authority within 72 hours of
@@ -1691,8 +1692,9 @@ The 72-hour process itself is yours to run.
       <p>The audit log helps scope a breach — which data, which subjects, by which
 access — and HDS as operator runs the monitoring and incident-response
 procedure that feeds the 72-hour decision. The notification itself, and
-the risk-likelihood judgement, are the controller's. At-rest encryption,
-a known gap, would otherwise narrow the &quot;unsecured data&quot; definition.
+the risk-likelihood judgement, are the controller's. At-rest volume
+encryption (in place since 2026-06-26) narrows the exposure of a leaked
+at-rest artefact and feeds the risk-likelihood assessment.
 </p>
       <details><summary>detail</summary><p>Audit queries over the suspected window list the accesses that touched
 the data and the streams read; the access version chain shows whether
@@ -1722,8 +1724,10 @@ breach.
 </article><article class="req" id="req-art-34" data-coverage="facilitated" data-personas="controller data-subject" data-text="art.34 communication of a personal data breach to the data subject identification of affected subjects is derivable from the audit log
 filtered by the breached access and window. delivery of the communication
 is the controller's job, composed with its own messaging pipeline; hds's
-transactional mail is per-recipient, not a bulk channel. at-rest
-encryption (a known gap) would otherwise scope the high-risk exemption.
+transactional mail is per-recipient, not a bulk channel. at-rest volume
+encryption (in place since 2026-06-26) can scope the art.34(3)(a)
+exemption for media exposures; a live-system compromise is assessed on
+its facts.
 " data-planned="0">
   <h3><code>Art.34</code> Communication of a personal data breach to the data subject <span class="draft">draft</span></h3>
   <p class="text">Where a breach is likely to result in high risk, the controller must
@@ -1753,8 +1757,10 @@ Encryption-at-rest may scope the high-risk determination
       <p>Identification of affected subjects is derivable from the audit log
 filtered by the breached access and window. Delivery of the communication
 is the controller's job, composed with its own messaging pipeline; HDS's
-transactional mail is per-recipient, not a bulk channel. At-rest
-encryption (a known gap) would otherwise scope the high-risk exemption.
+transactional mail is per-recipient, not a bulk channel. At-rest volume
+encryption (in place since 2026-06-26) can scope the Art.34(3)(a)
+exemption for media exposures; a live-system compromise is assessed on
+its facts.
 </p>
       <details><summary>detail</summary><p>The affected-subject roster comes from audit queries; the controller's
 CRM or mail provider renders and sends the Art.34 content per recipient,
@@ -1783,7 +1789,7 @@ inputs — data-residency facts, audit/access descriptions of the
 processing flow, system-stream isolation as the sensitive-data boundary,
 and this matrix as the technical-measures inventory. a formal dpia
 process is a known gap that the controller must run itself.
-" data-planned="0">
+" data-planned="1">
   <h3><code>Art.35</code> Data protection impact assessment <span class="draft">draft</span></h3>
   <p class="text">Where processing is likely to result in a high risk, the controller must
 carry out a data-protection impact assessment before processing.
@@ -1803,7 +1809,7 @@ deployment.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">CH</span><span class="rg">US</span> </div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">CH</span><span class="rg">US</span> <span class="pl low" title="HDS's own DPIA process is being stood up: the DPIA procedure (baseline) and its record template are drafted in the internal pipeline; the first executed assessment is the tracked remainder. — 🔒 gdpr/procedures/dpia">⏳ procedure</span></div>
       <p>The DPIA is a written assessment the controller produces; HDS supplies
 inputs — data-residency facts, audit/access descriptions of the
 processing flow, system-stream isolation as the sensitive-data boundary,
@@ -1877,10 +1883,12 @@ unmitigated high risk.
       </div>
     </div>
   </div>
-</article><article class="req" id="req-art-37" data-coverage="out-of-scope" data-personas="controller processor" data-text="art.37 designation of the data protection officer dpo designation is an organisational decision with no software role.
-healthcare deployments processing special-category data at scale will
-commonly trigger the art.37(1)(c) requirement; hds makes its own
-processor-side designation and the controller makes its own.
+</article><article class="req" id="req-art-37" data-coverage="implemented" data-personas="controller processor" data-text="art.37 designation of the data protection officer hds has made its processor-side designation: a data protection officer
+was appointed effective 2026-07-17, recorded in the designated-roles
+register (disclosed on request; the source register is still moving
+through internal approval). healthcare deployments processing
+special-category data at scale will commonly trigger the art.37(1)(c)
+requirement; the controller still makes its own designation.
 " data-planned="0">
   <h3><code>Art.37</code> Designation of the data protection officer <span class="draft">draft</span></h3>
   <p class="text">The controller and processor must designate a DPO in the cases listed,
@@ -1897,14 +1905,19 @@ designation is required.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b out-of-scope">out-of-scope</span> <span class="rg">CH</span><span class="rg">US</span> </div>
-      <p>DPO designation is an organisational decision with no software role.
-Healthcare deployments processing special-category data at scale will
-commonly trigger the Art.37(1)(c) requirement; HDS makes its own
-processor-side designation and the controller makes its own.
+      <div class="lh">HDS <span class="b implemented">implemented</span> <span class="rg">CH</span><span class="rg">US</span> </div>
+      <p>HDS has made its processor-side designation: a Data Protection Officer
+was appointed effective 2026-07-17, recorded in the designated-roles
+register (disclosed on request; the source register is still moving
+through internal approval). Healthcare deployments processing
+special-category data at scale will commonly trigger the Art.37(1)(c)
+requirement; the controller still makes its own designation.
 </p>
-      
-      
+      <details><summary>detail</summary><p>The designation is an organisational artefact, not a software control.
+Publishing a public DPO contact point through the service-info
+convention is the Art.38 follow-up, tracked on that row.
+</p></details>
+      <ul class="ev"><li><span class="lock">🔒 hipaa/registers/designated-roles</span> <span class="onreq">available on request</span></li></ul>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -2334,9 +2347,13 @@ adequacy landscape.
 safeguard — typically standard contractual clauses. hds records the
 chosen mechanism on the transferring access clientdata so the art.30
 transfers register is derivable, and offers a dpa into which the sccs are
-incorporated. the scc/bcr documents themselves are controller/legal
-artefacts.
-" data-planned="0">
+incorporated. hds's own upstream instrument for the us hosting layer is
+still being executed: the aws hipaa baa is in force, and the gdpr dpa
+plus eu/swiss sccs with the transfer impact assessment are the tracked
+remainder (see the planned chip) — until signed and recorded, us-region
+transfers rest on the hipaa instrument alone. the scc/bcr documents
+themselves are controller/legal artefacts.
+" data-planned="1">
   <h3><code>Art.46</code> Transfers subject to appropriate safeguards <span class="draft">draft</span></h3>
   <p class="text">Absent an adequacy decision, a transfer requires appropriate safeguards
 such as SCCs, BCRs or approved codes.
@@ -2357,13 +2374,17 @@ access version chain.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">CH</span><span class="rg">US</span> </div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">CH</span><span class="rg">US</span> <span class="pl high" title="Execution of the AWS GDPR DPA plus EU/Swiss SCCs with the transfer impact assessment for the US hosting layer is the tracked remediation (the HIPAA BAA is already in force; the crossing is pseudonymised since 2026-06-24, which strengthens the TIA). — 🔒 gdpr/policies/international-transfers">⏳ doc</span></div>
       <p>Choosing the US region (AWS) is a transfer that needs an Art.46
 safeguard — typically standard contractual clauses. HDS records the
 chosen mechanism on the transferring access clientData so the Art.30
 transfers register is derivable, and offers a DPA into which the SCCs are
-incorporated. The SCC/BCR documents themselves are controller/legal
-artefacts.
+incorporated. HDS's own upstream instrument for the US hosting layer is
+still being executed: the AWS HIPAA BAA is in force, and the GDPR DPA
+plus EU/Swiss SCCs with the transfer impact assessment are the tracked
+remainder (see the planned chip) — until signed and recorded, US-region
+transfers rest on the HIPAA instrument alone. The SCC/BCR documents
+themselves are controller/legal artefacts.
 </p>
       <details><summary>detail</summary><p>The transfer surfaces — access-bound counterparty fetches, the US-region
 residency choice, and subprocessor outbound flows — each carry the
@@ -2371,7 +2392,7 @@ mechanism reference on the relevant artefact. HDS persists the references
 with versioning and audit; the controller concludes the safeguard
 instrument.
 </p></details>
-      <ul class="ev"><li><span class="lock">🔒 gdpr/policies/international-transfers</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/registers/subprocessor-register</span> <span class="onreq">available on request</span></li></ul>
+      <ul class="ev"><li><span class="lock">🔒 gdpr/policies/international-transfers</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/registers/subprocessor-register</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/risk/cross-core-residency-data-flow</span> <span class="onreq">available on request</span></li></ul>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>

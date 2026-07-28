@@ -232,9 +232,10 @@ scopes, retention policy and registration notice.
     </div>
   </div>
 </article><article class="req" id="req-art-8" data-coverage="facilitated" data-personas="controller processor data-subject" data-text="art.8 data security hds operates the technical security baseline: tls in transit, stream-scoped
-permissions, mfa, multi-core high availability and operated backup and
-restore. at-rest encryption of customer event data is a known gap and is
-flagged so the controller can weigh it in its security assessment.
+permissions, mfa, multi-core high availability, operated backup and
+restore, and at-rest encryption of the event store via hosting-layer
+volume encryption (in place since 2026-06-26; provider-managed keys —
+the accepted residual is recorded in the cited risk record).
 " data-planned="0">
   <h3><code>Art.8</code> Data security <span class="draft">draft</span></h3>
   <p class="text">The controller and processor must ensure data security through appropriate
@@ -256,16 +257,19 @@ detailing remains the operator's compliance verification work.
     <div class="layer hds">
       <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">CH</span> </div>
       <p>HDS operates the technical security baseline: TLS in transit, stream-scoped
-permissions, MFA, multi-core high availability and operated backup and
-restore. At-rest encryption of customer event data is a known gap and is
-flagged so the controller can weigh it in its security assessment.
+permissions, MFA, multi-core high availability, operated backup and
+restore, and at-rest encryption of the event store via hosting-layer
+volume encryption (in place since 2026-06-26; provider-managed keys —
+the accepted residual is recorded in the cited risk record).
 </p>
       <details><summary>detail</summary><p>The OPDP minimum-requirements detailing and the organisational measures
 remain the controller's and processor's compliance work. HDS supplies the
-technical and hosting safeguards and operates them; at-rest encryption of
-the event store is not implemented and must be treated as a residual risk.
+technical and hosting safeguards and operates them; at-rest volume
+encryption covers stored event data, with provider-held keys as the
+documented residual (operator-held-key or end-to-end encryption remain
+optional strengthenings).
 </p></details>
-      <ul class="ev"><li><span class="lock">🔒 hipaa/policies/transmission-security</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/policies/encryption</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/risk/at-rest-encryption-gap</span> <span class="onreq">available on request</span></li></ul>
+      <ul class="ev"><li><span class="lock">🔒 hipaa/policies/transmission-security</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/policies/encryption</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/risk/at-rest-encryption</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/evidence/at-rest-encryption-verification</span> <span class="onreq">available on request</span></li></ul>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -273,8 +277,8 @@ the event store is not implemented and must be treated as a residual risk.
         <strong>controller</strong> <span class="b documented">documented</span>
         
         <p>Assess whether the operated measures meet your security obligation,
-accounting for the at-rest encryption gap, and add organisational
-measures.
+weighing the provider-managed-key residual at rest, and add
+organisational measures.
 </p>
       </div><div class="persona">
         <strong>processor</strong> <span class="b documented">documented</span>
@@ -486,10 +490,13 @@ meet; HDS provides the underlying scoping evidence.
 controller can meet its Commissioner-notification duty. The subject
 notification trigger is more conditional than under GDPR; the controller's
 incident-response matrix should encode both regimes where it faces both.
-At-rest encryption of the event store is not implemented, which affects
-the safe-harbour assessment of a leaked artefact.
+The event store is encrypted at rest (hosting-layer volume encryption,
+since 2026-06-26), which strengthens the safe-harbour assessment of a
+leaked at-rest artefact — a lost or decommissioned medium is protected;
+a live-system compromise reaches decrypted content and is assessed on
+its facts.
 </p></details>
-      <ul class="ev"><li><span class="lock">🔒 hipaa/procedures/security-incident-response</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 gdpr/procedures/breach-notification-72h</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/risk/at-rest-encryption-gap</span> <span class="onreq">available on request</span></li></ul>
+      <ul class="ev"><li><span class="lock">🔒 hipaa/procedures/security-incident-response</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 gdpr/procedures/breach-notification-72h</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/risk/at-rest-encryption</span> <span class="onreq">available on request</span></li></ul>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -1303,7 +1310,7 @@ approval before engaging sub-processors.
 and data-residency records describe much of the processing. the register
 as a maintained document is a known gap: hds does not generate or keep the
 controller's register, which the controller must author.
-" data-planned="0">
+" data-planned="1">
   <h3><code>Art.12</code> Register of processing activities <span class="draft">draft</span></h3>
   <p class="text">Each controller and processor must maintain a register of processing
 activities, subject to an exception for smaller enterprises whose
@@ -1322,7 +1329,7 @@ legal judgement.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">CH</span> </div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">CH</span> <span class="pl low" title="HDS's own processor-side register document exists in the internal pipeline but is not yet populated with live processing activities; population is the tracked remediation (same register as gdpr Art.30). — 🔒 gdpr/registers/records-of-processing">⏳ doc</span></div>
       <p>HDS supplies the technical register substrate — access, client-data, audit
 and data-residency records describe much of the processing. The register
 as a maintained document is a known gap: HDS does not generate or keep the
