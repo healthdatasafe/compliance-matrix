@@ -885,7 +885,7 @@ erasure under storage limitation is a known gap (no retention automation).
 subjects are advised to use the app-portability self-service tool to keep
 a portable copy of their data **before** requesting erasure — the public
 deletion page on healthdatasafe.org cross-links accordingly.
-" data-planned="0">
+" data-planned="1">
   <h3><code>Art.17</code> Right to erasure (&quot;right to be forgotten&quot;) <span class="draft">draft</span></h3>
   <p class="text">Right to obtain erasure without undue delay where one of the enumerated
 conditions applies.
@@ -901,7 +901,7 @@ policy to complete erasure.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b configurable">configurable</span> <span class="rg">CH</span><span class="rg">US</span> </div>
+      <div class="lh">HDS <span class="b configurable">configurable</span> <span class="rg">CH</span><span class="rg">US</span> <span class="pl medium" title="The audit.onUserDelete pseudonymise mode (audit-row PII null-out composing the shipped alias primitive) is queued upstream; this row's erasure-vs-audit-retention position stays partial until it ships and HDS deploys it. — upstream: proposals/audit-on-user-delete.md">⏳ platform</span></div>
       <p>Per-user erasure is a single API call that deletes the subject's live
 data, attachments and audit rows. How far erasure extends into backups
 depends on the storage engine and backup-rotation policy; HDS operates a
@@ -1623,7 +1623,7 @@ response procedures) stay in your court.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">CH</span><span class="rg">US</span> </div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">CH</span><span class="rg">US</span> <span class="pl medium" title="End-to-end / operator-held-key encryption is queued upstream as the strengthening for the provider-managed-key at-rest residual; claimable on this row only after pryv ships it AND HDS deploys and enables it on all cores. — upstream: proposals/e2e-encryption.md">⏳ platform</span></div>
       <p>HDS implements transport encryption (TLS), encryption at rest, technical
 access control and per-user restore, and operates monitoring and alerting as
 operator. Encryption at rest is now in place in both regions via hosting-layer
