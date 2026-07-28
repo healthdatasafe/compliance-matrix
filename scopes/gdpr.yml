@@ -13,6 +13,14 @@ regions: [ch, us]
 changelog:
   - date: "2026-07-28"
     change: >
+      Internal-state sync: Art.37 out-of-scope -> implemented (DPO appointed
+      2026-07-17). Art.33/Art.34 stale "at-rest known gap" wording corrected
+      (shipped 2026-06-26); Art.32 risk-doc code renamed
+      at-rest-encryption-gap -> at-rest-encryption + verification evidence
+      cited. hds.planned chips: Art.35 DPIA process being stood up; Art.46
+      AWS GDPR DPA + EU/Swiss SCCs + TIA execution (impact high).
+  - date: "2026-07-28"
+    change: >
       Art.30: first hds.planned chip — the processor-side RoPA register doc
       exists internally but is not yet populated; chip carries the internal
       doc code as delivery evidence (new schema mechanism, this date).
@@ -1165,7 +1173,8 @@ requirements:
           - hipaa/policies/encryption
           - hipaa/policies/transmission-security
           - hipaa/policies/access-control
-          - hipaa/risk/at-rest-encryption-gap
+          - hipaa/risk/at-rest-encryption
+          - hipaa/evidence/at-rest-encryption-verification
     implementer:
       - persona: controller
         coverage: documented
@@ -1194,8 +1203,9 @@ requirements:
         The audit log helps scope a breach — which data, which subjects, by which
         access — and HDS as operator runs the monitoring and incident-response
         procedure that feeds the 72-hour decision. The notification itself, and
-        the risk-likelihood judgement, are the controller's. At-rest encryption,
-        a known gap, would otherwise narrow the "unsecured data" definition.
+        the risk-likelihood judgement, are the controller's. At-rest volume
+        encryption (in place since 2026-06-26) narrows the exposure of a leaked
+        at-rest artefact and feeds the risk-likelihood assessment.
       detail: |
         Audit queries over the suspected window list the accesses that touched
         the data and the streams read; the access version chain shows whether
@@ -1235,8 +1245,10 @@ requirements:
         Identification of affected subjects is derivable from the audit log
         filtered by the breached access and window. Delivery of the communication
         is the controller's job, composed with its own messaging pipeline; HDS's
-        transactional mail is per-recipient, not a bulk channel. At-rest
-        encryption (a known gap) would otherwise scope the high-risk exemption.
+        transactional mail is per-recipient, not a bulk channel. At-rest volume
+        encryption (in place since 2026-06-26) can scope the Art.34(3)(a)
+        exemption for media exposures; a live-system compromise is assessed on
+        its facts.
       detail: |
         The affected-subject roster comes from audit queries; the controller's
         CRM or mail provider renders and sends the Art.34 content per recipient,
@@ -1283,6 +1295,14 @@ requirements:
       evidence:
         internal_docs:
           - gdpr/procedures/dpia
+      planned:
+        - kind: procedure
+          summary: >-
+            HDS's own DPIA process is being stood up: the DPIA procedure
+            (baseline) and its record template are drafted in the internal
+            pipeline; the first executed assessment is the tracked remainder.
+          impact: low
+          internal_doc: gdpr/procedures/dpia
     implementer:
       - persona: controller
         coverage: documented
@@ -1324,13 +1344,23 @@ requirements:
     pryv_ref: Art.37
     draft: true
     hds:
-      coverage: out-of-scope
+      coverage: implemented
+      effort_saved: low
       overview: |
-        DPO designation is an organisational decision with no software role.
-        Healthcare deployments processing special-category data at scale will
-        commonly trigger the Art.37(1)(c) requirement; HDS makes its own
-        processor-side designation and the controller makes its own.
+        HDS has made its processor-side designation: a Data Protection Officer
+        was appointed effective 2026-07-17, recorded in the designated-roles
+        register (disclosed on request; the source register is still moving
+        through internal approval). Healthcare deployments processing
+        special-category data at scale will commonly trigger the Art.37(1)(c)
+        requirement; the controller still makes its own designation.
+      detail: |
+        The designation is an organisational artefact, not a software control.
+        Publishing a public DPO contact point through the service-info
+        convention is the Art.38 follow-up, tracked on that row.
       regions: [ch, us]
+      evidence:
+        internal_docs:
+          - hipaa/registers/designated-roles
     implementer:
       - persona: controller
         coverage: documented
@@ -1633,8 +1663,12 @@ requirements:
         safeguard — typically standard contractual clauses. HDS records the
         chosen mechanism on the transferring access clientData so the Art.30
         transfers register is derivable, and offers a DPA into which the SCCs are
-        incorporated. The SCC/BCR documents themselves are controller/legal
-        artefacts.
+        incorporated. HDS's own upstream instrument for the US hosting layer is
+        still being executed: the AWS HIPAA BAA is in force, and the GDPR DPA
+        plus EU/Swiss SCCs with the transfer impact assessment are the tracked
+        remainder (see the planned chip) — until signed and recorded, US-region
+        transfers rest on the HIPAA instrument alone. The SCC/BCR documents
+        themselves are controller/legal artefacts.
       detail: |
         The transfer surfaces — access-bound counterparty fetches, the US-region
         residency choice, and subprocessor outbound flows — each carry the
@@ -1646,6 +1680,16 @@ requirements:
         internal_docs:
           - gdpr/policies/international-transfers
           - hipaa/registers/subprocessor-register
+          - hipaa/risk/cross-core-residency-data-flow
+      planned:
+        - kind: doc
+          summary: >-
+            Execution of the AWS GDPR DPA plus EU/Swiss SCCs with the transfer
+            impact assessment for the US hosting layer is the tracked
+            remediation (the HIPAA BAA is already in force; the crossing is
+            pseudonymised since 2026-06-24, which strengthens the TIA).
+          impact: high
+          internal_doc: gdpr/policies/international-transfers
     implementer:
       - persona: controller
         coverage: documented

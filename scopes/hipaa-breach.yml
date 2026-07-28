@@ -11,6 +11,13 @@ layered_on_pryv: hipaa-breach
 regions: [us]
 
 changelog:
+  - date: "2026-07-28"
+    change: >
+      164.400/164.402/164.402(2): at-rest encryption shipped 2026-06-26 (hosting-layer
+      full-volume, both regions) — the stale "not yet shipped" wording removed; the
+      safe harbor is available for media exposures, not live-system compromise.
+      Implementer guidance updated accordingly. Risk-doc code renamed
+      at-rest-encryption-gap -> at-rest-encryption; evidence record cited.
   - date: "2026-06-15"
     change: >
       Initial draft of the HDS layer over the HIPAA Breach Notification Rule. All
@@ -33,18 +40,22 @@ requirements:
       regions: [us, ch]
       overview: |
         Subpart D only reaches PHI that is "unsecured" — PHI not rendered unusable
-        per HHS guidance. HDS narrows that surface by enforcing TLS in transit by
-        default; at-rest content encryption for ePHI is not yet shipped, so the
-        unsecured-PHI scope is currently wider at rest than in transit.
+        per HHS guidance. HDS narrows that surface on both halves of the data
+        path: TLS is enforced in transit, and ePHI is encrypted at rest in both
+        regions by hosting-layer volume encryption (verified 2026-06-26). The
+        unsecured-PHI boundary that remains is the in-use one: a running system,
+        account or token compromise reaches decrypted content.
       detail: |
         As a business associate, HDS is squarely within Subpart D's reach. The
         practical effect of this row is to set the boundary that the encryption
         and risk-assessment rows below refine: what counts as unsecured PHI in an
-        HDS deployment is governed by the transit/at-rest posture described under
-        164.402(2), which today leaves at-rest ePHI inside the unsecured category.
+        HDS deployment is governed by the transit/at-rest/in-use posture described
+        under 164.402(2) — media exposures of at-rest content fall inside the
+        safe harbor; live-system compromises do not.
       evidence:
         internal_docs:
-          - hipaa/risk/at-rest-encryption-gap
+          - hipaa/risk/at-rest-encryption
+          - hipaa/evidence/at-rest-encryption-verification
     implementer:
       - persona: covered-entity
         coverage: documented
@@ -84,14 +95,15 @@ requirements:
         The two limbs of §164.402 are refined in the dedicated rows below:
         164.402(1) covers the four-factor risk assessment, for which the audit log
         and access-version chain are the structured inputs, and 164.402(2) covers
-        the unsecured-PHI safe harbor, where HDS is honest that at-rest content
-        encryption is not yet shipped. The definitional analysis itself — deciding
-        whether a given event meets the breach definition — remains the
-        implementer's, supported by HDS evidence.
+        the unsecured-PHI safe harbor — available for at-rest media exposures
+        since the 2026-06-26 at-rest encryption rollout, not for live-system
+        compromises. The definitional analysis itself — deciding whether a given
+        event meets the breach definition — remains the implementer's, supported
+        by HDS evidence.
       evidence:
         internal_docs:
           - hipaa/procedures/breach-risk-assessment
-          - hipaa/risk/at-rest-encryption-gap
+          - hipaa/risk/at-rest-encryption
     implementer:
       - persona: covered-entity
         coverage: documented
@@ -169,33 +181,39 @@ requirements:
       regions: [us, ch]
       overview: |
         The safe harbor exempts properly secured PHI from breach notification. HDS
-        enforces TLS in transit, which places the in-transit half of the data path
-        inside the safe harbor. Platform at-rest encryption for ePHI content is NOT
-        YET SHIPPED, so the safe harbor does not currently apply to PHI at rest and
-        a disclosure of at-rest content can still be a reportable breach.
+        enforces TLS in transit (the FIPS-validated in-transit standards), and
+        ePHI is encrypted at rest in both regions by hosting-layer volume
+        encryption meeting NIST SP 800-111 full-volume encryption (verified
+        2026-06-26). The safe harbor is therefore available for lost, stolen or
+        decommissioned media — the volume keys are not stored with the media. It
+        is NOT available where a running system, account or access token is
+        compromised, since the volume is decrypted in use.
       detail: |
-        This is an honest-gap row. In-transit protection (TLS) aligns with the
-        FIPS-validated standards referenced by HHS guidance, so leaked data in
-        flight is generally outside the unsecured-PHI definition. At rest, HDS does
-        not yet provide NIST SP 800-111-equivalent content encryption for ePHI;
-        until that ships, at-rest ePHI remains unsecured PHI for the purposes of
-        this rule and any compromise must be assessed as a potential breach. The
-        gap, its compensating controls and the remediation plan are tracked in the
-        cited internal record.
+        In-transit protection (TLS) aligns with the FIPS-validated standards
+        referenced by HHS guidance, so leaked data in flight is generally outside
+        the unsecured-PHI definition. At rest, hosting-layer full-volume
+        encryption (Exoscale hypervisor-layer on ch1; AWS EBS/KMS on us1) renders
+        stored ePHI "secured" for media exposures. Keys are provider-managed —
+        the cited risk record analyses that accepted residual, and the evidence
+        record holds the vendor statements plus the Security Official's
+        attestation. A compromise of a live system, account or token reaches
+        decrypted content and must still be assessed under 164.402(1).
       evidence:
         internal_docs:
-          - hipaa/risk/at-rest-encryption-gap
+          - hipaa/risk/at-rest-encryption
+          - hipaa/evidence/at-rest-encryption-verification
     implementer:
       - persona: covered-entity
         coverage: documented
         overview: |
-          Do not rely on the at-rest safe harbor on HDS today; document the gap in
-          your risk analysis and treat at-rest exposures as potentially reportable.
+          Rely on the at-rest safe harbor for media exposures; assess
+          running-system, account or token compromises separately, where it does
+          not apply.
       - persona: business-associate
         coverage: documented
         overview: |
-          Account for the at-rest encryption gap in your own risk posture and in
-          assurances you give upstream.
+          Reflect the media-vs-live-system safe-harbor boundary in your own risk
+          posture and in assurances you give upstream.
       - persona: individual
         coverage: out-of-scope
 

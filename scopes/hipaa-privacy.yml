@@ -13,6 +13,11 @@ regions: [us]
 changelog:
   - date: "2026-07-28"
     change: >
+      164.530(a): documented -> implemented — HDS's own Privacy Official
+      designated 2026-07-15 (distinct holder from the Security Official),
+      recorded in the designated-roles register.
+  - date: "2026-07-28"
+    change: >
       164.514(c): the platform alias primitive (accesses.create
       {randomAlias:true}, deployed on all HDS cores with open-pryv.io
       2.0.0-rc.12) now provides the re-identification code directly; the
@@ -500,21 +505,26 @@ requirements:
     pryv_ref: 164.530(a)
     draft: true
     hds:
-      coverage: documented
+      coverage: implemented
       effort_saved: low
       regions: [us, ch]
       overview: |
-        Designation of a privacy official is the covered entity's organizational
-        decision. HDS's contribution is indirect: the audit log gives that
-        official a concrete artefact to review when investigating complaints or
-        internal use. HDS maintains its own privacy contact under its BA role.
+        HDS has designated its own Privacy Official under its BA role: a
+        distinct holder from the Security Official, appointed by the CEO
+        effective 2026-07-15 and recorded in the designated-roles register
+        (disclosed on request; the source documents are still moving through
+        internal approval). The audit log gives that official a concrete
+        artefact to review when investigating complaints or internal use. The
+        covered entity's own privacy-official designation remains its
+        organizational decision.
       detail: |
         HDS operates as a business associate and names its own responsible
-        contact, but the covered entity's privacy-official designation is a
-        programme element outside HDS's scope.
+        official and contact; the covered entity's privacy-official designation
+        is a programme element outside HDS's scope.
       evidence:
         internal_docs:
           - hipaa/policies/privacy-program-governance
+          - hipaa/registers/designated-roles
     implementer:
       - persona: covered-entity
         coverage: documented

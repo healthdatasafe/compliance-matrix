@@ -13,6 +13,17 @@ regions: [us, ch]
 changelog:
   - date: "2026-07-28"
     change: >
+      Internal-state sync: CC5.2 + CC6.7 stale "at-rest not yet shipped"
+      wording corrected (hosting-layer full-volume encryption in force since
+      2026-06-26; provider-managed-key residual documented); risk-doc code
+      renamed at-rest-encryption-gap -> at-rest-encryption + verification
+      evidence cited. hds.planned chips added on CC1.4 (training), CC3.2
+      (formal risk analysis, impact high), CC8.1 (change management), CC9.2
+      (vendor management), A1.2 (verified backups), A1.3 (contingency drill),
+      C1.2/P4.2/P4.3 (retention-and-disposal doc), P6.3 (PHI-safe telemetry,
+      tracked on pryv/open-pryv.io#60).
+  - date: "2026-07-28"
+    change: >
       C1.1: note the platform alias primitive (accesses.create
       {randomAlias:true}, deployed on all HDS cores with open-pryv.io
       2.0.0-rc.12) as the confidential-identity measure — a grant can expose a
@@ -183,6 +194,15 @@ requirements:
     evidence:
       internal_docs:
         - soc2/policies/workforce-competence
+    planned:
+      - kind: procedure
+        summary: >-
+          A standing security-awareness / competence programme is being stood
+          up: the workforce-training procedure and its completion-record
+          template are drafted in the internal pipeline; onboarding delivery
+          and tracked completions are the outstanding remainder.
+        impact: medium
+        internal_doc: hipaa/procedures/workforce-training
   implementer:
     - persona: service-organization
       coverage: documented
@@ -433,6 +453,15 @@ requirements:
     evidence:
       internal_docs:
         - soc2/procedures/risk-assessment
+    planned:
+      - kind: doc
+        summary: >-
+          The formal risk analysis is drafted in the internal pipeline (scope
+          inventory and risk table authored, assessment values outstanding)
+          and its completion is the top item on the risk-management treatment
+          register; completing it would change this row's claim.
+        impact: high
+        internal_doc: hipaa/risk/risk-analysis
   implementer:
     - persona: service-organization
       coverage: documented
@@ -680,13 +709,14 @@ requirements:
       control and authentication are enforced on every request, transmission is
       TLS by default, the audit log is always-on, and inter-core transport is
       mutually authenticated. HDS operates this stack across both data-residency
-      options. At-rest encryption of bulk event data is the one general control not
-      yet shipped (see CC6.7) and is noted honestly. A partner selects, configures
+      options. At-rest encryption of event data is in force at the hosting layer
+      in both regions (full-volume encryption, since 2026-06-26; see CC6.7 for
+      the provider-managed-key residual). A partner selects, configures
       and operates these controls; it does not build them.
     technical: |
       Logical access and authentication enforced per request; TLS in transit;
-      always-on per-user audit log; mutually authenticated inter-core transport.
-      At-rest encryption of bulk event data is not yet platform-provided.
+      always-on per-user audit log; mutually authenticated inter-core transport;
+      hosting-layer full-volume at-rest encryption in both regions.
     regions: [us, ch]
     evidence:
       internal_docs:
@@ -698,8 +728,8 @@ requirements:
       coverage: documented
       overview: |
         Select, configure and operate the platform general IT controls; document
-        the configuration and assess the at-rest encryption gap in your risk
-        analysis.
+        the configuration and weigh the provider-managed-key at-rest residual in
+        your risk analysis.
     - persona: user-entity
       coverage: out-of-scope
     - persona: subservice-organization
@@ -1047,35 +1077,37 @@ requirements:
       HDS-shipped intermediary that could log or cache), and movement is restricted
       by the permission model — a credential only moves the data its scope permits.
       Operator secrets at rest and bootstrap bundles for core-to-core movement are
-      encrypted with authenticated encryption. Bulk event-data at-rest encryption
-      is an operator-side storage-layer choice and is not yet platform-provided.
+      encrypted with authenticated encryption. Bulk event data is encrypted at
+      rest at the hosting/storage layer in both regions (since 2026-06-26),
+      with provider-managed keys as the documented residual.
     detail: |
       The transmission half is default-on TLS with no plaintext path; the movement
       half is bounded by the access permission model, so data only moves where a
       scope permits and there is no out-of-band dump path. Operator secrets and
-      core-to-core bootstrap material use authenticated encryption at rest. HDS is
-      honest that platform-managed at-rest encryption of bulk event data is not yet
-      shipped — at-rest protection is applied at the infrastructure/storage layer
-      in each region, and an organization assesses the residual gap in its risk
-      analysis.
+      core-to-core bootstrap material use authenticated encryption at rest. Event
+      data at rest is protected by hosting-layer full-volume encryption in each
+      region; keys are provider-managed, so platform-managed content encryption
+      (operator-held-key volumes or end-to-end) remains an optional
+      strengthening an organization weighs in its risk analysis.
     technical: |
       Default-on TLS for transmission with no intermediary; movement bounded by the
       access permission model; authenticated encryption of operator secrets and
-      core-to-core bundles. Bulk event-data at-rest encryption is operator-side, not
-      yet platform-provided.
+      core-to-core bundles; hosting-layer full-volume at-rest encryption in both
+      regions (provider-managed keys).
     regions: [us, ch]
     evidence:
       internal_docs:
         - hipaa/policies/transmission-security
         - hipaa/policies/encryption
-        - hipaa/risk/at-rest-encryption-gap
+        - hipaa/risk/at-rest-encryption
+        - hipaa/evidence/at-rest-encryption-verification
   implementer:
     - persona: service-organization
       coverage: configurable
       overview: |
-        Rely on default-on TLS and the permission-bounded movement model; apply
-        infrastructure at-rest encryption and assess the bulk-data at-rest gap in
-        your risk analysis.
+        Rely on default-on TLS and the permission-bounded movement model; weigh
+        the provider-managed-key at-rest residual in your risk analysis and add
+        application-side encryption where your assessment requires it.
     - persona: user-entity
       coverage: out-of-scope
     - persona: subservice-organization
@@ -1381,6 +1413,14 @@ requirements:
       internal_docs:
         - hipaa/policies/audit-controls
         - soc2/policies/change-management
+    planned:
+      - kind: doc
+        summary: >-
+          A written change-management process (ticketed approvals, documented
+          test evidence per change, rollback) is drafted in the internal
+          pipeline; its formalisation is the tracked remediation.
+        impact: medium
+        internal_doc: soc2/policies/change-management
   implementer:
     - persona: service-organization
       coverage: documented
@@ -1472,6 +1512,14 @@ requirements:
       internal_docs:
         - hipaa/registers/subprocessor-register
         - soc2/policies/vendor-management
+    planned:
+      - kind: doc
+        summary: >-
+          A formal vendor-management programme (assessment criteria, scored
+          risk tiers, scheduled re-assessment and SLA review) is drafted in
+          the internal pipeline; its formalisation is the tracked remediation.
+        impact: medium
+        internal_doc: soc2/policies/vendor-management
   implementer:
     - persona: service-organization
       coverage: documented
@@ -1568,6 +1616,16 @@ requirements:
       internal_docs:
         - hipaa/procedures/data-backup-plan
         - hipaa/procedures/disaster-recovery-plan
+    planned:
+      - kind: procedure
+        summary: >-
+          Automated, restore-verified backups are the tracked remediation: the
+          backup-plan procedure and a backup-run record template are in the
+          internal pipeline, the automated-tooling defect is on the
+          risk-management treatment register, and the first verified
+          restore-tested run is outstanding.
+        impact: medium
+        internal_doc: hipaa/procedures/data-backup-plan
   implementer:
     - persona: service-organization
       coverage: documented
@@ -1610,6 +1668,14 @@ requirements:
     evidence:
       internal_docs:
         - hipaa/procedures/contingency-plan-testing
+    planned:
+      - kind: procedure
+        summary: >-
+          The contingency-test procedure and its execution-record template are
+          drafted in the internal pipeline; the first verified, recorded drill
+          with retained evidence is the tracked remainder.
+        impact: medium
+        internal_doc: hipaa/procedures/contingency-plan-testing
   implementer:
     - persona: service-organization
       coverage: documented
@@ -1706,6 +1772,14 @@ requirements:
       internal_docs:
         - hipaa/policies/minimum-necessary
         - soc2/procedures/data-retention-and-disposal
+    planned:
+      - kind: doc
+        summary: >-
+          A documented retention-and-disposal schedule with verified backup
+          pruning is drafted in the internal pipeline; its formalisation is
+          the tracked remediation.
+        impact: low
+        internal_doc: soc2/procedures/data-retention-and-disposal
   implementer:
     - persona: service-organization
       coverage: documented
@@ -2186,6 +2260,14 @@ requirements:
     evidence:
       internal_docs:
         - soc2/procedures/data-retention-and-disposal
+    planned:
+      - kind: doc
+        summary: >-
+          The retention-and-disposal procedure (documented retention schedule
+          over the per-record metadata) is drafted in the internal pipeline;
+          its formalisation is the tracked remediation.
+        impact: low
+        internal_doc: soc2/procedures/data-retention-and-disposal
   implementer:
     - persona: service-organization
       coverage: documented
@@ -2229,6 +2311,15 @@ requirements:
       internal_docs:
         - soc2/procedures/data-retention-and-disposal
         - hipaa/policies/minimum-necessary
+    planned:
+      - kind: doc
+        summary: >-
+          The retention-and-disposal procedure (documented schedule, verified
+          backup pruning) is drafted in the internal pipeline; its
+          formalisation is the tracked remediation for the disposal half of
+          this row.
+        impact: low
+        internal_doc: soc2/procedures/data-retention-and-disposal
   implementer:
     - persona: service-organization
       coverage: documented
@@ -2449,6 +2540,17 @@ requirements:
     evidence:
       internal_docs:
         - hipaa/procedures/security-incident-response
+    planned:
+      - kind: feature
+        summary: >-
+          PHI-safe log handling for operator telemetry is the tracked
+          remediation: HDS-authored services are moving to an allow-list
+          observability library feeding a self-hosted collector, replacing the
+          deny-list scrubbing over a vendor agent; the live exception is
+          recorded in the subprocessor register.
+        impact: medium
+        internal_doc: hipaa/registers/subprocessor-register
+        tracking_url: https://github.com/pryv/open-pryv.io/issues/60
   implementer:
     - persona: service-organization
       coverage: documented

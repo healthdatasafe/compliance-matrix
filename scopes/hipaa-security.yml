@@ -13,6 +13,16 @@ regions: [us]
 changelog:
   - date: "2026-07-28"
     change: >
+      Internal-state sync: §164.308(a)(2) documented -> implemented (Security
+      Official appointed 2026-07-15). §164.310(d)(1) stale "at-rest not yet
+      shipped" wording corrected (shipped 2026-06-26); risk-doc code renamed
+      at-rest-encryption-gap -> at-rest-encryption; verification evidence doc
+      cited. hds.planned chips added: workforce training, verified backups,
+      contingency-test drill, hosting attestations, platform-telemetry
+      transition (§308(a)(1)(ii)(D), tracked on pryv/open-pryv.io#60).
+      Technology-stack register cited on §308(a)(1)(i).
+  - date: "2026-07-28"
+    change: >
       §164.308(a)(6)(i) and §164.308(a)(8): cite the upstream open-pryv.io
       coordinated vulnerability disclosure program (shipped 2026-07-28) as the
       substrate-vulnerability intake channel and as a periodic-evaluation
@@ -53,6 +63,7 @@ requirements:
     evidence:
       internal_docs:
         - hipaa/policies/security-management-process
+        - shared/registers/technology-stack
   implementer:
     - persona: covered-entity
       coverage: documented
@@ -82,8 +93,12 @@ requirements:
       On top of the platform's per-user audit log, HDS operates the review
       substrate: system-level activity is collected and monitored across both
       US and Switzerland data-residency options, with alerting on crash,
-      error-rate and silence conditions. The written review cadence remains the
-      implementer's responsibility.
+      error-rate and silence conditions. The platform telemetry channel is
+      mid-transition (see the planned chip): the in-process vendor agent was
+      removed 2026-07-28 in favour of an allow-list, aggregate-only emitter;
+      until the self-hosted collector and rebuilt alert chain are verified,
+      platform-core detection leans on synthetic and liveness checks. The
+      written review cadence remains the implementer's responsibility.
     detail: |
       Per-API-call audit records (platform layer) plus infrastructure telemetry
       (HDS layer) together give both subject-level and system-level activity
@@ -95,6 +110,17 @@ requirements:
     evidence:
       internal_docs:
         - hipaa/procedures/information-system-activity-review
+    planned:
+      - kind: feature
+        summary: >-
+          Platform telemetry is moving from a vendor in-process agent (removed
+          2026-07-28) to a self-hosted OTLP collector fed by the platform's
+          allow-list aggregate emitter; collector deployment, alert-chain
+          rebuild and end-to-end delivery verification are the tracked
+          remainder.
+        impact: medium
+        internal_doc: hipaa/registers/subprocessor-register
+        tracking_url: https://github.com/pryv/open-pryv.io/issues/60
   implementer:
     - persona: covered-entity
       coverage: documented
@@ -117,22 +143,26 @@ requirements:
   pryv_ref: 164.308(a)(2)
   draft: true
   hds:
-    coverage: documented
+    coverage: implemented
     effort_saved: low
     overview: |
-      HDS designates a named security official accountable for its security
-      programme over the platform; the designation is recorded internally and
-      disclosed on request. Each partner must designate their own official for
-      their own programme.
+      HDS has designated its Security Official: appointed by the CEO on behalf
+      of the HDS Foundation, effective 2026-07-15, recorded in the designated-
+      roles register and the governing policy (both disclosed on request; the
+      source documents are still moving through internal approval). Each
+      partner must designate their own official for their own programme.
     detail: |
-      This is an organisational designation, not a software control. HDS holds
-      the designation as an operator artefact; the assigned official draws on
-      the audit log, monitoring and this matrix as operational substrate. A
-      partner running ePHI on HDS names their own security official.
+      This is an organisational designation, not a software control. The
+      designation is made and recorded as an operator artefact; the assigned
+      official draws on the audit log, monitoring and this matrix as
+      operational substrate. A distinct Privacy Official is designated
+      separately (see hipaa-privacy §164.530(a)(1)). A partner running ePHI on
+      HDS names their own security official.
     regions: [us, ch]
     evidence:
       internal_docs:
         - hipaa/policies/assigned-security-responsibility
+        - hipaa/registers/designated-roles
   implementer:
     - persona: covered-entity
       coverage: documented
@@ -289,6 +319,15 @@ requirements:
     evidence:
       internal_docs:
         - hipaa/policies/security-awareness-reminders
+    planned:
+      - kind: procedure
+        summary: >-
+          A verified security-awareness training programme is being stood up:
+          the workforce-training procedure and its completion-record template
+          are drafted in the internal pipeline; onboarding training, reminder
+          cadence and completion tracking are the tracked remainder.
+        impact: medium
+        internal_doc: hipaa/procedures/workforce-training
   implementer:
     - persona: covered-entity
       coverage: documented
@@ -490,6 +529,16 @@ requirements:
     evidence:
       internal_docs:
         - hipaa/procedures/data-backup-plan
+    planned:
+      - kind: procedure
+        summary: >-
+          Automated, restore-verified backups are the tracked remediation: the
+          backup-plan procedure and a backup-run record template are in the
+          internal pipeline, the automated tooling defect is on the risk-
+          management treatment register, and the first verified restore-tested
+          run is outstanding.
+        impact: medium
+        internal_doc: hipaa/procedures/data-backup-plan
   implementer:
     - persona: covered-entity
       coverage: documented
@@ -603,6 +652,15 @@ requirements:
     evidence:
       internal_docs:
         - hipaa/procedures/contingency-plan-testing
+    planned:
+      - kind: procedure
+        summary: >-
+          The contingency-test procedure and its execution-record template are
+          drafted in the internal pipeline; the first verified, recorded drill
+          (backup restore + DR walkthrough, RTO/RPO to be set from results) is
+          the tracked remainder.
+        impact: medium
+        internal_doc: hipaa/procedures/contingency-plan-testing
   implementer:
     - persona: covered-entity
       coverage: documented
@@ -858,18 +916,30 @@ requirements:
       media re-use, sanitisation) is satisfied by the hosting provider's attested
       controls, recorded in the HDS hosting-provider register. At the application
       tier, open-pryv.io's per-user data model means an individual subject's ePHI
-      can be exported and moved as a discrete unit. Note: platform at-rest
-      encryption of bulk event data is not yet shipped, so media leaving the
-      production environment must be encrypted by the implementer's own at-rest
-      layer before transport — HDS documents this boundary explicitly.
+      can be exported and moved as a discrete unit. Production volumes are
+      encrypted at rest (hosting-layer full-volume encryption, both regions,
+      since 2026-06-26), so decommissioned server media are protected by
+      construction; a per-subject export leaving the platform is a fresh
+      plaintext artefact, and encrypting it in transport/storage remains the
+      mover's responsibility — HDS documents this boundary explicitly.
     technical: |
       Per-user data isolation makes per-subject export the unit of media movement;
-      operator-side at-rest encryption is applied at the storage/transport boundary
-      (platform-managed at-rest encryption of event data is not yet available).
+      server volumes carry hosting-layer at-rest encryption (Exoscale
+      hypervisor-layer on ch1, AWS EBS/KMS on us1); exports leaving the platform
+      must be encrypted by the mover at the storage/transport boundary.
     evidence:
       internal_docs:
         - hipaa/registers/hosting-provider-attestations
         - hipaa/procedures/media-controls
+        - hipaa/evidence/at-rest-encryption-verification
+    planned:
+      - kind: doc
+        summary: >-
+          The hosting-provider attestation register exists but the attestation
+          documents themselves are not yet collected and filed (dates/expiry
+          are placeholders); collection is the tracked remediation.
+        impact: low
+        internal_doc: hipaa/registers/hosting-provider-attestations
   implementer:
     - persona: covered-entity
       coverage: documented
@@ -1083,7 +1153,7 @@ requirements:
       (AES-256, us1). Verified 2026-06-26. Keys are provider-managed (AWS / Exoscale,
       both BAA subprocessors) — this satisfies the addressable mechanism and grounds
       the §164.402(2) breach safe-harbor for lost/stolen media, but is not
-      operator-held-key or end-to-end encryption (see hipaa/risk/at-rest-encryption-gap
+      operator-held-key or end-to-end encryption (see hipaa/risk/at-rest-encryption
       for the residual).
     detail: |
       Both production cores store ePHI on encrypted volumes. ch1 (Exoscale, ch-dk-2)
@@ -1108,7 +1178,8 @@ requirements:
     evidence:
       internal_docs:
         - hipaa/policies/encryption
-        - hipaa/risk/at-rest-encryption-gap
+        - hipaa/risk/at-rest-encryption
+        - hipaa/evidence/at-rest-encryption-verification
   implementer:
     - persona: covered-entity
       coverage: configurable

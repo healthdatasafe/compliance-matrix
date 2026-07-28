@@ -11,6 +11,14 @@ layered_on_pryv: swiss-nlpd
 regions: [ch]
 
 changelog:
+  - date: "2026-07-28"
+    change: >
+      Art.8 + Art.24: stale "at-rest not implemented" wording corrected — the
+      event store is encrypted at rest since 2026-06-26 (hosting-layer volume
+      encryption, provider-managed-key residual documented); risk-doc code
+      renamed at-rest-encryption-gap -> at-rest-encryption, verification
+      evidence cited. Art.12: hds.planned chip for the unpopulated
+      processor-side register.
   - date: "2026-06-15"
     change: >
       Initial draft of the HDS layer over the Swiss nLPD. All rows draft pending
@@ -164,26 +172,30 @@ requirements:
       regions: [ch]
       overview: |
         HDS operates the technical security baseline: TLS in transit, stream-scoped
-        permissions, MFA, multi-core high availability and operated backup and
-        restore. At-rest encryption of customer event data is a known gap and is
-        flagged so the controller can weigh it in its security assessment.
+        permissions, MFA, multi-core high availability, operated backup and
+        restore, and at-rest encryption of the event store via hosting-layer
+        volume encryption (in place since 2026-06-26; provider-managed keys —
+        the accepted residual is recorded in the cited risk record).
       detail: |
         The OPDP minimum-requirements detailing and the organisational measures
         remain the controller's and processor's compliance work. HDS supplies the
-        technical and hosting safeguards and operates them; at-rest encryption of
-        the event store is not implemented and must be treated as a residual risk.
+        technical and hosting safeguards and operates them; at-rest volume
+        encryption covers stored event data, with provider-held keys as the
+        documented residual (operator-held-key or end-to-end encryption remain
+        optional strengthenings).
       evidence:
         internal_docs:
           - hipaa/policies/transmission-security
           - hipaa/policies/encryption
-          - hipaa/risk/at-rest-encryption-gap
+          - hipaa/risk/at-rest-encryption
+          - hipaa/evidence/at-rest-encryption-verification
     implementer:
       - persona: controller
         coverage: documented
         overview: |
           Assess whether the operated measures meet your security obligation,
-          accounting for the at-rest encryption gap, and add organisational
-          measures.
+          weighing the provider-managed-key residual at rest, and add
+          organisational measures.
       - persona: processor
         coverage: documented
         overview: |
@@ -330,13 +342,16 @@ requirements:
         controller can meet its Commissioner-notification duty. The subject
         notification trigger is more conditional than under GDPR; the controller's
         incident-response matrix should encode both regimes where it faces both.
-        At-rest encryption of the event store is not implemented, which affects
-        the safe-harbour assessment of a leaked artefact.
+        The event store is encrypted at rest (hosting-layer volume encryption,
+        since 2026-06-26), which strengthens the safe-harbour assessment of a
+        leaked at-rest artefact — a lost or decommissioned medium is protected;
+        a live-system compromise reaches decrypted content and is assessed on
+        its facts.
       evidence:
         internal_docs:
           - hipaa/procedures/security-incident-response
           - gdpr/procedures/breach-notification-72h
-          - hipaa/risk/at-rest-encryption-gap
+          - hipaa/risk/at-rest-encryption
     implementer:
       - persona: controller
         coverage: documented
@@ -945,6 +960,15 @@ requirements:
       evidence:
         internal_docs:
           - gdpr/registers/records-of-processing
+      planned:
+        - kind: doc
+          summary: >-
+            HDS's own processor-side register document exists in the internal
+            pipeline but is not yet populated with live processing activities;
+            population is the tracked remediation (same register as gdpr
+            Art.30).
+          impact: low
+          internal_doc: gdpr/registers/records-of-processing
     implementer:
       - persona: controller
         coverage: documented

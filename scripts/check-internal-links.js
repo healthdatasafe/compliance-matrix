@@ -35,6 +35,11 @@ for (const f of await hdsScopeFiles()) {
       if (!cited.has(code)) cited.set(code, []);
       cited.get(code).push(`${s.id}.${r.ref}`);
     }
+    for (const p of (r.hds?.planned) || []) {
+      if (!p.internal_doc) continue;
+      if (!cited.has(p.internal_doc)) cited.set(p.internal_doc, []);
+      cited.get(p.internal_doc).push(`${s.id}.${r.ref} (planned)`);
+    }
   }
 }
 
