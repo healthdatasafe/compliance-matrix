@@ -395,7 +395,7 @@ requirements:
     pryv_effort_saved: high
     draft: false
     reviewed_by: Pryv compliance
-    reviewed_at: "2026-06-19"
+    reviewed_at: "2026-07-18"
     pryv_primitives: [access, permissions, clientData, CMC, event]
     docs: [guides/consent.md]
     tests: [AA01, ACCP, USAD]
@@ -427,6 +427,21 @@ requirements:
       Granular consent (§4) — different processing purposes can be
       expressed as separate accesses with different permissions, each
       independently withdrawable.
+
+      Second consent path — OAuth2 authorization (§1, §4) — where your
+      user authorises a delegated app through Pryv's OAuth2
+      authorization-code flow (`open-pryv.io/components/oauth2/`,
+      open-pryv.io 2.0.0-rc.8), the granular consent screen presents
+      the referenced offer's per-permission set and lets the user
+      untick individual permissions to downgrade the grant before
+      accepting; the accepted subset (`grantedPermissions`, validated
+      ⊆ the signed offer) is what Pryv mints the app access from
+      (`open-pryv.io/components/oauth2/src/routes/accept.ts`). The
+      durable consent record is the same primitive as everywhere else
+      — a cross-account CMC data-grant access, versioned and revocable;
+      revoking it tears down the app's refresh chain. Demonstrability
+      rests on that data-grant + the signed offer material (the access
+      + its version history), not on a separate event log.
     technical: |
       - Snapshot semantics: `context/access-versioning.md` (full head
         clone into history row per update).
@@ -1326,7 +1341,7 @@ requirements:
       | `letsEncrypt.enabled: true` | LE (or any `letsEncrypt.directoryUrl` ACME CA) | hostnames only for ACME challenges; **no user data** |
       | `services.email.smtp.*` | operator's SMTP relay | email + name + one-time tokens (templated bodies) — PII. **Pryv recommends per-core SMTP configuration** — the `services.email.smtp.*` config block is per-core, so an EU core routes mail through an EU SMTP relay independently of a US core's relay. Use this when residency is a hard requirement (e.g., EU subjects' password-reset emails never touching a US-jurisdiction relay) |
       | `services.mfa.mode: enabled` + `sms.endpoints[*]` | operator's SMS provider | phone number + MFA code — PII |
-      | `observability.provider: <id>` | Operator's chosen APM vendor (New Relic ships as the first adapter; the façade is pluggable — Datadog, Honeycomb, OpenTelemetry, internal Prometheus pipelines, etc. all drop in via a custom adapter under `providers/<id>/`) | aggregated metrics + error traces; PII filter is provider-specific (NR adapter ships a strict attribute-exclude list — see Layer 3 below) |
+      | `observability.enabled: true` + an OTLP endpoint | Whichever backend that endpoint belongs to — any OTLP-ingesting service, or none at all if it points at a collector the operator hosts | per-method metrics + sanitized error stack traces, built from a fixed allow-list before egress (see Layer 3 below) |
       | `service.eventTypes: https://...` | upstream catalogue host | **no personal data flows out** — fetch-only of JSON Schema fragments |
 
       **Let's Encrypt posture (operator clarification)**: ships as a
@@ -1359,19 +1374,49 @@ requirements:
          + `system-seq.test.js:533`. Honest scope: redacts
          credentials, not PII broadly — emails / usernames / event
          payloads only leak if a caller explicitly logs them.
-      3. **Observability PII filters** (when observability opt-in,
-         provider-specific) — the shipped New Relic adapter's
-         hard-coded attribute exclude list at
-         `components/business/src/observability/providers/newrelic/
-         newrelic.ts:39-49`: strips `request.headers.{authorization,
-         cookie,proxy-authorization,set-cookie*,x-*}` + `request.
-         body`; `record_sql: 'off'`; `allow_all_headers: false`.
-         The façade contract itself is pluggable — a custom
-         adapter (Datadog, Honeycomb, OpenTelemetry, internal
-         Prometheus, etc.) implements PII filtering through its
-         vendor's mechanism. **Operators writing custom adapters
-         own the PII-filter equivalence** — review every custom
-         adapter for its own PII-exposure surface.
+      3. **Observability allow-list** (when observability is opted
+         into) — telemetry is constructed by the platform from a
+         compile-time allow-list at
+         `components/business/src/observability/schema.ts` and
+         shipped over OTLP/HTTP. No vendor or OpenTelemetry SDK
+         runs in the process and nothing is auto-instrumented, so
+         the emitted surface is fixed in source rather than
+         filtered out of an agent's collection. Emitted:
+         per-API-method call counts, duration histograms and error
+         counts, labelled only with a method id from the platform's
+         own API registry, a status class and an error code from
+         the published error id list; service name and version,
+         core FQDN and worker index; and, for server-side faults,
+         the error class plus a stack trace with frames rewritten
+         repository-relative. Request URLs, query and route
+         parameters, bodies, headers, usernames, record identifiers,
+         log records and error **message** text have no key in the
+         schema and therefore no code path to the backend;
+         datapoints outside the vocabulary are dropped and counted.
+         Error reports are aggregated by fault and stamped at the
+         reporting interval rather than the instant of failure, and
+         the instance id is the machine hostname and never derived
+         from the service URL, so the two correlation handles that
+         would otherwise re-identify activity are removed. The
+         destination is a URL plus an auth header, so an operator
+         pointing it at a collector they host themselves has no
+         third-party processor here at all. Claim to rely on:
+         **anonymous by construction, with a residual correlation
+         risk at very low traffic volumes** (where one error in an
+         interval may be the only active user's). Where that
+         residual applies, treat the telemetry as personal data and
+         keep Art.28 in scope for an external destination.
+         ⚑ **Correction of record:** before 2026-07-27 this layer
+         was an in-process vendor agent whose scrubbing config lived
+         in a file the agent does not discover, so it was inert and
+         enabled deployments ran on vendor defaults (request URLs,
+         `Host`, route parameters carrying the username, forwarded
+         log records). That was fixed on 2026-07-27 and the agent
+         was then removed entirely, because a control that works by
+         enumerating what must not escape a collector that sees
+         everything is only as strong as that collector's defaults.
+         Full account:
+         `context/subprocessor-posture-and-data-flow.md`.
 
       **§3(g) deletion / return of personal data at the end of
       provision** — `bin/backup.js` + `system.users.delete` cover
@@ -1435,7 +1480,12 @@ requirements:
     technical: |
       Audit data lives in per-user SQLite
       (`open-pryv.io/components/audit/`); `audit.get` API method exposes
-      it with access-time + method + access reference. The audit row
+      it with access-time + method + access reference. Since
+      open-pryv.io `07b6d3b6`, OAuth2 authorization-server activity
+      (`oauth.*`: consent granted, code exchanged, token issued /
+      refreshed / revoked) is recorded in the same per-user trail, so
+      the register's "recipients" derivation covers how a delegated
+      app's access came to exist, not only its subsequent reads. The audit row
       content is data-minimal by construction — it carries action +
       source (transport + ip) + URL query + access ref + integrity
       hash, never the request body. So the Article 30 register
@@ -1459,7 +1509,7 @@ requirements:
     pryv_effort_saved: high
     facilitation_mode: infrastructure
     draft: true
-    pryv_primitives: [permissions, system-streams, randomAlias, letsEncrypt-integration, multi-core-mTLS, encryption-at-rest-user-data, encryption-at-rest-secrets, backup-restore, MFA, data-residency]
+    pryv_primitives: [permissions, system-streams, randomAlias, letsEncrypt-integration, multi-core-mTLS, encryption-at-rest-user-data, encryption-at-rest-secrets, shared-secrets, backup-restore, MFA, data-residency]
     planned:
       - kind: feature
         summary: "End-to-end encryption shifts encryption from Configurable infrastructure to a Pryv-managed primitive"
@@ -1470,21 +1520,8 @@ requirements:
       - kind: feature
         summary: "Three-phase supply-chain scanning pipeline strengthens the §1(b)/(c) ongoing-CIA + integrity axis with concrete SCA + SBOM + signed-image evidence"
         proposal: proposals/supply-chain-scanning-pipeline.md
-        backlog: SUPPLY-CHAIN-SCANNING-PIPELINE
         tracking_url: https://github.com/pryv/open-pryv.io/issues/81
         impact: low
-      - kind: feature
-        summary: "PlatformDB at-rest encryption strengthens §1(a) encryption evidence at the cluster-replicated identification + routing layer"
-        proposal: proposals/platformdb-at-rest-encryption.md
-        backlog: PLATFORMDB-AT-REST-ENCRYPTION
-        tracking_url: https://github.com/pryv/open-pryv.io/issues/79
-        impact: medium
-      - kind: enhancement
-        summary: "Published vulnerability disclosure program (security mailbox + PGP + GHSA + scope + SLA + safe harbor) strengthens §1(d) testing/effectiveness evidence; modernises today's bare SECURITY.md"
-        proposal: proposals/vulnerability-disclosure-program.md
-        backlog: VULNERABILITY-DISCLOSURE-PROGRAM
-        tracking_url: https://github.com/pryv/open-pryv.io/issues/84
-        impact: medium
     overview: |
       Multi-aspect article —
       Pryv implements several aspects for you (access control,
@@ -1496,13 +1533,22 @@ requirements:
       Per-aspect:
         - Encryption in transit: IMPLEMENTED — TLS 1.3 via built-in
           Let's Encrypt integration; mTLS between cores in a cluster.
-        - Encryption at rest: CONFIGURABLE — you enable operator
-          filesystem encryption (out-of-band) + AES-256-GCM for at-rest
-          operator secrets in PlatformDB. Event attachments inherit the
-          at-rest controls of your `storages.file.engine` choice:
-          filesystem encryption, S3 server-side encryption (SSE), or —
-          with attachments stored in PostgreSQL — the same DB-level
-          encryption that covers user rows.
+        - Encryption at rest: CONFIGURABLE — the
+          `container-encrypted-volume` companion (opt-in `CEV_ENABLED`)
+          provisions an encrypted volume covering the full user-data
+          surface (events, attachments, series, audit, and PlatformDB)
+          with a pluggable LUKS/gocryptfs backend and
+          env/file/exec/clevis/aws-kms key provider; operator secrets in
+          PlatformDB are additionally AES-256-GCM encrypted at the
+          application layer. CEV protects data on the storage medium
+          (stolen / decommissioned disks, off-host backups, snapshots);
+          it does not defend a running container, and a core running
+          rqlite outside a CEV container — or an external PostgreSQL —
+          falls back to operator-side full-disk encryption. Event
+          attachments inherit the at-rest controls of your
+          `storages.file.engine` choice: filesystem encryption, S3
+          server-side encryption (SSE), or — with attachments stored in
+          PostgreSQL — the same DB-level encryption that covers user rows.
         - Pseudonymisation: FACILITATED — system streams + custom
           event-type design; pseudonyms live in `clientData` or
           dedicated streams.
@@ -1510,6 +1556,26 @@ requirements:
           level scope at every API call (technical control, not policy).
         - Authentication strength: IMPLEMENTED — `mfa.*` API methods,
           opt-in per `services.mfa.mode`.
+        - Delegated-app authorization: IMPLEMENTED — the OAuth2
+          authorization-code + PKCE flow
+          (`open-pryv.io/components/oauth2/`, open-pryv.io 2.0.0-rc.8)
+          hardens third-party access with mandatory PKCE (S256 only),
+          exact-match redirect-URI validation (single loopback-port
+          carve-out; fragment URIs rejected), curated-only client
+          registration, and short-TTL access tokens paired with
+          single-use rotating refresh tokens.
+        - Credential hand-off: IMPLEMENTED — the shared-secrets
+          endpoints (`open-pryv.io/components/shared-secrets/`) hand a
+          credential to a third party by a one-time random key instead
+          of a URL-embedded token, which would persist in browser
+          history, referrer headers, and server access logs. The key is
+          redeemable exactly once, expires on a mandatory TTL, and Pryv
+          stores only its SHA-256 — a database dump cannot reconstruct
+          a live credential, and the payload is scrubbed (including
+          from event history) once the secret stops being pending. An
+          optional signature (passphrase or client-computed HMAC whose
+          verifier secret never reaches the server) adds a second
+          factor to the redemption.
         - Data residency: CONFIGURABLE — multi-hosting puts data where
           your subjects (or your policy) require, bounding exposure
           surface.
@@ -1524,8 +1590,7 @@ requirements:
         - Restoration (§1(c)): IMPLEMENTED — `bin/backup.js --restore`
           per-user; single-node `peers.json` recovery restores cluster
           availability after a quorum loss.
-        - Regular testing (§1(d)): FILLED BY EXISTING PRIMITIVES +
-          PARTIALLY MISSING on the vulnerability-intake side.
+        - Regular testing (§1(d)): FILLED BY EXISTING PRIMITIVES.
           **Existing evidence (citable today)**:
             - **Multi-engine CI test matrix** — ~2351 tests on
               PostgreSQL and SQLite (matched baseline),
@@ -1545,15 +1610,16 @@ requirements:
             - **Supply-chain pipeline** (Q24 backlog) —
               once shipped, adds SBOM + signed images + CI gate
               on `npm audit` + Trivy/Grype scan.
-          **Partial gap (queued)**: the vulnerability-intake
-          program. Today's `SECURITY.md` directs reporters at
-          the **public** issue tracker — opposite of responsible
-          disclosure norms. Backlog
-          `VULNERABILITY-DISCLOSURE-PROGRAM` ships the modern
-          shape (private channel via GitHub Security Advisories +
-          `security@` mailbox + PGP + scope + SLA + safe harbor
-          + advisory history) so operator can cite Pryv's VDP +
-          GHSA log as part of their Art.32(1)(d) evidence file.
+            - **Vulnerability disclosure program** — a
+              coordinated disclosure policy ships in `SECURITY.md`:
+              private reporting via GitHub Security Advisories +
+              a `security-dev@` mailbox, a published scope,
+              response-time SLA, safe-harbor language, a 90-day
+              coordinated-disclosure timeline, and GHSA/CVE
+              issuance for confirmed reports. Private vulnerability
+              reporting is enabled on the published repositories,
+              so operators can cite Pryv's VDP + GHSA advisory
+              history as part of their Art.32(1)(d) evidence file.
 
   - ref: Art.33
     title: Notification of personal data breach to the supervisory authority
@@ -1570,7 +1636,6 @@ requirements:
       - kind: feature
         summary: "bin/breach-scope.js — emits §33(1)(b-d) scoping report from audit + access-version data for a compromised accessId"
         proposal: proposals/breach-scope-tool.md
-        backlog: BREACH-SCOPE-TOOL
         tracking_url: https://github.com/pryv/open-pryv.io/issues/76
         impact: medium
     overview: |

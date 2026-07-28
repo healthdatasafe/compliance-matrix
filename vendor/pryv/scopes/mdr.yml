@@ -139,7 +139,7 @@ requirements:
     overview: |
       PMS data sources are
       two-fold: (1) operational telemetry of the device + backend
-      (audit log + New Relic observability when enabled); (2) field
+      (audit log + observability telemetry when enabled); (2) field
       data from the device itself, captured as events. Pryv is the
       substrate for both. The PMS plan itself, its trend analysis,
       and the PSUR write-up under Art. 86 are manufacturer-side.

@@ -1,6 +1,6 @@
 # Supply-chain scanning pipeline
 
-**Proposal mirror of**: `_plans/XXX-Backlog/SUPPLY-CHAIN-SCANNING-PIPELINE.md`
+**Proposal mirror of**: `_plans/XXX-Backlog/COMPLIANCE-SUPPLY-CHAIN-SCANNING-PIPELINE.md`
 (macroPryv-side backlog file).
 **Filed during:** Q24 implementer-perspective gap-probing session.
 **Surfacing question:** *"Does Pryv emit any artefact about its
@@ -73,7 +73,7 @@ metadata + dashboard, at the cost of a vendor relationship.
 ## Cross-references
 
 - macroPryv backlog file:
-  `_plans/XXX-Backlog/SUPPLY-CHAIN-SCANNING-PIPELINE.md`.
+  `_plans/XXX-Backlog/COMPLIANCE-SUPPLY-CHAIN-SCANNING-PIPELINE.md`.
 - `compliance-matrix/UPDATE-TRIGGERS.md` Section A entry
   `SUPPLY-CHAIN-SCANNING-PIPELINE`.
 - Q23 (Plan 71 FAQ) covered the runtime subprocessor posture —

@@ -1,6 +1,19 @@
 # PlatformDB at-rest encryption
 
-**Proposal mirror of**: `_plans/XXX-Backlog/PLATFORMDB-AT-REST-ENCRYPTION.md` (macroPryv).
+**Status: SUPERSEDED 2026-07-28 by `container-encrypted-volume` (CEV).**
+This proposal was filed 2026-05-21, before CEV shipped (v0.1.0, 2026-06-23).
+CEV provides encryption-at-rest for the full user-data surface including
+**PlatformDB** on a containerised deployment, covering this proposal's exact
+threat model (SSD / backup-tape / decommissioned-hardware forfeiture,
+filesystem-level breach, storage-layer subpoena). The rqlite-native / envelope
+paths below are therefore not pursued. The `gdpr.Art.32` chip has been
+discharged and the row prose cites CEV; GitHub issue #79 is closed. Residual
+not covered by CEV (running-container / rqlite replication-stream exposure) is
+tracked by `platformdb-pii-hashing.md`, already shipped for the PII columns.
+See `proposals/container-encrypted-volume.md`. The remainder of this file is
+retained as the original analysis (historical).
+
+**Proposal mirror of**: `_plans/XXX-Backlog/COMPLIANCE-PLATFORMDB-AT-REST-ENCRYPTION.md` (macroPryv).
 **Filed during**: Plan 71 Q25 — cross-border PlatformDB analysis.
 
 ## Goal
@@ -58,7 +71,7 @@ Does NOT cover:
 
 ## Cross-references
 
-- macroPryv backlog: `_plans/XXX-Backlog/PLATFORMDB-AT-REST-ENCRYPTION.md`
+- macroPryv backlog: `_plans/XXX-Backlog/COMPLIANCE-PLATFORMDB-AT-REST-ENCRYPTION.md`
 - `compliance-matrix/UPDATE-TRIGGERS.md` Section A entry
   `PLATFORMDB-AT-REST-ENCRYPTION`.
 - `compliance-matrix/context/cross-border-platformdb-implications.md`

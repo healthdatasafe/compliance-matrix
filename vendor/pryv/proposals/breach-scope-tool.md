@@ -106,7 +106,7 @@ recoverable post-hoc without them.
 ## Related
 
 - Upstream backlog:
-  `_plans/XXX-Backlog/BREACH-SCOPE-TOOL.md`
+  `_plans/XXX-Backlog/COMPLIANCE-BREACH-SCOPE-TOOL.md`
 - Sibling proposal: `proposals/audit-log-chaining.md` — when
   chained audit ships, the breach-scope report can cite the
   chain-hash range covering the breach window as non-repudiable

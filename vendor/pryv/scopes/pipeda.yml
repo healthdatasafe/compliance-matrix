@@ -258,7 +258,6 @@ requirements:
       - kind: feature
         summary: "bin/breach-scope.js produces the RROSH-input artefact in a single CLI call (records affected, methods invoked, streams touched)"
         proposal: proposals/breach-scope-tool.md
-        backlog: BREACH-SCOPE-TOOL
         tracking_url: https://github.com/pryv/open-pryv.io/issues/76
         impact: medium
     overview: |

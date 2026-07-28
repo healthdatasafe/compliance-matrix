@@ -111,7 +111,7 @@ cert-load).
 ## Related
 
 - Upstream backlog:
-  `_plans/XXX-Backlog/CLOCK-SKEW-CLUSTER-CHECKS.md`
+  `_plans/XXX-Backlog/COMPLIANCE-CLOCK-SKEW-CLUSTER-CHECKS.md`
 - Architecture note: `context/core-affinity-architecture.md`
 - Sibling proposal: `proposals/audit-log-chaining.md` (cite this
   in the chain backlog as a precondition).

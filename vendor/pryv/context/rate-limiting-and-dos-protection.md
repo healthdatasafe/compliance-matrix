@@ -71,7 +71,7 @@ posture is in the **detection layer**, not the enforcement layer:
   API method invocation includes timestamp, access reference,
   method, key request fields. `fail2ban` and SIEM tools consume
   this to drive policy.
-- **Observability adapter** (New Relic when configured). Per-core
+- **Observability emitter** (when configured). Per-core, per-method
   request rate + latency + error rate metrics feed
   capacity-management dashboards + anomaly-detection rules.
 - **Access primitive for revocation.** When abuse is detected,

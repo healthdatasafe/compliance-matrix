@@ -339,8 +339,8 @@ requirements:
     coverage: implemented
     pryv_effort_saved: high
     draft: true
-    pryv_primitives: [access, permissions, system-streams, MFA, encryption-at-rest-secrets, letsEncrypt-integration]
-    tests: [AA01, AA02, ACCP, MA01, MA02]
+    pryv_primitives: [access, permissions, system-streams, MFA, encryption-at-rest-secrets, letsEncrypt-integration, shared-secrets]
+    tests: [AA01, AA02, ACCP, MA01, MA02, SHS02, SHS09, SHS13]
     derives_from: [iso-27001.A.5.15, iso-27001.A.8.5, hipaa-security.164.312(a)(1)]
     planned:
       - kind: enhancement
@@ -357,6 +357,34 @@ requirements:
       isolate privileged data (credentials, MFA state). No plaintext
       transport path ships. You define who gets which access; Pryv
       enforces it.
+    detail: |
+      **OAuth2 as a second logical-access path.** Alongside token +
+      MFA authentication, Pryv ships a standards-based OAuth2
+      authorization-code + PKCE authorization server
+      (`open-pryv.io/components/oauth2/`, open-pryv.io 2.0.0-rc.8):
+      discovery at `GET /.well-known/oauth-authorization-server`,
+      `GET /oauth2/authorize`, and `POST /oauth2/token`. PKCE is
+      mandatory (S256 only); presented redirect URIs are validated by
+      exact string match with a single loopback-port carve-out
+      (RFC 8252 / 9700) and fragment-bearing redirect URIs are rejected
+      (`open-pryv.io/components/oauth2/src/clientRegistry.ts`). Client
+      registration is curated-only — the operator promotes an account
+      to an OAuth client via `bin/oauth-client.js`; open self-service
+      registration (`POST /oauth2/register`) is deliberately disabled.
+
+      **Credential transmission to third parties.** When a credential
+      must be handed to a counterparty, the shared-secrets endpoints
+      (`open-pryv.io/components/shared-secrets/`) replace URL-embedded
+      tokens with a one-time random key: redeemable exactly once (with
+      atomic single-winner semantics under concurrent redemption),
+      mandatory TTL, only the key's SHA-256 stored server-side, payload
+      scrubbed once consumed, optional passphrase / HMAC signature on
+      redemption. Browser history, referrer headers, and access logs
+      therefore stop carrying live credentials. A
+      `secretSharing: forbidden` feature permission — inherited by
+      child accesses and not strippable via `accesses.update` — lets
+      you exclude designated access classes from minting shared
+      secrets at all.
 
   - ref: CC6.2
     title: CC6.2 — User registration, credential issuance, and de-provisioning
@@ -380,6 +408,21 @@ requirements:
       account entirely. Each stage lands in the audit log. The
       authorization decision (who may register, what scope is
       appropriate) is your policy; the mechanism is shipped.
+    detail: |
+      **OAuth2 client credential issuance is curated.** For
+      delegated-app credentials, Pryv issues OAuth2 client identities
+      only through the operator CLI (`bin/oauth-client.js` — register /
+      rotate-secret / list), not through open dynamic registration: the
+      discovery document advertises no registration endpoint and
+      `POST /oauth2/register` (RFC 7591 open mode) is intentionally
+      deferred — `oauth.clientRegistration.mode: curated` is the only
+      supported value and `open` is rejected. Each client carries an
+      exact-match set of registered redirect URIs and, for confidential
+      clients, a rotatable `client_secret`. The authorization decision
+      (who becomes a client, which redirect URIs + scopes are
+      appropriate) stays your policy; the issuance + rotation mechanism
+      is shipped (`open-pryv.io/components/oauth2/`, open-pryv.io
+      2.0.0-rc.8).
 
   - ref: CC6.3
     title: CC6.3 — Role-based access, least privilege, segregation of duties
@@ -413,6 +456,29 @@ requirements:
       context/workforce-access-patterns.md. The IdP stays the source of
       truth for identity; Pryv records the access state + per-individual
       audit trail.
+
+      **OAuth2 revoke + refresh-chain teardown.** For delegated apps,
+      the durable consent behind an OAuth2 grant is a cross-account CMC
+      data-grant; revoking it (deleting the counterparty access) kills
+      the refresh chain — the next `refresh_token` exchange sees the
+      data-grant gone and fails `invalid_grant`, so no fresh access is
+      minted (`open-pryv.io/components/oauth2/src/grants/refresh_token.ts`,
+      open-pryv.io 2.0.0-rc.8). Access modification propagates the same
+      way: narrowing the granted permissions on the data-grant narrows
+      what the next rotated token can do; widening requires a fresh
+      consent, never a refresh.
+
+      **Operator client revocation reaches live tokens.** Revoking a
+      delegated app (`bin/oauth-client.js revoke <clientId>`) no longer
+      merely blocks new grants while issued tokens live out their TTL:
+      it writes a platform-wide tombstone and every core rejects that
+      client's existing access tokens at validation time within
+      `oauth.clientRevokeCheckSeconds` (default 30 s) — open socket.io
+      connections are swept and dropped too. So "remove access for app
+      X, everywhere, now" is one operator command with a bounded
+      propagation window (open-pryv.io `7b6321aa`). For DPoP-bound apps
+      the same is available per client key (`revoke-key <jkt>`,
+      open-pryv.io `4c0a5ade`).
 
   - ref: CC6.4
     title: CC6.4 — Physical access to facilities and protected assets
@@ -537,7 +603,6 @@ requirements:
       - kind: feature
         summary: "Supply-chain scanning pipeline (CI npm audit gate + SBOM + image scan + signing) gives CC7.1 a software-side vulnerability-detection feed; shifts F:Evidence Low → F:Evidence Medium"
         proposal: proposals/supply-chain-scanning-pipeline.md
-        backlog: SUPPLY-CHAIN-SCANNING-PIPELINE
         tracking_url: https://github.com/pryv/open-pryv.io/issues/81
         impact: medium
     overview: |
@@ -608,18 +673,17 @@ requirements:
         backlog: AUDIT-LOG-CHAINING
         tracking_url: https://github.com/pryv/open-pryv.io/issues/74
         impact: low
-      - kind: enhancement
-        summary: "Published vulnerability-disclosure program supplies the external intake channel for substrate-vulnerability reports feeding the incident plan"
-        proposal: proposals/vulnerability-disclosure-program.md
-        backlog: VULNERABILITY-DISCLOSURE-PROGRAM
-        tracking_url: https://github.com/pryv/open-pryv.io/issues/84
-        impact: low
     overview: |
       Pryv contributes the technical halves of incident response:
       detection + scoping (audit + observability) and containment
       (accesses.delete revokes a compromised credential immediately).
-      The incident-response program itself — roles, escalation,
-      communications, lessons-learned — is yours to define and rehearse.
+      The external intake channel for substrate-vulnerability reports
+      is published in `SECURITY.md` (coordinated disclosure policy:
+      private GHSA flow + `security-dev@` mailbox + SLA + scope +
+      safe harbor; private vulnerability reporting enabled on the
+      published repositories). The incident-response program itself —
+      roles, escalation, communications, lessons-learned — is yours
+      to define and rehearse.
 
   - ref: CC7.5
     title: CC7.5 — Recovery from identified security incidents
@@ -1168,13 +1232,17 @@ requirements:
     pryv_effort_saved: high
     draft: true
     pryv_primitives: [audit, audit-event-stream, access]
-    tests: [AT01, AT51, AT61]
+    tests: [AT01, AT51, AT61, OE07]
     derives_from: [hipaa-privacy.164.528, gdpr.Art.30]
     overview: |
       Every disclosure is a read against a shared / CMC access, and the
       per-user audit log records each access invocation with the
       accessId + accessSerial that made it — a complete, attributable
-      record of who accessed what, when. The audit-event-stream can
+      record of who accessed what, when. Since open-pryv.io `07b6d3b6`
+      the *authorization* of a disclosure is recorded too: OAuth2
+      `oauth.*` audit events capture the consent grant, the code
+      exchange and every token issuance / refresh / revocation that
+      underlie a delegated-app disclosure. The audit-event-stream can
       surface the same record into the subject's own streams. This is
       the technical disclosure register; how long you retain it is your
       policy.
@@ -1244,7 +1312,6 @@ requirements:
       - kind: feature
         summary: "Breach-scope tool (accessId → userId reverse-index + audit recordCount + affectedStreamIds) turns the audit trail into a who-was-affected answer for breach notices"
         proposal: proposals/breach-scope-tool.md
-        backlog: BREACH-SCOPE-TOOL
         tracking_url: https://github.com/pryv/open-pryv.io/issues/76
         impact: high
       - kind: feature

@@ -1,7 +1,7 @@
 # Proposal: chained / hashed / signed audit log
 
 **Status:** future. Mirror of the macroPryv backlog item
-`_plans/XXX-Backlog/AUDIT-LOG-CHAINING.md` (filed 2026-05-19 from the
+`_plans/XXX-Backlog/COMPLIANCE-AUDIT-LOG-CHAINING.md` (filed 2026-05-19 from the
 compliance-matrix implementer-perspective gap-probing session).
 
 ## Today's posture (voluntarily missing for now)
@@ -79,7 +79,7 @@ tamper-resistance question; rows updated alongside this proposal:
 
 ## Related
 
-- Upstream backlog: `_plans/XXX-Backlog/AUDIT-LOG-CHAINING.md`
+- Upstream backlog: `_plans/XXX-Backlog/COMPLIANCE-AUDIT-LOG-CHAINING.md`
 - Sibling proposal: `proposals/e2e-encryption.md` (also a future
   primitive that strengthens the deliberate-infrastructure-only
   posture).

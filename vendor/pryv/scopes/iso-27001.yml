@@ -83,6 +83,17 @@ requirements:
       checked against the access's stream + level permissions. The
       operator's access-control rule definition (who gets what) is
       the policy half; technical enforcement is Pryv-side.
+    detail: |
+      **OAuth2 redirect + scope enforcement.** Pryv's delegated-app
+      authorization path (OAuth2 authorization-code + PKCE,
+      `open-pryv.io/components/oauth2/`, open-pryv.io 2.0.0-rc.8)
+      enforces access rules at two points: presented redirect URIs are
+      validated by exact string match (single loopback-port carve-out
+      per RFC 8252 / 9700; fragment-bearing URIs rejected —
+      `open-pryv.io/components/oauth2/src/clientRegistry.ts`), and the
+      minted app access carries only the user's granted subset of the
+      referenced consent offer's permissions. PKCE (S256) is mandatory
+      for every client.
 
   - ref: A.5.34
     title: A.5.34 — Privacy and protection of personal information
@@ -255,7 +266,7 @@ requirements:
     pryv_effort_saved: high
     draft: true
     pryv_primitives: [audit, audit-event-stream]
-    tests: [AT01, AT02, AT03, AT51, AT52, AT53, AT61, AT65]
+    tests: [AT01, AT02, AT03, AT51, AT52, AT53, AT61, AT65, OE07]
     planned:
       - kind: feature
         summary: "Chained / signed audit log adds the software-side tamper-resistance signal A.8.15 expects"
@@ -266,7 +277,12 @@ requirements:
     overview: |
       Per-user audit log captures every API method invocation; access
       reference (accessId + accessSerial) ties each row to the
-      authenticated identity. Audit storage uses SQLite directly to
+      authenticated identity. Since open-pryv.io `07b6d3b6` this
+      includes the OAuth2 authorization server's own activity
+      (`oauth.*` events: consent lifecycle, code exchange incl. replay
+      attempts, token issued / refreshed / revoked / reuse-detected) —
+      authorization decisions are logged alongside the data accesses
+      they enable. Audit storage uses SQLite directly to
       decouple log integrity from data-path engine issues. The
       "analysed" element (review cadence, alerting thresholds) is the
       operator's procedure.
@@ -323,10 +339,11 @@ requirements:
     draft: true
     pryv_primitives: [observability-provider, audit]
     overview: |
-      The pluggable observability
-      provider (New Relic adapter shipped) gives system-level
-      monitoring; audit logs give application-level activity.
-      Operator chooses provider + thresholds + escalation paths.
+      The opt-in observability
+      emitter (per-method metrics + error reports over OTLP) gives
+      system-level monitoring; audit logs give application-level
+      activity. Operator chooses backend + thresholds + escalation
+      paths.
       Anomaly-detection logic on the audit stream itself is a
       potential extension.
 
@@ -633,15 +650,20 @@ requirements:
     pryv_effort_saved: medium
     facilitation_mode: primitive
     draft: true
-    pryv_primitives: [access, permissions, audit, observability-provider]
+    pryv_primitives: [access, permissions, audit, observability-provider, shared-secrets]
     overview: |
       Pryv's primary leakage-
       prevention surface is the permission model — an access only
       reads / writes the streams its scope permits, so a misconfigured
       app can't accidentally exfiltrate out-of-scope data. The audit
-      log surfaces anomalous access patterns post-facto. Network /
-      endpoint DLP (browser-side copy-paste protection, USB blocking,
-      etc.) is the operator's endpoint-management scope.
+      log surfaces anomalous access patterns post-facto. The
+      shared-secrets primitive closes a classic leakage channel:
+      credentials handed to third parties travel as a one-time random
+      key instead of a URL-embedded token, so browser history, referrer
+      headers, and server access logs stop accumulating live
+      credentials. Network / endpoint DLP (browser-side copy-paste
+      protection, USB blocking, etc.) is the operator's
+      endpoint-management scope.
 
   - ref: A.8.22
     title: A.8.22 — Segregation of networks
@@ -737,26 +759,18 @@ requirements:
     facilitation_mode: evidence
     draft: true
     pryv_primitives: [observability-provider, audit]
-    planned:
-      - kind: enhancement
-        summary: "Published vulnerability disclosure program + GHSA advisory history becomes the substrate-vulnerability threat-intelligence feed for operators"
-        proposal: proposals/vulnerability-disclosure-program.md
-        backlog: VULNERABILITY-DISCLOSURE-PROGRAM
-        tracking_url: https://github.com/pryv/open-pryv.io/issues/84
-        impact: medium
     overview: |
       Pryv-side contribution to
       threat intelligence: dependabot alerts on master (Q24
       supply-chain backlog ships the broader CI gate + SBOM +
       Trivy/Grype pipeline), CHANGELOG announcements of relevant
       security fixes, observability data on anomalous request
-      patterns. Vulnerability-disclosure intake — today's
-      SECURITY.md directs reporters at the public issue tracker
-      (opposite of responsible-disclosure norms — backlog
-      `VULNERABILITY-DISCLOSURE-PROGRAM` ships the modern shape:
-      private GHSA flow + `security@` mailbox + PGP + scope +
-      SLA + safe harbor + published advisory history). Once
-      shipped, that VDP + GHSA log becomes the substrate-
+      patterns. Vulnerability-disclosure intake: `SECURITY.md`
+      publishes a coordinated disclosure policy (private GitHub
+      Security Advisories flow + `security-dev@` mailbox + scope +
+      SLA + safe harbor + GHSA/CVE issuance), and private
+      vulnerability reporting is enabled on the published
+      repositories. That VDP + GHSA log is the substrate-
       vulnerability threat-intelligence feed downstream
       operators subscribe to. The operator's own threat-intel
       programme (threat-feed subscriptions, correlation logic)
@@ -789,6 +803,16 @@ requirements:
       lifecycle, and Pryv records the resulting access state +
       per-individual audit trail.
 
+      **Delegated-app identity via OAuth2.** For app identities, Pryv
+      ships an OAuth2 authorization-code + PKCE flow
+      (`open-pryv.io/components/oauth2/`, open-pryv.io 2.0.0-rc.8): each
+      client is a curated identity the operator registers through
+      `bin/oauth-client.js` (create / rotate-secret / list — the full
+      credential lifecycle), authenticating with mandatory PKCE (S256
+      only) against an exact-match registered redirect-URI set. Open
+      self-registration is disabled, so every client identity is
+      operator-authorised before it exists.
+
   - ref: A.5.17
     title: A.5.17 — Authentication information
     text: |
@@ -799,7 +823,7 @@ requirements:
     pryv_effort_saved: medium
     facilitation_mode: infrastructure
     draft: true
-    pryv_primitives: [system-streams, MFA, encryption-at-rest-secrets]
+    pryv_primitives: [system-streams, MFA, encryption-at-rest-secrets, shared-secrets]
     planned:
       - kind: enhancement
         summary: "Reference MFA plugins broaden the authentication-information catalogue"
@@ -813,6 +837,34 @@ requirements:
       etc.); MFA secrets follow the same isolation. Operator's
       secret-distribution + secret-rotation policy is the
       organizational programme; Pryv provides the secure storage tier.
+    detail: |
+      **OAuth2 token + secret handling.** Where you delegate access to
+      apps, Pryv's OAuth2 flow (`open-pryv.io/components/oauth2/`,
+      open-pryv.io 2.0.0-rc.8) manages the authentication material for
+      you: access tokens are short-lived (`oauth.accessTokenTTL`,
+      default 1 h), refresh tokens are single-use and rotate on every
+      exchange with a sliding TTL bounded by an absolute cap
+      (`oauth.refreshTokenTTL` / `oauth.refreshTokenAbsoluteTTL`), and a
+      replayed (already-rotated) refresh token fails the exchange
+      (`open-pryv.io/components/oauth2/src/grants/refresh_token.ts`).
+      Confidential clients hold a rotatable `client_secret`
+      (`bin/oauth-client.js rotate-secret`). The operator's broader
+      secret-distribution + rotation programme stays the organizational
+      half; Pryv supplies the short-TTL + rotation mechanics.
+
+      **Transmitting authentication information to a third party.**
+      "Appropriate handling" includes how a credential travels when you
+      hand it to someone else. Pryv's shared-secrets endpoints
+      (`open-pryv.io/components/shared-secrets/`) replace the
+      URL-embedded-token pattern with a one-time random key: redeemable
+      exactly once, mandatory TTL, only the key's SHA-256 stored
+      server-side, payload scrubbed once consumed, optional
+      passphrase / HMAC signature on redemption. Your handling policy
+      ("never send credentials in links or logs") gains a shipped
+      mechanism to point at instead of a prohibition alone. A
+      `secretSharing: forbidden` feature permission — inherited by
+      child accesses — lets you exclude publicly-exposed tokens from
+      the mechanism entirely.
 
   - ref: A.5.18
     title: A.5.18 — Access rights
@@ -1425,7 +1477,6 @@ requirements:
       - kind: feature
         summary: "Three-phase supply-chain scanning pipeline (CI npm audit gate + SBOM via Syft + image scan via Grype + cosign signing); shifts row F:Awareness Low → F:Evidence Medium when shipped"
         proposal: proposals/supply-chain-scanning-pipeline.md
-        backlog: SUPPLY-CHAIN-SCANNING-PIPELINE
         tracking_url: https://github.com/pryv/open-pryv.io/issues/81
         impact: medium
     overview: |
@@ -1466,21 +1517,15 @@ requirements:
         backlog: AUDIT-LOG-CHAINING
         tracking_url: https://github.com/pryv/open-pryv.io/issues/74
         impact: medium
-      - kind: enhancement
-        summary: "Published vulnerability disclosure program supplies the externally-facing intake channel for substrate-vulnerability reports into the incident-management plan"
-        proposal: proposals/vulnerability-disclosure-program.md
-        backlog: VULNERABILITY-DISCLOSURE-PROGRAM
-        tracking_url: https://github.com/pryv/open-pryv.io/issues/84
-        impact: low
     overview: |
       Pryv contributes detection
       + scoping data (audit + observability) + containment primitive
       (accesses.delete) + substrate-vulnerability intake channel
-      (backlog `VULNERABILITY-DISCLOSURE-PROGRAM` modernises
-      today's bare SECURITY.md into a GHSA-based private flow
-      with SLA + scope + safe harbor). The incident-management
-      plan itself (roles, escalation, communications, lessons-
-      learned) is operator-side.
+      (`SECURITY.md` publishes a coordinated disclosure policy: a
+      GHSA-based private flow with SLA + scope + safe harbor, and
+      private vulnerability reporting is enabled on the published
+      repositories). The incident-management plan itself (roles,
+      escalation, communications, lessons-learned) is operator-side.
 
   - ref: A.5.25
     title: A.5.25 — Assessment and decision on information security events
