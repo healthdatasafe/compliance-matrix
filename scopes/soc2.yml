@@ -11,6 +11,11 @@ layered_on_pryv: soc2
 regions: [us, ch]
 
 changelog:
+  - date: "2026-07-28"
+    change: >
+      CC7.4: cite the upstream open-pryv.io coordinated vulnerability
+      disclosure program (shipped 2026-07-28) as the external
+      substrate-vulnerability intake channel.
   - date: "2026-06-15"
     change: >
       Initial draft of the HDS layer over the SOC 2 Trust Services Criteria
@@ -1267,8 +1272,13 @@ requirements:
       monitoring, containment uses immediate access revocation or scope reduction,
       and a documented flow governs escalation and communication. The procedure is
       held internally and shared on request, and feeds breach-notification timing a
-      partner must honour. A partner authors and rehearses its own incident-response
-      programme over the same technical substrate.
+      partner must honour. For substrate vulnerabilities, the upstream open-pryv.io
+      project's coordinated vulnerability disclosure program (private GitHub
+      Security Advisories plus a security mailbox, GHSA/CVE issuance) is the
+      external intake channel; a published advisory affecting the deployed release
+      enters HDS's procedure as a provider notification. A partner authors and
+      rehearses its own incident-response programme over the same technical
+      substrate.
     regions: [us, ch]
     evidence:
       internal_docs:
