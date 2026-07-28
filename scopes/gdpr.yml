@@ -11,6 +11,12 @@ layered_on_pryv: gdpr
 regions: [ch, us]
 
 changelog:
+  - date: "2026-07-28"
+    change: >
+      Art.4, Art.17, Art.32: the platform pseudonymisation primitive
+      (accesses.create {randomAlias:true}, vendored c2cd9b2) is deployed on all
+      HDS cores (open-pryv.io 2.0.0-rc.12). Art.17 stays partial — the
+      audit.onUserDelete pseudonymise mode is still refused at boot upstream.
   - date: "2026-06-15"
     change: >
       Initial draft of the HDS layer over the GDPR. All rows draft pending
@@ -139,9 +145,13 @@ requirements:
       overview: |
         HDS maps GDPR vocabulary onto concrete platform artefacts: personal data
         is event content, the data subject is the account owner, consent is the
-        granted access plus clientData, processing is any audited API call. In
-        the usual SaaS arrangement HDS is the processor and the customer is the
-        controller; the role assignment is contractual.
+        granted access plus clientData, processing is any audited API call, and
+        pseudonymisation maps to the platform's alias primitive —
+        `accesses.create {randomAlias:true}` mints a platform-unique routable
+        `r-XXXXXXXX` alias that hides the username per access — deployed on the
+        HDS cores since 2026-07-28. In the usual SaaS arrangement HDS is the
+        processor and the customer is the controller; the role assignment is
+        contractual.
       detail: |
         The controller/processor split is set in the data-processing agreement,
         not by the software. HDS as processor acts on documented controller
@@ -612,6 +622,11 @@ requirements:
         the rotation policy. Erasure here is caller-triggered; automated
         retention deletion must be composed externally by the controller. The
         operator backup/erasure procedure is available on request. The
+        platform's `audit.onUserDelete: pseudonymise` mode (null out audit-row
+        PII via the now-shipped `randomAlias` primitive while preserving
+        forensic value) remains unavailable — refused at boot upstream until
+        the audit-row null-out lands — so erasure-vs-audit-retention on HDS
+        resolves through `erase` (default) or `keep`, not pseudonymisation. The
         operator-facing healthdatasafe.org `/users/data-deletion` page surfaces
         the portability tool as the first step ("Before You Delete — Download a
         Copy") so the subject's right to a copy under Art.20 is exercised
@@ -1113,9 +1128,12 @@ requirements:
         access control and per-user restore, and operates monitoring and alerting as
         operator. Encryption at rest is now in place in both regions via hosting-layer
         volume encryption (Exoscale default on ch1; AWS EBS on us1, AES-256) —
-        provider-managed keys, verified 2026-06-26. Pseudonymisation is strengthened:
-        cross-region PlatformDB identifiers are HMAC-pseudonymised
-        (platform.piiMode=hashed, cutover 2026-06-24). Data residency is
+        provider-managed keys, verified 2026-06-26. Pseudonymisation is strengthened
+        on two fronts: cross-region PlatformDB identifiers are HMAC-pseudonymised
+        (platform.piiMode=hashed, cutover 2026-06-24), and the platform's
+        access-level alias primitive (`accesses.create {randomAlias:true}` — a
+        random routable alias in place of the username) is deployed on all HDS
+        cores since 2026-07-28. Data residency is
         facilitated/configurable. Organisational testing and incident procedures
         remain the controller's.
       detail: |

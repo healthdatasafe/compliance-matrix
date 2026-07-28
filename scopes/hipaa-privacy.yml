@@ -11,6 +11,12 @@ layered_on_pryv: hipaa-privacy
 regions: [us]
 
 changelog:
+  - date: "2026-07-28"
+    change: >
+      164.514(c): the platform alias primitive (accesses.create
+      {randomAlias:true}, deployed on all HDS cores with open-pryv.io
+      2.0.0-rc.12) now provides the re-identification code directly; the
+      explicit code-to-PHI map stays as the alternative path.
   - date: "2026-06-15"
     change: >
       Initial draft of the HDS layer over the HIPAA Privacy Rule. All rows draft
@@ -1168,14 +1174,24 @@ requirements:
       facilitation_mode: storage
       regions: [us, ch]
       overview: |
-        When re-identification is needed, HDS supports keeping the code-to-PHI
-        mapping as a tightly scoped resource reachable only by the
-        re-identification administrator role. The code-generation method must not
-        encode PHI, which is the covered entity's editorial requirement.
+        The platform's alias primitive provides the re-identification code
+        directly: `accesses.create {randomAlias:true}` (deployed on the HDS
+        cores since 2026-07-28) mints a platform-unique `r-XXXXXXXX` alias that
+        is random by construction — it does not encode PHI, satisfying
+        §514(c)(1)(ii) out of the box — and the platform holds the
+        alias-to-user mapping. Where a workflow instead needs an explicit
+        code-to-PHI map, HDS supports keeping it as a tightly scoped resource
+        reachable only by the re-identification administrator role; the
+        code-generation method must then not encode PHI, which is the covered
+        entity's editorial requirement.
       detail: |
-        The mapping lives on a dedicated subtree with access permitted only to the
-        re-identification role. HDS enforces the scope and stores the mapping;
-        ensuring the code is random or derived from non-PHI is the implementer's.
+        With the alias path, the aliased access exposes only the alias and the
+        covered entity re-identifies by resolving it through the platform — the
+        code is used for no other purpose. With an explicit map, the mapping
+        lives on a dedicated subtree with access permitted only to the
+        re-identification role; HDS enforces the scope and stores the mapping,
+        and ensuring the code is random or derived from non-PHI is the
+        implementer's.
       evidence:
         internal_docs:
           - hipaa/policies/de-identification

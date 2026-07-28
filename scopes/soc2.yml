@@ -13,6 +13,12 @@ regions: [us, ch]
 changelog:
   - date: "2026-07-28"
     change: >
+      C1.1: note the platform alias primitive (accesses.create
+      {randomAlias:true}, deployed on all HDS cores with open-pryv.io
+      2.0.0-rc.12) as the confidential-identity measure — a grant can expose a
+      random routable alias instead of the username.
+  - date: "2026-07-28"
+    change: >
       CC7.4: cite the upstream open-pryv.io coordinated vulnerability
       disclosure program (shipped 2026-07-28) as the external
       substrate-vulnerability intake channel.
@@ -1634,8 +1640,11 @@ requirements:
       HDS-operated platform: subject data is per-user isolated, and confidential
       streams are reachable only by access tokens granted the matching per-stream
       permission, with privileged namespaces (credentials) separately controlled.
-      HDS operates this access-controlled isolation and documents its
-      confidentiality and access-control posture.
+      Where the account identity is itself confidential, the platform's alias
+      primitive (`accesses.create {randomAlias:true}`, deployed on the HDS
+      cores since 2026-07-28) lets a grant expose a random routable alias in
+      place of the username. HDS operates this access-controlled isolation and
+      documents its confidentiality and access-control posture.
     detail: |
       Identification and maintenance of confidential information is enforced by
       stream layout plus the permission model rather than left to downstream
