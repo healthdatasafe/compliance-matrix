@@ -185,7 +185,7 @@ requirements:
         summary: "Reference TOTP / WebAuthn plugins reduce dependence on SMS-OTP for the second factor"
         proposal: proposals/mfa-modern-methods.md
         backlog: MFA-MODERN-METHODS
-        tracking_url: https://github.com/pryv/open-pryv.io/issues/78
+        tracking_url: https://github.com/orgs/pryv/projects/5?pane=issue&itemId=190467852&issue=pryv%7Copen-pryv.io%7C78
         impact: low
     overview: |
       Pryv stores credentials on a privileged `system-stream`, separate
@@ -435,7 +435,7 @@ requirements:
         summary: "End-to-end (server-blind) encryption via proxy re-encryption brings CMEK / BYOK to the Pryv layer"
         proposal: proposals/e2e-encryption.md
         backlog: E2E-ENCRYPTION
-        tracking_url: https://github.com/pryv/open-pryv.io/issues/34
+        tracking_url: https://github.com/orgs/pryv/projects/5?pane=issue&itemId=180707914&issue=pryv%7Copen-pryv.io%7C34
         impact: medium
     overview: |
       The "mechanism to encrypt and decrypt ePHI" is delivered as
@@ -493,7 +493,7 @@ requirements:
         summary: "Chained / signed audit log strengthens tamper-resistance evidence"
         proposal: proposals/audit-log-chaining.md
         backlog: AUDIT-LOG-CHAINING
-        tracking_url: https://github.com/pryv/open-pryv.io/issues/74
+        tracking_url: https://github.com/orgs/pryv/projects/5?pane=issue&itemId=190467766&issue=pryv%7Copen-pryv.io%7C74
         impact: low
     overview: |
       Pryv's per-user audit log records every API method invocation —
@@ -552,7 +552,7 @@ requirements:
         summary: "Chained / signed audit log enforces log integrity at the primitive layer"
         proposal: proposals/audit-log-chaining.md
         backlog: AUDIT-LOG-CHAINING
-        tracking_url: https://github.com/pryv/open-pryv.io/issues/74
+        tracking_url: https://github.com/orgs/pryv/projects/5?pane=issue&itemId=190467766&issue=pryv%7Copen-pryv.io%7C74
         impact: medium
     overview: |
       Integrity is multi-
@@ -578,7 +578,7 @@ requirements:
         summary: "Chained / signed audit log authenticates audit data (row moves F:Evidence|Low → F:Evidence|Med)"
         proposal: proposals/audit-log-chaining.md
         backlog: AUDIT-LOG-CHAINING
-        tracking_url: https://github.com/pryv/open-pryv.io/issues/74
+        tracking_url: https://github.com/orgs/pryv/projects/5?pane=issue&itemId=190467766&issue=pryv%7Copen-pryv.io%7C74
         impact: medium
     overview: |
       Event versioning preserves
@@ -618,7 +618,7 @@ requirements:
         summary: "Reference MFA plugins (TOTP / WebAuthn) + primitive-catalogue doc surface the pluggability"
         proposal: proposals/mfa-modern-methods.md
         backlog: MFA-MODERN-METHODS
-        tracking_url: https://github.com/pryv/open-pryv.io/issues/78
+        tracking_url: https://github.com/orgs/pryv/projects/5?pane=issue&itemId=190467852&issue=pryv%7Copen-pryv.io%7C78
         impact: medium
     overview: |
       Authentication is mediated by the access-token primitive: the
@@ -1037,6 +1037,13 @@ requirements:
     pryv_primitives: [audit, observability-provider]
     derives_from: [iso-27001.A.8.15]
     tests: [AT01, AT02, AT51]
+    planned:
+      - kind: enhancement
+        summary: "Reference reverse-proxy rate-limiting configurations add an enforcement companion to log-in monitoring on the authentication endpoints"
+        proposal: proposals/rate-limiting-recipes.md
+        backlog: RATE-LIMITING-RECIPES
+        tracking_url: https://github.com/orgs/pryv/projects/5?pane=issue&itemId=219705775&issue=pryv%7Copen-pryv.io%7C117
+        impact: low
     overview: |
       Login + authentication-
       failure events are captured in the audit log (per `auth.*` API
@@ -1129,6 +1136,12 @@ requirements:
     draft: true
     pryv_primitives: [audit, observability-provider]
     derives_from: [hipaa-security.164.316(b)(2)(iii)]
+    planned:
+      - kind: feature
+        summary: "Read-only effective-configuration endpoint supplies the technical baseline snapshot the periodic evaluation is measured against"
+        proposal: proposals/config-effective-exposure.md
+        tracking_url: https://github.com/orgs/pryv/projects/5?pane=issue&itemId=219705795&issue=pryv%7Copen-pryv.io%7C118
+        impact: medium
     overview: |
       Evaluation is the operator's
       cyclical assessment. Pryv-side inputs: audit log (control-

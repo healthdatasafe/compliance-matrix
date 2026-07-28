@@ -259,9 +259,11 @@ requirements:
       TTL primitive; the operator composes `events.get toTime=` +
       `events.delete` + audit-log inactivity oracle in an external
       retention job (`context/data-retention-operator-owned.md`).
-      `auth.randomAlias` (backlog `ALIASES`) is the planned
-      anonymisation companion for "render in a non-identifying
-      form" rather than "delete".
+      `accesses.create {randomAlias:true}` ships the anonymisation
+      companion for "render in a non-identifying form" rather than
+      "delete": a platform-unique routable alias replaces the username
+      on that access, so a counterparty holding it cannot re-identify
+      the principal or cross-match them against another access.
 
   - ref: A.7.4.6
     title: A.7.4.6 — Temporary files

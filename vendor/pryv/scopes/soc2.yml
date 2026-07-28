@@ -347,7 +347,7 @@ requirements:
         summary: "Reference TOTP / WebAuthn MFA plugins + AAL-tier mapping strengthen the CC6.1 authentication-strength evidence"
         proposal: proposals/mfa-modern-methods.md
         backlog: MFA-MODERN-METHODS
-        tracking_url: https://github.com/pryv/open-pryv.io/issues/78
+        tracking_url: https://github.com/orgs/pryv/projects/5?pane=issue&itemId=190467852&issue=pryv%7Copen-pryv.io%7C78
         impact: medium
     overview: |
       Logical access is enforced by Pryv at the API surface: every
@@ -603,7 +603,7 @@ requirements:
       - kind: feature
         summary: "Supply-chain scanning pipeline (CI npm audit gate + SBOM + image scan + signing) gives CC7.1 a software-side vulnerability-detection feed; shifts F:Evidence Low → F:Evidence Medium"
         proposal: proposals/supply-chain-scanning-pipeline.md
-        tracking_url: https://github.com/pryv/open-pryv.io/issues/81
+        tracking_url: https://github.com/orgs/pryv/projects/5?pane=issue&itemId=190467908&issue=pryv%7Copen-pryv.io%7C81
         impact: medium
     overview: |
       Pryv-side substrate-vulnerability detection today is partial +
@@ -671,7 +671,7 @@ requirements:
         summary: "Chained / signed audit log strengthens forensic evidence during incident analysis (F:Evidence Med → High)"
         proposal: proposals/audit-log-chaining.md
         backlog: AUDIT-LOG-CHAINING
-        tracking_url: https://github.com/pryv/open-pryv.io/issues/74
+        tracking_url: https://github.com/orgs/pryv/projects/5?pane=issue&itemId=190467766&issue=pryv%7Copen-pryv.io%7C74
         impact: low
     overview: |
       Pryv contributes the technical halves of incident response:
@@ -859,7 +859,7 @@ requirements:
         summary: "End-to-end (proxy re-encryption / BYOK) keeps confidential content opaque to the operator; the natural future confidentiality primitive"
         proposal: proposals/e2e-encryption.md
         backlog: E2E-ENCRYPTION
-        tracking_url: https://github.com/pryv/open-pryv.io/issues/34
+        tracking_url: https://github.com/orgs/pryv/projects/5?pane=issue&itemId=180707914&issue=pryv%7Copen-pryv.io%7C34
         impact: low
     overview: |
       Pryv lets you identify + isolate confidential data by stream
@@ -1312,13 +1312,13 @@ requirements:
       - kind: feature
         summary: "Breach-scope tool (accessId → userId reverse-index + audit recordCount + affectedStreamIds) turns the audit trail into a who-was-affected answer for breach notices"
         proposal: proposals/breach-scope-tool.md
-        tracking_url: https://github.com/pryv/open-pryv.io/issues/76
+        tracking_url: https://github.com/orgs/pryv/projects/5?pane=issue&itemId=190467808&issue=pryv%7Copen-pryv.io%7C76
         impact: high
       - kind: feature
         summary: "Chained audit log raises forensic confidence in the breach-scope determination"
         proposal: proposals/audit-log-chaining.md
         backlog: AUDIT-LOG-CHAINING
-        tracking_url: https://github.com/pryv/open-pryv.io/issues/74
+        tracking_url: https://github.com/orgs/pryv/projects/5?pane=issue&itemId=190467766&issue=pryv%7Copen-pryv.io%7C74
         impact: low
     overview: |
       Pryv contributes the scoping evidence a breach notice needs — the

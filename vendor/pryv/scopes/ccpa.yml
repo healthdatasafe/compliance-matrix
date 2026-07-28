@@ -279,7 +279,7 @@ requirements:
         summary: "End-to-end encryption narrows the §1798.150 nonencrypted-PI trigger zone further"
         proposal: proposals/e2e-encryption.md
         backlog: E2E-ENCRYPTION
-        tracking_url: https://github.com/pryv/open-pryv.io/issues/34
+        tracking_url: https://github.com/orgs/pryv/projects/5?pane=issue&itemId=180707914&issue=pryv%7Copen-pryv.io%7C34
         impact: low
     overview: |
       Two contributions:

@@ -162,7 +162,7 @@ requirements:
         summary: "End-to-end encryption reframes the safeguards posture for high-sensitivity health data"
         proposal: proposals/e2e-encryption.md
         backlog: E2E-ENCRYPTION
-        tracking_url: https://github.com/pryv/open-pryv.io/issues/34
+        tracking_url: https://github.com/orgs/pryv/projects/5?pane=issue&itemId=180707914&issue=pryv%7Copen-pryv.io%7C34
         impact: low
     overview: |
       Multi-aspect safeguards
@@ -253,12 +253,12 @@ requirements:
         summary: "Chained audit log improves RROSH evidence chain (scoping + non-repudiation)"
         proposal: proposals/audit-log-chaining.md
         backlog: AUDIT-LOG-CHAINING
-        tracking_url: https://github.com/pryv/open-pryv.io/issues/74
+        tracking_url: https://github.com/orgs/pryv/projects/5?pane=issue&itemId=190467766&issue=pryv%7Copen-pryv.io%7C74
         impact: low
       - kind: feature
         summary: "bin/breach-scope.js produces the RROSH-input artefact in a single CLI call (records affected, methods invoked, streams touched)"
         proposal: proposals/breach-scope-tool.md
-        tracking_url: https://github.com/pryv/open-pryv.io/issues/76
+        tracking_url: https://github.com/orgs/pryv/projects/5?pane=issue&itemId=190467808&issue=pryv%7Copen-pryv.io%7C76
         impact: medium
     overview: |
       Same primitive set as the

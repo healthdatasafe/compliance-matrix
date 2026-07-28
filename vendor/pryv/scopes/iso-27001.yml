@@ -195,7 +195,7 @@ requirements:
         summary: "Reference TOTP / WebAuthn plugins + AAL-tier mapping doc strengthen the A.8.5 evidence chain"
         proposal: proposals/mfa-modern-methods.md
         backlog: MFA-MODERN-METHODS
-        tracking_url: https://github.com/pryv/open-pryv.io/issues/78
+        tracking_url: https://github.com/orgs/pryv/projects/5?pane=issue&itemId=190467852&issue=pryv%7Copen-pryv.io%7C78
         impact: medium
     overview: |
       Token-based auth by default; multi-factor via `mfa.*` API methods
@@ -272,7 +272,7 @@ requirements:
         summary: "Chained / signed audit log adds the software-side tamper-resistance signal A.8.15 expects"
         proposal: proposals/audit-log-chaining.md
         backlog: AUDIT-LOG-CHAINING
-        tracking_url: https://github.com/pryv/open-pryv.io/issues/74
+        tracking_url: https://github.com/orgs/pryv/projects/5?pane=issue&itemId=190467766&issue=pryv%7Copen-pryv.io%7C74
         impact: low
     overview: |
       Per-user audit log captures every API method invocation; access
@@ -380,7 +380,7 @@ requirements:
         summary: "End-to-end encryption adds a customer-key flow (CMEK / BYOK) to the cryptography catalogue"
         proposal: proposals/e2e-encryption.md
         backlog: E2E-ENCRYPTION
-        tracking_url: https://github.com/pryv/open-pryv.io/issues/34
+        tracking_url: https://github.com/orgs/pryv/projects/5?pane=issue&itemId=180707914&issue=pryv%7Copen-pryv.io%7C34
         impact: low
     overview: |
       TLS 1.3 for transit, AES-256-GCM for at-rest operator secrets
@@ -589,6 +589,12 @@ requirements:
     facilitation_mode: evidence
     draft: true
     pryv_primitives: [audit]
+    planned:
+      - kind: feature
+        summary: "Read-only effective-configuration endpoint supplies per-core configuration-management evidence without host access"
+        proposal: proposals/config-effective-exposure.md
+        tracking_url: https://github.com/orgs/pryv/projects/5?pane=issue&itemId=219705795&issue=pryv%7Copen-pryv.io%7C118
+        impact: medium
     overview: |
       Pryv configuration lives in
       `default-config.yml` + `override-config.yml` + `host-config.yml`
@@ -829,7 +835,7 @@ requirements:
         summary: "Reference MFA plugins broaden the authentication-information catalogue"
         proposal: proposals/mfa-modern-methods.md
         backlog: MFA-MODERN-METHODS
-        tracking_url: https://github.com/pryv/open-pryv.io/issues/78
+        tracking_url: https://github.com/orgs/pryv/projects/5?pane=issue&itemId=190467852&issue=pryv%7Copen-pryv.io%7C78
         impact: low
     overview: |
       Pryv stores
@@ -1037,7 +1043,7 @@ requirements:
         summary: "Bootstrap-join + pre-cert-load clock-skew detection (would shift row to F:Awareness|Low)"
         proposal: proposals/clock-skew-cluster-checks.md
         backlog: CLOCK-SKEW-CLUSTER-CHECKS
-        tracking_url: https://github.com/pryv/open-pryv.io/issues/77
+        tracking_url: https://github.com/orgs/pryv/projects/5?pane=issue&itemId=190467834&issue=pryv%7Copen-pryv.io%7C77
         impact: medium
     overview: |
       Clock sync is the host-OS concern (chronyd / ntpd); Pryv stores
@@ -1118,6 +1124,13 @@ requirements:
     draft: true
     pryv_primitives: [letsEncrypt-integration, multi-core-mTLS, observability-provider]
     derives_from: [iso-27001.A.8.20]
+    planned:
+      - kind: enhancement
+        summary: "Reference reverse-proxy rate-limiting configurations give the network-services row a concrete artefact instead of an architectural rationale"
+        proposal: proposals/rate-limiting-recipes.md
+        backlog: RATE-LIMITING-RECIPES
+        tracking_url: https://github.com/orgs/pryv/projects/5?pane=issue&itemId=219705775&issue=pryv%7Copen-pryv.io%7C117
+        impact: low
     overview: |
       Pryv's external
       network surface is the TLS-terminating HTTPS API + the embedded
@@ -1477,7 +1490,7 @@ requirements:
       - kind: feature
         summary: "Three-phase supply-chain scanning pipeline (CI npm audit gate + SBOM via Syft + image scan via Grype + cosign signing); shifts row F:Awareness Low → F:Evidence Medium when shipped"
         proposal: proposals/supply-chain-scanning-pipeline.md
-        tracking_url: https://github.com/pryv/open-pryv.io/issues/81
+        tracking_url: https://github.com/orgs/pryv/projects/5?pane=issue&itemId=190467908&issue=pryv%7Copen-pryv.io%7C81
         impact: medium
     overview: |
       Supply-chain risk at the Pryv layer today is **partial and
@@ -1515,7 +1528,7 @@ requirements:
         summary: "Chained audit log strengthens forensic evidence (row could shift F:Evidence|Med → F:Evidence|High)"
         proposal: proposals/audit-log-chaining.md
         backlog: AUDIT-LOG-CHAINING
-        tracking_url: https://github.com/pryv/open-pryv.io/issues/74
+        tracking_url: https://github.com/orgs/pryv/projects/5?pane=issue&itemId=190467766&issue=pryv%7Copen-pryv.io%7C74
         impact: medium
     overview: |
       Pryv contributes detection

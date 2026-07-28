@@ -193,12 +193,12 @@ requirements:
         summary: "Chained audit log IS the burden-of-proof artefact (row could shift F:Evidence|Med → F:Evidence|High)"
         proposal: proposals/audit-log-chaining.md
         backlog: AUDIT-LOG-CHAINING
-        tracking_url: https://github.com/pryv/open-pryv.io/issues/74
+        tracking_url: https://github.com/orgs/pryv/projects/5?pane=issue&itemId=190467766&issue=pryv%7Copen-pryv.io%7C74
         impact: medium
       - kind: feature
         summary: "bin/breach-scope.js bundles the §164.414 demonstration artefact (audit-walk + integrity hashes for the affected window)"
         proposal: proposals/breach-scope-tool.md
-        tracking_url: https://github.com/pryv/open-pryv.io/issues/76
+        tracking_url: https://github.com/orgs/pryv/projects/5?pane=issue&itemId=190467808&issue=pryv%7Copen-pryv.io%7C76
         impact: medium
     overview: |
       "Burden of proof" is met
@@ -225,7 +225,7 @@ requirements:
       - kind: feature
         summary: "bin/breach-scope.js compresses the scoping step so the 60-day clock is dominated by editorial work, not data-gathering"
         proposal: proposals/breach-scope-tool.md
-        tracking_url: https://github.com/pryv/open-pryv.io/issues/76
+        tracking_url: https://github.com/orgs/pryv/projects/5?pane=issue&itemId=190467808&issue=pryv%7Copen-pryv.io%7C76
         impact: medium
     overview: |
       The 60-day clock is procedural
@@ -250,7 +250,7 @@ requirements:
       - kind: feature
         summary: "bin/breach-scope.js produces the §404(c) PHI-involved description machine-derivably from audit + access-version data"
         proposal: proposals/breach-scope-tool.md
-        tracking_url: https://github.com/pryv/open-pryv.io/issues/76
+        tracking_url: https://github.com/orgs/pryv/projects/5?pane=issue&itemId=190467808&issue=pryv%7Copen-pryv.io%7C76
         impact: medium
     overview: |
       Content of the notification is the covered entity's editorial
@@ -327,7 +327,7 @@ requirements:
         summary: "End-to-end encryption broadens safe-harbor coverage to bulk event data"
         proposal: proposals/e2e-encryption.md
         backlog: E2E-ENCRYPTION
-        tracking_url: https://github.com/pryv/open-pryv.io/issues/34
+        tracking_url: https://github.com/orgs/pryv/projects/5?pane=issue&itemId=180707914&issue=pryv%7Copen-pryv.io%7C34
         impact: low
     overview: |
       The safe-harbor

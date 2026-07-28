@@ -1454,8 +1454,13 @@ requirements:
         summary: "Chained / signed audit log makes the Article 30 register tamper-evident"
         proposal: proposals/audit-log-chaining.md
         backlog: AUDIT-LOG-CHAINING
-        tracking_url: https://github.com/pryv/open-pryv.io/issues/74
+        tracking_url: https://github.com/orgs/pryv/projects/5?pane=issue&itemId=190467766&issue=pryv%7Copen-pryv.io%7C74
         impact: low
+      - kind: feature
+        summary: "Read-only effective-configuration endpoint turns the §1(g) description of technical security measures into emitable evidence"
+        proposal: proposals/config-effective-exposure.md
+        tracking_url: https://github.com/orgs/pryv/projects/5?pane=issue&itemId=219705795&issue=pryv%7Copen-pryv.io%7C118
+        impact: medium
     overview: |
       The combination of access + clientData + audit + (cross-account)
       CMC + data-residency IS your Article 30 register: who, what, why,
@@ -1515,12 +1520,17 @@ requirements:
         summary: "End-to-end encryption shifts encryption from Configurable infrastructure to a Pryv-managed primitive"
         proposal: proposals/e2e-encryption.md
         backlog: E2E-ENCRYPTION
-        tracking_url: https://github.com/pryv/open-pryv.io/issues/34
+        tracking_url: https://github.com/orgs/pryv/projects/5?pane=issue&itemId=180707914&issue=pryv%7Copen-pryv.io%7C34
         impact: low
       - kind: feature
         summary: "Three-phase supply-chain scanning pipeline strengthens the §1(b)/(c) ongoing-CIA + integrity axis with concrete SCA + SBOM + signed-image evidence"
         proposal: proposals/supply-chain-scanning-pipeline.md
-        tracking_url: https://github.com/pryv/open-pryv.io/issues/81
+        tracking_url: https://github.com/orgs/pryv/projects/5?pane=issue&itemId=190467908&issue=pryv%7Copen-pryv.io%7C81
+        impact: low
+      - kind: feature
+        summary: "Read-only effective-configuration endpoint strengthens the evidence narrative around operator-visible safeguards"
+        proposal: proposals/config-effective-exposure.md
+        tracking_url: https://github.com/orgs/pryv/projects/5?pane=issue&itemId=219705795&issue=pryv%7Copen-pryv.io%7C118
         impact: low
     overview: |
       Multi-aspect article —
@@ -1636,7 +1646,7 @@ requirements:
       - kind: feature
         summary: "bin/breach-scope.js — emits §33(1)(b-d) scoping report from audit + access-version data for a compromised accessId"
         proposal: proposals/breach-scope-tool.md
-        tracking_url: https://github.com/pryv/open-pryv.io/issues/76
+        tracking_url: https://github.com/orgs/pryv/projects/5?pane=issue&itemId=190467808&issue=pryv%7Copen-pryv.io%7C76
         impact: medium
     overview: |
       Pryv's audit log helps you
@@ -1742,6 +1752,12 @@ requirements:
     facilitation_mode: evidence
     draft: true
     pryv_primitives: [audit, data-residency, access, system-streams]
+    planned:
+      - kind: feature
+        summary: "Read-only effective-configuration endpoint feeds the DPIA safeguards inventory from live per-core data instead of a hand-written list"
+        proposal: proposals/config-effective-exposure.md
+        tracking_url: https://github.com/orgs/pryv/projects/5?pane=issue&itemId=219705795&issue=pryv%7Copen-pryv.io%7C118
+        impact: medium
     overview: |
       The DPIA is a written
       assessment artefact — Pryv has no role in producing it. What
