@@ -124,8 +124,8 @@ tracking reports.
       <div class="lh">Pryv platform <span class="b implemented">implemented</span></div>
       <p>Every API call is captured by Pryv's per-user audit log; the
 `audit.get` method exposes it for periodic review. Observability
-(New Relic adapter) gives system-level activity reports for the
-infrastructure side. The &quot;regular review&quot; cadence is your written
+(opt-in telemetry emitter) gives system-level activity reports for
+the infrastructure side. The &quot;regular review&quot; cadence is your written
 procedure.
 </p>
     </div>
@@ -617,11 +617,11 @@ signals; access primitives provide the containment mechanism
 substrate-vulnerability intake specifically (operator
 learning that the Pryv version they run has a confirmed
 vulnerability), the upstream's vulnerability disclosure
-program is the externally-facing channel — today minimal
-(SECURITY.md is a 6-line pointer at the public issue
-tracker); modernised by backlog
-`VULNERABILITY-DISCLOSURE-PROGRAM` (private GHSA flow +
-`security@` mailbox + PGP + advisory history).
+program is the externally-facing channel: `SECURITY.md`
+publishes a coordinated disclosure policy (private GitHub
+Security Advisories flow + `security-dev@` mailbox + scope +
+SLA + safe harbor), and private vulnerability reporting is
+enabled on the published repositories.
 </p>
     </div>
     <div class="layer hds">
@@ -637,6 +637,11 @@ system-level anomaly signals; containment uses immediate token revocation
 or scope reduction. HDS documents its incident-handling and notification
 flow, which feeds the breach-reporting obligations a partner carries under
 their BAA. Partners run their own incident programme for their workload.
+For vulnerabilities in the platform substrate itself, the upstream
+open-pryv.io project publishes a coordinated vulnerability disclosure
+program (private GitHub Security Advisories plus a security mailbox, with
+GHSA/CVE issuance); a published advisory affecting the deployed release
+enters HDS's incident procedure as a provider notification.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/procedures/security-incident-response</span> <span class="onreq">available on request</span></li></ul>
     </div>
@@ -898,9 +903,10 @@ Pryv's test matrix (~2351 PG and SQLite, matched baseline, passing on every
 commit — concrete §164.308(a)(8) effectiveness evidence),
 Pryv's supply-chain pipeline (Q24 backlog `SUPPLY-CHAIN-
 SCANNING-PIPELINE` once shipped), Pryv's vulnerability
-disclosure program + GHSA advisory history (backlog
-`VULNERABILITY-DISCLOSURE-PROGRAM` once shipped). The
-assessment write-up is operator-side.
+disclosure program + GHSA advisory history (coordinated
+disclosure policy published in `SECURITY.md`; private
+vulnerability reporting enabled on the published
+repositories). The assessment write-up is operator-side.
 </p>
     </div>
     <div class="layer hds">
@@ -912,9 +918,12 @@ evaluation write-up is held internally and shared on request.
 </p>
       <details><summary>detail</summary><p>Inputs to the evaluation include audit-log samples, operational-stability
 data, this layered matrix as the inventory of controls to assess against,
-and the platform's automated test suite as ongoing effectiveness evidence.
-HDS documents the cadence and findings; a partner runs its own periodic
-evaluation for its own programme.
+the platform's automated test suite as ongoing effectiveness evidence, and
+the upstream project's published security-advisory history (open-pryv.io's
+coordinated vulnerability disclosure program with GHSA/CVE issuance),
+checked against the release HDS deploys. HDS documents the cadence and
+findings; a partner runs its own periodic evaluation for its own
+programme.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/procedures/periodic-evaluation</span> <span class="onreq">available on request</span></li></ul>
     </div>

@@ -1725,8 +1725,13 @@ to understand, contain, remediate, and communicate them.
       <p>Pryv contributes the technical halves of incident response:
 detection + scoping (audit + observability) and containment
 (accesses.delete revokes a compromised credential immediately).
-The incident-response program itself — roles, escalation,
-communications, lessons-learned — is yours to define and rehearse.
+The external intake channel for substrate-vulnerability reports
+is published in `SECURITY.md` (coordinated disclosure policy:
+private GHSA flow + `security-dev@` mailbox + SLA + scope +
+safe harbor; private vulnerability reporting enabled on the
+published repositories). The incident-response program itself —
+roles, escalation, communications, lessons-learned — is yours
+to define and rehearse.
 </p>
     </div>
     <div class="layer hds">
@@ -1742,8 +1747,13 @@ defines and rehearses its own programme.
 monitoring, containment uses immediate access revocation or scope reduction,
 and a documented flow governs escalation and communication. The procedure is
 held internally and shared on request, and feeds breach-notification timing a
-partner must honour. A partner authors and rehearses its own incident-response
-programme over the same technical substrate.
+partner must honour. For substrate vulnerabilities, the upstream open-pryv.io
+project's coordinated vulnerability disclosure program (private GitHub
+Security Advisories plus a security mailbox, GHSA/CVE issuance) is the
+external intake channel; a published advisory affecting the deployed release
+enters HDS's procedure as a provider notification. A partner authors and
+rehearses its own incident-response programme over the same technical
+substrate.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/procedures/security-incident-response</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/procedures/incident-mitigation</span> <span class="onreq">available on request</span></li></ul>
     </div>
@@ -2199,8 +2209,11 @@ system you operate, and revise the plan from the results.
 hds-operated platform: subject data is per-user isolated, and confidential
 streams are reachable only by access tokens granted the matching per-stream
 permission, with privileged namespaces (credentials) separately controlled.
-hds operates this access-controlled isolation and documents its
-confidentiality and access-control posture.
+where the account identity is itself confidential, the platform's alias
+primitive (`accesses.create {randomalias:true}`, deployed on the hds
+cores since 2026-07-28) lets a grant expose a random routable alias in
+place of the username. hds operates this access-controlled isolation and
+documents its confidentiality and access-control posture.
 ">
   <h3><code>C1.1</code> C1.1 — Identification and maintenance of confidential information <span class="draft">draft</span></h3>
   <p class="text">The entity identifies and maintains confidential information to meet its
@@ -2225,8 +2238,11 @@ see context/data-masking-projection-vs-transformation.md.
 HDS-operated platform: subject data is per-user isolated, and confidential
 streams are reachable only by access tokens granted the matching per-stream
 permission, with privileged namespaces (credentials) separately controlled.
-HDS operates this access-controlled isolation and documents its
-confidentiality and access-control posture.
+Where the account identity is itself confidential, the platform's alias
+primitive (`accesses.create {randomAlias:true}`, deployed on the HDS
+cores since 2026-07-28) lets a grant expose a random routable alias in
+place of the username. HDS operates this access-controlled isolation and
+documents its confidentiality and access-control posture.
 </p>
       <details><summary>detail</summary><p>Identification and maintenance of confidential information is enforced by
 stream layout plus the permission model rather than left to downstream
@@ -3225,7 +3241,11 @@ related to privacy.
       <p>Every disclosure is a read against a shared / CMC access, and the
 per-user audit log records each access invocation with the
 accessId + accessSerial that made it — a complete, attributable
-record of who accessed what, when. The audit-event-stream can
+record of who accessed what, when. Since open-pryv.io `07b6d3b6`
+the *authorization* of a disclosure is recorded too: OAuth2
+`oauth.*` audit events capture the consent grant, the code
+exchange and every token issuance / refresh / revocation that
+underlie a delegated-app disclosure. The audit-event-stream can
 surface the same record into the subject's own streams. This is
 the technical disclosure register; how long you retain it is your
 policy.

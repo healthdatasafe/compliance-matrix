@@ -1639,10 +1639,16 @@ documentation.
       </div>
     </div>
   </div>
-</article><article class="req" id="req-164-514-c" data-coverage="facilitated" data-personas="covered-entity individual" data-text="164.514(c) de-identification — re-identification when re-identification is needed, hds supports keeping the code-to-phi
-mapping as a tightly scoped resource reachable only by the
-re-identification administrator role. the code-generation method must not
-encode phi, which is the covered entity's editorial requirement.
+</article><article class="req" id="req-164-514-c" data-coverage="facilitated" data-personas="covered-entity individual" data-text="164.514(c) de-identification — re-identification the platform's alias primitive provides the re-identification code
+directly: `accesses.create {randomalias:true}` (deployed on the hds
+cores since 2026-07-28) mints a platform-unique `r-xxxxxxxx` alias that
+is random by construction — it does not encode phi, satisfying
+§514(c)(1)(ii) out of the box — and the platform holds the
+alias-to-user mapping. where a workflow instead needs an explicit
+code-to-phi map, hds supports keeping it as a tightly scoped resource
+reachable only by the re-identification administrator role; the
+code-generation method must then not encode phi, which is the covered
+entity's editorial requirement.
 ">
   <h3><code>164.514(c)</code> De-identification — re-identification <span class="draft">draft</span></h3>
   <p class="text">A covered entity may assign a re-identification code to de-identified
@@ -1667,14 +1673,24 @@ re-identification administrator role; the code generation method
     </div>
     <div class="layer hds">
       <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span></div>
-      <p>When re-identification is needed, HDS supports keeping the code-to-PHI
-mapping as a tightly scoped resource reachable only by the
-re-identification administrator role. The code-generation method must not
-encode PHI, which is the covered entity's editorial requirement.
+      <p>The platform's alias primitive provides the re-identification code
+directly: `accesses.create {randomAlias:true}` (deployed on the HDS
+cores since 2026-07-28) mints a platform-unique `r-XXXXXXXX` alias that
+is random by construction — it does not encode PHI, satisfying
+§514(c)(1)(ii) out of the box — and the platform holds the
+alias-to-user mapping. Where a workflow instead needs an explicit
+code-to-PHI map, HDS supports keeping it as a tightly scoped resource
+reachable only by the re-identification administrator role; the
+code-generation method must then not encode PHI, which is the covered
+entity's editorial requirement.
 </p>
-      <details><summary>detail</summary><p>The mapping lives on a dedicated subtree with access permitted only to the
-re-identification role. HDS enforces the scope and stores the mapping;
-ensuring the code is random or derived from non-PHI is the implementer's.
+      <details><summary>detail</summary><p>With the alias path, the aliased access exposes only the alias and the
+covered entity re-identifies by resolving it through the platform — the
+code is used for no other purpose. With an explicit map, the mapping
+lives on a dedicated subtree with access permitted only to the
+re-identification role; HDS enforces the scope and stores the mapping,
+and ensuring the code is random or derived from non-PHI is the
+implementer's.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/de-identification</span> <span class="onreq">available on request</span></li></ul>
     </div>

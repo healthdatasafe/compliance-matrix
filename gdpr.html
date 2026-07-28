@@ -209,9 +209,13 @@ US residency option accordingly.
   </div>
 </article><article class="req" id="req-art-4" data-coverage="documented" data-personas="controller processor" data-text="art.4 definitions hds maps gdpr vocabulary onto concrete platform artefacts: personal data
 is event content, the data subject is the account owner, consent is the
-granted access plus clientdata, processing is any audited api call. in
-the usual saas arrangement hds is the processor and the customer is the
-controller; the role assignment is contractual.
+granted access plus clientdata, processing is any audited api call, and
+pseudonymisation maps to the platform's alias primitive —
+`accesses.create {randomalias:true}` mints a platform-unique routable
+`r-xxxxxxxx` alias that hides the username per access — deployed on the
+hds cores since 2026-07-28. in the usual saas arrangement hds is the
+processor and the customer is the controller; the role assignment is
+contractual.
 ">
   <h3><code>Art.4</code> Definitions <span class="draft">draft</span></h3>
   <p class="text">Defines key terms: personal data, processing, controller, processor,
@@ -230,9 +234,13 @@ rather than abstract concepts.
       <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">CH</span><span class="rg">US</span></div>
       <p>HDS maps GDPR vocabulary onto concrete platform artefacts: personal data
 is event content, the data subject is the account owner, consent is the
-granted access plus clientData, processing is any audited API call. In
-the usual SaaS arrangement HDS is the processor and the customer is the
-controller; the role assignment is contractual.
+granted access plus clientData, processing is any audited API call, and
+pseudonymisation maps to the platform's alias primitive —
+`accesses.create {randomAlias:true}` mints a platform-unique routable
+`r-XXXXXXXX` alias that hides the username per access — deployed on the
+HDS cores since 2026-07-28. In the usual SaaS arrangement HDS is the
+processor and the customer is the controller; the role assignment is
+contractual.
 </p>
       <details><summary>detail</summary><p>The controller/processor split is set in the data-processing agreement,
 not by the software. HDS as processor acts on documented controller
@@ -907,6 +915,11 @@ engine-agnostically. Backup residue differs by engine and is bounded by
 the rotation policy. Erasure here is caller-triggered; automated
 retention deletion must be composed externally by the controller. The
 operator backup/erasure procedure is available on request. The
+platform's `audit.onUserDelete: pseudonymise` mode (null out audit-row
+PII via the now-shipped `randomAlias` primitive while preserving
+forensic value) remains unavailable — refused at boot upstream until
+the audit-row null-out lands — so erasure-vs-audit-retention on HDS
+resolves through `erase` (default) or `keep`, not pseudonymisation. The
 operator-facing healthdatasafe.org `/users/data-deletion` page surfaces
 the portability tool as the first step (&quot;Before You Delete — Download a
 Copy&quot;) so the subject's right to a copy under Art.20 is exercised
@@ -1583,9 +1596,12 @@ each controller.
 access control and per-user restore, and operates monitoring and alerting as
 operator. encryption at rest is now in place in both regions via hosting-layer
 volume encryption (exoscale default on ch1; aws ebs on us1, aes-256) —
-provider-managed keys, verified 2026-06-26. pseudonymisation is strengthened:
-cross-region platformdb identifiers are hmac-pseudonymised
-(platform.piimode=hashed, cutover 2026-06-24). data residency is
+provider-managed keys, verified 2026-06-26. pseudonymisation is strengthened
+on two fronts: cross-region platformdb identifiers are hmac-pseudonymised
+(platform.piimode=hashed, cutover 2026-06-24), and the platform's
+access-level alias primitive (`accesses.create {randomalias:true}` — a
+random routable alias in place of the username) is deployed on all hds
+cores since 2026-07-28. data residency is
 facilitated/configurable. organisational testing and incident procedures
 remain the controller's.
 ">
@@ -1611,9 +1627,12 @@ response procedures) stay in your court.
 access control and per-user restore, and operates monitoring and alerting as
 operator. Encryption at rest is now in place in both regions via hosting-layer
 volume encryption (Exoscale default on ch1; AWS EBS on us1, AES-256) —
-provider-managed keys, verified 2026-06-26. Pseudonymisation is strengthened:
-cross-region PlatformDB identifiers are HMAC-pseudonymised
-(platform.piiMode=hashed, cutover 2026-06-24). Data residency is
+provider-managed keys, verified 2026-06-26. Pseudonymisation is strengthened
+on two fronts: cross-region PlatformDB identifiers are HMAC-pseudonymised
+(platform.piiMode=hashed, cutover 2026-06-24), and the platform's
+access-level alias primitive (`accesses.create {randomAlias:true}` — a
+random routable alias in place of the username) is deployed on all HDS
+cores since 2026-07-28. Data residency is
 facilitated/configurable. Organisational testing and incident procedures
 remain the controller's.
 </p>
