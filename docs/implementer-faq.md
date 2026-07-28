@@ -410,7 +410,7 @@ Tier stays `Implemented | High`; one tooling follow-up remains
 | 2 | HF series read pattern at scale? | `GET /events/<id>/series` per series-event reads data points (HFS worker). The backup tool calls this for every `series:*`-typed event as of v0.3.0; data points land in `hf-data/<eventId>.json`. Per-series 4xx is non-fatal (series may be empty / unreadable; skip + log). |
 | 3 | Attachment download semantics in the bundle? | Backup script downloads bytes inline (10-parallel) via `GET /events/<id>/<attId>?readToken=...`. Inline binaries land in `attachments/` under the bundle folder. Multi-attachment events round-trip in full as of v0.4.0 (multi-attachment restore). |
 | 4 | Cross-core aggregation in multi-core deployments? | Subject's user-account is core-affine — `apiEndpoint` resolves to the home core. CMC counterparty data lives in the counterparty's account on whichever core hosts that subject. Backup runs against one `apiEndpoint`; the subject must run a separate backup against each CMC-shared account they hold. Not a v2-only concern; same for multi-region deployments. |
-| 5 | Audit log truncation interaction with `audit.onUserDelete` (Q8)? | Both Q8 + Q10 fixes shipped 2026-05-27. The backup tool fetches audit via `/audit/logs`. `audit.onUserDelete: keep` mode means the bundle includes the long audit history; `pseudonymise` mode (REFUSED AT BOOT until `auth.randomAlias` ships) will mean the audit content carries aliases rather than the canonical username; `erase` (default) means the audit content matches whatever wasn't already erased by prior `auth.delete` calls. The subject's right to read their own audit log via `audit.getLogs` works directly with their personal token. |
+| 5 | Audit log truncation interaction with `audit.onUserDelete` (Q8)? | Both Q8 + Q10 fixes shipped 2026-05-27. The backup tool fetches audit via `/audit/logs`. `audit.onUserDelete: keep` mode means the bundle includes the long audit history; `pseudonymise` mode (still REFUSED AT BOOT — `auth.randomAlias` has since shipped and is deployed on the HDS cores, but the audit-row alias null-out built on it is outstanding) will mean the audit content carries aliases rather than the canonical username; `erase` (default) means the audit content matches whatever wasn't already erased by prior `auth.delete` calls. The subject's right to read their own audit log via `audit.getLogs` works directly with their personal token. |
 
 **Audit of pryv-account-backup v0.4.0 vs Art.15(1) sub-paragraphs** — full
 table at `context/account-backup-coverage.md`. Highlights:
@@ -1128,6 +1128,19 @@ implementer-owns-clinical-logic architecture (Q9 audit-minimality,
 Q12 core-affinity, Q15 backup-encryption-is-operator-side, Q19
 revocation-UI-is-implementer-side, Q20 DPIA-section-(d)-is-
 implementer-assembled).
+
+**Cross-reference (2026-07-28) — where HDS, as implementer, carries
+the semantic side.** The "No, by design" platform answer above is
+one half of a two-layer arrangement: HDS's data-model layer
+(`model.datasafe.dev` catalogue — bounded event types, SNOMED/LOINC
+coded items) plus validated, standardised instruments administered
+under HCP supervision (EQ-5D and similar PROs, the cervical-fluid
+model) achieve semantic cleanliness **at source**, before
+`events.create`. The HDS White Paper's claim that semantic
+validation "is the part HDS directly addresses" refers to that
+implementer layer, not to the platform — the two statements
+compose (platform = structural at ingest; HDS data-model +
+instruments = semantic at capture) and do not contradict.
 
 **Matrix encoding:**
 - `gdpr.Art.5` detail block — Art.5(1)(d) bullet rewritten with
