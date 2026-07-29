@@ -1613,7 +1613,7 @@ CIA, restoration and regular testing.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> <a class="pl low" href="https://github.com/orgs/pryv/projects/5?pane=issue&amp;itemId=180707914&amp;issue=pryv%7Copen-pryv.io%7C34" title="End-to-end encryption shifts encryption from Configurable infrastructure to a Pryv-managed primitive">⏳ feature</a><a class="pl low" href="https://github.com/orgs/pryv/projects/5?pane=issue&amp;itemId=190467908&amp;issue=pryv%7Copen-pryv.io%7C81" title="Three-phase supply-chain scanning pipeline strengthens the §1(b)/(c) ongoing-CIA + integrity axis with concrete SCA + SBOM + signed-image evidence">⏳ feature</a><a class="pl low" href="https://github.com/orgs/pryv/projects/5?pane=issue&amp;itemId=219705795&amp;issue=pryv%7Copen-pryv.io%7C118" title="Read-only effective-configuration endpoint strengthens the evidence narrative around operator-visible safeguards">⏳ feature</a></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> <a class="pl low" href="https://github.com/orgs/pryv/projects/5?pane=issue&amp;itemId=180707914&amp;issue=pryv%7Copen-pryv.io%7C34" title="End-to-end encryption shifts encryption from Configurable infrastructure to a Pryv-managed primitive">⏳ feature</a><a class="pl low" href="https://github.com/orgs/pryv/projects/5?pane=issue&amp;itemId=219705795&amp;issue=pryv%7Copen-pryv.io%7C118" title="Read-only effective-configuration endpoint strengthens the evidence narrative around operator-visible safeguards">⏳ feature</a></div>
       <p>Multi-aspect article,
 Pryv implements several aspects for you (access control,
 encryption-in-transit, restoration) and provides configurable
@@ -1668,11 +1668,17 @@ the infrastructure layer.
   </div>
 </article><article class="req" id="req-art-33" data-coverage="facilitated" data-personas="controller processor" data-text="art.33 notification of personal data breach to the supervisory authority the audit log helps scope a breach — which data, which subjects, by which
 access — and hds as operator runs the monitoring and incident-response
-procedure that feeds the 72-hour decision. the notification itself, and
-the risk-likelihood judgement, are the controller's. at-rest volume
-encryption (in place since 2026-06-26) narrows the exposure of a leaked
-at-rest artefact and feeds the risk-likelihood assessment.
-" data-planned="1">
+procedure that feeds the 72-hour decision. since 2026-07-29 that scoping
+is a deployed platform primitive: `bin/breach-scope.js` emits an
+art.33(1)(b-d) report for a compromised access from the audit +
+access-version data, backed by a cluster-wide access reverse-index
+(`get /system/accesses/:accessid`) and scoped-exposure audit fields
+(`recordcount`, `scopedstreamids` — the resolved scope, an upper bound
+on exposure). the notification itself, and the risk-likelihood
+judgement, are the controller's. at-rest volume encryption (in place
+since 2026-06-26) narrows the exposure of a leaked at-rest artefact and
+feeds the risk-likelihood assessment.
+" data-planned="0">
   <h3><code>Art.33</code> Notification of personal data breach to the supervisory authority <span class="draft">draft</span></h3>
   <p class="text">The controller must notify the supervisory authority within 72 hours of
 becoming aware of a breach, unless it is unlikely to pose a risk.
@@ -1691,19 +1697,30 @@ run.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">CH</span><span class="rg">US</span> <a class="pl medium" href="https://github.com/pryv/open-pryv.io/issues/76" title="The upstream breach-scope tool SHIPPED 2026-07-28 (merged upstream, #76 closed): automated Art.33(1)(b-d) scoping report, access reverse-lookup and scoped-exposure audit fields. Becomes claimable on this row once an open-pryv.io release carrying it is deployed to all HDS cores — the current HDS deployment (rc.12) predates it. — upstream: proposals/breach-scope-tool.md">⏳ platform</a></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">CH</span><span class="rg">US</span> </div>
       <p>The audit log helps scope a breach — which data, which subjects, by which
 access — and HDS as operator runs the monitoring and incident-response
-procedure that feeds the 72-hour decision. The notification itself, and
-the risk-likelihood judgement, are the controller's. At-rest volume
-encryption (in place since 2026-06-26) narrows the exposure of a leaked
-at-rest artefact and feeds the risk-likelihood assessment.
+procedure that feeds the 72-hour decision. Since 2026-07-29 that scoping
+is a deployed platform primitive: `bin/breach-scope.js` emits an
+Art.33(1)(b-d) report for a compromised access from the audit +
+access-version data, backed by a cluster-wide access reverse-index
+(`GET /system/accesses/:accessId`) and scoped-exposure audit fields
+(`recordCount`, `scopedStreamIds` — the resolved scope, an upper bound
+on exposure). The notification itself, and the risk-likelihood
+judgement, are the controller's. At-rest volume encryption (in place
+since 2026-06-26) narrows the exposure of a leaked at-rest artefact and
+feeds the risk-likelihood assessment.
 </p>
-      <details><summary>detail</summary><p>Audit queries over the suspected window list the accesses that touched
-the data and the streams read; the access version chain shows whether
-processing was within scope. HDS runs detection and an operator-side
-incident procedure; the controller owns the supervisory-authority
-notification.
+      <details><summary>detail</summary><p>`bin/breach-scope.js` resolves a compromised accessId to its owner and
+window, then reports the accesses that touched the data and the streams
+in scope — the §33(1)(b) categories/subjects and (b-d) inputs — from the
+audit log and access-version chain. `scopedStreamIds` records the query's
+resolved scope (upper bound on what the access could reach), not the
+events actually returned, so it never understates exposure; `recordCount`
+counts delivered records. Deployed on all HDS cores 2026-07-29
+(open-pryv.io master `d3c9c605`; the access index backfilled per core).
+HDS runs detection and the operator-side incident procedure; the
+controller owns the supervisory-authority notification.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 gdpr/procedures/breach-notification-72h</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/procedures/security-incident-response</span> <span class="onreq">available on request</span></li></ul>
     </div>

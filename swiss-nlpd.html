@@ -456,9 +456,11 @@ artefacts as inputs.
   </div>
 </article><article class="req" id="req-art-24" data-coverage="facilitated" data-personas="controller processor data-subject" data-text="art.24 notification of data security breaches hds operates the audit log and access version chain that let the
 controller scope a breach — which subjects, which streams, by which
-access. the nlpd's &quot;as soon as possible&quot; timeline is the controller's to
-meet; hds provides the underlying scoping evidence.
-" data-planned="1">
+access — now automated by the deployed breach-scope primitive
+(`bin/breach-scope.js` + `get /system/accesses/:accessid`, on all hds
+cores since 2026-07-29). the nlpd's &quot;as soon as possible&quot; timeline is
+the controller's to meet; hds provides the underlying scoping evidence.
+" data-planned="0">
   <h3><code>Art.24</code> Notification of data security breaches <span class="draft">draft</span></h3>
   <p class="text">The controller must notify the Federal Data Protection and Information
 Commissioner of a breach likely to result in a high risk to the personality
@@ -481,21 +483,25 @@ regime if you face both.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">CH</span> <a class="pl medium" href="https://github.com/pryv/open-pryv.io/issues/76" title="The upstream breach-scope tool SHIPPED 2026-07-28 (#76 closed) — automated scoping report for a compromised access. Becomes claimable on the Commissioner-notification scoping here once an open-pryv.io release carrying it is deployed to all HDS cores (the current HDS deployment predates it). — upstream: proposals/breach-scope-tool.md">⏳ platform</a></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">CH</span> </div>
       <p>HDS operates the audit log and access version chain that let the
 controller scope a breach — which subjects, which streams, by which
-access. The nLPD's &quot;as soon as possible&quot; timeline is the controller's to
-meet; HDS provides the underlying scoping evidence.
+access — now automated by the deployed breach-scope primitive
+(`bin/breach-scope.js` + `GET /system/accesses/:accessId`, on all HDS
+cores since 2026-07-29). The nLPD's &quot;as soon as possible&quot; timeline is
+the controller's to meet; HDS provides the underlying scoping evidence.
 </p>
       <details><summary>detail</summary><p>As a processor, HDS notifies the controller of breaches it detects so the
-controller can meet its Commissioner-notification duty. The subject
-notification trigger is more conditional than under GDPR; the controller's
-incident-response matrix should encode both regimes where it faces both.
-The event store is encrypted at rest (hosting-layer volume encryption,
-since 2026-06-26), which strengthens the safe-harbour assessment of a
-leaked at-rest artefact — a lost or decommissioned medium is protected;
-a live-system compromise reaches decrypted content and is assessed on
-its facts.
+controller can meet its Commissioner-notification duty. The scoping
+report (compromised access → owner, affected subjects/streams, scoped
+exposure) is emitted by `bin/breach-scope.js` from the audit +
+access-version data. The subject notification trigger is more conditional
+than under GDPR; the controller's incident-response matrix should encode
+both regimes where it faces both. The event store is encrypted at rest
+(hosting-layer volume encryption, since 2026-06-26), which strengthens
+the safe-harbour assessment of a leaked at-rest artefact — a lost or
+decommissioned medium is protected; a live-system compromise reaches
+decrypted content and is assessed on its facts.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/procedures/security-incident-response</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 gdpr/procedures/breach-notification-72h</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/risk/at-rest-encryption</span> <span class="onreq">available on request</span></li></ul>
     </div>

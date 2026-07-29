@@ -1541,7 +1541,7 @@ fix announcements, and a config-validation step that fails fast on malformed
 configuration at start. operational monitoring and the audit log surface
 runtime anomalies. hds operates this and layers its own patching cadence;
 an organization's own vulnerability-scanning cadence sits on top.
-" data-planned="1">
+" data-planned="0">
   <h3><code>CC7.1</code> CC7.1 — Detection of configuration changes and vulnerabilities <span class="draft">draft</span></h3>
   <p class="text">The entity uses detection and monitoring procedures to identify configuration
 changes that introduce new vulnerabilities and susceptibility to newly
@@ -1549,14 +1549,24 @@ discovered vulnerabilities.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> <a class="pl medium" href="https://github.com/orgs/pryv/projects/5?pane=issue&amp;itemId=190467908&amp;issue=pryv%7Copen-pryv.io%7C81" title="Supply-chain scanning pipeline (CI npm audit gate + SBOM + image scan + signing) gives CC7.1 a software-side vulnerability-detection feed; shifts F:Evidence Low → F:Evidence Medium">⏳ feature</a></div>
-      <p>Pryv-side substrate-vulnerability detection today is partial +
-passive: committed package-lock, Dependabot alerts on
-open-pryv.io master, CHANGELOG announcements of relevant fixes,
-and a config-validation step that fails fast on malformed
-configuration at master start. Observability + audit surface
-runtime anomalies. Your own vulnerability-scanning cadence (when
-to upgrade, how to verify) sits on top.
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
+      <p>Pryv-side substrate-vulnerability detection now has an
+active, CI-enforced feed (open-pryv.io master merge
+`9e2ee7ff`): a runtime-dependency audit gate fails every
+build on high or critical advisories in the shipped npm
+tree (accepted advisories live in a documented allowlist,
+not silenced), a CycloneDX SBOM is emitted and
+Grype-scanned on every CI run (build fails on critical
+findings), the base image is digest-pinned with the rqlite
+download checksum-verified, and release images are
+cosign-signed with a SLSA build-provenance attestation.
+Dependabot alerts, CHANGELOG announcements, and a
+config-validation step that fails fast on malformed
+configuration at master start round this out; observability
++ audit surface runtime anomalies. Base-image OS-level CVEs
+remain visible to the scanners (a slimmer-base migration is
+a tracked follow-up). Your own scanning cadence for the
+layers you add sits on top.
 </p>
     </div>
     <div class="layer hds">
@@ -3487,7 +3497,7 @@ notifications within the regulatory deadline is your process.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> <a class="pl medium" href="https://github.com/pryv/open-pryv.io/issues/76" title="The upstream breach-scope tool SHIPPED 2026-07-28 (#76 closed) and automates exactly the manual step this row states — the reverse-index from a compromised access to affected subjects. Becomes claimable here once an open-pryv.io release carrying it is deployed to all HDS cores (the current HDS deployment predates it). — upstream: proposals/breach-scope-tool.md">⏳ platform</a></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>The platform supplies the scoping evidence a breach notice needs — the
 audit log ties a compromised access to the users and data it touched — and
 HDS operates the monitoring and incident-response programme that detects
@@ -3496,10 +3506,14 @@ regulatory deadline is the service organization's process.
 </p>
       <details><summary>detail</summary><p>HDS operates the detection-and-scoping substrate (audit plus monitoring,
 with alerting wired end to end) so a breach has a contemporaneous,
-attributable record of who was affected. Today the reverse-index from a
-compromised access to affected subjects is a manual step. The implementer
-drafts and sends the breach notices and meets the regulatory clock; HDS's
-incident procedure governs the report it produces.
+attributable record of who was affected. The reverse-index from a
+compromised access to affected subjects is now a deployed platform
+primitive, not a manual step: `GET /system/accesses/:accessId` resolves a
+compromised access to its owner in O(1) over a cluster-wide index, and
+`bin/breach-scope.js` emits the affected-subjects/data report from the
+audit + access-version data (deployed on all HDS cores 2026-07-29). The
+implementer drafts and sends the breach notices and meets the regulatory
+clock; HDS's incident procedure governs the report it produces.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/procedures/security-incident-response</span> <span class="onreq">available on request</span></li></ul>
     </div>
