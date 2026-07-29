@@ -1,5 +1,24 @@
 # Supply-chain scanning pipeline
 
+**Status: shipped** in open-pryv.io master merge `9e2ee7ff`
+(feature commits `3ecb1e9a` dependency bumps + audit gate,
+`afe6832c` CI pipeline). Delivered: `scripts/audit-prod-deps`
+fails CI on high or critical advisories in the runtime
+(`--omit=dev`) npm tree, with accepted advisories documented in
+a justified allowlist (`security-audit` job); CycloneDX SBOM
+emission (source tree on every CI run, image per release) with a
+Grype scan of the source SBOM failing on critical (`sbom` job);
+keyless (OIDC) cosign signing + SLSA build-provenance
+attestation on release tags (`docker` job); digest-pinned base
+image + rqlite tarball checksum verification in the Dockerfile;
+nodemailer major bump clearing the standing runtime advisories.
+Honest bound: the pinned `node:24-bookworm` base image still
+carries OS-level CVEs that image scans surface; a slimmer-base
+migration is tracked as a separate follow-up. The tag-gated
+signing/provenance path is structurally verified and is first
+exercised by the next release tag. Matrix chips discharged and
+row shifts applied; see "Row shifts" below.
+
 **Proposal mirror of**: `_plans/XXX-Backlog/COMPLIANCE-SUPPLY-CHAIN-SCANNING-PIPELINE.md`
 (macroPryv-side backlog file).
 **Filed during:** Q24 implementer-perspective gap-probing session.
@@ -26,7 +45,16 @@ digest-pinned or moving-tag?"*
 | SBOM emission (CycloneDX / SPDX) | ❌ | (no manifest published per release) |
 | Image signing (cosign / Docker Content Trust) | ❌ | (no signature on pushed images) |
 
-## After shipping (3-phase pipeline per backlog)
+## Row shifts (applied at discharge; table kept as proposed)
+
+Applied deltas vs. the table below: the `tests: [CIYAML]`
+citation was not added (no such test code exists in the
+open-pryv.io suite; the CI workflow is cited in prose instead);
+iso-27001 A.5.22 was added as a new row (facilitated / effort
+low / mode evidence); soc2 CC7.1, chipped after this table was
+written, shifted F:Evidence Low to F:Evidence Medium;
+hipaa-security 164.308(a)(8), iso-27001 A.5.23 and A.8.30
+received prose refinements without tier changes.
 
 | Scope | Ref | Kind | Impact | After shipping |
 |---|---|---|---|---|

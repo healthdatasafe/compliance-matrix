@@ -526,7 +526,11 @@ requirements:
       chosen regions; bootstrap bundle export gives a clean cloud-
       exit path (re-issue the cluster onto new infrastructure);
       operator-side at-rest encryption isolates the cloud provider
-      from plaintext.
+      from plaintext. The per-release CycloneDX SBOM and
+      cosign-signed image from the open-pryv.io supply-chain
+      pipeline travel with the workload, so a provider exit hands
+      the next environment a machine-readable composition manifest
+      plus a verifiable image signature.
 
   - ref: A.6.3
     title: A.6.3 Information security awareness, education and training
@@ -719,7 +723,10 @@ requirements:
       management concern. When the operator's "supplier" is Pryv
       (i.e., they consume open-pryv.io as a third-party platform),
       this matrix + the CHANGELOGs + the public release process serve
-      as the supplier-monitoring artefact set the operator references.
+      as the supplier-monitoring artefact set the operator
+      references, now joined by the per-release CycloneDX SBOM and
+      the keyless cosign signature + SLSA provenance on published
+      images (open-pryv.io supply-chain pipeline, merge `9e2ee7ff`).
 
   - ref: A.8.31
     title: A.8.31 Separation of development, test and production environments
@@ -1485,34 +1492,58 @@ requirements:
       manage the information-security risks associated with the ICT
       products and services supply chain.
     coverage: facilitated
-    pryv_effort_saved: low
-    facilitation_mode: awareness
+    pryv_effort_saved: medium
+    facilitation_mode: evidence
     draft: true
     pryv_primitives: [audit]
     derives_from: [iso-27001.A.5.19, iso-27001.A.8.30]
-    planned:
-      - kind: feature
-        summary: "Three-phase supply-chain scanning pipeline (CI npm audit gate + SBOM via Syft + image scan via Grype + cosign signing); shifts row F:Awareness Low → F:Evidence Medium when shipped"
-        proposal: proposals/supply-chain-scanning-pipeline.md
-        tracking_url: https://github.com/orgs/pryv/projects/5?pane=issue&itemId=190467908&issue=pryv%7Copen-pryv.io%7C81
-        impact: medium
     overview: |
-      Supply-chain risk at the Pryv layer today is **partial and
-      passive**: `package-lock.json` committed, CI uses
-      `npm install --ignore-scripts`, per-commit Docker SHA tag
-      pushed alongside the moving `:2.0.0-pre` tag, rqlite version
-      pinned via Dockerfile `ARG` (no checksum verification yet),
-      GitHub Dependabot security alerts surface CVEs via the repo's
-      Security tab (a 2026-04-30 sweep cleared 22 alerts → 0).
-      What's **not** in place: CI gate on `npm audit`,
-      SCA tool integration, container image scanning (Trivy /
-      Grype), base image digest pinning, SBOM emission (CycloneDX /
-      SPDX), image signing (cosign / SLSA attestation), rqlite
-      tarball `sha256sum -c`. See
-      `proposals/supply-chain-scanning-pipeline.md` for the
-      three-phase plan that closes the gap. The operator's broader
-      ICT supply-chain programme (vendor assessment, SLA reviews,
-      contract clauses) sits on top.
+      Supply-chain risk at the Pryv layer is now actively managed
+      and CI-enforced (open-pryv.io master merge `9e2ee7ff`):
+      `scripts/audit-prod-deps` fails every build on high or
+      critical advisories affecting the shipped (`--omit=dev`)
+      npm tree, with accepted advisories documented in a
+      justified allowlist rather than silenced; a CycloneDX SBOM
+      of the source tree is emitted on every CI run and scanned
+      with Grype (build fails on critical findings); the Docker
+      base image is digest-pinned and the rqlite download is
+      checksum-verified before unpacking; on release tags the
+      published image additionally carries its own CycloneDX
+      SBOM, a keyless (OIDC) cosign signature, and a SLSA
+      build-provenance attestation that pullers can verify.
+      Committed `package-lock.json`, `npm install
+      --ignore-scripts` in CI, and GitHub Dependabot alerts
+      continue underneath. Honest bound: the pinned base image
+      still carries OS-level CVEs that scanners surface (a
+      slimmer-base migration is tracked as a follow-up), so the
+      claim is detection, gating and attestation, not a CVE-free
+      image. The operator's broader ICT supply-chain programme
+      (vendor assessment, SLA reviews, contract clauses) sits on
+      top.
+
+  - ref: A.5.22
+    title: A.5.22 Monitoring, review and change management of supplier services
+    text: |
+      The organization shall regularly monitor, review, evaluate
+      and manage change in supplier information security practices
+      and service delivery.
+    coverage: facilitated
+    pryv_effort_saved: low
+    facilitation_mode: evidence
+    draft: true
+    derives_from: [iso-27001.A.5.21, iso-27001.A.5.19]
+    overview: |
+      When the supplier under review is Pryv (open-pryv.io
+      consumed as a third-party platform), the upstream
+      supply-chain pipeline supplies the recurring monitoring
+      artefacts: a runtime-dependency audit gate on every CI
+      build, a CycloneDX SBOM emitted per CI run and per released
+      image, Grype scan results, and cosign-signed images with
+      SLSA build provenance (open-pryv.io merge `9e2ee7ff`),
+      alongside the CHANGELOGs and the public release process.
+      Reviewing those artefacts on your own cadence, and
+      monitoring every supplier other than Pryv, is your
+      service-management process.
 
   - ref: A.5.24
     title: A.5.24 Information security incident management planning and preparation

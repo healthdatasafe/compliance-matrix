@@ -11,6 +11,12 @@ layered_on_pryv: soc2
 regions: [us, ch]
 
 changelog:
+  - date: "2026-07-29"
+    change: >
+      P6.6: breach-scope primitive DEPLOYED to all HDS cores 2026-07-29 — the
+      "manual reverse-index" sentence retired; row now states the deployed
+      GET /system/accesses/:accessId + bin/breach-scope.js primitive; chip
+      retired.
   - date: "2026-07-28"
     change: >
       P6.6: platform uplink chip for the upstream breach-scope tool
@@ -2697,25 +2703,18 @@ requirements:
     detail: |
       HDS operates the detection-and-scoping substrate (audit plus monitoring,
       with alerting wired end to end) so a breach has a contemporaneous,
-      attributable record of who was affected. Today the reverse-index from a
-      compromised access to affected subjects is a manual step. The implementer
-      drafts and sends the breach notices and meets the regulatory clock; HDS's
-      incident procedure governs the report it produces.
+      attributable record of who was affected. The reverse-index from a
+      compromised access to affected subjects is now a deployed platform
+      primitive, not a manual step: `GET /system/accesses/:accessId` resolves a
+      compromised access to its owner in O(1) over a cluster-wide index, and
+      `bin/breach-scope.js` emits the affected-subjects/data report from the
+      audit + access-version data (deployed on all HDS cores 2026-07-29). The
+      implementer drafts and sends the breach notices and meets the regulatory
+      clock; HDS's incident procedure governs the report it produces.
     regions: [us, ch]
     evidence:
       internal_docs:
         - hipaa/procedures/security-incident-response
-    planned:
-      - kind: platform
-        summary: >-
-          The upstream breach-scope tool SHIPPED 2026-07-28 (#76 closed) and
-          automates exactly the manual step this row states — the
-          reverse-index from a compromised access to affected subjects.
-          Becomes claimable here once an open-pryv.io release carrying it is
-          deployed to all HDS cores (the current HDS deployment predates it).
-        impact: medium
-        upstream_proposal: vendor/pryv/proposals/breach-scope-tool.md
-        tracking_url: https://github.com/pryv/open-pryv.io/issues/76
   implementer:
     - persona: service-organization
       coverage: documented

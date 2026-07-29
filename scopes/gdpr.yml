@@ -11,6 +11,12 @@ layered_on_pryv: gdpr
 regions: [ch, us]
 
 changelog:
+  - date: "2026-07-29"
+    change: >
+      Art.33: breach-scope primitive now DEPLOYED to all HDS cores (open-pryv.io
+      master d3c9c605; access index backfilled per core, GET
+      /system/accesses/:accessId verified live). Row upgraded from prose +
+      platform-uplink chip to the deployed primitive; chip retired.
   - date: "2026-07-28"
     change: >
       Art.33: platform uplink chip for the upstream breach-scope tool
@@ -1231,32 +1237,32 @@ requirements:
       overview: |
         The audit log helps scope a breach — which data, which subjects, by which
         access — and HDS as operator runs the monitoring and incident-response
-        procedure that feeds the 72-hour decision. The notification itself, and
-        the risk-likelihood judgement, are the controller's. At-rest volume
-        encryption (in place since 2026-06-26) narrows the exposure of a leaked
-        at-rest artefact and feeds the risk-likelihood assessment.
+        procedure that feeds the 72-hour decision. Since 2026-07-29 that scoping
+        is a deployed platform primitive: `bin/breach-scope.js` emits an
+        Art.33(1)(b-d) report for a compromised access from the audit +
+        access-version data, backed by a cluster-wide access reverse-index
+        (`GET /system/accesses/:accessId`) and scoped-exposure audit fields
+        (`recordCount`, `scopedStreamIds` — the resolved scope, an upper bound
+        on exposure). The notification itself, and the risk-likelihood
+        judgement, are the controller's. At-rest volume encryption (in place
+        since 2026-06-26) narrows the exposure of a leaked at-rest artefact and
+        feeds the risk-likelihood assessment.
       detail: |
-        Audit queries over the suspected window list the accesses that touched
-        the data and the streams read; the access version chain shows whether
-        processing was within scope. HDS runs detection and an operator-side
-        incident procedure; the controller owns the supervisory-authority
-        notification.
+        `bin/breach-scope.js` resolves a compromised accessId to its owner and
+        window, then reports the accesses that touched the data and the streams
+        in scope — the §33(1)(b) categories/subjects and (b-d) inputs — from the
+        audit log and access-version chain. `scopedStreamIds` records the query's
+        resolved scope (upper bound on what the access could reach), not the
+        events actually returned, so it never understates exposure; `recordCount`
+        counts delivered records. Deployed on all HDS cores 2026-07-29
+        (open-pryv.io master `d3c9c605`; the access index backfilled per core).
+        HDS runs detection and the operator-side incident procedure; the
+        controller owns the supervisory-authority notification.
       regions: [ch, us]
       evidence:
         internal_docs:
           - gdpr/procedures/breach-notification-72h
           - hipaa/procedures/security-incident-response
-      planned:
-        - kind: platform
-          summary: >-
-            The upstream breach-scope tool SHIPPED 2026-07-28 (merged upstream,
-            #76 closed): automated Art.33(1)(b-d) scoping report, access
-            reverse-lookup and scoped-exposure audit fields. Becomes claimable
-            on this row once an open-pryv.io release carrying it is deployed
-            to all HDS cores — the current HDS deployment (rc.12) predates it.
-          impact: medium
-          upstream_proposal: vendor/pryv/proposals/breach-scope-tool.md
-          tracking_url: https://github.com/pryv/open-pryv.io/issues/76
     implementer:
       - persona: controller
         coverage: documented

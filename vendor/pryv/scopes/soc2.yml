@@ -598,25 +598,29 @@ requirements:
       in the introduction of new vulnerabilities, and (2) susceptibility
       to newly discovered vulnerabilities.
     coverage: facilitated
-    pryv_effort_saved: low
+    pryv_effort_saved: medium
     facilitation_mode: evidence
     draft: true
     pryv_primitives: [observability-provider, audit]
     derives_from: [iso-27001.A.8.8, iso-27001.A.8.9]
-    planned:
-      - kind: feature
-        summary: "Supply-chain scanning pipeline (CI npm audit gate + SBOM + image scan + signing) gives CC7.1 a software-side vulnerability-detection feed; shifts F:Evidence Low → F:Evidence Medium"
-        proposal: proposals/supply-chain-scanning-pipeline.md
-        tracking_url: https://github.com/orgs/pryv/projects/5?pane=issue&itemId=190467908&issue=pryv%7Copen-pryv.io%7C81
-        impact: medium
     overview: |
-      Pryv-side substrate-vulnerability detection today is partial +
-      passive: committed package-lock, Dependabot alerts on
-      open-pryv.io master, CHANGELOG announcements of relevant fixes,
-      and a config-validation step that fails fast on malformed
-      configuration at master start. Observability + audit surface
-      runtime anomalies. Your own vulnerability-scanning cadence (when
-      to upgrade, how to verify) sits on top.
+      Pryv-side substrate-vulnerability detection now has an
+      active, CI-enforced feed (open-pryv.io master merge
+      `9e2ee7ff`): a runtime-dependency audit gate fails every
+      build on high or critical advisories in the shipped npm
+      tree (accepted advisories live in a documented allowlist,
+      not silenced), a CycloneDX SBOM is emitted and
+      Grype-scanned on every CI run (build fails on critical
+      findings), the base image is digest-pinned with the rqlite
+      download checksum-verified, and release images are
+      cosign-signed with a SLSA build-provenance attestation.
+      Dependabot alerts, CHANGELOG announcements, and a
+      config-validation step that fails fast on malformed
+      configuration at master start round this out; observability
+      + audit surface runtime anomalies. Base-image OS-level CVEs
+      remain visible to the scanners (a slimmer-base migration is
+      a tracked follow-up). Your own scanning cadence for the
+      layers you add sits on top.
 
   - ref: CC7.2
     title: CC7.2 Monitoring for anomalies indicative of security events
@@ -775,10 +779,14 @@ requirements:
       reference. Your broader vendor-risk programme (assessment
       criteria, SLA reviews, subprocessor inventory) sits on top.
     detail: |
-      Supply-chain risk on the Pryv substrate is tracked under the
-      supply-chain-scanning-pipeline proposal, committed lockfile +
-      Dependabot today; CI npm-audit gate + SBOM + image scanning +
-      signing planned. See CC7.1.
+      Supply-chain risk on the Pryv substrate is actively managed
+      upstream: committed lockfile + Dependabot, a CI
+      runtime-dependency audit gate, CycloneDX SBOM emission with
+      Grype scanning, a digest-pinned base image, and
+      cosign-signed release images with SLSA provenance
+      (open-pryv.io merge `9e2ee7ff`). The SBOM + signature +
+      CHANGELOG set is the vendor-monitoring artefact you cite
+      when Pryv is the vendor under review. See CC7.1.
 
   # ───────────────────────────────────────────────────────────────
   # A1, Availability (additional category)

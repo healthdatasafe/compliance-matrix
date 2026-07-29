@@ -1523,11 +1523,6 @@ requirements:
         tracking_url: https://github.com/orgs/pryv/projects/5?pane=issue&itemId=180707914&issue=pryv%7Copen-pryv.io%7C34
         impact: low
       - kind: feature
-        summary: "Three-phase supply-chain scanning pipeline strengthens the §1(b)/(c) ongoing-CIA + integrity axis with concrete SCA + SBOM + signed-image evidence"
-        proposal: proposals/supply-chain-scanning-pipeline.md
-        tracking_url: https://github.com/orgs/pryv/projects/5?pane=issue&itemId=190467908&issue=pryv%7Copen-pryv.io%7C81
-        impact: low
-      - kind: feature
         summary: "Read-only effective-configuration endpoint strengthens the evidence narrative around operator-visible safeguards"
         proposal: proposals/config-effective-exposure.md
         tracking_url: https://github.com/orgs/pryv/projects/5?pane=issue&itemId=219705795&issue=pryv%7Copen-pryv.io%7C118
@@ -1624,9 +1619,20 @@ requirements:
               for operator-side verification (sample-app
               proposal queued to package this as a customer-
               facing "verify your deployment" runbook).
-            - **Supply-chain pipeline** (Q24 backlog),
-              once shipped, adds SBOM + signed images + CI gate
-              on `npm audit` + Trivy/Grype scan.
+            - **Supply-chain pipeline** (shipped, open-pryv.io
+              merge `9e2ee7ff`): a CI gate fails the build on
+              high or critical advisories in the runtime npm
+              tree (accepted advisories live in a documented
+              allowlist, not silenced), a CycloneDX SBOM is
+              emitted and Grype-scanned on every CI run, the
+              base image is digest-pinned with the rqlite
+              download checksum-verified, and release images
+              carry a keyless cosign signature plus a SLSA
+              build-provenance attestation. The pinned base
+              image still shows OS-level CVEs in scans (a
+              slimmer-base migration is a tracked follow-up);
+              the claim is detection, gating and attestation,
+              not a CVE-free image.
             - **Vulnerability disclosure program**: a
               coordinated disclosure policy ships in `SECURITY.md`:
               private reporting via GitHub Security Advisories +

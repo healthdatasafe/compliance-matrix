@@ -1153,8 +1153,10 @@ requirements:
       data), this matrix (control inventory to evaluate against),
       Pryv's test matrix (~2351 PG and SQLite, matched baseline, passing on every
       commit, concrete §164.308(a)(8) effectiveness evidence),
-      Pryv's supply-chain pipeline (Q24 backlog `SUPPLY-CHAIN-
-      SCANNING-PIPELINE` once shipped), Pryv's vulnerability
+      Pryv's supply-chain pipeline (shipped in open-pryv.io
+      `9e2ee7ff`: CI dependency-audit gate, per-release CycloneDX
+      SBOM, cosign-signed images; the SBOM + latest scan output
+      are citable periodic-evaluation artefacts), Pryv's vulnerability
       disclosure program + GHSA advisory history (coordinated
       disclosure policy published in `SECURITY.md`; private
       vulnerability reporting enabled on the published

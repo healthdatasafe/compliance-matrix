@@ -11,6 +11,11 @@ layered_on_pryv: swiss-nlpd
 regions: [ch]
 
 changelog:
+  - date: "2026-07-29"
+    change: >
+      Art.24: breach-scope primitive DEPLOYED to all HDS cores 2026-07-29 —
+      Commissioner-notification scoping upgraded to the deployed primitive;
+      chip retired.
   - date: "2026-07-28"
     change: >
       Art.24: platform uplink chip for the upstream breach-scope tool
@@ -339,34 +344,27 @@ requirements:
       overview: |
         HDS operates the audit log and access version chain that let the
         controller scope a breach — which subjects, which streams, by which
-        access. The nLPD's "as soon as possible" timeline is the controller's to
-        meet; HDS provides the underlying scoping evidence.
+        access — now automated by the deployed breach-scope primitive
+        (`bin/breach-scope.js` + `GET /system/accesses/:accessId`, on all HDS
+        cores since 2026-07-29). The nLPD's "as soon as possible" timeline is
+        the controller's to meet; HDS provides the underlying scoping evidence.
       detail: |
         As a processor, HDS notifies the controller of breaches it detects so the
-        controller can meet its Commissioner-notification duty. The subject
-        notification trigger is more conditional than under GDPR; the controller's
-        incident-response matrix should encode both regimes where it faces both.
-        The event store is encrypted at rest (hosting-layer volume encryption,
-        since 2026-06-26), which strengthens the safe-harbour assessment of a
-        leaked at-rest artefact — a lost or decommissioned medium is protected;
-        a live-system compromise reaches decrypted content and is assessed on
-        its facts.
+        controller can meet its Commissioner-notification duty. The scoping
+        report (compromised access → owner, affected subjects/streams, scoped
+        exposure) is emitted by `bin/breach-scope.js` from the audit +
+        access-version data. The subject notification trigger is more conditional
+        than under GDPR; the controller's incident-response matrix should encode
+        both regimes where it faces both. The event store is encrypted at rest
+        (hosting-layer volume encryption, since 2026-06-26), which strengthens
+        the safe-harbour assessment of a leaked at-rest artefact — a lost or
+        decommissioned medium is protected; a live-system compromise reaches
+        decrypted content and is assessed on its facts.
       evidence:
         internal_docs:
           - hipaa/procedures/security-incident-response
           - gdpr/procedures/breach-notification-72h
           - hipaa/risk/at-rest-encryption
-      planned:
-        - kind: platform
-          summary: >-
-            The upstream breach-scope tool SHIPPED 2026-07-28 (#76 closed) —
-            automated scoping report for a compromised access. Becomes
-            claimable on the Commissioner-notification scoping here once an
-            open-pryv.io release carrying it is deployed to all HDS cores
-            (the current HDS deployment predates it).
-          impact: medium
-          upstream_proposal: vendor/pryv/proposals/breach-scope-tool.md
-          tracking_url: https://github.com/pryv/open-pryv.io/issues/76
     implementer:
       - persona: controller
         coverage: documented
