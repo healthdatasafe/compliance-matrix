@@ -547,11 +547,15 @@ requirements:
     planned:
       - kind: procedure
         summary: >-
-          Automated, restore-verified backups are the tracked remediation: the
-          backup-plan procedure and a backup-run record template are in the
-          internal pipeline, the automated tooling defect is on the risk-
-          management treatment register, and the first verified restore-tested
-          run is outstanding.
+          Automated, restore-verified backups are the tracked remediation.
+          Provisioned and verified 2026-07-29: in-region off-host object
+          storage in each region (Swiss and US) with object versioning; HDS-held
+          hybrid encryption of every archive (a per-run AES-256-GCM key wrapped
+          to a per-region RSA-4096 public key, the private key held off-host);
+          least-privilege per-host access; and defined targets (RPO 24h, RTO 72h,
+          retention 7 daily / 4 weekly / 12 monthly). Outstanding before this is
+          fully implemented: the scheduled cycle, the success/absence alert, and
+          the first verified restore-tested run.
         impact: medium
         internal_doc: hipaa/procedures/data-backup-plan
   implementer:
