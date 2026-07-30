@@ -36,21 +36,15 @@ for (const f of await templateFiles()) {
   if (data) templates.push(data);
 }
 
-// ---- NEW RELIC browser monitoring placeholder ----
-// Go-live prerequisite (HDS NR directive): paste the New Relic Browser snippet
-// for the 'hds-prod-compliance-matrix' entity into public/newrelic-snippet.html.
-// If present it is injected into every page; if absent, a comment marker is used.
-const NR_SNIPPET_FILE = path.join(ROOT, 'public', 'newrelic-snippet.html');
-const NR = fs.existsSync(NR_SNIPPET_FILE)
-  ? fs.readFileSync(NR_SNIPPET_FILE, 'utf8')
-  : '<!-- New Relic browser snippet goes here before go-live (NR directive) -->';
+// Plan 88 / fence 9 — no client-side (browser) monitoring agent in a public site.
+// The New Relic Browser snippet injection was removed: third-party monitoring code
+// in a visitor's browser cannot be allow-listed, so it is removed, not configured.
 
 const layout = (title, body, { active } = {}) => `<!doctype html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${esc(title)} — HDS compliance-matrix</title>
 <link rel="stylesheet" href="styles.css">
-${NR}
 </head><body>
 <header class="top">
   <a class="brand" href="index.html">HDS <b>compliance-matrix</b></a>
