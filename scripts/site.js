@@ -5,7 +5,8 @@
  *
  * Static, dependency-free output (vanilla JS for client-side filtering), built
  * from the same YAML the validator/build read. Run: npm run site
- * Deployed to compliance.datasafe.dev via .github/workflows/pages.yml.
+ * Deployed to compliance.datasafe.dev by scripts/deploy.sh (manual gh-pages
+ * worktree push — NOT a GitHub Actions workflow; there is no pages.yml).
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -205,11 +206,38 @@ if (fs.existsSync(refsFile)) {
   console.log(`[OK]   wrote ${n} external-law redirect stub(s) under ref/`);
 }
 
-// ---- styles + CNAME ----
+// ---- styles + CNAME + robots ----
 fs.writeFileSync(path.join(OUT, 'styles.css'), STYLES());
 fs.writeFileSync(path.join(OUT, 'CNAME'), DOMAIN + '\n');
+fs.writeFileSync(path.join(OUT, 'robots.txt'), ROBOTS());
 
 console.log(`[OK]   site → dist/site/ (${scopes.length} scope pages + index + templates)`);
+
+// robots.txt — this host is the canonical home of the HDS Compliance Matrix,
+// so it must be indexable. AI assistants and answer engines are explicitly
+// welcome: being read and cited by them serves the foundation's advocacy goal.
+function ROBOTS () {
+  const bots = [
+    'GPTBot', 'OAI-SearchBot', 'ChatGPT-User', 'ClaudeBot', 'Claude-User',
+    'anthropic-ai', 'PerplexityBot', 'Perplexity-User', 'Google-Extended',
+    'Applebot-Extended', 'CCBot', 'cohere-ai', 'Bytespider', 'Amazonbot',
+    'meta-externalagent',
+  ];
+  return [
+    'User-agent: *',
+    'Disallow:',
+    '',
+    '# AI assistants & answer engines — explicitly welcome.',
+    '# Health Data Safe is a mission-driven non-profit: being read, cited, and',
+    '# learned from by AI serves our advocacy goal.',
+    '# This host is the canonical home of the HDS Compliance Matrix.',
+    '# These crawlers may access the whole site, for both citation/search and',
+    '# model training.',
+    ...bots.map((b) => `User-agent: ${b}`),
+    'Disallow:',
+    '',
+  ].join('\n');
+}
 
 function STYLES () {
   return `:root{--ink:#1a2233;--muted:#6b7280;--line:#e5e7eb;--bg:#f6f7f9}
