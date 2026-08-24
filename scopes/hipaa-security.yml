@@ -1195,7 +1195,14 @@ requirements:
       so a running host or a compelled provider could read plaintext — operator-held-key
       encryption (the container-encrypted-volume facility, CEV_ENABLED, shipped in the
       open-pryv.io rc.5 encrypted image and LUKS-verified on HDS hosts) or end-to-end
-      encryption remain optional strengthenings, not required for this addressable spec.
+      encryption remain optional strengthenings, not required for this addressable spec. Source
+      for ch1's default-on encryption: Exoscale's compliance statement
+      (exoscale.com/compliance/encryption), covering Compute root volumes, Block Storage
+      and Object Storage alike (AES-256-XTS, unique key per volume), so the claim does
+      not depend on which storage type holds the ePHI. Evidence grades differ by region:
+      ch1 rests on this vendor default-on statement; us1 on the Security Official's
+      attestation, since AWS EBS encryption is opt-in per volume and vendor
+      documentation cannot establish it is in force.
     technical: |
       At-rest: ch1 = Exoscale hypervisor-layer volume encryption (AES-256-XTS,
       default-on, provider-managed key per volume); us1 = AWS EBS encryption
@@ -1502,15 +1509,14 @@ requirements:
       satisfying the addressable transmission-encryption specification without
       requiring an implementer decision to enable it. HDS operates the certificate
       lifecycle. The implementer documents that transmission encryption is in force
-      and, separately, assesses at-rest encryption under §164.312(a)(2)(iv), where
-      the platform gap is noted.
+      and, separately, assesses at-rest encryption under §164.312(a)(2)(iv), which
+      is implemented in both regions (no platform gap).
     technical: |
       TLS encryption default-on for all ePHI transmission; certificate lifecycle
       operated by HDS.
     evidence:
       internal_docs:
         - hipaa/policies/transmission-security
-        - hipaa/policies/encryption
   implementer:
     - persona: covered-entity
       coverage: documented
@@ -1636,7 +1642,6 @@ requirements:
       is produced and what evidence it carries.
     evidence:
       internal_docs:
-        - hipaa/procedures/security-incident-response
         - hipaa/registers/baa-register
   implementer:
     - persona: covered-entity
