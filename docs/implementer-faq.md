@@ -103,21 +103,44 @@ catalogue's "SMS-based by default" phrasing reads as feature scope
 when it's a default. NIST AAL framing depends on configured
 provider: SMS-only = AAL1; TOTP+push or WebAuthn = AAL2.
 
-**Future direction:** ship reference plugins for server-side TOTP +
-WebAuthn (the latter needs a `LocalService` abstraction since
-WebAuthn ceremonies don't fit the HTTP-roundtrip `Service` shape).
-Tracked under internal backlog slug `MFA-MODERN-METHODS`, as part
-of the broader OAuth2 / account-based-signatures auth-modernisation
-arc.
+**Update 2026-09-03 — server-side TOTP has shipped.** As of
+`2.0.0-rc.14`, in-process TOTP (RFC 6238) is a first-class method
+requiring **no external provider**, and the generic
+`MfaMethod` contract (`enroll`/`challenge`/`verify`) plus a
+name-keyed registry replaced the HTTP-only `Service` shape — so the
+"needs a local abstraction" blocker is resolved. MFA is also now
+**active by default**: see the behaviour-change note in
+`docs/pryv-primitives.md` before upgrading, because an operator who
+wants MFA off must now say so explicitly.
+
+**Still future direction:** **WebAuthn**. It is not implemented, and
+it is now the only remaining item of the modernisation arc — the
+extension point it needs already exists. Tracked upstream at
+`pryv/open-pryv.io#78`.
+
+**Two qualifications on the AAL framing above**, both the
+implementer's responsibility rather than the core's:
+- AAL2 characterises the sessions of *enrolled* users. Enrolment is
+  voluntary and the core does not force it, so "the deployment is
+  AAL2" does not follow from "TOTP is available".
+- The failed-attempt limiter is per-MFA-session (5 tries) and
+  re-authenticating grants a fresh budget; there is no per-account
+  limit or knob for one (`pryv/open-pryv.io#128`). Rate-limiting
+  login / `mfa.verify` at the edge is therefore part of any AAL2
+  assertion.
 
 **Matrix encoding:**
-- `proposals/mfa-modern-methods.md` — mirror of the upstream
-  backlog; three-step modernisation (docs → TOTP → WebAuthn).
-- `docs/pryv-primitives.md` MFA section rewritten to spell out
-  pluggability + per-provider AAL framing.
+- `docs/pryv-primitives.md` MFA section — rewritten for the
+  multi-method model, the active-by-default change, the extension
+  point, and the two AAL qualifications.
 - `hipaa-security.164.312(d)` `detail` block extended.
 
-**Commit:** `23c9895`.
+> The former `proposals/mfa-modern-methods.md` mirror referenced
+> here does not exist in this repo; the upstream backlog slug
+> `MFA-MODERN-METHODS` is now largely superseded by the shipped
+> TOTP work, with WebAuthn tracked at `pryv/open-pryv.io#78`.
+
+**Commit:** `23c9895` (original); TOTP update 2026-09-03.
 
 ### Q5 — How do you handle workforce / role-based access control granularity (e.g., 100 nurses in a hospital deployment)?
 

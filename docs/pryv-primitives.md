@@ -138,41 +138,72 @@ A privileged stream namespace managed by the core (not user-creatable).
 
 Multi-factor authentication via the `mfa.*` API methods
 (`mfa.activate`, `mfa.confirm`, `mfa.challenge`, `mfa.verify`,
-`mfa.deactivate`, `mfa.recover`). Opt-in per `services.mfa.mode`
-operator config.
+`mfa.deactivate`, `mfa.recover`).
 
-**Pluggable** — `components/business/src/mfa/Service.ts` defines an
-abstract `Service` base class with `challenge()` and `verify()`
-methods. Two subclasses ship today, both targeting HTTP-callable
-external providers:
+**Multi-method since 2.0.0-rc.14** — server-side TOTP (RFC 6238,
+authenticator apps) now ships in-process, alongside the existing
+HTTP-provider SMS adapters. Configuration is
+`services.mfa.active` + `defaultMethod` + `methods.{totp,sms}`.
 
-- `ChallengeVerifyService` — two-step external provider (separate
-  challenge + verify endpoints).
-- `SingleService` — one-step external provider (single endpoint
-  does both).
+> **Behaviour change to plan for.** `services.mfa.active` ships
+> `true`, so the `mfa.*` endpoints are live by default and any user
+> may self-enrol TOTP. Nothing is forced — a user with no enrolled
+> factor logs in exactly as before. To disable MFA entirely an
+> operator must set `services.mfa.active: false`; a bare
+> `mode: disabled` no longer suffices, because it is
+> indistinguishable from the shipped default. The legacy
+> single-valued `services.mfa.mode`
+> (`disabled`/`challenge-verify`/`single`) is deprecated but still
+> honoured, and **takes precedence** over the new model, so an
+> existing SMS deployment upgrades unchanged until it migrates off
+> `mode`.
 
-The shipped subclasses are configured with SMS provider templates
-by default (Twilio-style HTTP endpoints with `{{ username }}`
-placeholder substitution), but the abstraction is generic over
-any HTTP-callable provider. Operators can:
+**Extension point** — `components/business/src/mfa/MfaMethod.ts`
+defines the `MfaMethod` contract (`enroll` / `challenge` /
+`verify`), and a registry in `mfa/index.ts` resolves a method by
+name from config or per user from the stored profile. Methods
+shipping today:
 
-- **Config-only:** point `services.mfa` URLs at any HTTP MFA
-  provider matching the challenge/verify or single-step shape
-  (Twilio Authy, Auth0 MFA API, Duo Web webhook, etc.).
-- **Code-level:** extend `Service` to implement any provider —
-  internal or external.
+- `totp` — in-process TOTP. **No external provider required.**
+  Secrets are encrypted at rest; a used code cannot be replayed
+  (the guard is enforced against the stored time step, so
+  concurrent sessions cannot reuse a code). Knobs:
+  `digits`, `periodSeconds`, `driftSteps`, `issuer`, `secretsKey`.
+- `sms` — the HTTP-provider adapters (`ChallengeVerifyService`
+  two-step, `SingleService` one-step), configured with
+  Twilio-style templates by default but generic over any
+  HTTP-callable provider (Auth0 MFA API, Duo Web webhook, …).
 
-In-process ceremonies (server-side TOTP, WebAuthn) currently
-require a `Service`-subclass implementation. Reference plugins for
-TOTP + WebAuthn are tracked under internal backlog slug
-`MFA-MODERN-METHODS` (matrix-side mirror at
-`proposals/mfa-modern-methods.md`).
+So operators have three routes: **config-only** for TOTP or for any
+HTTP provider matching the SMS shapes; **code-level** by
+implementing `MfaMethod` for anything else. **WebAuthn is still not
+implemented** — it remains the open item of the "modern methods"
+work (see `pryv/open-pryv.io#78`).
+
+**Discovery** — `service.info().features.mfa = { methods: [...] }`
+lists the active methods, default first (`[]` when MFA is off, and
+the field is absent on cores older than rc.14). Clients should read
+it rather than hardcoding, so a UI never offers a factor the
+operator has no provider for.
 
 - **Compliance role**: authentication strength control (ISO 27001
   A.8.5, HIPAA-Security 164.312(d), GDPR Art.32 multi-aspect, DiGA
-  Annex 1.2.4, PIPEDA Principle 4.7). Which NIST AAL the deployment
-  can claim depends on the configured provider; AAL2 requires TOTP
-  + push or WebAuthn (SMS-only is AAL1 under NIST SP 800-63B Rev 3).
+  Annex 1.2.4, PIPEDA Principle 4.7). Which NIST AAL a deployment
+  can claim depends on the configured method **and on enrolment**:
+  SMS-only is AAL1 under NIST SP 800-63B Rev 3, whereas TOTP is an
+  AAL2-class authenticator. Two qualifications matter before
+  claiming AAL2:
+  - **Enrolment is per-user and voluntary.** With MFA active but
+    not enforced, AAL2 characterises the sessions of *enrolled*
+    users, not the deployment as a whole. Requiring enrolment is
+    left to the implementer — the core does not force it.
+  - **Attempt throttling is the implementer's job.** The failed-
+    attempt limiter is scoped to a single MFA session (5 tries);
+    re-authenticating grants a fresh budget, and there is no
+    per-account limit or configuration knob for one
+    (`pryv/open-pryv.io#128`). A deployment that cannot rate-limit
+    login/`mfa.verify` at the edge should account for that when
+    assessing authenticator strength.
 
 ### `audit-event-stream`
 
