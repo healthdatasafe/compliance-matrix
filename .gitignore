@@ -36,3 +36,6 @@ wab/dist/
 # Vitest
 coverage/
 dist-ghpages/
+
+# The backloop.dev secret is never committed (plan 95).
+backloop.dev.json
