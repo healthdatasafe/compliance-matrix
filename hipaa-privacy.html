@@ -17,7 +17,7 @@
     <h1>HIPAA Privacy Rule <span class="short">HIPAA-Privacy</span></h1>
     <p class="meta">regulation · US · 45 CFR Part 164 Subpart E (HITECH 2013 Omnibus Final Rule) <span class="rg">US</span>
       · layered on Pryv <code>hipaa-privacy</code></p>
-    <div class="covbar"><span class="seg implemented" style="width:8.6%" title="implemented: 3"></span><span class="seg configurable" style="width:2.9%" title="configurable: 1"></span><span class="seg facilitated" style="width:71.4%" title="facilitated: 25"></span><span class="seg documented" style="width:8.6%" title="documented: 3"></span><span class="seg out-of-scope" style="width:8.6%" title="out-of-scope: 3"></span></div>
+    <div class="covbar"><span class="seg implemented" style="width:8.6%" title="implemented: 3"></span><span class="seg configurable" style="width:2.9%" title="configurable: 1"></span><span class="seg facilitated" style="width:71.4%" title="facilitated: 25"></span><span class="seg documented" style="width:11.4%" title="documented: 4"></span><span class="seg out-of-scope" style="width:5.7%" title="out-of-scope: 2"></span></div>
     
 <div class="filters">
   <input type="search" id="q" placeholder="Search requirements…" aria-label="search">
@@ -356,7 +356,7 @@ needs, so by construction the holder cannot see more phi than granted.
 the granularity of &quot;minimum necessary&quot; follows the covered entity's
 stream and permission design.
 " data-planned="0">
-  <h3><code>164.514(d)</code> Minimum necessary use, disclosure and requests <span class="draft">draft</span></h3>
+  <h3><code>164.514(d)</code> Minimum necessary use, disclosure and requests </h3>
   <p class="text">Reasonable efforts must be made to limit PHI to the minimum necessary to
 accomplish the intended purpose.
 </p>
@@ -382,9 +382,13 @@ stream and permission design.
       <details><summary>detail</summary><p>HDS facilitates a stream topology where distinct purposes live on
 distinct subtrees and per-purpose accesses point at the smallest
 necessary subtree, avoiding blanket permissions except for stated
-unrestricted roles.
+unrestricted roles. The same discipline is applied to HDS's own
+operational telemetry, whose contents are evidenced as carrying no PHI
+and no individually identifiable health information: the operator
+channel is a place minimum-necessary can quietly fail, so it is
+evidenced rather than assumed.
 </p></details>
-      <ul class="ev"><li><span class="lock">🔒 hipaa/policies/minimum-necessary</span> <span class="onreq">available on request</span></li></ul>
+      <ul class="ev"><li><span class="lock">🔒 hipaa/policies/minimum-necessary</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/evidence/monitoring-telemetry-no-phi</span> <span class="onreq">available on request</span></li></ul>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -515,7 +519,7 @@ which are recorded against your account.
 </article><article class="req" id="req-164-524" data-coverage="implemented" data-personas="individual covered-entity business-associate" data-text="164.524 right of access by the individual pryv is user-centric: the individual owns their data and, holding a
 personal token, reads everything through the standard api — events,
 streams, accesses with history, audit records and attachments. hds
-operates this access capability end-to-end across both regions.
+operates this access capability end-to-end across every region.
 " data-planned="0">
   <h3><code>164.524</code> Right of access by the individual <span class="draft">draft</span></h3>
   <p class="text">An individual has the right to inspect and obtain a copy of their PHI in a
@@ -538,7 +542,7 @@ not a software latency.
       <p>Pryv is user-centric: the individual owns their data and, holding a
 personal token, reads everything through the standard API — events,
 streams, accesses with history, audit records and attachments. HDS
-operates this access capability end-to-end across both regions.
+operates this access capability end-to-end across every region.
 </p>
       <details><summary>detail</summary><p>Events return as canonical JSON validated against the data-type schemas —
 structured, machine-readable and consumer-friendly — and attachments
@@ -626,7 +630,7 @@ are preserved with version history.
 </article><article class="req" id="req-164-528" data-coverage="facilitated" data-personas="covered-entity individual business-associate" data-text="164.528 accounting of disclosures the audit log is the §164.528 substrate: every api method call attributed
 to an access and version is recorded, and filtering by access category
 lets the covered entity derive the accountable subset. six-year retention
-of the audit log is an hds-operated configuration on both regions.
+of the audit log is an hds-operated configuration on every region.
 " data-planned="0">
   <h3><code>164.528</code> Accounting of disclosures <span class="draft">draft</span></h3>
   <p class="text">An individual has the right to an accounting of disclosures of their PHI
@@ -648,7 +652,7 @@ configuration.
       <p>The audit log is the §164.528 substrate: every API method call attributed
 to an access and version is recorded, and filtering by access category
 lets the covered entity derive the accountable subset. Six-year retention
-of the audit log is an HDS-operated configuration on both regions.
+of the audit log is an HDS-operated configuration on every region.
 </p>
       <details><summary>detail</summary><p>Each accounting field has an audit-log source: date from the row
 timestamp, recipient from the access holder or counterparty, description
@@ -867,7 +871,7 @@ provides access revocation and operates backup and restore should
 mitigation require rolling back data state.
 </p>
       <details><summary>detail</summary><p>HDS exposes access deletion to revoke an offending counterparty and
-operates the backup-restore capability across both regions; the mitigation
+operates the backup-restore capability across every region; the mitigation
 decision and any breach notification follow the covered entity's process.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/procedures/incident-mitigation</span> <span class="onreq">available on request</span></li></ul>
@@ -898,7 +902,7 @@ BAA.
 permits. the §502(b)(2) exceptions are programmatic, and the audit log
 records any broader access for accountability.
 " data-planned="0">
-  <h3><code>164.502(b)</code> Minimum necessary uses, disclosures and requests <span class="draft">draft</span></h3>
+  <h3><code>164.502(b)</code> Minimum necessary uses, disclosures and requests </h3>
   <p class="text">Reasonable efforts must be made to limit PHI to the minimum necessary,
 subject to enumerated exceptions including treatment disclosures,
 disclosures to the individual, authorized disclosures and disclosures
@@ -925,9 +929,11 @@ records any broader access for accountability.
       <details><summary>detail</summary><p>Where an exception applies, the implementer leaves the access scoped per
 that exception's permission; HDS records the broader access so it remains
 accountable. The substantive minimum-necessary policy is the covered
-entity's.
+entity's. On HDS's own side, the operational telemetry it collects as
+operator is evidenced as carrying no PHI and no individually
+identifiable health information.
 </p></details>
-      <ul class="ev"><li><span class="lock">🔒 hipaa/policies/minimum-necessary</span> <span class="onreq">available on request</span></li></ul>
+      <ul class="ev"><li><span class="lock">🔒 hipaa/policies/minimum-necessary</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/evidence/monitoring-telemetry-no-phi</span> <span class="onreq">available on request</span></li></ul>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -1416,7 +1422,7 @@ partner-mediated path (covered entity intake → HDS-as-BA fulfilment).
   </div>
 </article><article class="req" id="req-164-524-c" data-coverage="implemented" data-personas="individual covered-entity business-associate" data-text="164.524(c) right of access — provision of access the hds-operated api delivers events in canonical json validated against
 the data-type schemas — readily producible in the §524(c) sense — across
-both regions. the app-portability self-service web app gives individuals
+every region. the app-portability self-service web app gives individuals
 a one-click zip download of their full phi dump; transformation to pdf
 or print and summary construction remain application-layer work on the
 same source events.
@@ -1440,7 +1446,7 @@ from the same source events.
       <div class="lh">HDS <span class="b implemented">implemented</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>The HDS-operated API delivers events in canonical JSON validated against
 the data-type schemas — readily producible in the §524(c) sense — across
-both regions. The app-portability self-service web app gives individuals
+every region. The app-portability self-service web app gives individuals
 a one-click ZIP download of their full PHI dump; transformation to PDF
 or print and summary construction remain application-layer work on the
 same source events.
@@ -1703,7 +1709,7 @@ re-identification.
   </div>
 </article><article class="req" id="req-164-528-b" data-coverage="facilitated" data-personas="covered-entity individual business-associate" data-text="164.528(b) accounting of disclosures — implementation specifications each §528(b)(2) field has an audit-log source — date, recipient, phi
 description and purpose — as mapped in the parent accounting row. hds
-operates the audit log that supplies these fields across both regions.
+operates the audit log that supplies these fields across every region.
 the audit log is included verbatim in every app-portability backup
 (`audit_logs.json`), so individuals receive the raw §528 source data
 alongside their phi in a single self-service download.
@@ -1727,7 +1733,7 @@ tractable.
       <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>Each §528(b)(2) field has an audit-log source — date, recipient, PHI
 description and purpose — as mapped in the parent accounting row. HDS
-operates the audit log that supplies these fields across both regions.
+operates the audit log that supplies these fields across every region.
 The audit log is included verbatim in every app-portability backup
 (`audit_logs.json`), so individuals receive the raw §528 source data
 alongside their PHI in a single self-service download.
@@ -1861,12 +1867,13 @@ sponsor.
       </div>
     </div>
   </div>
-</article><article class="req" id="req-164-502-j" data-coverage="out-of-scope" data-personas="covered-entity business-associate individual" data-text="164.502(j) disclosures by whistleblowers and workforce-member crime victims whistleblower protection is a legal framing with no software role. the
-audit-trail evidence of a disclosing person's access may be cited in
-subsequent proceedings, but hds provides no control specific to this
-requirement.
+</article><article class="req" id="req-164-502-j" data-coverage="documented" data-personas="covered-entity business-associate individual" data-text="164.502(j) disclosures by whistleblowers and workforce-member crime victims the protection itself is a matter of law and has no software role, but hds
+does carry a control for it: its workforce sanctions policy states that a
+good-faith protected disclosure to a regulatory, oversight or law-enforcement
+authority is not sanctionable conduct, and covers disclosure outside hds as
+well as internal reporting.
 " data-planned="0">
-  <h3><code>164.502(j)</code> Disclosures by whistleblowers and workforce-member crime victims <span class="draft">draft</span></h3>
+  <h3><code>164.502(j)</code> Disclosures by whistleblowers and workforce-member crime victims </h3>
   <p class="text">A workforce member's or business associate's disclosure of PHI to a
 regulatory, oversight or law-enforcement authority is not a violation where
 made in good-faith belief of unlawful conduct and meeting the §502(j)
@@ -1881,16 +1888,22 @@ may be cited in subsequent proceedings.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b out-of-scope">out-of-scope</span> <span class="rg">US</span><span class="rg">CH</span> </div>
-      <p>Whistleblower protection is a legal framing with no software role. The
-audit-trail evidence of a disclosing person's access may be cited in
-subsequent proceedings, but HDS provides no control specific to this
-requirement.
+      <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span> </div>
+      <p>The protection itself is a matter of law and has no software role, but HDS
+does carry a control for it: its workforce sanctions policy states that a
+good-faith protected disclosure to a regulatory, oversight or law-enforcement
+authority is not sanctionable conduct, and covers disclosure outside HDS as
+well as internal reporting.
 </p>
-      <details><summary>detail</summary><p>HDS neither enables nor restricts good-faith whistleblower disclosures
-beyond ordinary access controls; the protection is a matter of law.
+      <details><summary>detail</summary><p>HDS neither enables nor restricts good-faith whistleblower disclosures beyond
+ordinary access controls. What it holds is the organizational half: a written
+non-retaliation position inside the sanctions policy, so a workforce member
+making a §502(j) disclosure is not exposed to the graduated-sanctions process
+for having made it. The audit trail of a disclosing person's access remains
+available as evidence in subsequent proceedings. The implementer still states
+the protection in their own policies; HDS's control binds HDS's own workforce.
 </p></details>
-      
+      <ul class="ev"><li><span class="lock">🔒 hipaa/policies/workforce-sanctions</span> <span class="onreq">available on request</span></li></ul>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>

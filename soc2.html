@@ -212,7 +212,7 @@ software role. hds runs and documents its own competence programme for the
 workforce operating the platform; formal, verified security-awareness
 training is a known gap being matured. the service organization runs its own.
 " data-planned="1">
-  <h3><code>CC1.4</code> CC1.4 — Commitment to competence <span class="draft">draft</span></h3>
+  <h3><code>CC1.4</code> CC1.4 — Commitment to competence </h3>
   <p class="text">The entity demonstrates a commitment to attract, develop, and retain competent
 individuals in alignment with its objectives.
 </p>
@@ -224,7 +224,7 @@ role.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span> <span class="pl medium" title="A standing security-awareness / competence programme is being stood up: the workforce-training procedure and its completion-record template are drafted in the internal pipeline; onboarding delivery and tracked completions are the outstanding remainder. — 🔒 hipaa/procedures/workforce-training">⏳ procedure</span></div>
+      <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span> <span class="pl medium" title="The workforce-training procedure is approved and the completion register holds dated third-party certifications for every workforce member, with expiry reminders wired to the internal tasks board. What remains is the HDS-specific curriculum, the recorded acknowledgements, and letting the monthly cadence run a first full cycle: no per-occurrence execution record has been filed yet. — 🔒 hipaa/procedures/workforce-training">⏳ procedure</span></div>
       <p>Hiring, training and retention of competent staff is an HR programme with no
 software role. HDS runs and documents its own competence programme for the
 workforce operating the platform; formal, verified security-awareness
@@ -323,7 +323,7 @@ sanction policy.
 </article><article class="req" id="req-cc2-1" data-coverage="facilitated" data-personas="service-organization user-entity subservice-organization" data-text="cc2.1 cc2.1 — quality information to support internal control the platform produces two streams of control-relevant information that hds
 operates: the per-user audit log (application-level activity, attributable to
 an access identity) and operational monitoring (security and operational
-kpis across both data-residency options). what to monitor and how to act on
+kpis across every data-residency option). what to monitor and how to act on
 it is each organization's programme; hds supplies the quality data and runs
 its own monitoring over the platform.
 " data-planned="0">
@@ -346,7 +346,7 @@ your programme; Pryv supplies the quality data.
       <p>The platform produces two streams of control-relevant information that HDS
 operates: the per-user audit log (application-level activity, attributable to
 an access identity) and operational monitoring (security and operational
-KPIs across both data-residency options). What to monitor and how to act on
+KPIs across every data-residency option). What to monitor and how to act on
 it is each organization's programme; HDS supplies the quality data and runs
 its own monitoring over the platform.
 </p>
@@ -550,7 +550,7 @@ controls (this matrix, especially the cc6 access and cc6.6/6.7 boundary and
 cryptography rows), so when a confidentiality, integrity or availability risk
 is identified, the control that addresses it is mechanical to locate.
 " data-planned="1">
-  <h3><code>CC3.2</code> CC3.2 — Identification and analysis of risk <span class="draft">draft</span></h3>
+  <h3><code>CC3.2</code> CC3.2 — Identification and analysis of risk </h3>
   <p class="text">The entity identifies risks to the achievement of its objectives across the
 entity and analyzes them as a basis for deciding how they should be managed.
 </p>
@@ -567,7 +567,7 @@ rather than judgemental.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span> <span class="pl high" title="The formal risk analysis is drafted in the internal pipeline (scope inventory and risk table authored, assessment values outstanding) and its completion is the top item on the risk-management treatment register; completing it would change this row's claim. — 🔒 hipaa/risk/risk-analysis">⏳ doc</span></div>
+      <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span> <span class="pl medium" title="The formal risk analysis is conducted, rated and approved for the security objective. Extending it to the non-security trust-services objectives (availability, confidentiality, processing integrity, privacy) is the tracked remainder; the fraud consideration is carried at CC3.3. — 🔒 hipaa/risk/risk-analysis">⏳ doc</span></div>
       <p>A formal risk assessment is each organization's own methodology and findings.
 HDS is honest that its own formal risk assessment is not yet conducted — a
 known gap being matured. What HDS contributes is the inventory of technical
@@ -610,7 +610,7 @@ attributable, and unusual read or write patterns surface. hds operates this
 substrate; the fraud-risk analysis itself (which scenarios matter, what
 thresholds trigger review) is each organization's assessment.
 " data-planned="0">
-  <h3><code>CC3.3</code> CC3.3 — Consideration of the potential for fraud <span class="draft">draft</span></h3>
+  <h3><code>CC3.3</code> CC3.3 — Consideration of the potential for fraud </h3>
   <p class="text">The entity considers the potential for fraud when assessing risks to the
 achievement of its objectives.
 </p>
@@ -926,9 +926,9 @@ mechanisms are in place.
       <details><summary>detail</summary><p>General IT controls are where the platform contribution is strongest: access
 control and authentication are enforced on every request, transmission is
 TLS by default, the audit log is always-on, and inter-core transport is
-mutually authenticated. HDS operates this stack across both data-residency
-options. At-rest encryption of event data is in force at the hosting layer
-in both regions (full-volume encryption, since 2026-06-26; see CC6.7 for
+mutually authenticated. HDS operates this stack across every
+data-residency option. At-rest encryption of event data is in force at the hosting layer
+in every region (full-volume encryption, since 2026-06-26; see CC6.7 for
 the provider-managed-key residual). A partner selects, configures
 and operates these controls; it does not build them.
 </p></details>
@@ -1049,7 +1049,7 @@ downstream policy layer. Each request must present a valid access token whose
 per-stream, per-level permissions are checked before any data is touched;
 credentials and privileged state live on a separately controlled namespace;
 MFA strengthens the login where configured. HDS operates this stack across
-both data-residency options and documents its access-control and
+every data-residency option and documents its access-control and
 authentication policy. The implementer configures which grants its
 application mints.
 </p></details>
@@ -1394,7 +1394,7 @@ hds-shipped intermediary that could log or cache), and movement is restricted
 by the permission model — a credential only moves the data its scope permits.
 operator secrets at rest and bootstrap bundles for core-to-core movement are
 encrypted with authenticated encryption. bulk event data is encrypted at
-rest at the hosting/storage layer in both regions (since 2026-06-26),
+rest at the hosting/storage layer in every region (since 2026-06-26),
 with provider-managed keys as the documented residual.
 " data-planned="1">
   <h3><code>CC6.7</code> CC6.7 — Restriction and protection of information in transmission and movement <span class="draft">draft</span></h3>
@@ -1421,7 +1421,7 @@ HDS-shipped intermediary that could log or cache), and movement is restricted
 by the permission model — a credential only moves the data its scope permits.
 Operator secrets at rest and bootstrap bundles for core-to-core movement are
 encrypted with authenticated encryption. Bulk event data is encrypted at
-rest at the hosting/storage layer in both regions (since 2026-06-26),
+rest at the hosting/storage layer in every region (since 2026-06-26),
 with provider-managed keys as the documented residual.
 </p>
       <details><summary>detail</summary><p>The transmission half is default-on TLS with no plaintext path; the movement
@@ -1591,7 +1591,7 @@ downstream.
     </div>
   </div>
 </article><article class="req" id="req-cc7-2" data-coverage="facilitated" data-personas="service-organization user-entity subservice-organization" data-text="cc7.2 cc7.2 — monitoring for anomalies indicative of security events hds's operational monitoring gives system-level anomaly signal (latency,
-error rate, request volume) across both data-residency options, wired end to
+error rate, request volume) across every data-residency option, wired end to
 end with alerting before any component is treated as in production; the
 per-user audit log gives application-level activity attributable to an access.
 hds operates this monitoring; deciding which anomalies are security events is
@@ -1615,7 +1615,7 @@ extension you build; the raw signal is shipped.
     <div class="layer hds">
       <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>HDS's operational monitoring gives system-level anomaly signal (latency,
-error rate, request volume) across both data-residency options, wired end to
+error rate, request volume) across every data-residency option, wired end to
 end with alerting before any component is treated as in production; the
 per-user audit log gives application-level activity attributable to an access.
 HDS operates this monitoring; deciding which anomalies are security events is
@@ -1712,7 +1712,7 @@ operator — roles, escalation, communications — and documents it; that
 programme feeds the notification obligations a partner carries. the partner
 defines and rehearses its own programme.
 " data-planned="1">
-  <h3><code>CC7.4</code> CC7.4 — Incident response program <span class="draft">draft</span></h3>
+  <h3><code>CC7.4</code> CC7.4 — Incident response program </h3>
   <p class="text">The entity responds to identified security incidents through a defined program
 to understand, contain, remediate, and communicate them.
 </p>
@@ -1752,7 +1752,7 @@ enters HDS's procedure as a provider notification. A partner authors and
 rehearses its own incident-response programme over the same technical
 substrate.
 </p></details>
-      <ul class="ev"><li><span class="lock">🔒 hipaa/procedures/security-incident-response</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/procedures/incident-mitigation</span> <span class="onreq">available on request</span></li></ul>
+      <ul class="ev"><li><span class="lock">🔒 hipaa/procedures/security-incident-response</span> <span class="onreq">available on request</span></li></ul>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -1783,7 +1783,7 @@ fails. hds documents the recovery objectives and runbook it operates; the
 recovery-objective targets and drill cadence for an organization's own service
 are its own.
 " data-planned="0">
-  <h3><code>CC7.5</code> CC7.5 — Recovery from identified security incidents <span class="draft">draft</span></h3>
+  <h3><code>CC7.5</code> CC7.5 — Recovery from identified security incidents </h3>
   <p class="text">The entity identifies, develops, and implements activities to recover from
 identified security incidents.
 </p>
@@ -1813,7 +1813,7 @@ targets; verified, regularly tested recovery drilling is being matured (see
 CC4.1 evaluation). A partner sets its own recovery-objective targets and drill
 cadence over the same primitives.
 </p></details>
-      <ul class="ev"><li><span class="lock">🔒 hipaa/procedures/disaster-recovery-plan</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/procedures/incident-mitigation</span> <span class="onreq">available on request</span></li></ul>
+      <ul class="ev"><li><span class="lock">🔒 hipaa/procedures/disaster-recovery-plan</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/procedures/security-incident-response</span> <span class="onreq">available on request</span></li></ul>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -2090,7 +2090,7 @@ cooling, fire suppression) are inherited from the certified hosting
 provider per region. automated, regularly verified backups are still being
 formalised, so this is facilitated rather than fully implemented.
 " data-planned="1">
-  <h3><code>A1.2</code> A1.2 — Environmental protections, backup, and recovery infrastructure <span class="draft">draft</span></h3>
+  <h3><code>A1.2</code> A1.2 — Environmental protections, backup, and recovery infrastructure </h3>
   <p class="text">The entity authorizes, designs, implements, operates, maintains, and
 monitors environmental protections, software, data back-up processes, and
 recovery infrastructure to meet its objectives.
@@ -2108,7 +2108,7 @@ yours.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> <span class="pl medium" title="Automated, restore-verified backups are the tracked remediation: the backup-plan procedure and a backup-run record template are in the internal pipeline, the automated-tooling defect is on the risk-management treatment register, and the first verified restore-tested run is outstanding. — 🔒 hipaa/procedures/data-backup-plan">⏳ procedure</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> <span class="pl medium" title="The scheduled backup cycle is running on both regional cores as of 2026-07-30, producing encrypted off-host in-region copies, and an archive has been retrieved and decrypted with the off-host key to show the copies are usable. The tracked remainder is the per-region production restore drill at non-trivial scale and confirmation of the storage lifecycle backstop. — 🔒 hipaa/procedures/data-backup-plan">⏳ procedure</span></div>
       <p>The platform ships per-user backup and restore and a replicated multi-core
 topology, and HDS operates these on a schedule with cluster-replicated TLS
 so a surviving core stays user-facing. Environmental protections (power,
@@ -2154,7 +2154,7 @@ and hds documents the intended recovery-test cadence. regular, verified
 execution of the drill is a known gap being matured, so hds facilitates
 this rather than evidencing a fully operated test programme.
 " data-planned="1">
-  <h3><code>A1.3</code> A1.3 — Recovery plan testing <span class="draft">draft</span></h3>
+  <h3><code>A1.3</code> A1.3 — Recovery plan testing </h3>
   <p class="text">The entity tests recovery plan procedures supporting system recovery to
 meet its objectives.
 </p>
@@ -2168,7 +2168,7 @@ feeding gaps back into the plan, is your operating procedure.
 </p>
     </div>
     <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> <span class="pl medium" title="The contingency-test procedure and its execution-record template are drafted in the internal pipeline; the first verified, recorded drill with retained evidence is the tracked remainder. — 🔒 hipaa/procedures/contingency-plan-testing">⏳ procedure</span></div>
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> <span class="pl medium" title="The contingency-test procedure is approved and a first restore rehearsal was performed on 2026-07-29 with a retained execution record. It covered a single account, not a full per-region restore, so recovery at production scale is the tracked remainder. — 🔒 hipaa/procedures/contingency-plan-testing">⏳ procedure</span></div>
       <p>The platform provides a testable recovery path (restore a user from a
 backup into a clean core; fail a core and confirm a peer keeps serving),
 and HDS documents the intended recovery-test cadence. Regular, verified
