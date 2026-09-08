@@ -482,6 +482,7 @@ requirements:
     The entity identifies risks to the achievement of its objectives across the
     entity and analyzes them as a basis for deciding how they should be managed.
   pryv_ref: CC3.2
+  draft: false
   hds:
     coverage: documented
     effort_saved: medium
@@ -532,6 +533,7 @@ requirements:
     The entity considers the potential for fraud when assessing risks to the
     achievement of its objectives.
   pryv_ref: CC3.3
+  draft: false
   hds:
     coverage: facilitated
     effort_saved: low
@@ -1352,6 +1354,7 @@ requirements:
     The entity responds to identified security incidents through a defined program
     to understand, contain, remediate, and communicate them.
   pryv_ref: CC7.4
+  draft: false
   hds:
     coverage: facilitated
     effort_saved: medium
@@ -1400,6 +1403,7 @@ requirements:
     The entity identifies, develops, and implements activities to recover from
     identified security incidents.
   pryv_ref: CC7.5
+  draft: false
   hds:
     coverage: facilitated
     effort_saved: medium
@@ -1647,6 +1651,7 @@ requirements:
     monitors environmental protections, software, data back-up processes, and
     recovery infrastructure to meet its objectives.
   pryv_ref: A1.2
+  draft: false
   hds:
     coverage: facilitated
     effort_saved: high
@@ -1703,6 +1708,7 @@ requirements:
     The entity tests recovery plan procedures supporting system recovery to
     meet its objectives.
   pryv_ref: A1.3
+  draft: false
   hds:
     coverage: facilitated
     effort_saved: low

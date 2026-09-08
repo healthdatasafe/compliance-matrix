@@ -642,6 +642,7 @@ requirements:
       Right to obtain erasure without undue delay where one of the enumerated
       conditions applies.
     pryv_ref: Art.17
+    draft: false
     hds:
       coverage: configurable
       effort_saved: medium

@@ -137,6 +137,7 @@ requirements:
     Implement policies and procedures to prevent, detect, contain, and correct
     security violations.
   pryv_ref: 164.308(a)(1)(i)
+  draft: false
   hds:
     coverage: documented
     effort_saved: medium
@@ -188,6 +189,7 @@ requirements:
     vulnerabilities to the confidentiality, integrity, and availability of
     electronic protected health information held by the covered entity or
     business associate.
+  draft: false
   hds:
     coverage: implemented
     effort_saved: low
@@ -231,6 +233,7 @@ requirements:
   text: |
     Implement security measures sufficient to reduce risks and vulnerabilities
     to a reasonable and appropriate level to comply with §164.306(a).
+  draft: false
   hds:
     coverage: implemented
     effort_saved: low
@@ -330,6 +333,7 @@ requirements:
     Identify the security official who is responsible for developing and
     implementing the policies and procedures required by this subpart.
   pryv_ref: 164.308(a)(2)
+  draft: false
   hds:
     coverage: implemented
     effort_saved: low
@@ -449,6 +453,7 @@ requirements:
     a user's right of access, based on the entity's access authorization
     policies.
   pryv_ref: 164.308(a)(4)(ii)(C)
+  draft: false
   hds:
     coverage: implemented
     effort_saved: high
@@ -710,6 +715,7 @@ requirements:
     Establish and implement procedures to create and maintain retrievable exact
     copies of ePHI.
   pryv_ref: 164.308(a)(7)(ii)(A)
+  draft: false
   hds:
     coverage: facilitated
     effort_saved: high
@@ -844,6 +850,7 @@ requirements:
   text: |
     Implement procedures for periodic testing and revision of contingency plans.
   pryv_ref: 164.308(a)(7)(ii)(D)
+  draft: false
   hds:
     coverage: documented
     effort_saved: low
@@ -950,6 +957,7 @@ requirements:
     information systems and the facilities in which they are housed, while
     ensuring that properly authorized access is allowed.
   pryv_ref: "164.310"
+  draft: false
   hds:
     coverage: facilitated
     effort_saved: medium
@@ -1001,6 +1009,7 @@ requirements:
     information systems and the facilities housing them, while ensuring properly
     authorized access is allowed.
   pryv_ref: "164.310(a)(1)"
+  draft: false
   hds:
     coverage: facilitated
     effort_saved: medium
@@ -1046,6 +1055,7 @@ requirements:
     performed, how they are to be performed, and the physical attributes of the
     surroundings of any workstation or class of workstation that can access ePHI.
   pryv_ref: "164.310(b)"
+  draft: false
   hds:
     coverage: documented
     effort_saved: low
@@ -1094,6 +1104,7 @@ requirements:
     Implement physical safeguards for all workstations that access ePHI, to
     restrict access to authorized users.
   pryv_ref: "164.310(c)"
+  draft: false
   hds:
     coverage: documented
     effort_saved: low
@@ -1146,6 +1157,7 @@ requirements:
     hardware and electronic media containing ePHI into and out of a facility, and
     the movement of these items within the facility.
   pryv_ref: "164.310(d)(1)"
+  draft: false
   hds:
     coverage: facilitated
     effort_saved: medium
@@ -1460,6 +1472,7 @@ requirements:
     Implement hardware, software, and/or procedural mechanisms that record and
     examine activity in information systems containing or using ePHI.
   pryv_ref: 164.312(b)
+  draft: false
   hds:
     coverage: implemented
     effort_saved: high
@@ -1889,6 +1902,7 @@ requirements:
     that create, receive, maintain, or transmit ePHI on its behalf agree, via a
     written contract, to comply with the applicable Security Rule requirements.
   pryv_ref: 164.314(a)(2)(ii)(B)
+  draft: false
   hds:
     coverage: facilitated
     effort_saved: medium

@@ -291,6 +291,7 @@ requirements:
       Reasonable efforts must be made to limit PHI to the minimum necessary to
       accomplish the intended purpose.
     pryv_ref: 164.514(d)
+    draft: false
     hds:
       coverage: facilitated
       effort_saved: high
@@ -684,6 +685,7 @@ requirements:
       disclosures to the individual, authorized disclosures and disclosures
       required by law.
     pryv_ref: 164.502(b)
+    draft: false
     hds:
       coverage: facilitated
       effort_saved: high
@@ -1374,6 +1376,7 @@ requirements:
       made in good-faith belief of unlawful conduct and meeting the §502(j)
       conditions.
     pryv_ref: 164.502(j)
+    draft: false
     hds:
       coverage: documented
       effort_saved: low
