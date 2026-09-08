@@ -13,6 +13,19 @@ regions: [us]
 changelog:
   - date: "2026-09-08"
     change: >
+      Corrects the entry above it, which recorded four edits that a failed
+      script never wrote to the file: the 164.312(b) citation removal, the
+      164.308(a)(7)(ii)(A) backup chip and detail, and the 164.308(a)(7)(ii)(D)
+      chip. All four are now applied and verified by reading the parsed file
+      back. Separately: shared/registers/data-residency-regions cited on
+      164.308(a)(1)(i), the requirement it declares under refs_satisfy, and
+      count-bound residency phrasing ("both regions", "both cores", "both
+      data-residency options") replaced with number-agnostic wording throughout
+      the requirements, so a third region cannot make the prose false. The
+      changelog is left as written: it is history. Applies compliance-internal
+      instruction 2026-08-26-security-and-soc2-approvals, items 1 and 2.
+  - date: "2026-09-08"
+    change: >
       164.312(b): hipaa/procedures/information-system-activity-review removed
       from the evidence citations. That document released the code on
       2026-07-30 and now declares it under refs_relate; hipaa/policies/audit-controls
@@ -153,6 +166,7 @@ requirements:
       internal_docs:
         - hipaa/policies/security-management-process
         - shared/registers/technology-stack
+        - shared/registers/data-residency-regions
   implementer:
     - persona: covered-entity
       coverage: documented
@@ -574,7 +588,7 @@ requirements:
     overview: |
       Authentication and login-failure events are captured in the per-user
       audit log, and HDS's operational monitoring aggregates rate and anomaly
-      signals across both data-residency options. Discrepancy-reporting
+      signals across every data-residency option. Discrepancy-reporting
       thresholds and the response cadence are operator-side procedure.
     detail: |
       HDS surfaces login and authentication-failure events through the audit log
@@ -709,8 +723,11 @@ requirements:
     detail: |
       HDS runs the backup primitive on a schedule and documents the plan
       (frequency, location, encryption-at-rest applied at the storage boundary).
-      Verified, automatically tested backups are a known gap being matured; the
-      backup plan as it stands is cited as an internal document. Partners
+      The scheduled cycle produces encrypted, off-host, in-region copies on
+      every regional core, and an archive has been retrieved and decrypted with
+      the off-host key to demonstrate that the copies are usable rather than
+      merely produced. What is not yet demonstrated is restore at production
+      scale per region; that drill is the remaining gap. Partners
       operating their own deployments define their own schedule.
     regions: [us, ch]
     evidence:
@@ -725,9 +742,12 @@ requirements:
           hybrid encryption of every archive (a per-run AES-256-GCM key wrapped
           to a per-region RSA-4096 public key, the private key held off-host);
           least-privilege per-host access; and defined targets (RPO 24h, RTO 72h,
-          retention 7 daily / 4 weekly / 12 monthly). Outstanding before this is
-          fully implemented: the scheduled cycle, the success/absence alert, and
-          the first verified restore-tested run.
+          retention 7 daily / 4 weekly / 12 monthly). The scheduled cycle is
+          running on all regional cores as of 2026-07-30, and retrievability
+          was demonstrated by fetching an archive off-host and decrypting it
+          with the off-host private key. Outstanding before this is fully
+          implemented: the per-region production restore drill at non-trivial
+          scale, and confirmation of the storage lifecycle backstop.
         impact: medium
         internal_doc: hipaa/procedures/data-backup-plan
   implementer:
@@ -848,10 +868,11 @@ requirements:
     planned:
       - kind: procedure
         summary: >-
-          The contingency-test procedure and its execution-record template are
-          drafted in the internal pipeline; the first verified, recorded drill
-          (backup restore + DR walkthrough, RTO/RPO to be set from results) is
-          the tracked remainder.
+          The contingency-test procedure is approved and the first restore
+          rehearsal was performed on 2026-07-29 and filed as an execution
+          record. It covered a single account, not a full per-region restore,
+          so the tracked remainder is recovery at production scale in each
+          region.
         impact: medium
         internal_doc: hipaa/procedures/contingency-plan-testing
   implementer:
@@ -1144,7 +1165,7 @@ requirements:
       contract alone. At the application
       tier, open-pryv.io's per-user data model means an individual subject's ePHI
       can be exported and moved as a discrete unit. Production volumes are
-      encrypted at rest (hosting-layer full-volume encryption, both regions,
+      encrypted at rest (hosting-layer full-volume encryption, every region,
       since 2026-06-26), so decommissioned server media are protected by
       construction; a per-subject export leaving the platform is a fresh
       plaintext artefact, and encrypting it in transport/storage remains the
@@ -1462,7 +1483,6 @@ requirements:
     evidence:
       internal_docs:
         - hipaa/policies/audit-controls
-        - hipaa/procedures/information-system-activity-review
   implementer:
     - persona: covered-entity
       coverage: documented
@@ -1712,7 +1732,7 @@ requirements:
       requiring an implementer decision to enable it. HDS operates the certificate
       lifecycle. The implementer documents that transmission encryption is in force
       and, separately, assesses at-rest encryption under §164.312(a)(2)(iv), which
-      is implemented in both regions (no platform gap).
+      is implemented in every region (no platform gap).
     technical: |
       TLS encryption default-on for all ePHI transmission; certificate lifecycle
       operated by HDS.

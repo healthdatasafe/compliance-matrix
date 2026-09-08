@@ -11,6 +11,14 @@ layered_on_pryv: hipaa-privacy
 regions: [us]
 
 changelog:
+  - date: "2026-08-26"
+    change: >
+      The HDS-layer privacy policies and procedures cited by these rows reached
+      approved v1.0.0 on 2026-08-26 and 2026-08-28, signed by the Privacy
+      Official as reviewer and approver. Recorded so the matrix's own history
+      shows when the evidence behind these citations became signed. No coverage
+      tier moves on approval alone, and none moved here. Count-bound residency
+      phrasing replaced with number-agnostic wording on 2026-09-08.
   - date: "2026-09-08"
     change: >
       164.502(b) / 164.514(d): cite hipaa/evidence/monitoring-telemetry-no-phi,
@@ -410,7 +418,7 @@ requirements:
         Pryv is user-centric: the individual owns their data and, holding a
         personal token, reads everything through the standard API — events,
         streams, accesses with history, audit records and attachments. HDS
-        operates this access capability end-to-end across both regions.
+        operates this access capability end-to-end across every region.
       detail: |
         Events return as canonical JSON validated against the data-type schemas —
         structured, machine-readable and consumer-friendly — and attachments
@@ -492,7 +500,7 @@ requirements:
         The audit log is the §164.528 substrate: every API method call attributed
         to an access and version is recorded, and filtering by access category
         lets the covered entity derive the accountable subset. Six-year retention
-        of the audit log is an HDS-operated configuration on both regions.
+        of the audit log is an HDS-operated configuration on every region.
       detail: |
         Each accounting field has an audit-log source: date from the row
         timestamp, recipient from the access holder or counterparty, description
@@ -648,7 +656,7 @@ requirements:
         mitigation require rolling back data state.
       detail: |
         HDS exposes access deletion to revoke an offending counterparty and
-        operates the backup-restore capability across both regions; the mitigation
+        operates the backup-restore capability across every region; the mitigation
         decision and any breach notification follow the covered entity's process.
       evidence:
         internal_docs:
@@ -1054,7 +1062,7 @@ requirements:
       overview: |
         The HDS-operated API delivers events in canonical JSON validated against
         the data-type schemas — readily producible in the §524(c) sense — across
-        both regions. The app-portability self-service web app gives individuals
+        every region. The app-portability self-service web app gives individuals
         a one-click ZIP download of their full PHI dump; transformation to PDF
         or print and summary construction remain application-layer work on the
         same source events.
@@ -1255,7 +1263,7 @@ requirements:
       overview: |
         Each §528(b)(2) field has an audit-log source — date, recipient, PHI
         description and purpose — as mapped in the parent accounting row. HDS
-        operates the audit log that supplies these fields across both regions.
+        operates the audit log that supplies these fields across every region.
         The audit log is included verbatim in every app-portability backup
         (`audit_logs.json`), so individuals receive the raw §528 source data
         alongside their PHI in a single self-service download.

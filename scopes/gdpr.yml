@@ -1173,7 +1173,7 @@ requirements:
       overview: |
         HDS implements transport encryption (TLS), encryption at rest, technical
         access control and per-user restore, and operates monitoring and alerting as
-        operator. Encryption at rest is now in place in both regions via hosting-layer
+        operator. Encryption at rest is now in place in every region via hosting-layer
         volume encryption (Exoscale default on ch1; AWS EBS on us1, AES-256) —
         provider-managed keys, verified 2026-06-26. Pseudonymisation is strengthened
         on two fronts: cross-region PlatformDB identifiers are HMAC-pseudonymised

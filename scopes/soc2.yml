@@ -13,6 +13,19 @@ regions: [us, ch]
 changelog:
   - date: "2026-09-08"
     change: >
+      CC7.4 and CC7.5 re-pointed after incident-mitigation and
+      security-incident-response were deduplicated so each owns its facts.
+      incident-mitigation now keeps only the 164.530(f) harm-reduction steps,
+      which is not what either row is about: CC7.4 concerns incident response
+      and CC7.5 recovery. CC7.4 drops the redundant citation; CC7.5 cites
+      security-incident-response in its place. Count-bound residency phrasing
+      replaced with number-agnostic wording. HDS-layer documents behind these
+      rows reached approved v1.0.0 on 2026-08-26; no coverage tier moves on
+      approval alone. Applies compliance-internal instruction
+      2026-08-26-security-and-soc2-approvals, items 1 to 4. draft cleared on
+      the rows walked.
+  - date: "2026-09-08"
+    change: >
       A1.2 and A1.3: chips refreshed against what shipped. The backup cycle is
       running on both regional cores since 2026-07-30 with retrievability
       demonstrated by an off-host decrypt, and a first restore rehearsal ran
@@ -314,7 +327,7 @@ requirements:
       The platform produces two streams of control-relevant information that HDS
       operates: the per-user audit log (application-level activity, attributable to
       an access identity) and operational monitoring (security and operational
-      KPIs across both data-residency options). What to monitor and how to act on
+      KPIs across every data-residency option). What to monitor and how to act on
       it is each organization's programme; HDS supplies the quality data and runs
       its own monitoring over the platform.
     detail: |
@@ -745,15 +758,15 @@ requirements:
       General IT controls are where the platform contribution is strongest: access
       control and authentication are enforced on every request, transmission is
       TLS by default, the audit log is always-on, and inter-core transport is
-      mutually authenticated. HDS operates this stack across both data-residency
-      options. At-rest encryption of event data is in force at the hosting layer
-      in both regions (full-volume encryption, since 2026-06-26; see CC6.7 for
+      mutually authenticated. HDS operates this stack across every
+      data-residency option. At-rest encryption of event data is in force at the hosting layer
+      in every region (full-volume encryption, since 2026-06-26; see CC6.7 for
       the provider-managed-key residual). A partner selects, configures
       and operates these controls; it does not build them.
     technical: |
       Logical access and authentication enforced per request; TLS in transit;
       always-on per-user audit log; mutually authenticated inter-core transport;
-      hosting-layer full-volume at-rest encryption in both regions.
+      hosting-layer full-volume at-rest encryption in every region.
     regions: [us, ch]
     evidence:
       internal_docs:
@@ -840,7 +853,7 @@ requirements:
       per-stream, per-level permissions are checked before any data is touched;
       credentials and privileged state live on a separately controlled namespace;
       MFA strengthens the login where configured. HDS operates this stack across
-      both data-residency options and documents its access-control and
+      every data-residency option and documents its access-control and
       authentication policy. The implementer configures which grants its
       application mints.
     technical: |
@@ -1115,7 +1128,7 @@ requirements:
       by the permission model — a credential only moves the data its scope permits.
       Operator secrets at rest and bootstrap bundles for core-to-core movement are
       encrypted with authenticated encryption. Bulk event data is encrypted at
-      rest at the hosting/storage layer in both regions (since 2026-06-26),
+      rest at the hosting/storage layer in every region (since 2026-06-26),
       with provider-managed keys as the documented residual.
     detail: |
       The transmission half is default-on TLS with no plaintext path; the movement
@@ -1263,7 +1276,7 @@ requirements:
     facilitation_mode: evidence
     overview: |
       HDS's operational monitoring gives system-level anomaly signal (latency,
-      error rate, request volume) across both data-residency options, wired end to
+      error rate, request volume) across every data-residency option, wired end to
       end with alerting before any component is treated as in production; the
       per-user audit log gives application-level activity attributable to an access.
       HDS operates this monitoring; deciding which anomalies are security events is
@@ -1339,7 +1352,6 @@ requirements:
     The entity responds to identified security incidents through a defined program
     to understand, contain, remediate, and communicate them.
   pryv_ref: CC7.4
-  draft: true
   hds:
     coverage: facilitated
     effort_saved: medium
@@ -1367,7 +1379,6 @@ requirements:
     evidence:
       internal_docs:
         - hipaa/procedures/security-incident-response
-        - hipaa/procedures/incident-mitigation
   implementer:
     - persona: service-organization
       coverage: documented
@@ -1389,7 +1400,6 @@ requirements:
     The entity identifies, develops, and implements activities to recover from
     identified security incidents.
   pryv_ref: CC7.5
-  draft: true
   hds:
     coverage: facilitated
     effort_saved: medium
@@ -1415,7 +1425,7 @@ requirements:
     evidence:
       internal_docs:
         - hipaa/procedures/disaster-recovery-plan
-        - hipaa/procedures/incident-mitigation
+        - hipaa/procedures/security-incident-response
   implementer:
     - persona: service-organization
       coverage: documented

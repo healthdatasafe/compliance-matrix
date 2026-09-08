@@ -11,6 +11,14 @@ layered_on_pryv: hipaa-breach
 regions: [us]
 
 changelog:
+  - date: "2026-08-26"
+    change: >
+      The HDS-layer breach-notification procedures cited by these rows reached
+      approved v1.0.0 on 2026-08-26, signed by the Privacy Official as reviewer
+      and approver. Recorded so the matrix's own history shows when the
+      evidence behind these citations became signed. No coverage tier moves on
+      approval alone. Count-bound residency phrasing replaced with
+      number-agnostic wording on 2026-09-08.
   - date: "2026-07-28"
     change: >
       164.400/164.402/164.402(2): at-rest encryption shipped 2026-06-26 (hosting-layer
@@ -182,7 +190,7 @@ requirements:
       overview: |
         The safe harbor exempts properly secured PHI from breach notification. HDS
         enforces TLS in transit (the FIPS-validated in-transit standards), and
-        ePHI is encrypted at rest in both regions by hosting-layer volume
+        ePHI is encrypted at rest in every region by hosting-layer volume
         encryption meeting NIST SP 800-111 full-volume encryption (verified
         2026-06-26). The safe harbor is therefore available for lost, stolen or
         decommissioned media — the volume keys are not stored with the media. It
