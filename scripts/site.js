@@ -14,7 +14,7 @@ import {
   ROOT, loadYaml, parseFrontmatter,
   vendorScopeFiles, hdsScopeFiles, templateFiles,
 } from './lib/load.js';
-import { esc, badge, regions, COVERAGES, requirementCard } from './lib/render.js';
+import { esc, badge, regions, COVERAGES, requirementCard, refAnchorId } from './lib/render.js';
 
 const OUT = path.join(ROOT, 'dist', 'site');
 fs.rmSync(OUT, { recursive: true, force: true });
@@ -31,6 +31,98 @@ for (const f of await vendorScopeFiles()) {
   pryvByScope.set(s.id, m);
 }
 const scopes = (await hdsScopeFiles()).map((f) => loadYaml(f));
+const byId = new Map(scopes.map((s) => [s.id, s]));
+
+// Families group several scopes into one presented regulation (HIPAA's three
+// rules). Presentation only: the YAML files, refs, ref/ redirect stubs and
+// official-refs.yml keys are untouched.
+const familiesFile = path.join(ROOT, 'families.yml');
+const FAMILIES = (fs.existsSync(familiesFile) ? loadYaml(familiesFile).families : {}) || {};
+
+const profilesFile = path.join(ROOT, 'profiles.yml');
+const PROFILES = fs.existsSync(profilesFile) ? loadYaml(profilesFile) : null;
+
+/**
+ * One entry per regulation as the visitor sees it: either a family of scopes
+ * or a standalone scope. `members` is always an array, so downstream code
+ * never special-cases the grouped one.
+ */
+const groups = [];
+const seen = new Set();
+for (const s of scopes) {
+  if (s.family && FAMILIES[s.family]) {
+    if (seen.has(s.family)) continue;
+    seen.add(s.family);
+    const fam = FAMILIES[s.family];
+    const members = (fam.order || [])
+      .map((id) => byId.get(id))
+      .filter(Boolean)
+      .concat(scopes.filter((x) => x.family === s.family && !(fam.order || []).includes(x.id)));
+    groups.push({
+      key: s.family,
+      page: `${s.family}.html`,
+      title: fam.title,
+      short: fam.short || fam.title,
+      long: fam.long,
+      jurisdiction: fam.jurisdiction || members[0]?.jurisdiction,
+      blurb: fam.blurb,
+      canonical_url: fam.canonical_url,
+      members,
+      isFamily: true,
+    });
+  } else {
+    groups.push({
+      key: s.id,
+      page: `${s.id}.html`,
+      title: s.title,
+      short: s.short || s.id,
+      jurisdiction: s.jurisdiction,
+      canonical_url: s.canonical_url,
+      members: [s],
+      isFamily: false,
+    });
+  }
+}
+
+const allReqs = (g) => g.members.flatMap((s) => s.requirements || []);
+const regionsOf = (g) => [...new Set(g.members.flatMap((s) => s.regions || []))];
+
+/**
+ * The group's posture. A family has one posture per member scope; they are
+ * shown separately rather than averaged, because averaging a business
+ * associate's Security-Rule position with its Privacy-Rule position produces a
+ * number that describes nothing.
+ */
+const posturesOf = (g) => g.members
+  .map((s) => ({ scope: s, posture: s.hds_posture }))
+  .filter((x) => x.posture);
+
+const ASSURANCE_RANK = {
+  none: 0,
+  'self-assessed': 1,
+  'independent-readiness-review': 2,
+  'third-party-attested': 3,
+  certified: 4,
+};
+/** Weakest assurance across the group: a family is only as assured as its softest part. */
+function weakestAssurance (g) {
+  const levels = posturesOf(g).map((x) => x.posture.external_assurance?.level).filter(Boolean);
+  if (!levels.length) return null;
+  return levels.sort((a, b) => ASSURANCE_RANK[a] - ASSURANCE_RANK[b])[0];
+}
+/** Approved-documentation backing, summed across a family's member scopes. */
+function backing (g) {
+  return posturesOf(g).reduce((acc, { posture }) => {
+    const b = posture.evidence_backing || {};
+    acc.rows_total += b.rows_total || 0;
+    acc.rows_evidenced += b.rows_evidenced || 0;
+    acc.rows_approved += b.rows_approved || 0;
+    return acc;
+  }, { rows_total: 0, rows_evidenced: 0, rows_approved: 0 });
+}
+
+const allGaps = (g) => posturesOf(g).flatMap((x) =>
+  (x.posture.known_gaps || []).map((k) => ({ ...k, scopeId: x.scope.id })));
 const templates = [];
 for (const f of await templateFiles()) {
   const { data } = parseFrontmatter(f);
@@ -50,7 +142,8 @@ const layout = (title, body, { active } = {}) => `<!doctype html>
 <header class="top">
   <a class="brand" href="index.html">HDS <b>compliance-matrix</b></a>
   <nav>
-    <a href="index.html"${active === 'home' ? ' class="on"' : ''}>Overview</a>
+    <a href="index.html"${active === 'home' ? ' class="on"' : ''}>HDS standing</a>
+    <a href="implementer.html"${active === 'implementer' ? ' class="on"' : ''}>For implementers</a>
     <a href="templates.html"${active === 'templates' ? ' class="on"' : ''}>Templates</a>
     <a href="https://github.com/healthdatasafe/compliance-matrix">Source</a>
   </nav>
@@ -74,23 +167,350 @@ const covBar = (reqs) => {
   return `<div class="covbar">${seg}</div>`;
 };
 
-// ---- index ----
-const scopeCards = scopes.map((s) => {
-  const reqs = s.requirements || [];
-  return `<a class="scopecard" href="${esc(s.id)}.html">
-    <h3>${esc(s.title)} <span class="short">${esc(s.short || s.id)}</span></h3>
-    <p class="meta">${esc(s.type)} · ${esc(s.jurisdiction)} ${regions(s.regions)} · ${reqs.length} requirements</p>
+// ---- shared bits ----
+const assurancePill = (lvl) => {
+  const label = {
+    none: 'self-assessed, no external audit',
+    'self-assessed': 'self-assessed',
+    'independent-readiness-review': 'independent readiness review',
+    'third-party-attested': 'third-party attested',
+    certified: 'certified',
+  }[lvl] || 'not stated';
+  return `<span class="as as-${esc(lvl || 'unknown')}">${esc(label)}</span>`;
+};
+
+const ROLE_LABEL = {
+  controller: 'Controller',
+  processor: 'Processor',
+  'joint-controller': 'Joint controller',
+  'covered-entity': 'Covered entity',
+  'business-associate': 'Business associate',
+  'service-organization': 'Service organisation',
+  'not-applicable': 'Does not apply',
+};
+const ARRANGEMENT_LABEL = {
+  'partner-integration': 'Partner builds on HDS',
+  'hds-operated-service': 'HDS operates the service',
+};
+
+const roleRows = (posture) => (posture.roles || []).map((r) => `
+  <div class="rolerow">
+    <span class="arr">${esc(ARRANGEMENT_LABEL[r.arrangement] || r.arrangement)}</span>
+    <span class="rl rl-${esc(r.role)}">${esc(ROLE_LABEL[r.role] || r.role)}</span>
+    <p>${esc(r.applies_to)}</p>
+  </div>`).join('');
+
+// ---- index: how HDS itself stands ----
+// Editorial order is deliberate: what HDS has in place leads, the assurance
+// note sits at the foot of each card, and the gaps stay one click away on the
+// same page. Nothing is removed; the strongest true thing goes first.
+const totals = groups.reduce((acc, g) => {
+  const b = backing(g);
+  acc.total += b.rows_total; acc.evidenced += b.rows_evidenced; acc.approved += b.rows_approved;
+  return acc;
+}, { total: 0, evidenced: 0, approved: 0 });
+
+const postureCards = groups.map((g) => {
+  const b = backing(g);
+  const gaps = allGaps(g);
+  const lvl = weakestAssurance(g);
+  const ps = posturesOf(g);
+  const pct = Math.round(b.rows_approved / (b.rows_total || 1) * 100);
+  return `<article class="pcard">
+    <header>
+      <h3><a href="${esc(g.page)}">${esc(g.title)}</a> ${g.isFamily ? `<span class="short">${g.members.length} rules</span>` : ''}</h3>
+      <p class="meta">${esc(g.jurisdiction || '')} ${regions(regionsOf(g))} · ${b.rows_total} requirements</p>
+    </header>
+
+    <div class="backing">
+      <div class="bknum"><b>${b.rows_approved}</b> of ${b.rows_total}</div>
+      <p class="bklab">requirements backed by approved internal documentation
+        ${b.rows_evidenced > b.rows_approved ? `· <span class="muted">${b.rows_evidenced - b.rows_approved} more evidenced, documentation still in review</span>` : ''}</p>
+      <div class="bkbar"><span class="seg ok" style="width:${pct}%"></span><span class="seg mid" style="width:${Math.round((b.rows_evidenced - b.rows_approved) / (b.rows_total || 1) * 100)}%"></span></div>
+    </div>
+
+    ${ps.map(({ scope, posture }) => `
+      <div class="pbody">
+        ${g.isFamily ? `<h4 class="subrule">${esc(scope.short || scope.id)}</h4>` : ''}
+        <div class="roles">${roleRows(posture)}</div>
+        <p class="stmt">${esc(posture.statement)}</p>
+      </div>`).join('')}
+
+    <a class="more" href="${esc(g.page)}">Read the requirement rows →</a>
+
+    <footer class="pfoot">
+      ${assurancePill(lvl)}
+      ${gaps.length
+? `<details class="gaps"><summary>${gaps.length} open item${gaps.length > 1 ? 's' : ''} HDS is tracking</summary>
+        <ul>${gaps.map((k) => `<li><span class="sev sev-${esc(k.severity)}">${esc(k.severity)}</span> ${esc(k.summary)}
+          ${(k.refs || []).map((r) => `<code>${esc(r)}</code>`).join(' ')}
+          ${k.internal_doc ? `<span class="lock">🔒 ${esc(k.internal_doc)}</span>` : ''}</li>`).join('')}</ul>
+      </details>`
+: ''}
+      ${ps.some(({ posture }) => (posture.external_assurance?.inherited_provider_assurance || []).length)
+        ? `<details class="inh"><summary>Certificates HDS relies on but does not hold</summary><ul>${
+          ps.flatMap(({ posture }) => posture.external_assurance?.inherited_provider_assurance || [])
+            .map((x) => `<li>${esc(x)}</li>`).join('')}</ul>
+          <p class="muted">These belong to the hosting providers and cover their infrastructure, not HDS's own practices.</p></details>`
+        : ''}
+    </footer>
+  </article>`;
+}).join('');
+
+fs.writeFileSync(path.join(OUT, 'index.html'), layout('HDS standing', `
+<section class="hero">
+  <h1>Where Health Data Safe stands</h1>
+  <p class="lede">HDS runs a documented compliance programme across four frameworks. This page is
+  about <strong>HDS itself</strong>: the role it holds under each one, what its position rests on,
+  and what it is still working on. For what HDS carries on your behalf, see
+  <a href="implementer.html">the implementer view</a>.</p>
+  <p class="count"><b>${totals.approved}</b> of ${totals.total} requirements across ${groups.length} frameworks
+  are backed by approved internal documentation, released on request under NDA, signed BAA or audit engagement.</p>
+</section>
+<section class="postures">${postureCards}</section>
+<section class="method">
+  <h2>How to read this page</h2>
+  <p>Each requirement is answered from HDS's own documentation, and the document behind it is named
+  by code on the requirement row. A requirement counts above only when <em>every</em> document it
+  cites has completed internal approval. Open items are listed on each framework rather than
+  omitted, and every framework page carries the same detail at requirement level.</p>
+  <p>HDS's compliance programme is <strong>self-assessed</strong>: it has not been examined by an
+  external auditor, and HDS holds no certification or attestation of its own. Where certificates
+  appear, they belong to the hosting providers and cover their infrastructure. HDS is a non-profit
+  foundation and states this plainly so you can weigh it yourself.</p>
+  <p class="muted">All rows are draft pending review. Not legal advice; confirm your obligations with qualified counsel.</p>
+</section>
+`, { active: 'home' }));
+
+// ---- implementer view: what HDS carries for you ----
+const scopeCards = groups.map((g) => {
+  const reqs = allReqs(g);
+  return `<a class="scopecard" href="${esc(g.page)}">
+    <h3>${esc(g.title)} <span class="short">${esc(g.short)}</span></h3>
+    <p class="meta">${esc(g.jurisdiction || '')} ${regions(regionsOf(g))} · ${reqs.length} requirements</p>
     ${covBar(reqs)}
   </a>`;
 }).join('');
 
-const totalReqs = scopes.reduce((n, s) => n + (s.requirements || []).length, 0);
+const totalReqs = groups.reduce((n, g) => n + allReqs(g).length, 0);
 
-fs.writeFileSync(path.join(OUT, 'index.html'), layout('Overview', `
+// The obligation index the profile panel filters. Organisation personas only:
+// end-user personas are context, not the implementer's work.
+const ORG_PERSONAS = new Set(['partner', 'covered-entity', 'business-associate', 'controller',
+  'processor', 'service-organization', 'user-entity', 'subservice-organization']);
+const OBLIGATIONS = [];
+for (const s of scopes) {
+  for (const r of s.requirements || []) {
+    for (const o of r.implementer || []) {
+      if (!ORG_PERSONAS.has(o.persona)) continue;
+      OBLIGATIONS.push({
+        scope: s.id,
+        scopeShort: s.short || s.id,
+        page: (s.family && FAMILIES[s.family]) ? `${s.family}.html` : `${s.id}.html`,
+        ref: r.ref,
+        title: r.title,
+        anchor: refAnchorId(r.ref),
+        persona: o.persona,
+        coverage: o.coverage,
+        hdsCoverage: r.hds?.coverage || '',
+        overview: (o.overview || '').trim(),
+        templates: o.templates || [],
+        when: o.applies_when === undefined ? null : o.applies_when,
+      });
+    }
+  }
+}
+
+const featureGroups = [
+  ['population', 'Who your users are', 'This decides which regulations apply at all.'],
+  ['arrangement', 'Your arrangement with HDS', 'Pick one. It decides who is the controller, and therefore whose obligations these are.'],
+  ['residency', 'Where the data sits', ''],
+  ['application', 'What your application does', 'Tick everything that will be true.'],
+];
+
+const profilePanel = !PROFILES
+  ? ''
+  : `
+<section class="profile">
+  <h2>Tell us what you are building</h2>
+  <p class="lede">Start from an archetype, or tick the boxes directly. Nothing is sent anywhere:
+  the whole matrix is in this page and the filtering happens in your browser.</p>
+  <div class="presets">
+    ${PROFILES.presets.map((pr, i) => `<button type="button" class="preset" data-features="${esc(pr.features.join(','))}">
+      <b>${i + 1}. ${esc(pr.label)}</b><span>${esc((pr.summary || '').trim())}</span></button>`).join('')}
+  </div>
+  <div class="fgrid">
+    ${featureGroups.map(([grp, title, hint]) => {
+      const fs_ = PROFILES.features.filter((f) => f.group === grp);
+      if (!fs_.length) return '';
+      return `<fieldset class="fgroup2" data-group="${esc(grp)}">
+        <legend>${esc(title)}</legend>
+        ${hint ? `<p class="hint">${esc(hint)}</p>` : ''}
+        ${fs_.map((f) => `<label class="fopt">
+          <input type="${f.exclusive ? 'radio' : 'checkbox'}"${f.exclusive ? ` name="${esc(f.exclusive)}"` : ''} value="${esc(f.id)}">
+          <span>${esc(f.label)}${f.note ? `<em class="note">${esc(f.note.trim())}</em>` : ''}</span>
+        </label>`).join('')}
+      </fieldset>`;
+    }).join('')}
+  </div>
+  <div class="hipaarole" hidden>
+    <b>Your HIPAA role:</b>
+    <label><input type="radio" name="hiparole" value="covered-entity"> Covered Entity</label>
+    <label><input type="radio" name="hiparole" value="business-associate" checked> Business Associate</label>
+  </div>
+</section>
+<section class="result" id="result"></section>`;
+
+const profileJS = !PROFILES
+  ? ''
+  : `<script>
+window.__P = ${JSON.stringify({
+  features: PROFILES.features,
+derived: PROFILES.derived || [],
+  presets: PROFILES.presets,
+scope_applicability: PROFILES.scope_applicability,
+  uncovered: PROFILES.uncovered || [],
+personas: PROFILES.personas,
+  scopes: Object.fromEntries(scopes.map((s) => [s.id, {
+    title: s.title,
+short: s.short || s.id,
+    page: (s.family && FAMILIES[s.family]) ? s.family + '.html' : s.id + '.html',
+    posture: s.hds_posture
+? {
+      level: s.hds_posture.external_assurance?.level,
+      backing: s.hds_posture.evidence_backing || null,
+    }
+: null,
+  }])),
+  obligations: OBLIGATIONS,
+})};
+</script>
+<script>
+(function () {
+  var P = window.__P, panel = document.querySelector('.profile'), out = document.getElementById('result');
+  if (!P || !panel) return;
+  var roleBox = document.querySelector('.hipaarole');
+
+  function on() {
+    var s = {};
+    panel.querySelectorAll('input:checked').forEach(function (i) { s[i.value] = true; });
+    P.derived.forEach(function (d) {
+      if (d.all) s[d.id] = d.all.every(function (x) { return s[x]; });
+      if (d.any) s[d.id] = d.any.some(function (x) { return s[x]; });
+    });
+    return s;
+  }
+  function cond(c, s) {
+    if (!c) return false;
+    if (c.all) return c.all.every(function (x) { return s[x]; });
+    if (c.any) return c.any.some(function (x) { return s[x]; });
+    return false;
+  }
+  function personaFor(sid, s) {
+    var cfg = P.personas[sid];
+    if (!cfg) return null;
+    if (cfg.ask) { var r = document.querySelector('input[name=hiparole]:checked'); return r ? r.value : cfg.ask[0]; }
+    return s['arrangement-partner'] ? cfg['arrangement-partner'] : cfg['arrangement-direct'];
+  }
+
+  function render() {
+    var s = on();
+    var anyPop = P.features.some(function (f) { return f.group === 'population' && s[f.id]; });
+    var scopes = P.scope_applicability.filter(function (r) { return cond(r.when, s); }).map(function (r) { return r.scope; });
+    var hipaa = scopes.some(function (x) { return x.indexOf('hipaa') === 0; });
+    roleBox.hidden = !hipaa;
+
+    var warns = P.uncovered.filter(function (u) {
+      return cond(u.when, s) && !(u.unless || []).some(function (x) { return s[x]; });
+    });
+
+    if (!anyPop) {
+      out.innerHTML = '<div class="empty"><b>Start by saying where your users are.</b>' +
+        '<p>Which regulations apply to you follows from that, not from the technology.</p></div>';
+      return;
+    }
+
+    var html = '';
+    warns.forEach(function (u) {
+      html += '<div class="uncov"><b>' + esc(u.title) + '</b><p>' + esc(u.message) + '</p></div>';
+    });
+
+    if (!scopes.length) {
+      html += '<div class="empty"><b>No framework in this matrix matches that selection.</b>' +
+        '<p>That is a limit of the matrix, not a statement that you have no obligations.</p></div>';
+      out.innerHTML = html; return;
+    }
+
+    var totShown = 0, totHidden = 0, tpls = {};
+    var showHidden = document.getElementById('showhidden') && document.getElementById('showhidden').checked;
+
+    var sections = scopes.map(function (sid) {
+      var meta = P.scopes[sid], persona = personaFor(sid, s);
+      var rows = P.obligations.filter(function (o) { return o.scope === sid && o.persona === persona; });
+      var shown = [], hidden = 0, unprofiled = 0;
+      rows.forEach(function (o) {
+        var vis;
+        if (o.when === null) { vis = true; unprofiled++; }
+        else if (o.when === 'always') vis = true;
+        else vis = o.when.some(function (x) { return s[x]; });
+        if (vis) { shown.push(o); (o.templates || []).forEach(function (t) { tpls[t] = 1; }); }
+        else hidden++;
+      });
+      totShown += shown.length; totHidden += hidden;
+      var b = meta.posture && meta.posture.backing;
+      return '<article class="rscope"><h3><a href="' + meta.page + '">' + esc(meta.title) + '</a>' +
+        '<span class="pers">your role: ' + esc(persona) + '</span></h3>' +
+        (b ? '<p class="meta">HDS: ' + b.rows_approved + ' of ' + b.rows_total +
+          ' requirements backed by approved documentation · <a href="index.html">how HDS stands</a></p>' : '') +
+        '<p class="meta">' + shown.length + ' of ' + rows.length + ' obligations apply to you' +
+        (hidden ? ' · ' + hidden + ' hidden by your selections' : '') +
+        (unprofiled ? ' · <span class="npf">' + unprofiled + ' not yet profiled, shown to everyone</span>' : '') + '</p>' +
+        '<ul class="obl">' + shown.map(function (o) {
+          return '<li><a class="ref" href="' + o.page + '#' + o.anchor + '"><code>' + esc(o.ref) + '</code> ' + esc(o.title) + '</a>' +
+            (o.when === null ? ' <span class="npf">not yet profiled</span>' : '') +
+            (o.overview ? '<p>' + esc(o.overview) + '</p>' : '') +
+            (o.templates || []).map(function (t) {
+              return '<a class="tpl" href="templates.html#tpl-' + t + '">📄 ' + t + '</a>'; }).join('') +
+            '</li>'; }).join('') + '</ul></article>';
+    }).join('');
+
+    html += '<div class="rhead"><h2>' + totShown + ' obligations apply to you</h2>' +
+      '<p class="lede">Across ' + scopes.length + ' framework' + (scopes.length > 1 ? 's' : '') +
+      '. This tells you what to look at. It does not tell you that you are compliant.</p>' +
+      (totHidden ? '<label class="showh"><input type="checkbox" id="showhidden"' + (showHidden ? ' checked' : '') + '> show the ' + totHidden + ' obligations your selections rule out</label>' : '') +
+      '</div>';
+    var tl = Object.keys(tpls);
+    if (tl.length) {
+      html += '<div class="agree"><b>Agreements you will need to sign</b><p>' + tl.map(function (t) {
+        return '<a class="tpl" href="templates.html#tpl-' + t + '">📄 ' + t + '</a>'; }).join(' ') + '</p></div>';
+    }
+    out.innerHTML = html + sections;
+  }
+  function esc(x) { return String(x == null ? '' : x).replace(/[&<>"]/g, function (c) {
+    return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]; }); }
+
+  panel.addEventListener('input', render);
+  out.addEventListener('input', render);
+  panel.querySelectorAll('.preset').forEach(function (b) {
+    b.addEventListener('click', function () {
+      panel.querySelectorAll('input').forEach(function (i) { i.checked = false; });
+      b.dataset.features.split(',').forEach(function (id) {
+        var el = panel.querySelector('input[value="' + id + '"]'); if (el) el.checked = true; });
+      panel.querySelectorAll('.preset').forEach(function (x) { x.classList.remove('on'); });
+      b.classList.add('on');
+      render();
+    });
+  });
+  render();
+})();
+</script>`;
+
+fs.writeFileSync(path.join(OUT, 'implementer.html'), layout('For implementers', `
 <section class="hero">
-  <h1>Health Data Safe — compliance matrix</h1>
-  <p class="lede">How HDS is compliant, and what an organisation building on HDS must still
-  do themselves. Each requirement is read across three layers.</p>
+  <h1>What HDS carries for you</h1>
+  <p class="lede">How much of each requirement the platform and HDS operations already handle,
+  and what is still on your plate. Each requirement is read across three layers.
+  For HDS's own regulatory position, see <a href="index.html">where HDS stands</a>.</p>
   <div class="threelayer">
     <div class="ll pryv"><b>Pryv platform</b><span>what the open-pryv.io software does (inherited)</span></div>
     <div class="arrow">→</div>
@@ -98,10 +518,13 @@ fs.writeFileSync(path.join(OUT, 'index.html'), layout('Overview', `
     <div class="arrow">→</div>
     <div class="ll impl"><b>Implementer</b><span>what's on your plate, per persona (+ agreements to sign)</span></div>
   </div>
-  <p class="count">${scopes.length} scopes · ${totalReqs} requirements · ${templates.length} agreement templates</p>
+  <p class="count">${groups.length} regulations · ${totalReqs} requirements · ${templates.length} agreement templates</p>
 </section>
+${profilePanel}
+<h2 class="allh">All frameworks</h2>
 <section class="scopes">${scopeCards}</section>
-`, { active: 'home' }));
+${profileJS}
+`, { active: 'implementer' }));
 
 // ---- per-scope pages (with client-side filter) ----
 const filterBar = `
@@ -135,17 +558,49 @@ const filterJS = `<script>
 })();
 </script>`;
 
-for (const s of scopes) {
-  const pryv = pryvByScope.get(s.layered_on_pryv) || new Map();
-  const cards = (s.requirements || []).map((r) => requirementCard(r, pryv.get(r.pryv_ref) || {})).join('');
-  fs.writeFileSync(path.join(OUT, `${s.id}.html`), layout(s.short || s.title, `
-    <a class="back" href="index.html">← All scopes</a>
-    <h1>${esc(s.title)} <span class="short">${esc(s.short || s.id)}</span></h1>
-    <p class="meta">${esc(s.type)} · ${esc(s.jurisdiction)} · ${esc(s.version)} ${regions(s.regions)}
-      ${s.layered_on_pryv ? `· layered on Pryv <code>${esc(s.layered_on_pryv)}</code>` : ''}</p>
-    ${covBar(s.requirements || [])}
+for (const g of groups) {
+  const sections = g.members.map((s) => {
+    const pryv = pryvByScope.get(s.layered_on_pryv) || new Map();
+    const cards = (s.requirements || []).map((r) => requirementCard(r, pryv.get(r.pryv_ref) || {})).join('');
+    const head = g.isFamily
+      ? `<h2 class="rulehead" id="${esc(s.id)}">${esc(s.short || s.title)}
+           <span class="short">${esc(s.version)}</span></h2>
+         ${covBar(s.requirements || [])}`
+      : '';
+    return head + `<div class="reqs">${cards}</div>`;
+  }).join('');
+
+  // A family page carries the posture of each sub-rule up top, so the standing
+  // question is answerable without going back to the landing page.
+  const postureBlocks = posturesOf(g).map(({ scope, posture }) => `
+    <div class="pstrip">
+      <div class="pshead">${g.isFamily ? `<b>${esc(scope.short || scope.id)}</b>` : ''}
+        ${assurancePill(posture.external_assurance?.level)}</div>
+      <div class="roles">${roleRows(posture)}</div>
+      <p class="stmt">${esc(posture.statement)}</p>
+    </div>`).join('');
+
+  const subnav = g.isFamily
+    ? `<nav class="subnav">${g.members.map((s) =>
+        `<a href="#${esc(s.id)}">${esc(s.short || s.id)} <span class="n">${(s.requirements || []).length}</span></a>`).join('')}</nav>`
+    : '';
+
+  fs.writeFileSync(path.join(OUT, g.page), layout(g.short, `
+    <a class="back" href="index.html">← HDS standing</a> ·
+    <a class="back" href="implementer.html">implementer view</a>
+    <h1>${esc(g.title)} ${g.isFamily ? '' : `<span class="short">${esc(g.short)}</span>`}</h1>
+    <p class="meta">${esc(g.jurisdiction || '')} ${regions(regionsOf(g))}
+      ${g.isFamily ? '' : `· ${esc(g.members[0].type)} · ${esc(g.members[0].version)}`}
+      ${g.canonical_url ? `· <a href="${esc(g.canonical_url)}">official text</a>` : ''}</p>
+    ${g.blurb ? `<p class="lede">${esc(g.blurb)}</p>` : ''}
+    <details class="standing-inline" open>
+      <summary>How HDS itself stands against ${esc(g.short)}</summary>
+      ${postureBlocks}
+    </details>
+    ${subnav}
+    ${g.isFamily ? '' : covBar(allReqs(g))}
     ${filterBar}
-    <div class="reqs">${cards}</div>
+    ${sections}
     ${filterJS}
   `));
 }
@@ -160,12 +615,40 @@ const tplCards = templates.map((t) => `<article class="req" id="tpl-${esc(t.id)}
 </article>`).join('');
 
 fs.writeFileSync(path.join(OUT, 'templates.html'), layout('Templates', `
-  <a class="back" href="index.html">← All scopes</a>
+  <a class="back" href="implementer.html">← Implementer view</a>
   <h1>Agreement templates</h1>
   <p class="lede">Fill-in templates implementers use to meet their obligations.
   Review with counsel before use.</p>
   <div class="reqs">${tplCards}</div>
 `, { active: 'templates' }));
+
+// ---- retired per-scope page redirects ----
+// Grouping the HIPAA rules into one page retires hipaa-security.html,
+// hipaa-privacy.html and hipaa-breach.html. Those URLs are published and are
+// deep-linked by requirement anchor from the private document set, so each
+// keeps a stub that forwards to the family page preserving the #fragment.
+for (const g of groups.filter((x) => x.isFamily)) {
+  for (const s of g.members) {
+    fs.writeFileSync(path.join(OUT, `${s.id}.html`),
+`<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="canonical" href="/${g.page}#${esc(s.id)}">
+<title>${esc(s.short || s.id)} — moved</title>
+<script>
+// Preserve the requirement anchor: /hipaa-security.html#req-164-312-a-2-iv
+// becomes /hipaa.html#req-164-312-a-2-iv, and a bare visit lands on the section.
+location.replace('${g.page}' + (location.hash || '#${s.id}'));
+</script>
+</head><body style="font-family:system-ui,sans-serif;max-width:40rem;margin:4rem auto;padding:0 1.25rem;line-height:1.6">
+<p>The ${esc(s.short || s.id)} rows are now part of the combined
+<a href="${g.page}#${esc(s.id)}">${esc(g.title)}</a> page.</p>
+</body></html>
+`);
+  }
+  console.log(`[OK]   wrote ${g.members.length} redirect stub(s) for retired ${g.key} scope pages`);
+}
 
 // ---- external-law redirect stubs (indirection layer) ----
 // Reads official-refs.yml (repo root) and emits one stub per citation at
@@ -211,7 +694,7 @@ fs.writeFileSync(path.join(OUT, 'styles.css'), STYLES());
 fs.writeFileSync(path.join(OUT, 'CNAME'), DOMAIN + '\n');
 fs.writeFileSync(path.join(OUT, 'robots.txt'), ROBOTS());
 
-console.log(`[OK]   site → dist/site/ (${scopes.length} scope pages + index + templates)`);
+console.log(`[OK]   site → dist/site/ (${groups.length} regulation pages + standing index + implementer + templates)`);
 
 // robots.txt — this host is the canonical home of the HDS Compliance Matrix,
 // so it must be indexable. AI assistants and answer engines are explicitly
@@ -296,5 +779,92 @@ a.pl{cursor:pointer}
 .rg{display:inline-block;background:var(--ink);color:#fff;font-size:.6rem;font-weight:700;padding:.05rem .35rem;border-radius:.25rem;margin-left:.2rem}
 .tpl{font-size:.78rem;margin-left:.4rem;text-decoration:none}
 .lock{font-weight:600;color:#374151}.onreq{font-size:.7rem;color:#a16207;background:#fef9c3;padding:.02rem .35rem;border-radius:999px}
-.covers code{margin-right:.3rem}.muted{color:var(--muted)}`;
+.covers code{margin-right:.3rem}.muted{color:var(--muted)}
+/* ---- HDS standing page ---- */
+.honesty{background:#fff;border:1px solid var(--line);border-left:4px solid #b45309;border-radius:.6rem;padding:.9rem 1.1rem;margin:1.2rem 0;max-width:56rem}
+.honesty h2{font-size:.78rem;text-transform:uppercase;letter-spacing:.05em;color:#b45309;margin:0 0 .5rem}
+.honesty ul{margin:0;padding-left:1.1rem}.honesty li{font-size:.88rem;margin:.3rem 0}
+.postures{display:grid;grid-template-columns:repeat(auto-fill,minmax(27rem,1fr));gap:1rem;margin-top:1.2rem}
+.pcard{background:#fff;border:1px solid var(--line);border-radius:.6rem;padding:1rem 1.1rem;display:flex;flex-direction:column}
+.pcard header h3{margin:.1rem 0;font-size:1.1rem}.pcard header h3 a{text-decoration:none}
+.backing{margin:.8rem 0 .2rem;padding:.7rem .8rem;background:#f8fafc;border:1px solid var(--line);border-radius:.5rem}
+.bknum{font-size:1.35rem;font-weight:700;color:#15803d;line-height:1.1}
+.bklab{margin:.15rem 0 .5rem;font-size:.82rem;color:#374151}
+.bkbar{display:flex;height:7px;border-radius:999px;overflow:hidden;background:#e5e7eb}
+.bkbar .seg.ok{background:#15803d}.bkbar .seg.mid{background:#a7c4a0}
+.pfoot{margin-top:auto;padding-top:.7rem;border-top:1px solid var(--line)}
+.method{max-width:52rem;margin:2.5rem 0 0;padding-top:1.2rem;border-top:1px solid var(--line)}
+.method h2{font-size:.95rem}.method p{font-size:.85rem;color:#4b5563;max-width:52rem}
+/* ---- implementer profile panel ---- */
+.profile{background:#fff;border:1px solid var(--line);border-radius:.6rem;padding:1.1rem 1.2rem;margin:1.5rem 0 1rem}
+.profile h2{font-size:1.1rem;margin:0 0 .3rem}
+.presets{display:grid;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:.6rem;margin:1rem 0}
+.preset{text-align:left;background:#f8fafc;border:1px solid var(--line);border-radius:.5rem;padding:.6rem .7rem;cursor:pointer;font:inherit;color:inherit}
+.preset:hover{border-color:#1d4ed8}.preset.on{border-color:#1d4ed8;background:#eff6ff;box-shadow:0 0 0 1px #1d4ed8 inset}
+.preset b{display:block;font-size:.86rem;margin-bottom:.2rem}
+.preset span{font-size:.78rem;color:var(--muted);display:block}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(17rem,1fr));gap:.9rem;margin-top:.8rem}
+.fgroup2{border:1px solid var(--line);border-radius:.5rem;padding:.6rem .8rem;margin:0}
+.fgroup2 legend{font-size:.74rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);padding:0 .3rem}
+.fgroup2 .hint{font-size:.76rem;color:var(--muted);margin:.1rem 0 .5rem}
+.fopt{display:flex;gap:.45rem;align-items:flex-start;font-size:.83rem;margin:.35rem 0;cursor:pointer}
+.fopt input{margin-top:.2rem;flex:none}
+.fopt .note{display:block;font-style:normal;font-size:.76rem;color:var(--muted);margin-top:.15rem}
+.hipaarole{margin-top:.9rem;padding-top:.7rem;border-top:1px dashed var(--line);font-size:.84rem;display:flex;gap:1rem;align-items:center;flex-wrap:wrap}
+.hipaarole label{display:inline-flex;gap:.3rem;align-items:center;cursor:pointer}
+.result{margin-bottom:2rem}
+.rhead{margin:1.2rem 0 .6rem}.rhead h2{font-size:1.25rem;margin:0}
+.showh{display:inline-flex;gap:.35rem;align-items:center;font-size:.8rem;color:var(--muted);margin-top:.4rem;cursor:pointer}
+.empty,.uncov{background:#fff;border:1px solid var(--line);border-radius:.6rem;padding:.9rem 1.1rem;margin:1rem 0}
+.uncov{border-left:4px solid #b45309}.uncov b{color:#b45309}
+.empty p,.uncov p{margin:.3rem 0 0;font-size:.85rem;color:#4b5563}
+.agree{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:.6rem;padding:.7rem 1rem;margin:.8rem 0}
+.agree b{font-size:.86rem}.agree p{margin:.35rem 0 0}
+.rscope{background:#fff;border:1px solid var(--line);border-radius:.6rem;padding:1rem 1.1rem;margin:1rem 0}
+.rscope h3{margin:0 0 .2rem;font-size:1rem;display:flex;gap:.6rem;align-items:baseline;flex-wrap:wrap}
+.rscope h3 a{text-decoration:none}
+.pers{font-size:.72rem;font-weight:400;color:#1d4ed8;background:#eff6ff;padding:.05rem .4rem;border-radius:.25rem}
+.obl{list-style:none;padding:0;margin:.7rem 0 0}
+.obl li{border-top:1px solid var(--line);padding:.6rem 0}
+.obl li:first-child{border-top:0}
+.obl .ref{text-decoration:none;font-size:.88rem;font-weight:600;display:block}
+.obl p{margin:.25rem 0 .3rem;font-size:.83rem;color:#4b5563;white-space:pre-line}
+.npf{font-size:.66rem;background:#f3f4f6;color:#6b7280;padding:.05rem .35rem;border-radius:999px;white-space:nowrap}
+.allh{font-size:1rem;margin:2rem 0 .3rem;padding-top:1.2rem;border-top:1px solid var(--line)}
+.as{display:inline-block;padding:.1rem .45rem;border-radius:.25rem;font-size:.68rem;font-weight:600;letter-spacing:.01em;color:#6b7280;background:#f3f4f6;border:1px solid var(--line)}
+.as-independent-readiness-review{background:#e0f2fe;color:#0369a1}
+.as-third-party-attested,.as-certified{background:#dcfce7;color:#15803d}
+.as-unknown{background:#f3f4f6;color:#6b7280}
+.pbody{margin-top:.7rem}
+.subrule{font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin:.8rem 0 .3rem;border-top:1px dashed var(--line);padding-top:.6rem}
+.roles{margin:.4rem 0}
+.rolerow{display:grid;grid-template-columns:auto auto;gap:.3rem .5rem;align-items:center;margin:.45rem 0}
+.rolerow p{grid-column:1/-1;margin:.1rem 0 0;font-size:.8rem;color:#4b5563}
+.arr{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.03em}
+.rl{font-size:.72rem;font-weight:700;padding:.05rem .4rem;border-radius:.25rem;background:#eff6ff;color:#1d4ed8;justify-self:start}
+.rl-not-applicable{background:#f3f4f6;color:#6b7280}
+.rl-controller,.rl-covered-entity{background:#f0fdf4;color:#15803d}
+.stmt{font-size:.86rem;color:#374151;margin:.5rem 0}
+.revbar{display:flex;height:6px;border-radius:999px;overflow:hidden;background:#e5e7eb;margin:.6rem 0 .25rem}
+.revbar .seg.rev{background:#15803d}
+.revnum{font-size:.78rem;color:var(--muted);margin:0 0 .5rem}
+.gaps,.inh{font-size:.84rem;margin-top:.45rem}
+.gaps summary{cursor:pointer;color:#6b7280;font-weight:500;font-size:.8rem}
+.inh summary{cursor:pointer;color:var(--muted)}
+.gaps ul,.inh ul{margin:.5rem 0;padding-left:1.1rem}
+.gaps li,.inh li{margin:.4rem 0;font-size:.84rem}
+.sev{display:inline-block;font-size:.62rem;font-weight:700;text-transform:uppercase;padding:.05rem .35rem;border-radius:999px;margin-right:.25rem}
+.sev-high{background:#fee2e2;color:#b91c1c}.sev-medium{background:#fef3c7;color:#b45309}.sev-low{background:#e0f2fe;color:#0369a1}
+.more{padding-top:.7rem;font-size:.84rem;text-decoration:none;display:inline-block}
+/* ---- family / scope page ---- */
+.standing-inline{background:#fff;border:1px solid var(--line);border-radius:.6rem;padding:.7rem 1rem;margin:1rem 0}
+.standing-inline>summary{cursor:pointer;font-weight:700;font-size:.9rem}
+.pstrip{border-top:1px dashed var(--line);padding-top:.7rem;margin-top:.7rem}
+.pstrip:first-of-type{border-top:0}
+.pshead{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap}
+.subnav{display:flex;gap:.5rem;flex-wrap:wrap;margin:.8rem 0}
+.subnav a{background:#fff;border:1px solid var(--line);border-radius:999px;padding:.25rem .7rem;font-size:.82rem;text-decoration:none}
+.subnav a:hover{border-color:#1d4ed8}
+.subnav .n{color:var(--muted);font-size:.75rem}
+.rulehead{font-size:1.1rem;margin:2rem 0 .3rem;padding-top:1rem;border-top:2px solid var(--line);scroll-margin-top:7rem}`;
 }
