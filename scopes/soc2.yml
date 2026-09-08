@@ -11,6 +11,17 @@ layered_on_pryv: soc2
 regions: [us, ch]
 
 changelog:
+  - date: "2026-09-08"
+    change: >
+      CC3.2: the row said HDS "treats its own risk assessment as an operator
+      obligation in progress" and its chip said the assessment values were
+      outstanding. Both were stale: the analysis was conducted 2026-07-30 and
+      approved 2026-08-26. The gap is narrowed to what is genuinely left, the
+      non-security trust-services objectives, with the fraud consideration
+      carried at CC3.3; chip impact high -> medium. Coverage stays documented:
+      the assessment covers the security objective only. CC3.3 no longer calls
+      CC3.2 a known gap. Applies compliance-internal instruction
+      2026-07-30-risk-analysis-conducted, item 4. draft cleared on both rows.
   - date: "2026-07-29"
     change: >
       P6.6: breach-scope primitive DEPLOYED to all HDS cores 2026-07-29 — the
@@ -447,7 +458,6 @@ requirements:
     The entity identifies risks to the achievement of its objectives across the
     entity and analyzes them as a basis for deciding how they should be managed.
   pryv_ref: CC3.2
-  draft: true
   hds:
     coverage: documented
     effort_saved: medium
@@ -472,11 +482,12 @@ requirements:
     planned:
       - kind: doc
         summary: >-
-          The formal risk analysis is drafted in the internal pipeline (scope
-          inventory and risk table authored, assessment values outstanding)
-          and its completion is the top item on the risk-management treatment
-          register; completing it would change this row's claim.
-        impact: high
+          The formal risk analysis is conducted, rated and approved for the
+          security objective. Extending it to the non-security trust-services
+          objectives (availability, confidentiality, processing integrity,
+          privacy) is the tracked remainder; the fraud consideration is carried
+          at CC3.3.
+        impact: medium
         internal_doc: hipaa/risk/risk-analysis
   implementer:
     - persona: service-organization
@@ -497,7 +508,6 @@ requirements:
     The entity considers the potential for fraud when assessing risks to the
     achievement of its objectives.
   pryv_ref: CC3.3
-  draft: true
   hds:
     coverage: facilitated
     effort_saved: low
