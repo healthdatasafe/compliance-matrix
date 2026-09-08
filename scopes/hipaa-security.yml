@@ -13,6 +13,15 @@ regions: [us]
 changelog:
   - date: "2026-09-08"
     change: >
+      164.308(a)(7)(ii)(A): the backup chip named "retention 7 daily / 4 weekly
+      / 12 monthly". That grandfather-father-son schedule was retired on
+      2026-09-02 in favour of a flat 30 days, and the figure was copied into
+      the chip earlier the same day from a document that had not caught up. It
+      now reads flat 30 days. The consequence is not cosmetic: retention
+      cycling is the erasure-propagation bound, so the old figure overstated by
+      twelve times how long an erased account survives in backups.
+  - date: "2026-09-08"
+    change: >
       Corrects the entry above it, which recorded four edits that a failed
       script never wrote to the file: the 164.312(b) citation removal, the
       164.308(a)(7)(ii)(A) backup chip and detail, and the 164.308(a)(7)(ii)(D)
@@ -748,7 +757,8 @@ requirements:
           hybrid encryption of every archive (a per-run AES-256-GCM key wrapped
           to a per-region RSA-4096 public key, the private key held off-host);
           least-privilege per-host access; and defined targets (RPO 24h, RTO 72h,
-          retention 7 daily / 4 weekly / 12 monthly). The scheduled cycle is
+          retention a flat 30 days, the grandfather-father-son promotion having
+          been retired 2026-09-02). The scheduled cycle is
           running on all regional cores as of 2026-07-30, and retrievability
           was demonstrated by fetching an archive off-host and decrypting it
           with the off-host private key. Outstanding before this is fully
