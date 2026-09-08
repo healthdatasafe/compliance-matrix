@@ -11,6 +11,10 @@ layered_on_pryv: swiss-nlpd
 regions: [ch]
 
 changelog:
+  - date: "2026-09-08"
+    change: >
+      Art.12: same correction as gdpr Art.30, which it shares a register with.
+      draft cleared.
   - date: "2026-07-29"
     change: >
       Art.24: breach-scope primitive DEPLOYED to all HDS cores 2026-07-29 —
@@ -953,7 +957,7 @@ requirements:
       activities, subject to an exception for smaller enterprises whose
       processing poses a low risk; content parallels GDPR Art. 30.
     pryv_ref: Art.12
-    draft: true
+    draft: false
     hds:
       coverage: facilitated
       effort_saved: high
@@ -976,10 +980,12 @@ requirements:
       planned:
         - kind: doc
           summary: >-
-            HDS's own processor-side register document exists in the internal
-            pipeline but is not yet populated with live processing activities;
-            population is the tracked remediation (same register as gdpr
-            Art.30).
+            HDS's processor-side register is populated with its live
+            processing activities. What remains is narrower: retention periods
+            are not set for the recruitment, CRM and contact-mailbox rows, and
+            the Art.30(2) half stays empty until the first partner DPA is
+            executed, which the register states rather than filling with a
+            fictional row.
           impact: low
           internal_doc: gdpr/registers/records-of-processing
     implementer:

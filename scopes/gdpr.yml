@@ -13,6 +13,14 @@ regions: [ch, us]
 changelog:
   - date: "2026-09-08"
     change: >
+      Art.30: the chip said the processor-side RoPA register was "not yet
+      populated with live processing activities". It carries eight, and the
+      last fictional row was removed earlier. The chip now names the real
+      remainder: no retention period on the recruitment, CRM and
+      contact-mailbox rows, and an empty Art.30(2) half until the first
+      partner DPA. draft cleared.
+  - date: "2026-09-08"
+    change: >
       Art.17: the planned chip said the audit.onUserDelete pseudonymise mode
       was "queued upstream", while the row's own detail already said the
       setting ships and the mode is refused at boot. The chip now matches the
@@ -1127,7 +1135,7 @@ requirements:
       activities (purposes, categories, recipients, transfers, retention,
       security).
     pryv_ref: Art.30
-    draft: true
+    draft: false
     hds:
       coverage: facilitated
       effort_saved: medium
@@ -1148,9 +1156,12 @@ requirements:
       planned:
         - kind: doc
           summary: >-
-            HDS's own processor-side RoPA register exists in the internal doc
-            set but is not yet populated with live processing activities;
-            population is the tracked remediation.
+            HDS's processor-side register is populated with its live
+            processing activities. What remains is narrower: retention periods
+            are not set for the recruitment, CRM and contact-mailbox rows, and
+            the Art.30(2) half stays empty until the first partner DPA is
+            executed, which the register states rather than filling with a
+            fictional row.
           impact: medium
           internal_doc: gdpr/registers/records-of-processing
       evidence:
