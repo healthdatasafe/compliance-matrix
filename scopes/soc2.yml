@@ -13,6 +13,13 @@ regions: [us, ch]
 changelog:
   - date: "2026-09-08"
     change: >
+      CC1.4: same correction as hipaa-security 164.308(a)(5)(ii)(A). The
+      competence programme is the HIPAA one and it operates, evidenced by a
+      populated completion register rather than by assertion; what remains is
+      the HDS-specific curriculum, the acknowledgements and a first full cycle.
+      draft cleared.
+  - date: "2026-09-08"
+    change: >
       CC7.4 and CC7.5 re-pointed after incident-mitigation and
       security-incident-response were deduplicated so each owns its facts.
       incident-mitigation now keeps only the 164.530(f) harm-reduction steps,
@@ -226,7 +233,7 @@ requirements:
     The entity demonstrates a commitment to attract, develop, and retain competent
     individuals in alignment with its objectives.
   pryv_ref: CC1.4
-  draft: true
+  draft: false
   hds:
     coverage: documented
     effort_saved: low
@@ -248,10 +255,12 @@ requirements:
     planned:
       - kind: procedure
         summary: >-
-          A standing security-awareness / competence programme is being stood
-          up: the workforce-training procedure and its completion-record
-          template are drafted in the internal pipeline; onboarding delivery
-          and tracked completions are the outstanding remainder.
+          The workforce-training procedure is approved and the completion
+          register holds dated third-party certifications for every workforce
+          member, with expiry reminders wired to the internal tasks board. What
+          remains is the HDS-specific curriculum, the recorded acknowledgements,
+          and letting the monthly cadence run a first full cycle: no
+          per-occurrence execution record has been filed yet.
         impact: medium
         internal_doc: hipaa/procedures/workforce-training
   implementer:

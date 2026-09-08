@@ -13,6 +13,15 @@ regions: [us]
 changelog:
   - date: "2026-09-08"
     change: >
+      164.308(a)(5)(ii)(A): the training chip described the procedure and its
+      record template as "drafted in the internal pipeline" with completion
+      tracking outstanding. The procedure is approved, and the completion
+      register holds dated third-party certifications for every workforce
+      member with expiry reminders wired up. The chip now names the real
+      remainder: the HDS-specific curriculum, recorded acknowledgements, and a
+      first full cycle of the monthly cadence. draft cleared.
+  - date: "2026-09-08"
+    change: >
       164.308(a)(7)(ii)(A): the backup chip named "retention 7 daily / 4 weekly
       / 12 monthly". That grandfather-father-son schedule was retired on
       2026-09-02 in favour of a flat 30 days, and the figure was copied into
@@ -506,7 +515,7 @@ requirements:
   text: |
     Implement periodic security updates and reminders for the workforce.
   pryv_ref: 164.308(a)(5)(ii)(A)
-  draft: true
+  draft: false
   hds:
     coverage: facilitated
     effort_saved: low
@@ -529,10 +538,12 @@ requirements:
     planned:
       - kind: procedure
         summary: >-
-          A verified security-awareness training programme is being stood up:
-          the workforce-training procedure and its completion-record template
-          are drafted in the internal pipeline; onboarding training, reminder
-          cadence and completion tracking are the tracked remainder.
+          The workforce-training procedure is approved and the completion
+          register holds dated third-party certifications for every workforce
+          member, with expiry reminders wired to the internal tasks board. What
+          remains is the HDS-specific curriculum, the recorded acknowledgements,
+          and letting the monthly cadence run a first full cycle: no
+          per-occurrence execution record has been filed yet.
         impact: medium
         internal_doc: hipaa/procedures/workforce-training
   implementer:
