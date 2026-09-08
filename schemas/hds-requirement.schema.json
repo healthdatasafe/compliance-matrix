@@ -5,78 +5,160 @@
   "description": "A single mapped requirement in an HDS scope, expressed across the three-layer model: the Pryv platform layer (inherited, referenced), the HDS layer (authored), and the implementer layer (per-persona obligations).",
   "type": "object",
   "additionalProperties": false,
-  "required": ["ref", "title", "hds"],
+  "required": [
+    "ref",
+    "title",
+    "hds"
+  ],
   "properties": {
     "ref": {
       "type": "string",
       "description": "Official identifier within the scope (e.g. '164.312(a)(2)(iv)').",
       "pattern": "^[A-Za-z0-9._()\\-]+$"
     },
-    "title": { "type": "string", "minLength": 1 },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
     "text": {
       "type": "string",
       "description": "Paraphrased requirement text. Do NOT redistribute copyrighted standards verbatim."
     },
-    "text_url": { "type": "string", "format": "uri" },
+    "text_url": {
+      "type": "string",
+      "format": "uri"
+    },
     "pryv_ref": {
       "type": "string",
-      "description": "ref of the inherited platform-layer row in the layered_on_pryv scope (vendor/pryv). Optional — set when Pryv's matrix covers this requirement.",
+      "description": "ref of the inherited platform-layer row in the layered_on_pryv scope (vendor/pryv). Optional \u2014 set when Pryv's matrix covers this requirement.",
       "pattern": "^[A-Za-z0-9._()\\-]+$"
     },
-    "draft": { "type": "boolean", "default": true },
-    "reviewed_by": { "type": ["string", "null"] },
-    "reviewed_at": { "type": ["string", "null"], "format": "date" },
-    "hds": { "$ref": "#/$defs/hdsLayer" },
+    "draft": {
+      "type": "boolean",
+      "default": true
+    },
+    "reviewed_by": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "reviewed_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date"
+    },
+    "hds": {
+      "$ref": "#/$defs/hdsLayer"
+    },
     "implementer": {
       "type": "array",
       "description": "What's still on the plate of whoever builds on HDS, one entry per persona.",
-      "items": { "$ref": "#/$defs/implementerObligation" }
+      "items": {
+        "$ref": "#/$defs/implementerObligation"
+      }
     }
   },
   "$defs": {
     "coverage": {
-      "enum": ["implemented", "configurable", "facilitated", "documented", "out-of-scope"]
+      "enum": [
+        "implemented",
+        "configurable",
+        "facilitated",
+        "documented",
+        "out-of-scope"
+      ]
     },
     "hdsLayer": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["coverage"],
+      "required": [
+        "coverage"
+      ],
       "description": "What HDS-as-operator + the HDS app stack adds on top of the platform layer.",
       "properties": {
-        "coverage": { "$ref": "#/$defs/coverage" },
+        "coverage": {
+          "$ref": "#/$defs/coverage"
+        },
         "effort_saved": {
-          "enum": ["high", "medium", "low"],
+          "enum": [
+            "high",
+            "medium",
+            "low"
+          ],
           "description": "How much of the requirement HDS carries for the implementer."
         },
         "facilitation_mode": {
-          "enum": ["primitive", "evidence", "storage", "infrastructure", "awareness", "operations"],
+          "enum": [
+            "primitive",
+            "evidence",
+            "storage",
+            "infrastructure",
+            "awareness",
+            "operations"
+          ],
           "description": "Only meaningful when coverage='facilitated'."
         },
-        "overview": { "type": "string", "description": "2-3 sentence position. Audience: auditor / compliance officer." },
-        "detail": { "type": "string" },
-        "technical": { "type": "string" },
+        "overview": {
+          "type": "string",
+          "description": "2-3 sentence position. Audience: auditor / compliance officer."
+        },
+        "detail": {
+          "type": "string"
+        },
+        "technical": {
+          "type": "string"
+        },
         "regions": {
           "type": "array",
           "description": "Data-residency regions where this HDS claim holds. Omit if region-independent.",
-          "items": { "enum": ["ch", "us"] },
+          "items": {
+            "enum": [
+              "ch",
+              "us"
+            ]
+          },
           "uniqueItems": true
         },
         "planned": {
           "type": "array",
-          "description": "Queued work whose delivery would change this row's claim, each entry backed by evidence it is actually coming (a compliance-internal document moving through review, a public tracking issue, or a vendored upstream proposal). Rendered as one chip per entry alongside the coverage badge; scope pages filter on it. THIS REPO IS PUBLIC: reference only internal document CODES, public URLs, or vendored paths — never private workspace paths or plan numbers.",
+          "description": "Queued work whose delivery would change this row's claim, each entry backed by evidence it is actually coming (a compliance-internal document moving through review, a public tracking issue, or a vendored upstream proposal). Rendered as one chip per entry alongside the coverage badge; scope pages filter on it. THIS REPO IS PUBLIC: reference only internal document CODES, public URLs, or vendored paths \u2014 never private workspace paths or plan numbers.",
           "items": {
             "type": "object",
             "additionalProperties": false,
-            "required": ["kind", "summary", "impact"],
+            "required": [
+              "kind",
+              "summary",
+              "impact"
+            ],
             "anyOf": [
-              { "required": ["internal_doc"] },
-              { "required": ["tracking_url"] },
-              { "required": ["upstream_proposal"] }
+              {
+                "required": [
+                  "internal_doc"
+                ]
+              },
+              {
+                "required": [
+                  "tracking_url"
+                ]
+              },
+              {
+                "required": [
+                  "upstream_proposal"
+                ]
+              }
             ],
             "properties": {
               "kind": {
-                "enum": ["feature", "doc", "procedure", "platform"],
-                "description": "feature = HDS app/infra capability queued for delivery; doc = a compliance-internal document drafted and moving through review/approval (name its code in internal_doc); procedure = an operational procedure being stood up (first verified execution pending); platform = an upstream platform feature queued by the vendor whose shipping AND HDS-side deploy+verify would change this row's claim (authored uplink — impact rated from the HDS row's perspective, not the vendor's; anchor it with upstream_proposal)."
+                "enum": [
+                  "feature",
+                  "doc",
+                  "procedure",
+                  "platform"
+                ],
+                "description": "feature = HDS app/infra capability queued for delivery; doc = a compliance-internal document drafted and moving through review/approval (name its code in internal_doc); procedure = an operational procedure being stood up (first verified execution pending); platform = an upstream platform feature queued by the vendor whose shipping AND HDS-side deploy+verify would change this row's claim (authored uplink \u2014 impact rated from the HDS row's perspective, not the vendor's; anchor it with upstream_proposal)."
               },
               "summary": {
                 "type": "string",
@@ -84,7 +166,11 @@
                 "description": "One-line description of what's queued (rendered in the chip tooltip)."
               },
               "impact": {
-                "enum": ["high", "medium", "low"],
+                "enum": [
+                  "high",
+                  "medium",
+                  "low"
+                ],
                 "description": "How much this row's claim shifts when delivered. high = coverage tier likely changes; medium = effort/facilitation upgrade; low = wording / evidence refinement."
               },
               "internal_doc": {
@@ -99,7 +185,7 @@
               "upstream_proposal": {
                 "type": "string",
                 "pattern": "^vendor/pryv/proposals/[A-Za-z0-9._-]+\\.md$",
-                "description": "Path to the vendored upstream proposal this chip is gated on (e.g. 'vendor/pryv/proposals/e2e-encryption.md'). The file must exist in the snapshot — validate.js fails otherwise, so every sync:pryv automatically flags uplinked chips whose upstream item shipped or was dropped."
+                "description": "Path to the vendored upstream proposal this chip is gated on (e.g. 'vendor/pryv/proposals/e2e-encryption.md'). The file must exist in the snapshot \u2014 validate.js fails otherwise, so every sync:pryv automatically flags uplinked chips whose upstream item shipped or was dropped."
               },
               "eta": {
                 "type": "string",
@@ -113,9 +199,30 @@
           "additionalProperties": false,
           "description": "Proof for the HDS-layer claim. THIS REPO IS PUBLIC: cite only public material or internal document CODES (never operational/infra detail). implemented/configurable require at least one of docs[], internal_docs[] or tests[].",
           "properties": {
-            "tests": { "type": "array", "items": { "type": "string" }, "uniqueItems": true, "description": "Public (open-source) test codes only, e.g. from open-pryv.io." },
-            "docs": { "type": "array", "items": { "type": "string" }, "uniqueItems": true, "description": "PUBLIC documentation only — public URLs or paths in public repos (e.g. dev-site, this repo's docs/)." },
-            "internal_docs": { "type": "array", "items": { "type": "string" }, "uniqueItems": true, "description": "CODES of documents held privately in compliance-internal (e.g. 'hipaa/policies/security-management-process'). The code is public; the content is released only on request under NDA / signed BAA / audit engagement." }
+            "tests": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "uniqueItems": true,
+              "description": "Public (open-source) test codes only, e.g. from open-pryv.io."
+            },
+            "docs": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "uniqueItems": true,
+              "description": "PUBLIC documentation only \u2014 public URLs or paths in public repos (e.g. dev-site, this repo's docs/)."
+            },
+            "internal_docs": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "uniqueItems": true,
+              "description": "CODES of documents held privately in compliance-internal (e.g. 'hipaa/policies/security-management-process'). The code is public; the content is released only on request under NDA / signed BAA / audit engagement."
+            }
           }
         }
       }
@@ -123,23 +230,57 @@
     "implementerObligation": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["persona", "coverage"],
+      "required": [
+        "persona",
+        "coverage"
+      ],
       "properties": {
         "persona": {
           "enum": [
-            "partner", "covered-entity", "business-associate", "individual",
-            "controller", "processor", "data-subject",
-            "service-organization", "user-entity", "subservice-organization"
+            "partner",
+            "covered-entity",
+            "business-associate",
+            "individual",
+            "controller",
+            "processor",
+            "data-subject",
+            "service-organization",
+            "user-entity",
+            "subservice-organization"
           ],
           "description": "Who this obligation applies to. HIPAA: covered-entity/business-associate/individual. GDPR & Swiss nLPD: controller/processor/data-subject. SOC 2: service-organization/user-entity/subservice-organization. 'partner' = the generic organisation building on HDS."
         },
-        "coverage": { "$ref": "#/$defs/coverage" },
-        "overview": { "type": "string", "description": "What this persona must still do themselves." },
+        "coverage": {
+          "$ref": "#/$defs/coverage"
+        },
+        "overview": {
+          "type": "string",
+          "description": "What this persona must still do themselves."
+        },
         "templates": {
           "type": "array",
           "description": "ids of agreement templates (templates/<id>) this persona must sign for this row.",
-          "items": { "type": "string" },
+          "items": {
+            "type": "string"
+          },
           "uniqueItems": true
+        },
+        "applies_when": {
+          "description": "Feature ids from profiles.yml (ANY-of), or the literal 'always'. ABSENT means 'not yet profiled': the obligation is always shown and marked as such. An obligation may be hidden on the implementer page ONLY when this is present and every listed feature is off. Hiding a real obligation because nobody tagged the row is the failure mode this rule exists to prevent.",
+          "oneOf": [
+            {
+              "const": "always"
+            },
+            {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9-]*$"
+              }
+            }
+          ]
         }
       }
     }

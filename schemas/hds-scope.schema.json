@@ -5,23 +5,55 @@
   "description": "A regulation/standard mapped by the HDS matrix, layered on top of the corresponding Pryv platform scope.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["id", "title", "type", "jurisdiction", "version", "version_date", "requirements"],
+  "required": [
+    "id",
+    "title",
+    "type",
+    "jurisdiction",
+    "version",
+    "version_date",
+    "requirements"
+  ],
   "properties": {
     "id": {
       "type": "string",
       "description": "Stable scope identifier in kebab-case (e.g. 'hipaa-security').",
       "pattern": "^[a-z][a-z0-9-]*$"
     },
-    "title": { "type": "string", "minLength": 1 },
-    "short": { "type": "string", "description": "Display short name (e.g. 'HIPAA-Security')." },
-    "type": {
-      "enum": ["regulation", "standard", "hosting-cert", "discipline"]
+    "title": {
+      "type": "string",
+      "minLength": 1
     },
-    "jurisdiction": { "type": "string" },
-    "version": { "type": "string" },
-    "version_date": { "type": "string", "format": "date" },
-    "canonical_url": { "type": "string", "format": "uri" },
-    "matrix_language": { "type": "string", "default": "EN" },
+    "short": {
+      "type": "string",
+      "description": "Display short name (e.g. 'HIPAA-Security')."
+    },
+    "type": {
+      "enum": [
+        "regulation",
+        "standard",
+        "hosting-cert",
+        "discipline"
+      ]
+    },
+    "jurisdiction": {
+      "type": "string"
+    },
+    "version": {
+      "type": "string"
+    },
+    "version_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "canonical_url": {
+      "type": "string",
+      "format": "uri"
+    },
+    "matrix_language": {
+      "type": "string",
+      "default": "EN"
+    },
     "layered_on_pryv": {
       "type": "string",
       "description": "id of the Pryv scope (vendor/pryv/scopes/<id>.yml) this HDS scope layers on. Optional.",
@@ -30,7 +62,12 @@
     "regions": {
       "type": "array",
       "description": "Data-residency regions in which this scope is offered (ch = Exoscale/Switzerland, us = AWS/USA).",
-      "items": { "enum": ["ch", "us"] },
+      "items": {
+        "enum": [
+          "ch",
+          "us"
+        ]
+      },
       "uniqueItems": true
     },
     "changelog": {
@@ -38,16 +75,208 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["date", "change"],
+        "required": [
+          "date",
+          "change"
+        ],
         "properties": {
-          "date": { "type": "string", "format": "date" },
-          "change": { "type": "string" }
+          "date": {
+            "type": "string",
+            "format": "date"
+          },
+          "change": {
+            "type": "string"
+          }
         }
       }
     },
     "requirements": {
       "type": "array",
-      "items": { "$ref": "https://github.com/healthdatasafe/compliance-matrix/schemas/hds-requirement.schema.json" }
+      "items": {
+        "$ref": "https://github.com/healthdatasafe/compliance-matrix/schemas/hds-requirement.schema.json"
+      }
+    },
+    "family": {
+      "type": "string",
+      "description": "Optional grouping key. Scopes sharing a family are presented as one regulation on the site (e.g. the three HIPAA rules), while remaining separate files layered on their own vendor/pryv scope. The family's display name comes from families.yml.",
+      "pattern": "^[a-z][a-z0-9-]*$"
+    },
+    "hds_posture": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "roles",
+        "external_assurance",
+        "statement"
+      ],
+      "description": "HOW HDS ITSELF STANDS against this scope. This is a DIFFERENT axis from hds.coverage on a requirement: coverage says what HDS carries FOR AN IMPLEMENTER, posture says whether HDS as an organisation meets the regulation. Never infer one from the other.",
+      "properties": {
+        "roles": {
+          "type": "array",
+          "minItems": 1,
+          "description": "The arrangement(s) HDS operates under for this scope. HDS's standing differs by role, so a standing claim that does not name its role is not a claim.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "arrangement",
+              "role",
+              "applies_to"
+            ],
+            "properties": {
+              "arrangement": {
+                "enum": [
+                  "partner-integration",
+                  "hds-operated-service"
+                ]
+              },
+              "role": {
+                "enum": [
+                  "controller",
+                  "processor",
+                  "joint-controller",
+                  "covered-entity",
+                  "business-associate",
+                  "service-organization",
+                  "not-applicable"
+                ]
+              },
+              "applies_to": {
+                "type": "string",
+                "description": "One line: which processing this role covers."
+              }
+            }
+          }
+        },
+        "external_assurance": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "level"
+          ],
+          "description": "Independent assurance HDS holds FOR ITSELF. A hosting provider's certificate is NOT HDS assurance; record those under inherited_provider_assurance.",
+          "properties": {
+            "level": {
+              "enum": [
+                "none",
+                "self-assessed",
+                "independent-readiness-review",
+                "third-party-attested",
+                "certified"
+              ]
+            },
+            "detail": {
+              "type": "string"
+            },
+            "inherited_provider_assurance": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Certificates held by hosting providers that HDS relies on but does not hold. Rendered as explicitly NOT HDS's own."
+            }
+          }
+        },
+        "statement": {
+          "type": "string",
+          "minLength": 1,
+          "description": "2-4 sentences, plain language, written to be read by someone deciding whether to trust HDS. State the gaps."
+        },
+        "known_gaps": {
+          "type": "array",
+          "description": "Named open gaps in HDS's own posture. Each must be anchored: an internal document CODE, a public URL, or the refs of requirements whose planned[] chips carry it.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "summary",
+              "severity"
+            ],
+            "anyOf": [
+              {
+                "required": [
+                  "refs"
+                ]
+              },
+              {
+                "required": [
+                  "internal_doc"
+                ]
+              },
+              {
+                "required": [
+                  "tracking_url"
+                ]
+              }
+            ],
+            "properties": {
+              "summary": {
+                "type": "string",
+                "minLength": 1
+              },
+              "severity": {
+                "enum": [
+                  "high",
+                  "medium",
+                  "low"
+                ]
+              },
+              "refs": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "internal_doc": {
+                "type": "string"
+              },
+              "tracking_url": {
+                "type": "string",
+                "format": "uri"
+              }
+            }
+          }
+        },
+        "assessed_at": {
+          "type": "string",
+          "format": "date"
+        },
+        "draft": {
+          "type": "boolean",
+          "default": true
+        },
+        "evidence_backing": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "rows_evidenced",
+            "rows_approved",
+            "rows_total",
+            "as_of"
+          ],
+          "description": "How much of this scope rests on APPROVED internal documentation. Counts only, never per-document status. This is the honest measure of HDS's position; the row-level `draft` flag measures editorial review of the matrix wording and must never be presented as coverage. Regenerate with scripts/evidence-status.js against a compliance-internal checkout.",
+          "properties": {
+            "rows_total": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "rows_evidenced": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Rows citing at least one internal document."
+            },
+            "rows_approved": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Rows where EVERY cited internal document is approved."
+            },
+            "as_of": {
+              "type": "string",
+              "format": "date"
+            }
+          }
+        }
+      }
     }
   }
 }
