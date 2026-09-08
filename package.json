@@ -2,7 +2,7 @@
   "name": "compliance-matrix",
   "version": "0.0.1",
   "private": true,
-  "description": "HDS compliance & regulation matrix — how Health Data Safe is compliant and what implementers must do themselves. Layered on pryv/compliance-matrix.",
+  "description": "HDS compliance & regulation matrix \u2014 how Health Data Safe is compliant and what implementers must do themselves. Layered on pryv/compliance-matrix.",
   "type": "module",
   "engines": {
     "node": ">=24"
@@ -18,7 +18,8 @@
     "sync:pryv": "node scripts/sync-from-pryv.js",
     "test": "echo \"no script tests yet\" && exit 0",
     "lint": "eslint scripts/",
-    "lint:fix": "eslint scripts/ --fix"
+    "lint:fix": "eslint scripts/ --fix",
+    "evidence:status": "node scripts/evidence-status.js"
   },
   "dependencies": {
     "ajv": "^8.17.1",
