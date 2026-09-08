@@ -11,6 +11,15 @@ layered_on_pryv: gdpr
 regions: [ch, us]
 
 changelog:
+  - date: "2026-09-08"
+    change: >
+      Art.17: the planned chip said the audit.onUserDelete pseudonymise mode
+      was "queued upstream", while the row's own detail already said the
+      setting ships and the mode is refused at boot. The chip now matches the
+      detail: the setting is deployed with erase and keep usable, and only the
+      audit-row null-out behind pseudonymise is unimplemented. Verified against
+      the deployed build (2.0.0-rc.16) rather than the proposal file, which
+      reads as SHIPPED and covers the setting, not the null-out. draft cleared.
   - date: "2026-07-29"
     change: >
       Art.33: breach-scope primitive now DEPLOYED to all HDS cores (open-pryv.io
@@ -633,7 +642,6 @@ requirements:
       Right to obtain erasure without undue delay where one of the enumerated
       conditions applies.
     pryv_ref: Art.17
-    draft: true
     hds:
       coverage: configurable
       effort_saved: medium
@@ -674,10 +682,12 @@ requirements:
       planned:
         - kind: platform
           summary: >-
-            The audit.onUserDelete pseudonymise mode (audit-row PII null-out
-            composing the shipped alias primitive) is queued upstream; this
-            row's erasure-vs-audit-retention position stays partial until it
-            ships and HDS deploys it.
+            The audit.onUserDelete setting ships and is deployed, with erase
+            and keep both usable; its third mode, pseudonymise (audit-row PII
+            null-out), is enumerated but refused at boot because the audit-row
+            null-out itself is not implemented. This row's
+            erasure-vs-audit-retention position stays partial until that lands
+            upstream and HDS deploys it.
           impact: medium
           upstream_proposal: vendor/pryv/proposals/audit-on-user-delete.md
     implementer:
