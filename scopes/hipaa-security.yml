@@ -13,6 +13,16 @@ regions: [us]
 changelog:
   - date: "2026-09-08"
     change: >
+      164.314(a)(2)(ii)(B): hipaa/registers/subprocessor-register removed from
+      the evidence citations. That document carries an empty refs_satisfy and
+      declares this requirement under refs_relate, so the row was citing a
+      document that disowns the claim, the same defect fixed on
+      164.314(a)(2)(i)(C) and 164.312(e)(2)(ii) in the 2026-07-31 pass and
+      missed here. hipaa/registers/baa-register, already cited alongside, owns
+      the flow-down. Applies compliance-internal instruction
+      2026-07-30-newrelic-dpa-not-required-r16-closed, item 4. draft cleared.
+  - date: "2026-09-08"
+    change: >
       164.308(a)(4)(ii)(C): narrative sharpened, coverage unchanged at
       implemented. The periodic operator access review has now been executed
       once, so the row no longer reads as an untested cadence; the execution
@@ -1734,7 +1744,6 @@ requirements:
     that create, receive, maintain, or transmit ePHI on its behalf agree, via a
     written contract, to comply with the applicable Security Rule requirements.
   pryv_ref: 164.314(a)(2)(ii)(B)
-  draft: true
   hds:
     coverage: facilitated
     effort_saved: medium
@@ -1753,7 +1762,6 @@ requirements:
     evidence:
       internal_docs:
         - hipaa/registers/baa-register
-        - hipaa/registers/subprocessor-register
   implementer:
     - persona: covered-entity
       coverage: documented

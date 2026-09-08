@@ -13,6 +13,17 @@ regions: [us]
 changelog:
   - date: "2026-09-08"
     change: >
+      164.502(b) / 164.514(d): cite hipaa/evidence/monitoring-telemetry-no-phi,
+      which claims both codes under refs_satisfy, and state that HDS's own
+      operational telemetry is evidenced as carrying no PHI. Coverage unchanged
+      at facilitated. The evidence document is NOT cited on 164.312(b), which
+      the instruction also named: it declares that code under refs_relate.
+      Applies compliance-internal instruction
+      2026-07-30-monitoring-telemetry-no-phi-evidence, read together with and
+      corrected by 2026-07-30-newrelic-dpa-not-required-r16-closed. draft
+      cleared on both rows.
+  - date: "2026-09-08"
+    change: >
       164.502(j): out-of-scope -> documented. The row said HDS provides no
       control specific to this requirement; the workforce sanctions policy,
       approved 2026-08-26, carries a protected-disclosure clause covering
@@ -272,7 +283,6 @@ requirements:
       Reasonable efforts must be made to limit PHI to the minimum necessary to
       accomplish the intended purpose.
     pryv_ref: 164.514(d)
-    draft: true
     hds:
       coverage: facilitated
       effort_saved: high
@@ -288,10 +298,15 @@ requirements:
         HDS facilitates a stream topology where distinct purposes live on
         distinct subtrees and per-purpose accesses point at the smallest
         necessary subtree, avoiding blanket permissions except for stated
-        unrestricted roles.
+        unrestricted roles. The same discipline is applied to HDS's own
+        operational telemetry, whose contents are evidenced as carrying no PHI
+        and no individually identifiable health information: the operator
+        channel is a place minimum-necessary can quietly fail, so it is
+        evidenced rather than assumed.
       evidence:
         internal_docs:
           - hipaa/policies/minimum-necessary
+          - hipaa/evidence/monitoring-telemetry-no-phi
     implementer:
       - persona: covered-entity
         coverage: documented
@@ -661,7 +676,6 @@ requirements:
       disclosures to the individual, authorized disclosures and disclosures
       required by law.
     pryv_ref: 164.502(b)
-    draft: true
     hds:
       coverage: facilitated
       effort_saved: high
@@ -676,10 +690,13 @@ requirements:
         Where an exception applies, the implementer leaves the access scoped per
         that exception's permission; HDS records the broader access so it remains
         accountable. The substantive minimum-necessary policy is the covered
-        entity's.
+        entity's. On HDS's own side, the operational telemetry it collects as
+        operator is evidenced as carrying no PHI and no individually
+        identifiable health information.
       evidence:
         internal_docs:
           - hipaa/policies/minimum-necessary
+          - hipaa/evidence/monitoring-telemetry-no-phi
     implementer:
       - persona: covered-entity
         coverage: documented
