@@ -10,6 +10,48 @@ matrix_language: EN
 layered_on_pryv: hipaa-privacy
 regions: [us]
 
+family: hipaa
+
+hds_posture:
+  draft: true
+  assessed_at: "2026-09-08"
+  evidence_backing:
+    rows_total: 35
+    rows_evidenced: 33
+    rows_approved: 33
+    as_of: "2026-09-08"
+  roles:
+    - arrangement: partner-integration
+      role: business-associate
+      applies_to: >
+        PHI held on behalf of a covered entity. The Privacy Rule reaches HDS
+        through the BAA rather than directly; most of its obligations stay with
+        the covered entity.
+    - arrangement: hds-operated-service
+      role: not-applicable
+      applies_to: >
+        Direct-to-individual services HDS operates outside any covered-entity
+        relationship. Confirm your own characterisation with counsel.
+  external_assurance:
+    level: self-assessed
+    detail: >
+      No independent Privacy Rule assessment covers HDS.
+  statement: >
+    Thirty-three of the thirty-five requirements rest on approved HDS
+    documentation. Most of this rule is the covered entity's to discharge, and
+    HDS is recorded as facilitating rather than carrying twenty-five of the
+    rows, which is the honest shape of a business associate's position. What
+    HDS does supply directly is the individual-rights machinery, access,
+    amendment, accounting of disclosures and restriction, each an approved
+    procedure. Those procedures have been exercised in rehearsal rather than
+    against production volume.
+  known_gaps:
+    - summary: >
+        Thirty-two of thirty-five rows are unreviewed drafts. The positions are
+        stated but not second-read.
+      severity: medium
+      internal_doc: hipaa/policies/privacy-practices
+
 changelog:
   - date: "2026-08-26"
     change: >
@@ -126,11 +168,13 @@ requirements:
           - hipaa/policies/uses-and-disclosures
     implementer:
       - persona: covered-entity
+        applies_when: [ai-individual]
         coverage: documented
         overview: |
           Classify your workflows as TPO or not and provision purpose-tagged
           accesses accordingly.
       - persona: business-associate
+        applies_when: [ai-individual]
         coverage: documented
         overview: |
           Act on TPO data only within the scope your BAA permits.
@@ -167,6 +211,7 @@ requirements:
           - hipaa/policies/authorizations
     implementer:
       - persona: covered-entity
+        applies_when: [ai-individual, commercial-use, research-secondary-use]
         coverage: documented
         overview: |
           Ensure your consent surface presents all §508(c) authorization elements
@@ -177,6 +222,7 @@ requirements:
           You grant and revoke authorizations through the consent flow; each act
           is recorded.
       - persona: business-associate
+        applies_when: [ai-individual, commercial-use, research-secondary-use]
         coverage: documented
         overview: |
           Honour and record authorizations as instructed by the covered entity.
@@ -244,6 +290,7 @@ requirements:
           - hipaa/policies/uses-and-disclosures
     implementer:
       - persona: covered-entity
+        applies_when: [research-secondary-use]
         coverage: documented
         overview: |
           Determine whether each disclosure qualifies under §512 and record its
@@ -278,6 +325,7 @@ requirements:
           - hipaa/policies/de-identification
     implementer:
       - persona: covered-entity
+        applies_when: [ai-aggregate, research-secondary-use]
         coverage: documented
         overview: |
           Choose the de-identification method, perform the transformation, and
@@ -318,11 +366,13 @@ requirements:
           - hipaa/evidence/monitoring-telemetry-no-phi
     implementer:
       - persona: covered-entity
+        applies_when: [reads-data]
         coverage: documented
         overview: |
           Design stream topology and permission scopes so each access is limited
           to the minimum necessary, and document the rationale.
       - persona: business-associate
+        applies_when: [reads-data]
         coverage: documented
         overview: |
           Request only the minimum-necessary scope for your processing.
@@ -709,11 +759,13 @@ requirements:
           - hipaa/evidence/monitoring-telemetry-no-phi
     implementer:
       - persona: covered-entity
+        applies_when: [reads-data, ai-aggregate]
         coverage: documented
         overview: |
           Apply minimum-necessary scoping and document where exceptions are
           invoked.
       - persona: business-associate
+        applies_when: [reads-data, ai-aggregate]
         coverage: documented
         overview: |
           Limit your requests and uses of PHI to the minimum necessary.
@@ -750,12 +802,14 @@ requirements:
           - hipaa/registers/baa-register
     implementer:
       - persona: covered-entity
+        applies_when: [third-parties]
         coverage: documented
         overview: |
           Execute a BAA with each business associate before disclosing PHI and
           scope their access to what the BAA covers.
         templates: [baa]
       - persona: business-associate
+        applies_when: [third-parties]
         coverage: documented
         overview: |
           Sign the BAA and flow obligations down to any subcontractors.
@@ -1198,6 +1252,7 @@ requirements:
           - hipaa/policies/de-identification
     implementer:
       - persona: covered-entity
+        applies_when: [ai-aggregate, research-secondary-use]
         coverage: documented
         overview: |
           Select and execute Expert Determination or Safe Harbor and retain the
@@ -1242,6 +1297,7 @@ requirements:
           - hipaa/policies/de-identification
     implementer:
       - persona: covered-entity
+        applies_when: [ai-aggregate, research-secondary-use]
         coverage: documented
         overview: |
           Generate codes that do not encode PHI and restrict their use to
@@ -1327,12 +1383,14 @@ requirements:
           - hipaa/registers/baa-register
     implementer:
       - persona: covered-entity
+        applies_when: [third-parties]
         coverage: documented
         overview: |
           Execute a BAA meeting §164.504(e)(2) before any business associate
           handles PHI.
         templates: [baa]
       - persona: business-associate
+        applies_when: [third-parties]
         coverage: documented
         overview: |
           Sign the BAA and execute back-to-back subcontractor agreements with

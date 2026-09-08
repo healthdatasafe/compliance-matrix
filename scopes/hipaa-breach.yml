@@ -10,6 +10,47 @@ matrix_language: EN
 layered_on_pryv: hipaa-breach
 regions: [us]
 
+family: hipaa
+
+hds_posture:
+  draft: true
+  assessed_at: "2026-09-08"
+  evidence_backing:
+    rows_total: 13
+    rows_evidenced: 12
+    rows_approved: 12
+    as_of: "2026-09-08"
+  roles:
+    - arrangement: partner-integration
+      role: business-associate
+      applies_to: >
+        HDS's duty on discovering a breach is to notify the covered entity
+        without unreasonable delay; notifying individuals, HHS and the media
+        remains the covered entity's.
+    - arrangement: hds-operated-service
+      role: not-applicable
+      applies_to: >
+        Direct-to-individual services outside a covered-entity relationship.
+  external_assurance:
+    level: self-assessed
+    detail: >
+      No independent review. The incident and breach procedure has been
+      rehearsed, not tested by a real reportable breach.
+  statement: >
+    HDS can answer the question this rule actually turns on, which is who was
+    affected and what did they hold. The breach-scope primitive is deployed to
+    every core with the access index backfilled, so the blast radius of a
+    compromised token is enumerated rather than estimated, and twelve of the
+    thirteen requirements rest on approved documentation. The notification
+    procedure is approved and rehearsed; no real reportable breach has
+    exercised it.
+  known_gaps:
+    - summary: >
+        No row in this scope has completed review, and the notification
+        procedure has never run against a real incident.
+      severity: medium
+      internal_doc: procedures/security-incident-and-breach
+
 changelog:
   - date: "2026-08-26"
     change: >
