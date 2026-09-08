@@ -11,6 +11,14 @@ layered_on_pryv: hipaa-privacy
 regions: [us]
 
 changelog:
+  - date: "2026-09-08"
+    change: >
+      164.502(j): out-of-scope -> documented. The row said HDS provides no
+      control specific to this requirement; the workforce sanctions policy,
+      approved 2026-08-26, carries a protected-disclosure clause covering
+      disclosure outside HDS and claims 164.502(j) under refs_satisfy, so the
+      control exists and is now cited. Applies the addendum to compliance-internal
+      instruction 2026-07-29-byod-workstation-standard. draft flag cleared.
   - date: "2026-07-28"
     change: >
       164.530(a): documented -> implemented — HDS's own Privacy Official
@@ -1341,18 +1349,27 @@ requirements:
       made in good-faith belief of unlawful conduct and meeting the §502(j)
       conditions.
     pryv_ref: 164.502(j)
-    draft: true
     hds:
-      coverage: out-of-scope
+      coverage: documented
+      effort_saved: low
       regions: [us, ch]
       overview: |
-        Whistleblower protection is a legal framing with no software role. The
-        audit-trail evidence of a disclosing person's access may be cited in
-        subsequent proceedings, but HDS provides no control specific to this
-        requirement.
+        The protection itself is a matter of law and has no software role, but HDS
+        does carry a control for it: its workforce sanctions policy states that a
+        good-faith protected disclosure to a regulatory, oversight or law-enforcement
+        authority is not sanctionable conduct, and covers disclosure outside HDS as
+        well as internal reporting.
       detail: |
-        HDS neither enables nor restricts good-faith whistleblower disclosures
-        beyond ordinary access controls; the protection is a matter of law.
+        HDS neither enables nor restricts good-faith whistleblower disclosures beyond
+        ordinary access controls. What it holds is the organizational half: a written
+        non-retaliation position inside the sanctions policy, so a workforce member
+        making a §502(j) disclosure is not exposed to the graduated-sanctions process
+        for having made it. The audit trail of a disclosing person's access remains
+        available as evidence in subsequent proceedings. The implementer still states
+        the protection in their own policies; HDS's control binds HDS's own workforce.
+      evidence:
+        internal_docs:
+          - hipaa/policies/workforce-sanctions
     implementer:
       - persona: covered-entity
         coverage: documented

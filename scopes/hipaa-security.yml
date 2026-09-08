@@ -13,6 +13,16 @@ regions: [us]
 changelog:
   - date: "2026-09-08"
     change: >
+      164.310(b) / 164.310(c): planned doc chip naming the approved workstation
+      and BYOD standard, whose remainder is the third machine assessment and the
+      countersignatures on the two filed attestations. The standard is NOT cited
+      as evidence: its frontmatter carries an empty refs_satisfy and declares
+      these requirements under refs_relate, so citing it would hand an auditor a
+      document that disowns the claim. Applies compliance-internal instruction
+      2026-07-29-byod-workstation-standard, items 2 and 3; item 1 declined on
+      that ground. draft flag cleared on both rows.
+  - date: "2026-09-08"
+    change: >
       164.310 / 164.310(a)(1) / 164.310(d)(1): per-region evidence grades stated.
       The US region (AWS us-east-1) is evidenced by third-party attestations on
       file since 2026-07-28 (SOC 2 Type II + continued-operations letter, ISO/IEC
@@ -862,7 +872,6 @@ requirements:
     performed, how they are to be performed, and the physical attributes of the
     surroundings of any workstation or class of workstation that can access ePHI.
   pryv_ref: "164.310(b)"
-  draft: true
   hds:
     coverage: documented
     effort_saved: low
@@ -882,6 +891,16 @@ requirements:
     evidence:
       internal_docs:
         - hipaa/policies/physical-safeguards
+    planned:
+      - kind: doc
+        summary: >-
+          A workstation and BYOD standard now states what any machine must be
+          before it may hold credentials that reach ePHI, and is approved. Its
+          evidence is the countersigned per-machine attestation record: two of
+          the three machines in scope are attested and awaiting countersignature,
+          and one is not yet assessed. Completing them is the tracked remediation.
+        impact: low
+        internal_doc: hipaa/standards/byod-workstation
   implementer:
     - persona: covered-entity
       coverage: documented
@@ -901,7 +920,6 @@ requirements:
     Implement physical safeguards for all workstations that access ePHI, to
     restrict access to authorized users.
   pryv_ref: "164.310(c)"
-  draft: true
   hds:
     coverage: documented
     effort_saved: low
@@ -923,6 +941,16 @@ requirements:
     evidence:
       internal_docs:
         - hipaa/policies/physical-safeguards
+    planned:
+      - kind: doc
+        summary: >-
+          A workstation and BYOD standard now states what any machine must be
+          before it may hold credentials that reach ePHI, and is approved. Its
+          evidence is the countersigned per-machine attestation record: two of
+          the three machines in scope are attested and awaiting countersignature,
+          and one is not yet assessed. Completing them is the tracked remediation.
+        impact: low
+        internal_doc: hipaa/standards/byod-workstation
   implementer:
     - persona: covered-entity
       coverage: documented
