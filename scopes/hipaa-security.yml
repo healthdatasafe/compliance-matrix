@@ -13,6 +13,22 @@ regions: [us]
 changelog:
   - date: "2026-09-08"
     change: >
+      164.312(b): hipaa/procedures/information-system-activity-review removed
+      from the evidence citations. That document released the code on
+      2026-07-30 and now declares it under refs_relate; hipaa/policies/audit-controls
+      owns it and was already cited. Fourth row of this class found in this
+      pass. 164.308(a)(7)(ii)(A): the backup chip's outstanding list named the
+      scheduled cycle, the alert and the first verified run, all of which
+      happened on 2026-07-30; it now names what is actually left, the
+      per-region production restore drill and the lifecycle backstop.
+      164.308(a)(7)(ii)(D): testing has begun, a first restore rehearsal ran
+      2026-07-29 over a single account, so the row reads partly evidenced
+      rather than untested, and the chip names production-scale recovery as
+      the remainder. No coverage tier raised. Applies compliance-internal
+      instruction 2026-07-30-hipaa-signoff-sweep-refs-corrections. draft
+      cleared on the rows walked.
+  - date: "2026-09-08"
+    change: >
       164.308(a)(1)(ii)(A) risk analysis and (ii)(B) risk management added as
       HDS-layer rows, both implemented. They had no row at all: the scope file
       mirrored the Pryv layer's requirement selection, which omits the wholly
@@ -680,7 +696,6 @@ requirements:
     Establish and implement procedures to create and maintain retrievable exact
     copies of ePHI.
   pryv_ref: 164.308(a)(7)(ii)(A)
-  draft: true
   hds:
     coverage: facilitated
     effort_saved: high
@@ -809,7 +824,6 @@ requirements:
   text: |
     Implement procedures for periodic testing and revision of contingency plans.
   pryv_ref: 164.308(a)(7)(ii)(D)
-  draft: true
   hds:
     coverage: documented
     effort_saved: low
@@ -821,8 +835,11 @@ requirements:
     detail: |
       The testing programme itself is an operator activity rather than a
       platform feature, though restore drills run against the platform's backup
-      primitive. HDS documents the intended cadence and revision process and is
-      maturing verified, scheduled execution. Partners run and document their
+      primitive. HDS documents the cadence and revision process, and testing has
+      begun: a first restore rehearsal was performed on 2026-07-29 and recorded.
+      It covered a single account rather than a full per-region restore, so this
+      specification is partly evidenced rather than satisfied, and HDS says so
+      instead of reading a rehearsal as a drill. Partners run and document their
       own contingency-plan tests.
     regions: [us, ch]
     evidence:
@@ -1422,7 +1439,6 @@ requirements:
     Implement hardware, software, and/or procedural mechanisms that record and
     examine activity in information systems containing or using ePHI.
   pryv_ref: 164.312(b)
-  draft: true
   hds:
     coverage: implemented
     effort_saved: high

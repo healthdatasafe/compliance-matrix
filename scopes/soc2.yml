@@ -13,6 +13,17 @@ regions: [us, ch]
 changelog:
   - date: "2026-09-08"
     change: >
+      A1.2 and A1.3: chips refreshed against what shipped. The backup cycle is
+      running on both regional cores since 2026-07-30 with retrievability
+      demonstrated by an off-host decrypt, and a first restore rehearsal ran
+      2026-07-29 over a single account. Both chips previously described work
+      "in the internal pipeline" that had since been done. The remainders are
+      now stated precisely: production-scale per-region restore, and the
+      storage lifecycle backstop. Coverage unchanged. Applies
+      compliance-internal instruction
+      2026-07-30-hipaa-signoff-sweep-refs-corrections, item 4. draft cleared.
+  - date: "2026-09-08"
+    change: >
       CC3.2: the row said HDS "treats its own risk assessment as an operator
       obligation in progress" and its chip said the assessment values were
       outstanding. Both were stale: the analysis was conducted 2026-07-30 and
@@ -1626,7 +1637,6 @@ requirements:
     monitors environmental protections, software, data back-up processes, and
     recovery infrastructure to meet its objectives.
   pryv_ref: A1.2
-  draft: true
   hds:
     coverage: facilitated
     effort_saved: high
@@ -1654,11 +1664,12 @@ requirements:
     planned:
       - kind: procedure
         summary: >-
-          Automated, restore-verified backups are the tracked remediation: the
-          backup-plan procedure and a backup-run record template are in the
-          internal pipeline, the automated-tooling defect is on the
-          risk-management treatment register, and the first verified
-          restore-tested run is outstanding.
+          The scheduled backup cycle is running on both regional cores as of
+          2026-07-30, producing encrypted off-host in-region copies, and an
+          archive has been retrieved and decrypted with the off-host key to
+          show the copies are usable. The tracked remainder is the per-region
+          production restore drill at non-trivial scale and confirmation of the
+          storage lifecycle backstop.
         impact: medium
         internal_doc: hipaa/procedures/data-backup-plan
   implementer:
@@ -1682,7 +1693,6 @@ requirements:
     The entity tests recovery plan procedures supporting system recovery to
     meet its objectives.
   pryv_ref: A1.3
-  draft: true
   hds:
     coverage: facilitated
     effort_saved: low
@@ -1706,9 +1716,10 @@ requirements:
     planned:
       - kind: procedure
         summary: >-
-          The contingency-test procedure and its execution-record template are
-          drafted in the internal pipeline; the first verified, recorded drill
-          with retained evidence is the tracked remainder.
+          The contingency-test procedure is approved and a first restore
+          rehearsal was performed on 2026-07-29 with a retained execution
+          record. It covered a single account, not a full per-region restore,
+          so recovery at production scale is the tracked remainder.
         impact: medium
         internal_doc: hipaa/procedures/contingency-plan-testing
   implementer:
