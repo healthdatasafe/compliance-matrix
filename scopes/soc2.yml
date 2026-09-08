@@ -10,6 +10,64 @@ matrix_language: EN
 layered_on_pryv: soc2
 regions: [us, ch]
 
+hds_posture:
+  draft: true
+  assessed_at: "2026-09-08"
+  evidence_backing:
+    rows_total: 61
+    rows_evidenced: 61
+    rows_approved: 45
+    as_of: "2026-09-08"
+  roles:
+    - arrangement: partner-integration
+      role: service-organization
+      applies_to: >
+        HDS is the service organisation; the partner is the user entity. The
+        hosting providers are subservice organisations, carved in or out
+        depending on the criterion.
+    - arrangement: hds-operated-service
+      role: service-organization
+      applies_to: >
+        The same control environment operates HDS's own services.
+  external_assurance:
+    level: none
+    detail: >
+      HDS holds NO SOC 2 report. There is no Type I and no Type II, no audit
+      period has been defined and no CPA firm has been engaged. Nothing on this
+      site should be read as a SOC 2 opinion.
+    inherited_provider_assurance:
+      - AWS SOC 2 (hosting layer only, as a subservice organisation)
+  statement: >
+    Forty-five of the sixty-one Trust Services Criteria are answered from
+    approved HDS documentation, and the remaining sixteen are evidenced by
+    documents still moving through review. This is a readiness map: it shows
+    which criteria the existing control environment already meets, which is
+    what a service organisation needs before engaging an auditor. It is not an
+    audit and confers no opinion. Twelve criteria carry open remediation,
+    including change management, vendor management and a tamper-evident audit
+    log.
+  known_gaps:
+    - summary: >
+        No SOC 2 examination has been engaged, so there is no report to give a
+        user entity that asks for one.
+      severity: high
+      internal_doc: soc2/policies/system-description
+    - summary: >
+        A written change-management process with ticketed approvals, per-change
+        test evidence and rollback is drafted but not operating.
+      severity: medium
+      refs: ["CC8.1"]
+    - summary: >
+        A formal vendor-management programme with scored risk tiers and
+        scheduled re-assessment is drafted but not operating.
+      severity: medium
+      refs: ["CC9.2"]
+    - summary: >
+        The audit log is append-only by convention with no hash chain or signed
+        checkpoint, so it is not tamper-evident against a host-level admin.
+      severity: medium
+      refs: ["PI1.5"]
+
 changelog:
   - date: "2026-09-08"
     change: >
@@ -878,13 +936,16 @@ requirements:
         - hipaa/policies/authentication
   implementer:
     - persona: service-organization
+      applies_when: [stores-phi-copy, hds-as-idp]
       coverage: documented
       overview: |
         Configure least-privilege per-stream access grants for your application and
         document your access-authorization rules; decide whether to require MFA.
     - persona: user-entity
+      applies_when: [stores-phi-copy, hds-as-idp]
       coverage: out-of-scope
     - persona: subservice-organization
+      applies_when: [stores-phi-copy, hds-as-idp]
       coverage: documented
       overview: |
         Apply the same logical-access controls to the service you run downstream.
@@ -926,13 +987,16 @@ requirements:
         - hipaa/procedures/access-termination
   implementer:
     - persona: service-organization
+      applies_when: [hds-as-idp]
       coverage: documented
       overview: |
         Document who may register and authorize users and at what scope, and tie
         de-provisioning to immediate access revocation.
     - persona: user-entity
+      applies_when: [hds-as-idp]
       coverage: out-of-scope
     - persona: subservice-organization
+      applies_when: [hds-as-idp]
       coverage: documented
       overview: |
         Operate the same registration and de-provisioning lifecycle downstream.
@@ -973,13 +1037,16 @@ requirements:
         - hipaa/procedures/access-review
   implementer:
     - persona: service-organization
+      applies_when: [hds-as-idp]
       coverage: documented
       overview: |
         Define your role model and least-privilege scopes, map them onto access
         grants, and run a periodic access review over the version history.
     - persona: user-entity
+      applies_when: [hds-as-idp]
       coverage: out-of-scope
     - persona: subservice-organization
+      applies_when: [hds-as-idp]
       coverage: documented
       overview: |
         Apply role-based least-privilege access and segregation of duties
@@ -1063,13 +1130,16 @@ requirements:
         - hipaa/registers/hosting-provider-attestations
   implementer:
     - persona: service-organization
+      applies_when: [stores-phi-copy]
       coverage: configurable
       overview: |
         Choose the storage engine that matches your destruction policy and document
         how backup-resident copies are aged out.
     - persona: user-entity
+      applies_when: [stores-phi-copy]
       coverage: out-of-scope
     - persona: subservice-organization
+      applies_when: [stores-phi-copy]
       coverage: configurable
       overview: |
         Make the same engine and sanitisation choices for the service you run
@@ -1173,14 +1243,17 @@ requirements:
         upstream_proposal: vendor/pryv/proposals/e2e-encryption.md
   implementer:
     - persona: service-organization
+      applies_when: [stores-phi-copy]
       coverage: configurable
       overview: |
         Rely on default-on TLS and the permission-bounded movement model; weigh
         the provider-managed-key at-rest residual in your risk analysis and add
         application-side encryption where your assessment requires it.
     - persona: user-entity
+      applies_when: [stores-phi-copy]
       coverage: out-of-scope
     - persona: subservice-organization
+      applies_when: [stores-phi-copy]
       coverage: configurable
       overview: |
         Make the same transmission and at-rest choices for the service you run
@@ -1591,14 +1664,17 @@ requirements:
         internal_doc: soc2/policies/vendor-management
   implementer:
     - persona: service-organization
+      applies_when: [third-parties]
       coverage: documented
       overview: |
         Run your own vendor-risk programme; assess HDS as a vendor using its
         release process, this matrix and its subprocessor register.
       templates: [subprocessor]
     - persona: user-entity
+      applies_when: [third-parties]
       coverage: out-of-scope
     - persona: subservice-organization
+      applies_when: [third-parties]
       coverage: documented
       overview: |
         Manage the risk of your own downstream vendors and flow obligations through
@@ -1640,14 +1716,17 @@ requirements:
         - soc2/procedures/capacity-management
   implementer:
     - persona: service-organization
+      applies_when: [stores-phi-copy]
       coverage: documented
       overview: |
         Define and document your own capacity-planning thresholds and the
         provisioning workflow if you operate your own deployment; otherwise rely
         on the HDS-operated capacity posture and reference it.
     - persona: user-entity
+      applies_when: [stores-phi-copy]
       coverage: out-of-scope
     - persona: subservice-organization
+      applies_when: [stores-phi-copy]
       coverage: documented
       overview: |
         Where a hosting subservice carries the underlying compute, its capacity
@@ -1698,14 +1777,17 @@ requirements:
         internal_doc: hipaa/procedures/data-backup-plan
   implementer:
     - persona: service-organization
+      applies_when: [stores-phi-copy]
       coverage: documented
       overview: |
         Document your backup schedule, retention and offsite policy, and confirm
         restorability; if you operate your own deployment, run the backup and
         replication primitives yourself.
     - persona: user-entity
+      applies_when: [stores-phi-copy]
       coverage: out-of-scope
     - persona: subservice-organization
+      applies_when: [stores-phi-copy]
       coverage: documented
       overview: |
         The hosting subservice carries environmental protections at the facility
@@ -1749,13 +1831,16 @@ requirements:
         internal_doc: hipaa/procedures/contingency-plan-testing
   implementer:
     - persona: service-organization
+      applies_when: [stores-phi-copy]
       coverage: documented
       overview: |
         Schedule, run and document recovery-plan tests for the parts of the
         system you operate, and revise the plan from the results.
     - persona: user-entity
+      applies_when: [stores-phi-copy]
       coverage: out-of-scope
     - persona: subservice-organization
+      applies_when: [stores-phi-copy]
       coverage: out-of-scope
 
 # ───────────────────────────────────────────────────────────────
@@ -1801,13 +1886,16 @@ requirements:
         - hipaa/policies/minimum-necessary
   implementer:
     - persona: service-organization
+      applies_when: [stores-phi-copy, ai-aggregate]
       coverage: documented
       overview: |
         Classify your confidential data, map it to a stream layout, and grant
         least-privilege per-stream access; document the classification scheme.
     - persona: user-entity
+      applies_when: [stores-phi-copy, ai-aggregate]
       coverage: out-of-scope
     - persona: subservice-organization
+      applies_when: [stores-phi-copy, ai-aggregate]
       coverage: out-of-scope
 
 - ref: C1.2
@@ -1853,13 +1941,16 @@ requirements:
         internal_doc: soc2/procedures/data-retention-and-disposal
   implementer:
     - persona: service-organization
+      applies_when: [stores-phi-copy]
       coverage: documented
       overview: |
         Define your disposal schedule and triggers, choose a storage engine
         whose backup behaviour matches it, and document the procedure.
     - persona: user-entity
+      applies_when: [stores-phi-copy]
       coverage: out-of-scope
     - persona: subservice-organization
+      applies_when: [stores-phi-copy]
       coverage: documented
       overview: |
         The hosting subservice carries physical media sanitisation; obtain and
@@ -2212,13 +2303,16 @@ requirements:
         - hipaa/policies/access-control
   implementer:
     - persona: service-organization
+      applies_when: [reads-data]
       coverage: documented
       overview: |
         Define each collection purpose and the minimal stream set it needs, and
         grant only that scope; document the mapping.
     - persona: user-entity
+      applies_when: [reads-data]
       coverage: out-of-scope
     - persona: subservice-organization
+      applies_when: [reads-data]
       coverage: out-of-scope
 
 - ref: P3.2
@@ -2256,13 +2350,16 @@ requirements:
         - soc2/policies/privacy-notice
   implementer:
     - persona: service-organization
+      applies_when: [reads-data, ai-individual, commercial-use]
       coverage: documented
       overview: |
         Present a separate affirmative consent step for sensitive data and gate
         that data behind a distinct access; document the explicit-consent flow.
     - persona: user-entity
+      applies_when: [reads-data, ai-individual, commercial-use]
       coverage: out-of-scope
     - persona: subservice-organization
+      applies_when: [reads-data, ai-individual, commercial-use]
       coverage: out-of-scope
 
 - ref: P4.1
@@ -2298,13 +2395,16 @@ requirements:
         - hipaa/policies/access-control
   implementer:
     - persona: service-organization
+      applies_when: [reads-data, ai-aggregate]
       coverage: documented
       overview: |
         Map each identified purpose to a distinct access scope and document the
         mapping; the platform enforces the boundary.
     - persona: user-entity
+      applies_when: [reads-data, ai-aggregate]
       coverage: out-of-scope
     - persona: subservice-organization
+      applies_when: [reads-data, ai-aggregate]
       coverage: out-of-scope
 
 - ref: P4.2
@@ -2349,14 +2449,17 @@ requirements:
         internal_doc: soc2/procedures/data-retention-and-disposal
   implementer:
     - persona: service-organization
+      applies_when: [ai-individual]
       coverage: documented
       overview: |
         Define your retention schedule, record retention terms on each record,
         and operate the enforcement sweep yourself; document the absence of
         platform auto-expiry as your responsibility.
     - persona: user-entity
+      applies_when: [ai-individual]
       coverage: out-of-scope
     - persona: subservice-organization
+      applies_when: [ai-individual]
       coverage: out-of-scope
 
 - ref: P4.3
@@ -2672,14 +2775,17 @@ requirements:
         - hipaa/registers/subprocessor-register
   implementer:
     - persona: service-organization
+      applies_when: [third-parties]
       coverage: documented
       overview: |
         Obtain and retain privacy commitments from your own vendors and
         third parties; reference the enforced access scope where applicable.
       templates: [subprocessor]
     - persona: user-entity
+      applies_when: [third-parties]
       coverage: out-of-scope
     - persona: subservice-organization
+      applies_when: [third-parties]
       coverage: documented
       overview: |
         Provide your privacy commitments to the service organization and flow
@@ -2716,14 +2822,17 @@ requirements:
         - hipaa/registers/subprocessor-register
   implementer:
     - persona: service-organization
+      applies_when: [third-parties]
       coverage: documented
       overview: |
         Obtain notification commitments from your third parties and run your
         response process when notified.
       templates: [subprocessor]
     - persona: user-entity
+      applies_when: [third-parties]
       coverage: out-of-scope
     - persona: subservice-organization
+      applies_when: [third-parties]
       coverage: documented
       overview: |
         Commit to notify the service organization of suspected unauthorized

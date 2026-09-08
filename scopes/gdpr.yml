@@ -10,6 +10,85 @@ matrix_language: EN
 layered_on_pryv: gdpr
 regions: [ch, us]
 
+hds_posture:
+  draft: true
+  assessed_at: "2026-09-08"
+  evidence_backing:
+    rows_total: 47
+    rows_evidenced: 41
+    rows_approved: 3
+    as_of: "2026-09-08"
+  roles:
+    - arrangement: partner-integration
+      role: processor
+      applies_to: >
+        Personal data a partner institution holds on the platform. The partner
+        determines purposes and means and is the Art.4(7) controller; HDS
+        processes on documented instructions under Art.28.
+    - arrangement: hds-operated-service
+      role: controller
+      applies_to: >
+        Services HDS itself operates and offers directly to individuals, where
+        HDS determines the purposes and means. HDS then carries the controller
+        accountability under Art.24 for that processing.
+  external_assurance:
+    level: self-assessed
+    detail: >
+      No supervisory-authority certification under Art.42, no independent audit
+      and no readiness review has been performed against this scope. Every claim
+      below is HDS's own assessment of HDS, reviewed internally only.
+    inherited_provider_assurance:
+      - AWS ISO/IEC 27001, 27017 and 27018 (us region hosting layer, obtained 2026-07-28)
+  statement: >
+    HDS operates a GDPR programme rather than holding a GDPR credential. A Data
+    Protection Officer was designated on 2026-07-17, a processor-side record of
+    processing activities under Art.30 is maintained with eight live
+    activities, and the platform supplies the technical measures the articles
+    require. This is the least settled of the four frameworks on paper: three
+    requirements rest on fully approved documentation and thirty-eight more are
+    evidenced by documents still in review. The two material open items are the
+    transfer stack for the US hosting layer, where the AWS DPA, the EU and
+    Swiss standard contractual clauses and the transfer impact assessment are
+    not yet executed, and HDS's own DPIA process, which is drafted but not yet
+    operating.
+  known_gaps:
+    - summary: >
+        Nothing is on file evidencing the Swiss hosting region's physical and
+        environmental controls. The safeguards HDS inherits there are asserted
+        by the provider rather than evidenced by a third-party audit, and the
+        provider's public encryption statement is a product claim, not an
+        attestation.
+      severity: high
+      internal_doc: hipaa/registers/hosting-provider-attestations
+    - summary: >
+        Art.46 transfer stack for the US hosting layer is not executed: the AWS
+        GDPR DPA, EU and Swiss SCCs and the transfer impact assessment are all
+        outstanding.
+      severity: high
+      refs: ["Art.46"]
+    - summary: >
+        The Art.30 register carries no retention period on the recruitment, CRM
+        and contact-mailbox rows, and its Art.30(2) half stays empty until the
+        first partner DPA is signed.
+      severity: medium
+      refs: ["Art.30"]
+    - summary: >
+        Art.32 encryption rests on provider-managed keys. End-to-end or
+        operator-held-key encryption, where the server never holds plaintext, is
+        queued upstream and not shipped.
+      severity: medium
+      refs: ["Art.32"]
+    - summary: >
+        The audit.onUserDelete pseudonymise mode is refused at boot upstream, so
+        the Art.17 erasure story is complete only in its erase and keep modes.
+      severity: medium
+      refs: ["Art.17"]
+    - summary: >
+        HDS's own DPIA process is drafted internally but is not yet a running
+        procedure with a first executed assessment.
+      severity: low
+      refs: ["Art.35"]
+
 changelog:
   - date: "2026-09-08"
     change: >
@@ -258,6 +337,7 @@ requirements:
           - hipaa/policies/integrity
     implementer:
       - persona: controller
+        applies_when: [stores-phi-copy, ai-aggregate, research-secondary-use]
         coverage: documented
         overview: |
           Establish lawful basis, notices and a retention schedule; HDS does not
@@ -294,6 +374,7 @@ requirements:
           - gdpr/policies/lawful-basis-and-consent
     implementer:
       - persona: controller
+        applies_when: [reads-data, ai-aggregate, commercial-use, research-secondary-use]
         coverage: documented
         overview: |
           Determine and document the lawful basis for each processing activity
@@ -371,6 +452,7 @@ requirements:
           - hipaa/policies/access-control
     implementer:
       - persona: controller
+        applies_when: [ai-individual, research-secondary-use]
         coverage: documented
         overview: |
           Determine the Art.9(2) condition for each special-category processing
@@ -407,6 +489,7 @@ requirements:
           - gdpr/policies/lawful-basis-and-consent
     implementer:
       - persona: controller
+        applies_when: [minors]
         coverage: documented
         overview: |
           Verify age and parental authority in your UX and record the artefacts;
@@ -515,6 +598,7 @@ requirements:
           - gdpr/policies/lawful-basis-and-consent
     implementer:
       - persona: controller
+        applies_when: [reads-data, holds-contact-data, third-parties, ai-individual, commercial-use]
         coverage: documented
         overview: |
           Author and present the Art.13 disclosures at collection time; record
@@ -549,6 +633,7 @@ requirements:
           - gdpr/policies/lawful-basis-and-consent
     implementer:
       - persona: controller
+        applies_when: [reads-data]
         coverage: documented
         overview: |
           Record the data source and present the Art.14 disclosures within the
@@ -591,6 +676,7 @@ requirements:
           - gdpr/procedures/data-subject-rights
     implementer:
       - persona: controller
+        applies_when: [reads-data]
         coverage: documented
         overview: |
           Run the request-intake process and, if desired, a subject portal; the
@@ -701,6 +787,7 @@ requirements:
           upstream_proposal: vendor/pryv/proposals/audit-on-user-delete.md
     implementer:
       - persona: controller
+        applies_when: [stores-phi-copy, holds-contact-data]
         coverage: documented
         overview: |
           Decide when an erasure obligation is triggered and invoke deletion;
@@ -827,6 +914,7 @@ requirements:
           - gdpr/procedures/data-subject-rights
     implementer:
       - persona: controller
+        applies_when: [reads-data, ai-individual, commercial-use]
         coverage: documented
         overview: |
           Run the compelling-grounds assessment where applicable and apply the
@@ -864,6 +952,7 @@ requirements:
           - gdpr/procedures/data-subject-rights
     implementer:
       - persona: controller
+        applies_when: [reads-data, third-parties]
         coverage: documented
         overview: |
           Identify the recipients from the active accesses and notify each of the
@@ -899,6 +988,7 @@ requirements:
           - gdpr/procedures/data-subject-rights
     implementer:
       - persona: controller
+        applies_when: [automated-decisions]
         coverage: documented
         overview: |
           Implement the safeguards (basis, human intervention) and record the
@@ -1036,11 +1126,13 @@ requirements:
           - gdpr/registers/records-of-processing
     implementer:
       - persona: controller
+        applies_when: [arrangement-partner]
         coverage: documented
         overview: |
           Express your processing instructions as scoped accesses and review the
           audit log for deviations.
       - persona: processor
+        applies_when: [arrangement-partner]
         coverage: documented
         overview: |
           Process only on documented controller instructions and keep your staff
@@ -1116,12 +1208,14 @@ requirements:
           - gdpr/registers/records-of-processing
     implementer:
       - persona: controller
+        applies_when: [arrangement-partner, third-parties]
         coverage: documented
         overview: |
           Evaluate the processor's guarantees and conclude an Art.28 DPA before
           processing begins.
         templates: [dpa]
       - persona: processor
+        applies_when: [arrangement-partner, third-parties]
         coverage: documented
         overview: |
           Sign the DPA, maintain your subprocessor inventory and bind any
@@ -1169,11 +1263,13 @@ requirements:
           - gdpr/registers/records-of-processing
     implementer:
       - persona: controller
+        applies_when: [arrangement-partner, stores-phi-copy]
         coverage: documented
         overview: |
           Maintain your Art.30 register, drawing the technical fields from the
           platform's derivable inputs.
       - persona: processor
+        applies_when: [arrangement-partner, stores-phi-copy]
         coverage: documented
         overview: |
           Keep your own processor-side record of the processing you perform for
@@ -1234,11 +1330,13 @@ requirements:
           upstream_proposal: vendor/pryv/proposals/e2e-encryption.md
     implementer:
       - persona: controller
+        applies_when: [stores-phi-copy, hds-as-idp]
         coverage: documented
         overview: |
           Assess the residual at-rest-encryption risk, run regular security
           testing and document your incident procedures.
       - persona: processor
+        applies_when: [stores-phi-copy, hds-as-idp]
         coverage: documented
         overview: |
           Evidence your own security measures and the at-rest controls applied at
@@ -1287,11 +1385,13 @@ requirements:
           - hipaa/procedures/security-incident-response
     implementer:
       - persona: controller
+        applies_when: [stores-phi-copy]
         coverage: documented
         overview: |
           Run the 72-hour notification process and make the risk determination;
           the scoping substrate is provided.
       - persona: processor
+        applies_when: [stores-phi-copy]
         coverage: documented
         overview: |
           Notify the controller without undue delay on becoming aware of a
@@ -1329,6 +1429,7 @@ requirements:
           - hipaa/procedures/security-incident-response
     implementer:
       - persona: controller
+        applies_when: [stores-phi-copy, holds-contact-data]
         coverage: documented
         overview: |
           Derive the affected-subject roster, render and deliver the
@@ -1373,6 +1474,7 @@ requirements:
           internal_doc: gdpr/procedures/dpia
     implementer:
       - persona: controller
+        applies_when: [ai-individual, automated-decisions, research-secondary-use]
         coverage: documented
         overview: |
           Run the DPIA where required, using the platform's technical inputs and
@@ -1673,6 +1775,7 @@ requirements:
           - hipaa/registers/hosting-provider-attestations
     implementer:
       - persona: controller
+        applies_when: [transfer-out-of-region, third-parties]
         coverage: documented
         overview: |
           Choose residency to avoid or to deliberately ground transfers, and
@@ -1708,6 +1811,7 @@ requirements:
           - hipaa/registers/hosting-provider-attestations
     implementer:
       - persona: controller
+        applies_when: [transfer-out-of-region]
         coverage: documented
         overview: |
           Route subjects to an adequacy-covered region and track the current
@@ -1760,12 +1864,14 @@ requirements:
           internal_doc: gdpr/policies/international-transfers
     implementer:
       - persona: controller
+        applies_when: [transfer-out-of-region, third-parties]
         coverage: documented
         overview: |
           Conclude SCCs or another Art.46 safeguard for US-region or other
           third-country transfers and record the mechanism.
         templates: [dpa]
       - persona: processor
+        applies_when: [transfer-out-of-region, third-parties]
         coverage: documented
         overview: |
           Sign the SCC-bearing DPA and flow equivalent clauses down to any
@@ -1847,6 +1953,7 @@ requirements:
           - gdpr/policies/international-transfers
     implementer:
       - persona: controller
+        applies_when: [transfer-out-of-region]
         coverage: documented
         overview: |
           Establish that a derogation applies, record it per transfer, and limit
