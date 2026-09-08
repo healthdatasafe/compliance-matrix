@@ -1,0 +1,186 @@
+# profiles.yml — the implementer-profile vocabulary.
+#
+# Rows reference these ids from `implementer[].applies_when`. validate.js
+# rejects unknown ids and warns about a feature no row uses, because a checkbox
+# that changes nothing is worse than no checkbox.
+#
+# THE INVARIANT THIS FILE EXISTS TO PROTECT: an obligation may be hidden ONLY
+# when it carries an explicit `applies_when` list and every listed feature is
+# off. An obligation with no `applies_when` is ALWAYS shown, marked "not yet
+# profiled". Silence about an obligation is the one failure that actually harms
+# an implementer, so untagged never means inapplicable.
+
+version: 1
+
+# ---------------------------------------------------------------------------
+# Features: what the implementer tells us about what they are building.
+# ---------------------------------------------------------------------------
+features:
+
+  # --- Who your users are. This decides which regulations apply at all. ---
+  - id: subjects-eu
+    group: population
+    label: Your users are in the EU or EEA, or you are established there
+  - id: subjects-ch
+    group: population
+    label: Your users are in Switzerland, or you are established there
+  - id: subjects-us
+    group: population
+    label: Your users are in the United States
+  - id: hipaa-relationship
+    group: population
+    label: A HIPAA Covered Entity is involved (a provider, health plan or clearinghouse)
+    note: >
+      Without one, HIPAA does not reach data an individual stores in their own
+      HDS account. Other US regimes do, and this matrix has no scope for them yet.
+  - id: want-soc2
+    group: population
+    label: Your customers ask you for SOC 2 assurance
+
+  # --- The arrangement. Exactly one; it decides who is the controller. ---
+  - id: arrangement-direct
+    group: arrangement
+    exclusive: arrangement
+    label: Your users hold their own HDS accounts, and HDS is the controller of that data
+  - id: arrangement-partner
+    group: arrangement
+    exclusive: arrangement
+    label: You are the controller and HDS processes on your instructions, under a DPA or BAA
+
+  # --- Where the data sits. ---
+  - id: region-ch
+    group: residency
+    label: Data is pinned to the Swiss region
+  - id: region-us
+    group: residency
+    label: Data is pinned to the US region
+
+  # --- What your application actually does. ---
+  - id: reads-data
+    group: application
+    label: Your application reads user data out of HDS (dashboards, sharing with you)
+  - id: hds-as-idp
+    group: application
+    label: Your users sign in to your application with their HDS account
+  - id: stores-phi-copy
+    group: application
+    label: You store a copy of health data outside HDS, including archives and backups
+  - id: holds-contact-data
+    group: application
+    label: You hold contact details outside HDS, for example to send notifications
+  - id: third-parties
+    group: application
+    label: You share data with third parties, or engage subprocessors
+  - id: ai-aggregate
+    group: application
+    label: AI, machine learning or analytics producing only aggregated output
+  - id: ai-individual
+    group: application
+    label: AI or analytics producing output about an identifiable individual
+  - id: automated-decisions
+    group: application
+    label: Automated decisions with a legal or similarly significant effect on a person
+  - id: commercial-use
+    group: application
+    label: Marketing, profiling for marketing, or selling data
+  - id: research-secondary-use
+    group: application
+    label: Research or other use beyond the purpose the data was collected for
+  - id: minors
+    group: application
+    label: Your users include people under the age of digital consent
+
+# ---------------------------------------------------------------------------
+# Derived features: the ONLY place AND-logic lives. Row tags stay flat any-of
+# lists, which is what keeps the tagging reviewable and the matching cheap.
+# ---------------------------------------------------------------------------
+derived:
+  - id: transfer-out-of-region
+    all: [subjects-eu, region-us]
+    label: Personal data leaving the EU or EEA for the US region
+
+# ---------------------------------------------------------------------------
+# Presets: the four archetypes, as starting points over the same checkboxes.
+# ---------------------------------------------------------------------------
+presets:
+  - id: self-monitoring
+    label: Self-monitoring app
+    summary: Your application serves the end user only. You store nothing.
+    features: [arrangement-direct]
+  - id: shared-with-you
+    label: Shared with you, sign-in via HDS
+    summary: >
+      Users share data with you and sign in with their HDS account. You still
+      store no health data of your own.
+    features: [arrangement-direct, reads-data, hds-as-idp]
+  - id: aggregate-ai
+    label: Plus aggregated AI or analytics
+    summary: >
+      As above, plus AI or analytics that produce aggregated reports only. No
+      health data stored outside HDS.
+    features: [arrangement-direct, reads-data, hds-as-idp, ai-aggregate]
+  - id: stores-copy
+    label: You store a copy of the data
+    summary: >
+      You hold your own copy of health data. That makes you a controller for
+      that copy, and most of the storage-side obligations become yours.
+    features: [arrangement-partner, reads-data, hds-as-idp, stores-phi-copy]
+
+# ---------------------------------------------------------------------------
+# Which regulations apply, given the population selected.
+# ---------------------------------------------------------------------------
+scope_applicability:
+  - scope: gdpr
+    when: { any: [subjects-eu] }
+  - scope: swiss-nlpd
+    when: { any: [subjects-ch] }
+  - scope: hipaa-security
+    when: { all: [subjects-us, hipaa-relationship] }
+  - scope: hipaa-privacy
+    when: { all: [subjects-us, hipaa-relationship] }
+  - scope: hipaa-breach
+    when: { all: [subjects-us, hipaa-relationship] }
+  - scope: soc2
+    when: { any: [want-soc2] }
+
+# Gaps in this matrix's own coverage, surfaced rather than left as silence.
+# A selection that lands here gets a warning, not an empty result.
+uncovered:
+  - id: us-consumer
+    when: { all: [subjects-us] }
+    unless: [hipaa-relationship]
+    title: US consumer health data, with no Covered Entity involved
+    message: >
+      HIPAA does not apply to this arrangement. The FTC Health Breach
+      Notification Rule and state consumer-health-data laws do. This matrix
+      has no scope for either yet, so the requirements below are not the whole
+      of your obligations. Take this one to counsel.
+
+# Which persona's obligations to show, per scope and arrangement.
+# `ask` means the implementer picks, because the matrix carries both and they
+# are materially different sets of obligations.
+personas:
+  gdpr:
+    arrangement-direct: controller
+    arrangement-partner: controller
+  swiss-nlpd:
+    arrangement-direct: controller
+    arrangement-partner: controller
+  hipaa-security: { ask: [covered-entity, business-associate] }
+  hipaa-privacy: { ask: [covered-entity, business-associate] }
+  hipaa-breach: { ask: [covered-entity, business-associate] }
+  soc2:
+    arrangement-direct: service-organization
+    arrangement-partner: service-organization
+
+# ---------------------------------------------------------------------------
+# Known limitation, stated in the file that causes it.
+#
+# The GDPR and nLPD `controller` obligations were authored for partner mode,
+# where the partner is the controller. In direct mode HDS is the controller and
+# the implementer is a recipient, an independent controller only for what it
+# processes on its own systems. Roughly 30 to 40 of the 77 controller entries
+# read differently under that arrangement. Only the rows the four presets touch
+# are tagged so far; the rest show unfiltered and marked "not yet profiled".
+# The full walk is tracked as follow-on work.
+# ---------------------------------------------------------------------------
