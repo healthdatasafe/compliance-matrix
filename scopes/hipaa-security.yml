@@ -11,6 +11,17 @@ layered_on_pryv: hipaa-security
 regions: [us]
 
 changelog:
+  - date: "2026-09-08"
+    change: >
+      164.310 / 164.310(a)(1) / 164.310(d)(1): per-region evidence grades stated.
+      The US region (AWS us-east-1) is evidenced by third-party attestations on
+      file since 2026-07-28 (SOC 2 Type II + continued-operations letter, ISO/IEC
+      27001 naming us-east-1 in the certified locations, 27017, 27018); the Swiss
+      region is contractually assured but not evidenced, and the row now says so
+      instead of claiming HDS holds the attestations outright. The 164.310(d)(1)
+      planned chip is discharged for the US half and narrowed to the Swiss half.
+      Applies compliance-internal instruction 2026-07-28-aws-attestations-and-risk-ratings.
+      draft flag cleared on the three rows walked.
   - date: "2026-07-28"
     change: >
       Platform uplink chips (kind: platform): §164.308(a)(8) effective-config
@@ -755,7 +766,6 @@ requirements:
     information systems and the facilities in which they are housed, while
     ensuring that properly authorized access is allowed.
   pryv_ref: "164.310"
-  draft: true
   hds:
     coverage: facilitated
     effort_saved: medium
@@ -775,6 +785,12 @@ requirements:
       region's data residency, and holds the provider attestations on file. The
       facility-control hardware itself remains the certified provider's; HDS's
       contribution is selection, documentation and the residency guarantee.
+      Evidence grades differ by region: the US region (AWS, us-east-1) is
+      evidenced by independent third-party attestations obtained 2026-07-28 and
+      on file (SOC 2 Type II with a continued-operations letter, ISO/IEC 27001
+      with us-east-1 named in the certified locations, 27017 and 27018). The
+      Swiss region is contractually assured but not yet evidenced: nothing is on
+      file for it, and the provider's audit clause is the route to closing that.
     evidence:
       internal_docs:
         - hipaa/policies/physical-safeguards
@@ -801,7 +817,6 @@ requirements:
     information systems and the facilities housing them, while ensuring properly
     authorized access is allowed.
   pryv_ref: "164.310(a)(1)"
-  draft: true
   hds:
     coverage: facilitated
     effort_saved: medium
@@ -817,8 +832,11 @@ requirements:
       certified infrastructure in the EU/Switzerland and US regions. The
       facility-access-control specification is satisfied at the server tier by the
       provider's attested controls, which HDS records in its hosting-provider
-      register. The implementer's own facilities (offices where workforce members
-      access ePHI) remain their responsibility.
+      register. Evidence grades differ by region: the US region's facility
+      controls rest on third-party attestations on file since 2026-07-28; the
+      Swiss region's rest on contract alone, with no attestation yet obtained.
+      The implementer's own facilities (offices where workforce members access
+      ePHI) remain their responsibility.
     evidence:
       internal_docs:
         - hipaa/registers/hosting-provider-attestations
@@ -926,7 +944,6 @@ requirements:
     hardware and electronic media containing ePHI into and out of a facility, and
     the movement of these items within the facility.
   pryv_ref: "164.310(d)(1)"
-  draft: true
   hds:
     coverage: facilitated
     effort_saved: medium
@@ -941,7 +958,9 @@ requirements:
     detail: |
       The server-tier device-and-media-controls obligation (secure disposal,
       media re-use, sanitisation) is satisfied by the hosting provider's attested
-      controls, recorded in the HDS hosting-provider register. At the application
+      controls, recorded in the HDS hosting-provider register, where the US
+      region is evidenced by attestations on file and the Swiss region rests on
+      contract alone. At the application
       tier, open-pryv.io's per-user data model means an individual subject's ePHI
       can be exported and moved as a discrete unit. Production volumes are
       encrypted at rest (hosting-layer full-volume encryption, both regions,
@@ -962,9 +981,12 @@ requirements:
     planned:
       - kind: doc
         summary: >-
-          The hosting-provider attestation register exists but the attestation
-          documents themselves are not yet collected and filed (dates/expiry
-          are placeholders); collection is the tracked remediation.
+          Swiss region only. The US region's media-sanitisation evidence is on
+          file (AWS third-party attestations obtained 2026-07-28), so the
+          collection remediation is discharged for that half. Nothing is on file
+          for the Swiss region, whose provider is contractually obliged to supply
+          a current ISO/IEC 27001 certificate and SOC 2 Type II summary on
+          request; obtaining them is the remaining remediation.
         impact: low
         internal_doc: hipaa/registers/hosting-provider-attestations
   implementer:
