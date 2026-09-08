@@ -1,9 +1,26 @@
 # Proposal: MFA: document the extension point + ship reference plugins
 
-**Status:** future. Mirror of the macroPryv backlog item
-`_plans/XXX-Backlog/COMPLIANCE-MFA-MODERN-METHODS.md`, in the perspective of
-`_plans/40-OAUTH2-Account-based-signatures-later/` (the broader
-auth-modernisation plan).
+**Status:** step 2 (server-side TOTP) SHIPPED to `open-pryv.io` master
+(`b606b328`, 2026-09-02); steps 1 (full docs) and 3 (WebAuthn) future. Mirror of
+the macroPryv backlog item `_plans/XXX-Backlog/COMPLIANCE-MFA-MODERN-METHODS.md`,
+in the perspective of `_plans/40-OAUTH2-Account-based-signatures-later/` (the
+broader auth-modernisation plan).
+
+> **Step 2 shipped 2026-09-02 in `b606b328` (Plan 119).** Server-side TOTP
+> (RFC 6238) is built in `open-pryv.io/components/business/src/mfa/` (in-process
+> `TotpService` + `MfaMethod` registry + config normalizer) and is the default
+> method when MFA is enabled; SMS unchanged; secrets encrypted at rest; RFC
+> golden-vector-tested; cross-model security-reviewed (a HIGH concurrent-replay
+> finding fixed). Released in `open-pryv.io` `2.0.0-rc.14` (2026-09-02) and
+> deployed to pryv.me production (both cores) — MFA now active by default there.
+> The
+> auth-strength rows this strengthens — `hipaa-security` 164.312(d) /
+> 164.308(a)(5)(ii)(D), `iso-27001` A.8.5 / A.5.17, `diga` A1.2.4 — stay
+> `Implemented | High` and gain a stronger evidence chain (in-process TOTP,
+> NIST 800-63B AAL2 without a third-party service); the matrix-row detail text
+> refresh is the remaining matrix-data step. Known post-ship hardening (per-user
+> rate limit, replay compare-and-set) tracked in Plan 119 sub-plan 1
+> (`_plans/XXX-Backlog/MFA-TOTP-HARDENING.md`; Plan 119 closed + archived).
 
 ## Today's posture (correct + currently understated)
 

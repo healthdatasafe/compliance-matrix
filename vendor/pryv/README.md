@@ -14,16 +14,28 @@ box). HDS layers its own (HDS + implementer) rows on top.
 ## Snapshot documents the software, not the HDS deployment
 
 The snapshot tracks the upstream **tip** and therefore describes what the
-open-pryv.io software does at that commit — which can run **ahead of the build
-HDS actually deploys**. As of 2026-07-28 the snapshot describes features up to
-open-pryv.io `2.0.0-rc.8` (OAuth2 authorization server + PKCE, DPoP,
-shared-secrets, operator client/key revocation, the allow-list observability
-emitter) while the deployed HDS production cores run `2.0.0-rc.4` (see
-`dev-deploy/config/apps.yml`), which carries none of those. **Deployment-anchored
-claims live in the HDS layer** (`../../scopes/*.yml`): an HDS row only cites a
-platform primitive once the deployed cores run a build carrying it. When the
-cores upgrade, revisit the HDS rows the sync report flagged and lift this gap
-note's version delta.
+open-pryv.io software does at that commit, which can run **ahead of the build HDS
+actually deploys**. **Deployment-anchored claims live in the HDS layer**
+(`../../scopes/*.yml`): an HDS row only cites a platform primitive once the
+deployed cores run a build carrying it. When the cores upgrade, revisit the HDS
+rows the sync report flagged and update the delta recorded below.
+
+**As of 2026-09-08 there is no delta.** Both HDS production cores run
+open-pryv.io `2.0.0-rc.16`, deployed 2026-09-07 (deploy tags
+`deploy/prod-ch1-20260907` and `deploy/prod-us1-20260907`), and the snapshot
+describes the same line. The dev core runs `2.0.0-rc.14`. Every platform
+primitive the snapshot documents is therefore citable by an HDS row on
+deployment grounds.
+
+> **Read the version from the deploy tags, not from a hand-written note.** This
+> paragraph claimed a deployed `rc.4` against an `rc.8` snapshot from 2026-07-28
+> until 2026-09-08, through twelve release candidates and four production
+> roll-forwards. Because the rule above gates every citation on the deployed
+> version, a stale figure here silently withholds primitives the cores have been
+> running for months. The authoritative check is
+> `git describe --tags --match '2.0.0-rc.*' deploy/prod-ch1-<newest>` in the
+> `open-pryv.io` checkout; `dev-deploy/config/apps.yml` notes are prose and go
+> stale the same way this did.
 
 ## Why vendored (not a submodule / live fetch)
 
