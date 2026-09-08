@@ -13,6 +13,18 @@ regions: [us]
 changelog:
   - date: "2026-09-08"
     change: >
+      164.308(a)(4)(ii)(C): narrative sharpened, coverage unchanged at
+      implemented. The periodic operator access review has now been executed
+      once, so the row no longer reads as an untested cadence; the execution
+      record is stated as filed and in review, not as signed evidence. The row
+      also now states the boundary explicitly: the review covers operator
+      accounts HDS administers, not the accesses account holders grant over
+      their own data. Nothing about the operator population, the grants or the
+      machines is published. Applies compliance-internal instruction
+      2026-07-30-first-access-review-executed (item 1 was already applied in the
+      2026-07-31 pass). draft flag cleared.
+  - date: "2026-09-08"
+    change: >
       164.310(b) / 164.310(c): planned doc chip naming the approved workstation
       and BYOD standard, whose remainder is the third machine assessment and the
       countersignatures on the two filed attestations. The standard is NOT cited
@@ -288,7 +300,6 @@ requirements:
     a user's right of access, based on the entity's access authorization
     policies.
   pryv_ref: 164.308(a)(4)(ii)(C)
-  draft: true
   hds:
     coverage: implemented
     effort_saved: high
@@ -301,8 +312,14 @@ requirements:
       HDS operates establishment, review and modification of access rights as
       audited operations: grants can be enumerated with their full version
       chain, narrowed or revoked, with each step timestamped and attributed to
-      the acting administrator. HDS documents its own establishment-and-review
-      cadence; partners apply the same primitives.
+      the acting administrator. HDS's own periodic operator access review is
+      defined on a stated cadence and has been executed, so the cadence is
+      exercised rather than merely written; the execution record is filed
+      internally and is in review, not yet signed off. Partners apply the same
+      primitives to their own populations. The review covers the operator
+      accounts HDS administers, not the accesses that individual account holders
+      grant over their own data: those are the account holder's to review and
+      revoke, and HDS does not act on them.
     regions: [us, ch]
     evidence:
       internal_docs:
