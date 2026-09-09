@@ -3,7 +3,7 @@ id: baa
 title: Business Associate Agreement (template)
 kind: baa
 signer: covered-entity
-counterparty: hds
+counterparty: business-associate
 frameworks: [hipaa]
 covers:
   - hipaa-security.164.314(a)(1)
@@ -11,8 +11,10 @@ covers:
 status: draft
 version: "0.1.0"
 summary: >
-  Template BAA between a Covered Entity (or upstream Business Associate) and HDS,
-  governing HDS's handling of ePHI on the customer's behalf.
+  Template BAA for a Covered Entity (or upstream Business Associate) to sign with
+  ITS OWN business associates. NOT for use with HDS: in the vault product HDS
+  holds data for the individual, who grants access directly, so it maintains
+  nothing on a customer's behalf and is nobody's business associate there.
 ---
 
 > ⚠️ **Not legal advice.** This template is engineering/operational guidance.
@@ -23,7 +25,14 @@ summary: >
 
 This Business Associate Agreement ("Agreement") is entered into by and between
 `[Covered Entity / Business Associate legal name]` ("Covered Entity") and
-**Health Data Safe** ("Business Associate"), effective `[date]`.
+`[Business Associate legal name]` ("Business Associate"), effective `[date]`.
+
+> **Not for use with HDS.** In the vault product an individual holds their own
+> account and decides who may see the data, so HDS creates, receives, maintains
+> and transmits nothing on your behalf and is not your business associate. Use
+> this template with the vendors *you* engage that do handle protected health
+> information for you. Partnership arrangements in which HDS would act on an
+> organisation's behalf are documented separately and fall outside this matrix.
 
 ## 1. Definitions
 Terms used but not otherwise defined have the meaning given in 45 CFR Parts 160
@@ -51,7 +60,7 @@ integrity, and availability of the ePHI it handles, including:
   (`[EU/Switzerland | US]`);
 - monitoring and alerting on its services.
 _At-rest encryption status and other current control details are described in
-HDS's internal documentation, available on request under this Agreement._
+the Business Associate's documentation, available on request under this Agreement._
 
 ## 4. Subcontractors (§164.308(b), §164.314(a)(2)(ii))
 Business Associate will ensure that any subcontractor that creates, receives,
@@ -88,7 +97,7 @@ feasible, and retain no copies.
 ---
 
 **Covered Entity:** `[name, signatory, title, date]`
-**Business Associate (Health Data Safe):** `[signatory, title, date]`
+**Business Associate:** `[signatory, title, date]`
 
 _Execution is recorded via the controlled sign-off workflow; the executed copy is
-filed in HDS's BAA register._
+filed in your own BAA register._

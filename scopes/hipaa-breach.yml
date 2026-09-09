@@ -21,29 +21,35 @@ hds_posture:
     rows_approved: 12
     as_of: "2026-09-08"
   roles:
-    - arrangement: covered-entity-relationship
-      role: business-associate
-      applies_to: >
-        HDS's duty on discovering a breach is to notify the covered entity
-        without unreasonable delay; notifying individuals, HHS and the media
-        remains the covered entity's.
     - arrangement: vault
       role: not-applicable
       applies_to: >
-        Direct-to-individual services outside a covered-entity relationship.
+        The individual's vault. HDS holds the data for the individual, who
+        decides who may see it, so HDS creates, receives, maintains and
+        transmits nothing on a covered entity's behalf. HIPAA does not reach
+        HDS here.
+  no_role_note: >
+    This matrix covers the vault product, and HDS holds no HIPAA role in it. A
+    business associate maintains protected health information ON BEHALF OF a
+    covered entity; in the vault HDS maintains it for the individual, and an
+    organisation reaches that data only through consent the individual grants it
+    directly. Partnership arrangements in which HDS would handle data on an
+    organisation's behalf, and would therefore need a BAA, exist and are
+    documented separately. They are outside this matrix. The requirements below
+    are still the map for an implementer who does hold a HIPAA role of its own.
   external_assurance:
     level: self-assessed
     detail: >
       No independent review. The incident and breach procedure has been
       rehearsed, not tested by a real reportable breach.
   statement: >
-    HDS can answer the question this rule actually turns on, which is who was
-    affected and what did they hold. The breach-scope primitive is deployed to
-    every core with the access index backfilled, so the blast radius of a
-    compromised token is enumerated rather than estimated, and twelve of the
-    thirteen requirements rest on approved documentation. The notification
-    procedure is approved and rehearsed; no real reportable breach has
-    exercised it.
+    HIPAA does not reach HDS in the vault product, but the question this rule turns
+    on is one the platform can answer: who was affected and what did they hold. The
+    breach-scope primitive is deployed to every core with the access index
+    backfilled, so the blast radius of a compromised token is enumerated rather
+    than estimated, and twelve of the thirteen requirements are answered from
+    approved documentation. The notification procedure is approved and rehearsed;
+    no real reportable breach has exercised it.
   known_gaps:
     - summary: >
         No row in this scope has completed review, and the notification
@@ -120,8 +126,7 @@ requirements:
         applies_when: always
         coverage: documented
         overview: |
-          Confirm with HDS, in your BAA, which protections apply to your data and
-          which obligations flow down to your own subcontractors.
+          Confirm which protections apply to the data you hold and which obligations flow down to your own subcontractors.
         templates: [baa]
       - persona: individual
         coverage: out-of-scope

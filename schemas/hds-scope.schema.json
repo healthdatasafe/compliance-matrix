@@ -275,9 +275,9 @@
             }
           }
         },
-        "not_a_processor": {
+        "no_role_note": {
           "type": "string",
-          "description": "Optional. States why HDS does not hold a processor role for this scope, where a reader would otherwise expect one. Present on the scopes whose regime has a processor concept."
+          "description": "Why HDS does not hold the role a reader would expect under this scope. THE MATRIX COVERS THE VAULT PRODUCT ONLY: data is held for the individual, who decides who may see it, so HDS is not an Art.28 processor and not a business associate here. Arrangements that would create such a role (a partnership where HDS handles data on an organisation's behalf) are documented separately and are out of this matrix's scope."
         }
       }
     }

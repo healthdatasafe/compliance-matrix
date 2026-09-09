@@ -26,7 +26,7 @@ hds_posture:
         operating it, so HDS is the controller under the Act. Data enters only with
         the individual's explicit consent, and the individual decides who may
         access it afterwards.
-  not_a_processor: >
+  no_role_note: >
     HDS is not an processor for this product, and the matrix does not
     offer that arrangement. Acting as a processor would require processing on a
     controller's instructions and returning or deleting the data at its choice. HDS acts on the

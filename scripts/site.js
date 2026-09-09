@@ -246,21 +246,29 @@ const postureCards = groups.map((g) => {
 
     <div class="backing">
       <div class="bknum"><b>${b.rows_approved}</b> of ${b.rows_total}</div>
-      <p class="bklab">requirements backed by approved internal documentation
+      <p class="bklab">requirements answered from approved HDS documentation
         ${b.rows_evidenced > b.rows_approved ? `· <span class="muted">${b.rows_evidenced - b.rows_approved} more evidenced, documentation still in review</span>` : ''}</p>
       <div class="bkbar"><span class="seg ok" style="width:${pct}%"></span><span class="seg mid" style="width:${Math.round((b.rows_evidenced - b.rows_approved) / (b.rows_total || 1) * 100)}%"></span></div>
     </div>
 
-    ${ps.map(({ scope, posture }) => `
+    ${(() => {
+      // A family whose sub-rules all state the same role shows it once, not
+      // three identical rows.
+      const same = g.isFamily && new Set(ps.map(({ posture }) => JSON.stringify(posture.roles))).size === 1;
+      const note = (po) => po.no_role_note
+        ? `<p class="notproc"><b>HDS holds no role here, by design.</b> ${esc(po.no_role_note)}</p>`
+        : '';
+      return (same
+        ? `<div class="pbody"><div class="roles">${roleRows(ps[0].posture)}</div>${note(ps[0].posture)}</div>`
+        : '') +
+        ps.map(({ scope, posture }) => `
       <div class="pbody">
         ${g.isFamily ? `<h4 class="subrule">${esc(scope.short || scope.id)}</h4>` : ''}
-        <div class="roles">${roleRows(posture)}</div>
+        ${same ? '' : `<div class="roles">${roleRows(posture)}</div>`}
         <p class="stmt">${esc(posture.statement)}</p>
-        ${posture.not_a_processor
-? `<p class="notproc"><b>HDS is not your processor, by design.</b>
-          ${esc(posture.not_a_processor)}</p>`
-: ''}
-      </div>`).join('')}
+        ${same ? '' : note(posture)}
+      </div>`).join('');
+    })()}
 
     <a class="more" href="${esc(g.page)}">Read the requirement rows →</a>
 
@@ -291,7 +299,7 @@ fs.writeFileSync(path.join(OUT, 'standing.html'), layout('HDS standing', `
   and what it is still working on. For what HDS carries on your behalf, see
   <a href="implementer.html">the implementer view</a>.</p>
   <p class="count"><b>${totals.approved}</b> of ${totals.total} requirements across ${groups.length} frameworks
-  are backed by approved internal documentation, released on request under NDA, signed BAA or audit engagement.</p>
+  are answered from approved HDS documentation, released on request under NDA, signed BAA or audit engagement.</p>
 </section>
 <section class="postures">${postureCards}</section>
 <section class="method">
@@ -652,7 +660,7 @@ short: s.short || s.id,
         (unprofiled ? ' · <span class="npf">' + unprofiled + ' not yet classified, shown in full</span>' : '') +
         (nonDuty ? ' · ' + nonDuty + ' place no duty on you' : '') +
         (meta.posture && meta.posture.backing ? ' · HDS: ' + meta.posture.backing.rows_approved + ' of ' +
-          meta.posture.backing.rows_total + ' backed by approved documentation, <a href="standing.html">see standing</a>' : '') + '</p>' +
+          meta.posture.backing.rows_total + ' answered from approved HDS documentation, <a href="standing.html">see standing</a>' : '') + '</p>' +
         (orient.length ? '<details class="scopetest"><summary>Does this framework reach you at all?</summary><ul>' +
           orient.map(function (o) {
             return '<li><a class="ref" href="' + o.page + '#' + o.anchor + '"><code>' + esc(o.ref) + '</code> ' + esc(o.title) + '</a>' +
@@ -916,9 +924,9 @@ for (const g of groups) {
         ${assurancePill(posture.external_assurance?.level)}</div>
       <div class="roles">${roleRows(posture)}</div>
       <p class="stmt">${esc(posture.statement)}</p>
-      ${posture.not_a_processor
-? `<p class="notproc"><b>HDS is not your processor, by design.</b>
-        ${esc(posture.not_a_processor)}</p>`
+      ${posture.no_role_note
+? `<p class="notproc"><b>HDS holds no role here, by design.</b>
+        ${esc(posture.no_role_note)}</p>`
 : ''}
     </div>`).join('');
 

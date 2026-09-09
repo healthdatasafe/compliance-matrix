@@ -21,19 +21,22 @@ hds_posture:
     rows_approved: 43
     as_of: "2026-09-08"
   roles:
-    - arrangement: covered-entity-relationship
-      role: business-associate
-      applies_to: >
-        PHI a covered entity or another business associate places on the
-        platform. HDS is the business associate under a signed BAA and carries
-        the Security Rule obligations that flow to that role.
     - arrangement: vault
       role: not-applicable
       applies_to: >
-        Services HDS operates directly for individuals and not on behalf of a
-        covered entity. HIPAA attaches through the covered-entity relationship,
-        so it does not reach this arrangement; the GDPR and the nLPD do. Confirm
-        the characterisation of your own arrangement with counsel.
+        The individual's vault. HDS holds the data for the individual, who
+        decides who may see it, so HDS creates, receives, maintains and
+        transmits nothing on a covered entity's behalf. HIPAA does not reach
+        HDS here.
+  no_role_note: >
+    This matrix covers the vault product, and HDS holds no HIPAA role in it. A
+    business associate maintains protected health information ON BEHALF OF a
+    covered entity; in the vault HDS maintains it for the individual, and an
+    organisation reaches that data only through consent the individual grants it
+    directly. Partnership arrangements in which HDS would handle data on an
+    organisation's behalf, and would therefore need a BAA, exist and are
+    documented separately. They are outside this matrix. The requirements below
+    are still the map for an implementer who does hold a HIPAA role of its own.
   external_assurance:
     level: self-assessed
     detail: >
@@ -43,14 +46,15 @@ hds_posture:
     inherited_provider_assurance:
       - AWS ISO/IEC 27001 (us-east-1 named in the certified locations), 27017, 27018 — obtained 2026-07-28
   statement: >
-    Every one of the forty-three Security Rule requirements is answered from an
-    approved HDS document. The administrative safeguards are live procedures,
-    not paper: a risk analysis and risk-management plan are approved, workforce
-    training runs against a completion register, backups are provisioned on both
-    regional cores and a first restore rehearsal was executed on 2026-07-29.
-    Nine requirements carry remediation HDS has committed to and not yet
-    delivered; encryption at rest uses provider-managed keys, and customer-held
-    or end-to-end keys are queued rather than shipped.
+    HIPAA does not reach HDS in the vault product, so the position below is not
+    a claim that HDS meets the Security Rule: it is what the platform supplies to
+    an implementer who does hold a role. Every one of the forty-three requirements
+    is answered from an approved HDS document, and the operational safeguards
+    behind those answers are live rather than paper: a risk analysis and
+    risk-management plan are approved, workforce training runs against a completion
+    register, backups are provisioned on both regional cores and a first restore
+    rehearsal was executed on 2026-07-29. Nine carry remediation HDS has committed
+    to and not delivered; encryption at rest uses provider-managed keys.
   known_gaps:
     - summary: >
         Addressable encryption at rest rests on provider-managed keys. Neither
@@ -2035,15 +2039,14 @@ requirements:
       applies_when: [connects, stores-phi-copy, third-parties]
       coverage: documented
       overview: |
-        Execute a BAA with HDS before sending any ePHI, and keep it on file.
+        Execute a business associate agreement with every business associate you engage, before any ePHI reaches them, and keep each on file. HDS is not one of them: in the vault it holds data for the individual, who grants you access directly.
       templates: [baa]
     - persona: business-associate
       basis: integration
       applies_when: [connects, stores-phi-copy, third-parties]
       coverage: documented
       overview: |
-        Execute a BAA with HDS and back-to-back agreements with any of your own
-        downstream processors.
+        Execute back-to-back agreements with any downstream subcontractor you engage. No agreement with HDS is needed for the vault: it holds the data for the individual, not on your behalf.
       templates: [baa, subcontractor]
     - persona: individual
       coverage: out-of-scope
@@ -2128,8 +2131,7 @@ requirements:
       applies_when: [connects, stores-phi-copy, third-parties]
       coverage: documented
       overview: |
-        Ensure your BAA with HDS specifies the incident-report channel and
-        timing, and integrate HDS reports into your own breach-assessment
+        Ensure each agreement with your own business associates specifies the incident-report channel and timing, and integrate what you receive into your own breach-assessment
         procedure.
       templates: [baa]
     - persona: business-associate
