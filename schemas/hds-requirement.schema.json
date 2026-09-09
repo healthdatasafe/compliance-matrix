@@ -281,6 +281,14 @@
               }
             }
           ]
+        },
+        "nature": {
+          "enum": [
+            "obligation",
+            "orientation"
+          ],
+          "default": "obligation",
+          "description": "'orientation' marks an entry that is NOT a duty: a scope provision telling the reader whether the regime engages at all (GDPR Art.2/Art.3 and their nLPD equivalents), or similar guidance. Orientation entries are always shown and NEVER counted as obligations. Without this, a scope article inflates the obligation count for an implementer who has no obligations, which is how a page that should read 'nothing attaches to you' comes to read '4 obligations apply'."
         }
       }
     }
