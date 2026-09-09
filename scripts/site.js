@@ -161,6 +161,8 @@ const layout = (title, body, { active } = {}) => `<!doctype html>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${esc(title)} — HDS compliance-matrix</title>
 <link rel="stylesheet" href="styles.css">
+<link rel="alternate" type="text/plain" href="llms.txt" title="Machine-readable summary and matching rules">
+<link rel="alternate" type="text/plain" href="llms-full.txt" title="The full matrix as text">
 </head><body>
 <header class="top">
   <a class="brand" href="index.html">HDS <b>compliance-matrix</b></a>
@@ -180,6 +182,12 @@ const layout = (title, body, { active } = {}) => `<!doctype html>
   something here is wrong, write to <a href="mailto:${CONTACT}">${CONTACT}</a>: the documents are
   released under NDA, a signed BAA or an audit engagement. Platform layer inherited from
   <a href="https://github.com/pryv/compliance-matrix">pryv/compliance-matrix</a>.</p>
+  <p class="agentnote"><strong>Reading this with an agent?</strong> The implementer view computes
+  its answer in the browser, so scraping that page returns an empty result. The whole matrix is
+  published as text instead: <a href="llms.txt">llms.txt</a> for the model, HDS's position per
+  framework and the rules for computing an implementer's answer, and
+  <a href="llms-full.txt">llms-full.txt</a> for all ${scopes.reduce((n, s) => n + (s.requirements || []).length, 0)} requirements across the three layers
+  (per framework: ${scopes.map((s) => `<a href="llms-${esc(s.id)}.txt">${esc(s.short || s.id)}</a>`).join(', ')}).</p>
 </footer>
 </body></html>`;
 
@@ -1309,15 +1317,24 @@ for (const g of groups.filter((x) => x.isFamily)) {
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex">
 <link rel="canonical" href="/${g.page}#${esc(s.id)}">
+<link rel="alternate" type="text/plain" href="llms-${esc(s.id)}.txt" title="This framework as text">
 <title>${esc(s.short || s.id)} — moved</title>
 <script>
 // Preserve the requirement anchor: /hipaa-security.html#req-164-312-a-2-iv
 // becomes /hipaa.html#req-164-312-a-2-iv, and a bare visit lands on the section.
+// The meta refresh below is the no-JS path: without it a client that does not
+// run scripts, which includes most agents, saw only the fallback paragraph.
 location.replace('${g.page}' + (location.hash || '#${s.id}'));
 </script>
+<meta http-equiv="refresh" content="0; url=${g.page}#${esc(s.id)}">
 </head><body style="font-family:system-ui,sans-serif;max-width:40rem;margin:4rem auto;padding:0 1.25rem;line-height:1.6">
 <p>The ${esc(s.short || s.id)} rows are now part of the combined
 <a href="${g.page}#${esc(s.id)}">${esc(g.title)}</a> page.</p>
+<p style="color:#6b7280;font-size:.85rem;border-top:1px dashed #e5e7eb;padding-top:.7rem;margin-top:1.2rem">
+<strong>Reading this with an agent?</strong> This framework is published as text at
+<a href="llms-${esc(s.id)}.txt">llms-${esc(s.id)}.txt</a>, and the whole matrix at
+<a href="llms-full.txt">llms-full.txt</a>, with the model and matching rules in
+<a href="llms.txt">llms.txt</a>.</p>
 </body></html>
 `);
   }
@@ -1406,6 +1423,7 @@ a{color:#1d4ed8}
 .top nav a.on,.top nav a:hover{color:#fff}
 main{max-width:84rem;margin:1.5rem auto;padding:0 1.5rem}
 footer{max-width:84rem;margin:2rem auto;padding:1rem 1.5rem;border-top:1px solid var(--line);color:var(--muted);font-size:.8rem}
+.agentnote{border-top:1px dashed var(--line);padding-top:.7rem;margin-top:.7rem}
 h1{font-size:1.5rem}.short{font-weight:400;color:var(--muted);font-size:.9rem}
 .meta{color:var(--muted);font-size:.82rem}
 .back{font-size:.85rem;color:var(--muted);text-decoration:none}
