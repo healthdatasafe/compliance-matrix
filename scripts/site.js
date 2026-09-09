@@ -1030,6 +1030,272 @@ fs.writeFileSync(path.join(OUT, 'templates.html'), layout('Templates', `
   <div class="reqs">${tplCards}</div>
 `, { active: 'templates' }));
 
+// ---- llms.txt + llms-full.txt ----
+//
+// The implementer page computes its answer in the BROWSER, so a plain HTTP fetch
+// returns an empty <section id="result"> and an undocumented JSON blob. An agent
+// reading the URL therefore gets a form, and one that half-implements the
+// matching produces a confident wrong compliance answer with nothing to flag it.
+// These two files are what a machine reader actually consumes: llms-full.txt
+// carries the whole matrix so no matching engine is needed, and llms.txt carries
+// the model plus the matching rules for an agent that wants to compute.
+// GENERATED from the same YAML as the pages, never hand-written: the sibling
+// site's hand-written llms.txt asserted a wrong legal model for months.
+
+const plain = (s) => String(s ?? '').replace(/\s+/g, ' ').trim();
+const wrap = (s, w = 88, indent = '') => {
+  const words = plain(s).split(' ');
+  const lines = [];
+  let line = '';
+  for (const word of words) {
+    if ((line + ' ' + word).trim().length > w) { lines.push(indent + line.trim()); line = word; } else line = (line + ' ' + word).trim();
+  }
+  if (line) lines.push(indent + line.trim());
+  return lines.join('\n');
+};
+
+const posturePara = (s) => {
+  const po = s.hds_posture;
+  if (!po) return '';
+  const roles = (po.roles || []).map((r) =>
+    `  - ${r.arrangement}: HDS is ${r.role}. ${plain(r.applies_to)}`).join('\n');
+  const gaps = (po.known_gaps || []).map((g) =>
+    `  - [${g.severity}] ${plain(g.summary)}${(g.refs || []).length ? ` (refs: ${g.refs.join(', ')})` : ''}`).join('\n');
+  const eb = po.evidence_backing;
+  return [
+    `HDS's own position on ${s.short || s.id}:`,
+    roles,
+    `  External assurance: ${po.external_assurance?.level || 'not stated'}. ${plain(po.external_assurance?.detail)}`,
+    (po.external_assurance?.inherited_provider_assurance || []).length
+      ? `  Certificates HDS relies on but does NOT hold: ${po.external_assurance.inherited_provider_assurance.join('; ')}`
+      : '',
+    eb ? `  Evidence: ${eb.rows_approved} of ${eb.rows_total} requirements answered from approved HDS documentation (${eb.rows_evidenced} cite internal evidence), as of ${eb.as_of}.` : '',
+    wrap(po.statement, 88, '  '),
+    po.no_role_note ? wrap('NOTE: ' + po.no_role_note, 88, '  ') : '',
+    gaps ? `  Known gaps in HDS's own position:\n${gaps}` : '',
+  ].filter(Boolean).join('\n');
+};
+
+const SITE = `https://${DOMAIN}`;
+
+// ---- llms.txt ----
+const featureLines = (PROFILES?.features || []).map((f) =>
+  `- ${f.id} (${f.group}${f.exclusive ? ', exclusive: ' + f.exclusive : ''}): ${plain(f.label)}${f.note ? ' — ' + plain(f.note) : ''}`).join('\n');
+const derivedLines = (PROFILES?.derived || []).map((d) =>
+  `- ${d.id} = ${d.all ? 'ALL of [' + d.all.join(', ') + ']' : 'ANY of [' + d.any.join(', ') + ']'}`).join('\n');
+const scopeRuleLines = (PROFILES?.scope_applicability || []).map((r) =>
+  `- ${r.scope} applies when ${r.when.all ? 'ALL of [' + r.when.all.join(', ') + ']' : 'ANY of [' + r.when.any.join(', ') + ']'}`).join('\n');
+const personaLines = Object.entries(PROFILES?.personas || {}).map(([sid, cfg]) => cfg.derive
+  ? `- ${sid}: ${cfg.derive.map((d) => `${d.persona} when ${d.when.all ? 'ALL of [' + d.when.all.join(', ') + ']' : 'ANY of [' + d.when.any.join(', ') + ']'}`).join('; ')}; otherwise NO ROLE (the framework's duties do not attach to the implementer)`
+  : `- ${sid}: always ${cfg.default}`).join('\n');
+
+fs.writeFileSync(path.join(OUT, 'llms.txt'), `# HDS Compliance Matrix
+
+> How Health Data Safe stands against ${groups.length} regulatory frameworks, and what an
+> organisation building on it has to do. ${scopes.reduce((n, s) => n + (s.requirements || []).length, 0)} requirements, read across three
+> layers: the open-pryv.io platform, HDS as operator, and the implementer.
+
+Canonical home: ${SITE}
+Full matrix as text, for machine reading: ${SITE}/llms-full.txt
+Per framework, if the full file is too large: ${scopes.map((s) => `${SITE}/llms-${s.id}.txt`).join(', ')}
+Source: https://github.com/healthdatasafe/compliance-matrix
+Generated ${new Date().toISOString().slice(0, 10)} from the repository's YAML. Not hand-written.
+
+## Read this before quoting anything here
+
+- **Not legal advice.** Engineering and operational guidance. Obligations must be confirmed
+  with qualified counsel.
+- **This matrix covers the vault product only.** Individuals hold their own accounts, data
+  enters only with their explicit consent, and they decide who may access it.
+- HDS's positions below are **self-assessed**. HDS holds no third-party attestation,
+  certification or audit of its own. Where certificates appear they belong to hosting
+  providers and cover their infrastructure, not HDS's practices.
+
+## The three determinations that shape everything else
+
+1. **HDS is the controller of the vault.** It determines the purposes and means of operating it.
+2. **HDS is nobody's GDPR Art.28 processor.** It cannot satisfy Art.28(3): it acts on the
+   individual's permissions rather than a controller's documented instructions, the individual
+   exercises their rights directly, and HDS cannot delete or return a vault at a third party's
+   direction. An organisation that receives data an individual chose to share with it is an
+   INDEPENDENT controller of that copy.
+3. **HDS holds no HIPAA role in the vault.** A business associate acts ON BEHALF OF a covered
+   entity; every access to a vault comes from the individual's consent instead, so it creates no
+   business associate relationship, with the clinician, the application, or HDS. Consent is not
+   delegation. Where an organisation would place PHI with HDS on its OWN behalf a BAA is
+   required; that arrangement is documented separately and is outside this matrix.
+
+## Frameworks
+
+${groups.map((g) => g.members.map((s) => `### ${s.title} (${s.id})
+${s.jurisdiction || ''} · ${(s.requirements || []).length} requirements · page: ${SITE}/${(s.family && FAMILIES[s.family]) ? s.family : s.id}.html
+${posturePara(s)}`).join('\n\n')).join('\n\n')}
+
+## How the implementer view computes its answer
+
+The page at ${SITE}/implementer.html computes in the browser, so fetching that URL returns an
+empty result. To reach the same answer, apply these rules to the full matrix in llms-full.txt.
+
+### Features the implementer selects
+${featureLines}
+
+### Derived features, computed from the above
+${derivedLines}
+
+### Which frameworks apply
+${scopeRuleLines}
+
+### Which persona's obligations to read
+${personaLines}
+
+### Which obligations apply
+An obligation is one entry under a requirement's \`implementer:\` list. For a given framework:
+
+1. Read only entries whose \`persona\` matches the persona derived above. If the persona is NO
+   ROLE, none of that framework's duties attach to the implementer.
+2. Skip any entry with \`coverage: out-of-scope\`. Those record that a requirement was
+   considered and places no duty on anyone; they are not obligations.
+3. An entry with \`nature: orientation\` is a scope provision, not a duty. Show it, never count
+   it as an obligation.
+4. Otherwise the entry applies if \`applies_when\` is absent, or is \`always\`, or ANY listed
+   feature is on. Absent means "not yet classified": show it, never treat it as inapplicable.
+5. \`basis: entity\` means the duty attaches because of what the organisation already is and
+   would exist on any platform. \`basis: integration\` means it arises from using HDS. Present
+   them separately: roughly three quarters of the HIPAA family is \`entity\`.
+
+### What HDS covers
+Each requirement's \`hds.coverage\` is one of implemented, configurable, facilitated, documented,
+out-of-scope. implemented and configurable are delivered by the platform or its configuration;
+facilitated means HDS supplies part of the answer; documented means HDS records a position
+without implementing it; out-of-scope means no software role for anyone. This measures what HDS
+carries FOR an implementer. It is NOT a statement that HDS itself meets the requirement: that is
+the hds_posture block, reported per framework above.
+
+## Pages
+
+- ${SITE}/ — what this is and how it works
+- ${SITE}/standing.html — how HDS itself stands
+- ${SITE}/implementer.html — what you have to do
+- ${SITE}/templates.html — agreement templates
+${groups.map((g) => `- ${SITE}/${g.page} — ${g.title}`).join('\n')}
+
+## Contact
+
+Questions, corrections, or a report that this gave you the wrong answer:
+https://github.com/healthdatasafe/compliance-matrix/issues
+Evidence documents are cited by code and released under NDA, a signed BAA or an audit
+engagement: ${CONTACT}
+`);
+
+// ---- llms-full.txt ----
+const layerBlock = (label, o) => {
+  if (!o) return '';
+  const bits = [`  ${label}: ${o.coverage || 'n/a'}${o.effort_saved ? ` (effort saved: ${o.effort_saved})` : ''}${o.facilitation_mode ? ` (mode: ${o.facilitation_mode})` : ''}`];
+  if (o.overview) bits.push(wrap(o.overview, 88, '    '));
+  if (o.detail) bits.push(wrap('Detail: ' + o.detail, 88, '    '));
+  const ev = o.evidence || {};
+  const evs = [...(ev.docs || []).map((x) => 'doc:' + x), ...(ev.internal_docs || []).map((x) => 'internal:' + x), ...(ev.tests || []).map((x) => 'test:' + x)];
+  if (evs.length) bits.push(`    Evidence: ${evs.join(', ')}`);
+  for (const pl of o.planned || []) bits.push(`    PLANNED (${pl.kind}, impact ${pl.impact}): ${plain(pl.summary)}`);
+  return bits.join('\n');
+};
+
+const fullBody = scopes.map((s) => {
+  const pryv = pryvByScope.get(s.layered_on_pryv) || new Map();
+  const reqs = (s.requirements || []).map((r) => {
+    const impl = (r.implementer || []).map((o) => {
+      const tags = [
+        o.applies_when === undefined
+          ? 'applies_when: NOT YET CLASSIFIED (always shown)'
+          : `applies_when: ${o.applies_when === 'always' ? 'always' : '[' + o.applies_when.join(', ') + ']'}`,
+        o.basis ? `basis: ${o.basis}` : '',
+        o.nature === 'orientation' ? 'nature: orientation (not a duty)' : '',
+        o.coverage === 'out-of-scope' ? 'PLACES NO DUTY ON THIS PERSONA' : '',
+      ].filter(Boolean).join('; ');
+      return `  IMPLEMENTER [${o.persona}] coverage: ${o.coverage}\n    ${tags}` +
+        (o.overview ? '\n' + wrap(o.overview, 88, '    ') : '') +
+        ((o.templates || []).length ? `\n    Templates to sign: ${o.templates.join(', ')}` : '');
+    }).join('\n');
+    return [
+      `## ${s.id} ${r.ref} — ${r.title}`,
+      r.text ? wrap('Requirement: ' + r.text, 88, '  ') : '',
+      `  Anchor: ${SITE}/${(s.family && FAMILIES[s.family]) ? s.family : s.id}.html#${refAnchorId(r.ref)}`,
+      layerBlock('PRYV PLATFORM', pryv.get(r.pryv_ref)),
+      layerBlock('HDS', r.hds),
+      impl,
+    ].filter(Boolean).join('\n');
+  }).join('\n\n');
+  return `# ${s.title} (${s.id})
+${s.type} · ${s.jurisdiction} · ${s.version} · regions: ${(s.regions || []).join(', ') || 'n/a'}
+Official text: ${s.canonical_url || 'n/a'}
+
+${posturePara(s)}
+
+${reqs}`;
+}).join('\n\n\n');
+
+fs.writeFileSync(path.join(OUT, 'llms-full.txt'), `# HDS Compliance Matrix — full text
+
+Generated ${new Date().toISOString().slice(0, 10)} from https://github.com/healthdatasafe/compliance-matrix
+Summary and the rules for computing an implementer's answer: ${SITE}/llms.txt
+
+NOT LEGAL ADVICE. Engineering and operational guidance; confirm obligations with counsel.
+This matrix covers the HDS vault product: individuals hold their own accounts, data enters only
+with their explicit consent, and they decide who may access it. HDS is the controller of the
+vault, is nobody's Art.28 processor, and holds no HIPAA role in it.
+
+Each requirement is answered across three layers: the open-pryv.io PLATFORM (inherited), HDS as
+operator, and the IMPLEMENTER building on it. An hds_posture block per framework states how HDS
+ITSELF stands, which is a different axis from what HDS carries for an implementer.
+
+${templates.map((tpl) => `TEMPLATE ${tpl.id}: ${tpl.title} — signer: ${tpl.signer}, counterparty: ${tpl.counterparty || 'n/a'}. ${plain(tpl.summary)}`).join('\n')}
+
+${fullBody}
+`);
+// 591 KB is roughly 150k tokens: too large for many agents to ingest in one
+// read, and an agent usually needs only the frameworks that apply to it.
+const fullParts = scopes.map((s) => {
+  const pryv2 = pryvByScope.get(s.layered_on_pryv) || new Map();
+  const body = (s.requirements || []).map((r) => {
+    const impl = (r.implementer || []).map((o) => {
+      const tags = [
+        o.applies_when === undefined
+          ? 'applies_when: NOT YET CLASSIFIED (always shown)'
+          : `applies_when: ${o.applies_when === 'always' ? 'always' : '[' + o.applies_when.join(', ') + ']'}`,
+        o.basis ? `basis: ${o.basis}` : '',
+        o.nature === 'orientation' ? 'nature: orientation (not a duty)' : '',
+        o.coverage === 'out-of-scope' ? 'PLACES NO DUTY ON THIS PERSONA' : '',
+      ].filter(Boolean).join('; ');
+      return `  IMPLEMENTER [${o.persona}] coverage: ${o.coverage}\n    ${tags}` +
+        (o.overview ? '\n' + wrap(o.overview, 88, '    ') : '') +
+        ((o.templates || []).length ? `\n    Templates to sign: ${o.templates.join(', ')}` : '');
+    }).join('\n');
+    return [
+      `## ${s.id} ${r.ref} — ${r.title}`,
+      r.text ? wrap('Requirement: ' + r.text, 88, '  ') : '',
+      `  Anchor: ${SITE}/${(s.family && FAMILIES[s.family]) ? s.family : s.id}.html#${refAnchorId(r.ref)}`,
+      layerBlock('PRYV PLATFORM', pryv2.get(r.pryv_ref)),
+      layerBlock('HDS', r.hds),
+      impl,
+    ].filter(Boolean).join('\n');
+  }).join('\n\n');
+  const out = `# ${s.title} (${s.id}) — full text
+
+Part of the HDS Compliance Matrix. Summary and matching rules: ${SITE}/llms.txt
+All frameworks in one file: ${SITE}/llms-full.txt
+
+NOT LEGAL ADVICE. This matrix covers the HDS vault product: HDS is the controller of the vault,
+is nobody's Art.28 processor, and holds no HIPAA role in it.
+
+${posturePara(s)}
+
+${body}
+`;
+  fs.writeFileSync(path.join(OUT, `llms-${s.id}.txt`), out);
+  return `${s.id} ${Math.round(out.length / 1024)}KB`;
+});
+console.log(`[OK]   wrote llms.txt, llms-full.txt and ${fullParts.length} per-framework part(s): ${fullParts.join(', ')}`);
+
 // ---- retired per-scope page redirects ----
 // Grouping the HIPAA rules into one page retires hipaa-security.html,
 // hipaa-privacy.html and hipaa-breach.html. Those URLs are published and are
