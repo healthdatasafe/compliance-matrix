@@ -21,6 +21,8 @@ fs.rmSync(OUT, { recursive: true, force: true });
 fs.mkdirSync(OUT, { recursive: true });
 
 const DOMAIN = 'compliance.datasafe.dev';
+const CONTACT = 'contact@healthdatasafe.org';
+const ISSUES = 'https://github.com/healthdatasafe/compliance-matrix/issues';
 
 // One linear reading order. The framework pages are detail views reached from
 // these, so they keep their own back links rather than joining the sequence.
@@ -172,10 +174,11 @@ const layout = (title, body, { active } = {}) => `<!doctype html>
 </header>
 <main>${pager(active)}${body}${pager(active)}</main>
 <footer>
-  <p><strong>Not legal advice.</strong> Engineering &amp; operational guidance; confirm your
+  <p><strong>Not legal advice.</strong> Engineering and operational guidance; confirm your
   obligations with qualified counsel.</p>
-  <p>Internal evidence is shown by code only — the document itself is released on request
-  under NDA / signed BAA / audit engagement. Platform layer inherited from
+  <p>Internal evidence is shown by code only. To read a document behind a code, or to tell us
+  something here is wrong, write to <a href="mailto:${CONTACT}">${CONTACT}</a>: the documents are
+  released under NDA, a signed BAA or an audit engagement. Platform layer inherited from
   <a href="https://github.com/pryv/compliance-matrix">pryv/compliance-matrix</a>.</p>
 </footer>
 </body></html>`;
@@ -520,6 +523,8 @@ short: s.short || s.id,
     }
 : null,
   }])),
+  contact: CONTACT,
+  issues: ISSUES,
   obligations: OBLIGATIONS,
   nonDuties: NON_DUTIES,
   hdsCover: HDS_COVER,
@@ -731,7 +736,46 @@ short: s.short || s.id,
       html += '<div class="agree"><b>Agreements you will need to sign</b><p>' + tl.map(function (t) {
         return '<a class="tpl" href="templates.html#tpl-' + t + '">📄 ' + t + '</a>'; }).join(' ') + '</p></div>';
     }
-    out.innerHTML = html + sections;
+    out.innerHTML = html + sections + whatNext();
+  }
+
+  // A self-service reader arrives here with a list and no idea what to do with
+  // it, and no way to tell us when it reads wrong. Both were missing.
+  // A self-service reader arrives here with a list, no idea what to do with it,
+  // and no way to tell us when it reads wrong. The issue board is the better
+  // route for anything shareable: it is public, so the next implementer sees the
+  // answer, and it feeds the session-start issue sweep rather than an inbox.
+  function issueLink(kind, title, body) {
+    return P.issues + '/new?labels=' + encodeURIComponent(kind) +
+      '&title=' + encodeURIComponent(title) +
+      '&body=' + encodeURIComponent(body + '\\n\\n---\\nSelection: ' + location.href);
+  }
+  function whatNext() {
+    var sel = 'Replace this with what you are building and what the page told you.';
+    return '<section class="whatnext">' +
+      '<h2>What to do with this</h2>' +
+      '<ol>' +
+      '<li><b>Treat it as a starting point, not a verdict.</b> It tells you which requirements ' +
+      'to look at and how much the vault already covers. It cannot tell you that you are ' +
+      'compliant, and it is not legal advice: take the list to counsel.</li>' +
+      '<li><b>Read the requirement rows.</b> Each action links to its row, where you can see ' +
+      'what the platform does, what HDS operations add, and what stays with you.</li>' +
+      '<li><b>Ask for the evidence.</b> Rows cite internal documents by code. Write to ' +
+      '<a href="mailto:' + P.contact + '">' + P.contact + '</a> to read one, under NDA, a ' +
+      'signed BAA or an audit engagement.</li>' +
+      '</ol>' +
+      '<h3>Tell us how it went</h3>' +
+      '<p class="wnsub">Publicly on the issue board, so the next implementer finds the answer. ' +
+      'Your selection is included in the link. If what you are building is confidential, ' +
+      'write to <a href="mailto:' + P.contact + '">' + P.contact + '</a> instead.</p>' +
+      '<div class="wnbtns">' +
+      '<a class="wnb ok" href="' + issueLink('documentation', 'Worked: [what you built]',
+        'What I built:\\n\\nWhat the page told me:\\n\\nWhat matched reality:\\n') + '">It matched what I had to do</a>' +
+      '<a class="wnb bad" href="' + issueLink('bug', 'Wrong or confusing: [what]',
+        'What I built:\\n\\nWhat the page told me:\\n\\nWhy that is wrong or confusing:\\n') + '">Something was wrong</a>' +
+      '<a class="wnb ask" href="' + issueLink('question', 'Question: [what]',
+        'What I am building:\\n\\nWhat I could not work out from the page:\\n') + '">I have a question</a>' +
+      '</div></section>';
   }
 
   function esc(x) { return String(x == null ? '' : x).replace(/[&<>"]/g, function (c) {
@@ -1227,6 +1271,18 @@ main>.pager:last-child{margin-top:2rem}
 .scopetest ul{margin:.5rem 0;padding-left:1.1rem}
 .scopetest li{margin:.4rem 0}
 .scopetest p{margin:.2rem 0;font-size:.82rem;color:#4b5563}
+.whatnext{background:#fff;border:1px solid var(--line);border-radius:.6rem;padding:1rem 1.2rem;margin:1.5rem 0 0}
+.whatnext h2{font-size:1rem;margin:0 0 .5rem}
+.whatnext ol{margin:0;padding-left:1.2rem}
+.whatnext li{font-size:.86rem;color:#374151;margin:.5rem 0;line-height:1.5}
+.whatnext h3{font-size:.9rem;margin:1.1rem 0 .2rem;padding-top:.9rem;border-top:1px solid var(--line)}
+.wnsub{font-size:.82rem;color:var(--muted);margin:.2rem 0 .7rem}
+.wnbtns{display:flex;gap:.5rem;flex-wrap:wrap}
+.wnb{display:inline-block;font-size:.84rem;font-weight:600;text-decoration:none;padding:.45rem .8rem;border-radius:.4rem;border:1px solid var(--line);background:#fff}
+.wnb.ok{border-color:#bbf7d0;background:#f0fdf4;color:#15803d}
+.wnb.bad{border-color:#fecaca;background:#fef2f2;color:#b91c1c}
+.wnb.ask{border-color:#bfdbfe;background:#eff6ff;color:#1d4ed8}
+.wnb:hover{filter:brightness(.97)}
 .unclass{font-size:.82rem;color:#4b5563;background:#f8fafc;border:1px solid var(--line);border-left:3px solid #9ca3af;border-radius:.4rem;padding:.5rem .7rem;margin:.5rem 0;max-width:52rem}
 .showh{display:inline-flex;gap:.35rem;align-items:center;font-size:.8rem;color:var(--muted);margin-top:.4rem;cursor:pointer}
 .empty,.uncov{background:#fff;border:1px solid var(--line);border-radius:.6rem;padding:.9rem 1.1rem;margin:1rem 0}
