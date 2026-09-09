@@ -361,6 +361,20 @@ fs.writeFileSync(path.join(OUT, 'index.html'), layout('HDS and compliance', `
   code on the requirement row. Two questions follow from that, and they are different questions
   that this site keeps apart: <a href="standing.html">how HDS itself stands</a> against each
   framework, and <a href="implementer.html">what you have to do</a> if you build on it.</p>
+
+  <details class="qa">
+    <summary>What if my application writes data into a person's vault?</summary>
+    <p>A lab pushing results, a clinic pushing records, a device sending measurements: the API
+    grants write access to specific parts of an account, and only after the individual consents.
+    Writing that way is a <strong>disclosure the individual asked for</strong>. It does not make
+    you a controller of the copy that lands in their vault, any more than reading does: they hold
+    the account and decide who may touch it, and HDS is the controller of what it holds.</p>
+    <p>Your obligations come from the record <em>you</em> keep, not from the direction the data
+    travels. A lab answers for the accuracy of its results because it is a lab. If you hold the
+    data on your own systems, say so on the implementer page and the duties follow from that. If
+    you capture at the point of care and retain nothing, you are supplying a tool, and little
+    attaches to you.</p>
+  </details>
 </section>
 
 <h2 class="allh">The frameworks</h2>
@@ -1156,6 +1170,9 @@ main>.pager:last-child{margin-top:2rem}
 .covkey{display:flex;gap:.5rem;flex-wrap:wrap;margin:.9rem 0 .3rem}
 .covnote{font-size:.8rem;max-width:56rem;margin:.2rem 0 0}
 .method.lead{border-top:0;padding-top:0;margin-top:1.2rem}
+.qa{margin:1rem 0 0;background:#fff;border:1px solid var(--line);border-radius:.5rem;padding:.7rem .9rem;max-width:56rem}
+.qa>summary{cursor:pointer;font-weight:600;font-size:.88rem}
+.qa p{font-size:.85rem;color:#4b5563;margin:.6rem 0 0}
 .method{max-width:56rem;margin:2.5rem 0 0;padding-top:1.2rem;border-top:1px solid var(--line)}
 .method .threelayer{margin:.6rem 0}
 .method h2{font-size:.95rem}.method p{font-size:.85rem;color:#4b5563;max-width:52rem}

@@ -459,3 +459,34 @@ refs:
     url: "https://www.ecfr.gov/current/title-45/section-164.314#p-164.314(a)"
     label: "45 CFR §164.314(a)"
     source: eCFR
+
+  # Added 2026-09-09: cited by compliance-internal but absent here, so the stub
+  # was never generated and seven document links resolved to 404.
+  "gdpr.Art.38":
+    url: "https://gdpr-info.eu/art-38-gdpr/"
+    label: "GDPR Art.38"
+    source: gdpr-info.eu
+  "hipaa-breach.164.400":
+    url: "https://www.ecfr.gov/current/title-45/section-164.400"
+    label: "45 CFR §164.400"
+    source: eCFR
+  "hipaa-breach.164.404(d)":
+    url: "https://www.ecfr.gov/current/title-45/section-164.404#p-164.404(d)"
+    label: "45 CFR §164.404(d)"
+    source: eCFR
+  "hipaa-privacy.164.502(j)":
+    url: "https://www.ecfr.gov/current/title-45/section-164.502#p-164.502(j)"
+    label: "45 CFR §164.502(j)"
+    source: eCFR
+  "hipaa-privacy.164.504(g)":
+    url: "https://www.ecfr.gov/current/title-45/section-164.504#p-164.504(g)"
+    label: "45 CFR §164.504(g)"
+    source: eCFR
+  "hipaa-privacy.164.514(d)":
+    url: "https://www.ecfr.gov/current/title-45/section-164.514#p-164.514(d)"
+    label: "45 CFR §164.514(d)"
+    source: eCFR
+  "hipaa-security.164.306(b)":
+    url: "https://www.ecfr.gov/current/title-45/section-164.306#p-164.306(b)"
+    label: "45 CFR §164.306(b)"
+    source: eCFR
