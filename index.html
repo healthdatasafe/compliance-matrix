@@ -39,6 +39,20 @@
   code on the requirement row. Two questions follow from that, and they are different questions
   that this site keeps apart: <a href="standing.html">how HDS itself stands</a> against each
   framework, and <a href="implementer.html">what you have to do</a> if you build on it.</p>
+
+  <details class="qa">
+    <summary>What if my application writes data into a person's vault?</summary>
+    <p>A lab pushing results, a clinic pushing records, a device sending measurements: the API
+    grants write access to specific parts of an account, and only after the individual consents.
+    Writing that way is a <strong>disclosure the individual asked for</strong>. It does not make
+    you a controller of the copy that lands in their vault, any more than reading does: they hold
+    the account and decide who may touch it, and HDS is the controller of what it holds.</p>
+    <p>Your obligations come from the record <em>you</em> keep, not from the direction the data
+    travels. A lab answers for the accuracy of its results because it is a lab. If you hold the
+    data on your own systems, say so on the implementer page and the duties follow from that. If
+    you capture at the point of care and retain nothing, you are supplying a tool, and little
+    attaches to you.</p>
+  </details>
 </section>
 
 <h2 class="allh">The frameworks</h2>

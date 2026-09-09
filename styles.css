@@ -81,6 +81,9 @@ main>.pager:last-child{margin-top:2rem}
 .covkey{display:flex;gap:.5rem;flex-wrap:wrap;margin:.9rem 0 .3rem}
 .covnote{font-size:.8rem;max-width:56rem;margin:.2rem 0 0}
 .method.lead{border-top:0;padding-top:0;margin-top:1.2rem}
+.qa{margin:1rem 0 0;background:#fff;border:1px solid var(--line);border-radius:.5rem;padding:.7rem .9rem;max-width:56rem}
+.qa>summary{cursor:pointer;font-weight:600;font-size:.88rem}
+.qa p{font-size:.85rem;color:#4b5563;margin:.6rem 0 0}
 .method{max-width:56rem;margin:2.5rem 0 0;padding-top:1.2rem;border-top:1px solid var(--line)}
 .method .threelayer{margin:.6rem 0}
 .method h2{font-size:.95rem}.method p{font-size:.85rem;color:#4b5563;max-width:52rem}
