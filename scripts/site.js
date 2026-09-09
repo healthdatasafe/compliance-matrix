@@ -234,6 +234,10 @@ const postureCards = groups.map((g) => {
         ${g.isFamily ? `<h4 class="subrule">${esc(scope.short || scope.id)}</h4>` : ''}
         <div class="roles">${roleRows(posture)}</div>
         <p class="stmt">${esc(posture.statement)}</p>
+        ${posture.not_a_processor
+? `<p class="notproc"><b>HDS is not your processor, by design.</b>
+          ${esc(posture.not_a_processor)}</p>`
+: ''}
       </div>`).join('')}
 
     <a class="more" href="${esc(g.page)}">Read the requirement rows →</a>
@@ -323,7 +327,6 @@ for (const s of scopes) {
 
 const featureGroups = [
   ['population', 'Who your users are', 'This decides which regulations apply at all.'],
-  ['arrangement', 'Your arrangement with HDS', 'Pick one. It decides who is the controller, and therefore whose obligations these are.'],
   ['residency', 'Where the data sits', ''],
   ['application', 'What your application does', 'Tick everything that will be true.'],
 ];
@@ -410,7 +413,7 @@ short: s.short || s.id,
     var cfg = P.personas[sid];
     if (!cfg) return null;
     if (cfg.ask) { var r = document.querySelector('input[name=hiparole]:checked'); return r ? r.value : cfg.ask[0]; }
-    return s['arrangement-partner'] ? cfg['arrangement-partner'] : cfg['arrangement-direct'];
+    return cfg.default;
   }
 
   function render() {
@@ -527,19 +530,25 @@ ${profileJS}
 `, { active: 'implementer' }));
 
 // ---- per-scope pages (with client-side filter) ----
-const filterBar = `
+// The persona checkboxes are derived from the personas actually present in the
+// scope. They used to be a hardcoded HIPAA list, which meant the GDPR, nLPD and
+// SOC 2 pages filtered every row out and rendered "0 / 47": none of those
+// scopes uses a HIPAA persona name.
+const filterBarFor = (reqs) => {
+  const personas = [...new Set(reqs.flatMap((r) => (r.implementer || []).map((o) => o.persona)))].sort();
+  return `
 <div class="filters">
   <input type="search" id="q" placeholder="Search requirements…" aria-label="search">
   <span class="fgroup" id="cov">
     ${COVERAGES.map((c) => `<label><input type="checkbox" value="${c}" checked> <span class="b ${c}">${c}</span></label>`).join('')}
   </span>
   <span class="fgroup" id="persona">
-    ${['partner', 'covered-entity', 'business-associate', 'individual'].map((p) =>
-      `<label><input type="checkbox" value="${p}" checked> ${p}</label>`).join('')}
+    ${personas.map((p) => `<label><input type="checkbox" value="${esc(p)}" checked> ${esc(p)}</label>`).join('')}
   </span>
   <label class="fgroup"><input type="checkbox" id="fplan"> <span class="pl low">⏳ planned only</span></label>
   <span class="fcount" id="fcount"></span>
 </div>`;
+};
 
 const filterJS = `<script>
 (function(){
@@ -578,6 +587,10 @@ for (const g of groups) {
         ${assurancePill(posture.external_assurance?.level)}</div>
       <div class="roles">${roleRows(posture)}</div>
       <p class="stmt">${esc(posture.statement)}</p>
+      ${posture.not_a_processor
+? `<p class="notproc"><b>HDS is not your processor, by design.</b>
+        ${esc(posture.not_a_processor)}</p>`
+: ''}
     </div>`).join('');
 
   const subnav = g.isFamily
@@ -599,7 +612,7 @@ for (const g of groups) {
     </details>
     ${subnav}
     ${g.isFamily ? '' : covBar(allReqs(g))}
-    ${filterBar}
+    ${filterBarFor(allReqs(g))}
     ${sections}
     ${filterJS}
   `));
@@ -845,6 +858,8 @@ a.pl{cursor:pointer}
 .rl-not-applicable{background:#f3f4f6;color:#6b7280}
 .rl-controller,.rl-covered-entity{background:#f0fdf4;color:#15803d}
 .stmt{font-size:.86rem;color:#374151;margin:.5rem 0}
+.notproc{font-size:.82rem;color:#374151;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:.45rem;padding:.55rem .7rem;margin:.5rem 0}
+.notproc b{display:block;margin-bottom:.2rem;color:#15803d}
 .revbar{display:flex;height:6px;border-radius:999px;overflow:hidden;background:#e5e7eb;margin:.6rem 0 .25rem}
 .revbar .seg.rev{background:#15803d}
 .revnum{font-size:.78rem;color:var(--muted);margin:0 0 .5rem}
