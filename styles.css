@@ -7,6 +7,7 @@ a{color:#1d4ed8}
 .top nav a.on,.top nav a:hover{color:#fff}
 main{max-width:84rem;margin:1.5rem auto;padding:0 1.5rem}
 footer{max-width:84rem;margin:2rem auto;padding:1rem 1.5rem;border-top:1px solid var(--line);color:var(--muted);font-size:.8rem}
+.agentnote{border-top:1px dashed var(--line);padding-top:.7rem;margin-top:.7rem}
 h1{font-size:1.5rem}.short{font-weight:400;color:var(--muted);font-size:.9rem}
 .meta{color:var(--muted);font-size:.82rem}
 .back{font-size:.85rem;color:var(--muted);text-decoration:none}
