@@ -24,30 +24,34 @@ hds_posture:
     - arrangement: vault
       role: not-applicable
       applies_to: >
-        The individual's vault. HDS holds the data for the individual, who
-        decides who may see it, so HDS creates, receives, maintains and
-        transmits nothing on a covered entity's behalf. HIPAA does not reach
-        HDS here.
+        Every vault. The individual holds the account and decides who may see
+        the data, so HDS holds it for them and never on a covered entity's
+        behalf, whoever put it there and wherever it physically sits. A business
+        associate is defined by acting on a covered entity's behalf, so HDS is
+        not one here and HIPAA does not reach it.
   no_role_note: >
-    This matrix covers the vault product, and HDS holds no HIPAA role in it. A
-    business associate maintains protected health information ON BEHALF OF a
-    covered entity; in the vault HDS maintains it for the individual, and an
-    organisation reaches that data only through consent the individual grants it
-    directly. Partnership arrangements in which HDS would handle data on an
-    organisation's behalf, and would therefore need a BAA, exist and are
-    documented separately. They are outside this matrix. The requirements below
-    are still the map for an implementer who does hold a HIPAA role of its own.
+    Consent is not delegation. When an individual grants a clinician or an
+    application access to their own vault, that access flows from their consent,
+    not from anyone instructing HDS, so it creates no business associate
+    relationship: not with the clinician, not with the application, and not with
+    HDS. The data sitting on HDS infrastructure does not change on whose behalf
+    it is held. Where an organisation would place protected health information
+    with HDS on its OWN behalf, a BAA would be required; that arrangement is
+    documented separately and is outside this matrix. The requirements below
+    remain the map for an implementer that holds a HIPAA role of its own, and
+    the FTC Health Breach Notification Rule and state consumer-health-data law
+    are what reach the user-sovereign case instead.
   external_assurance:
     level: self-assessed
     detail: >
       No independent Privacy Rule assessment covers HDS.
   statement: >
-    HIPAA does not reach HDS in the vault product. Thirty-three of the thirty-five
+    HIPAA does not reach HDS in the vault. Thirty-three of the thirty-five
     requirements are answered from approved HDS documentation, which is what an
-    implementer holding a covered-entity or business-associate role inherits when
-    it builds here. Most of this rule is the covered entity's to discharge in any
-    case. What the platform supplies directly is the individual-rights machinery,
-    access, amendment, accounting of disclosures and restriction, each an approved
+    implementer holding a covered-entity or business-associate role inherits when it
+    builds here. Most of this rule is the covered entity's to discharge in any case.
+    What the platform supplies directly is the individual-rights machinery, access,
+    amendment, accounting of disclosures and restriction, each an approved
     procedure, exercised in rehearsal rather than against production volume.
   known_gaps:
     - summary: >

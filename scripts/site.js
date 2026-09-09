@@ -211,8 +211,8 @@ const ROLE_LABEL = {
   'not-applicable': 'Does not apply',
 };
 const ARRANGEMENT_LABEL = {
-  'partner-integration': 'Partner builds on HDS',
-  'hds-operated-service': 'HDS operates the service',
+  vault: 'Individual holds the account',
+  'covered-entity-relationship': 'A healthcare provider is in the relationship',
 };
 
 const roleRows = (posture) => (posture.roles || []).map((r) => `
@@ -256,7 +256,7 @@ const postureCards = groups.map((g) => {
       // three identical rows.
       const same = g.isFamily && new Set(ps.map(({ posture }) => JSON.stringify(posture.roles))).size === 1;
       const note = (po) => po.no_role_note
-        ? `<p class="notproc"><b>HDS holds no role here, by design.</b> ${esc(po.no_role_note)}</p>`
+        ? `<p class="notproc"><b>What building on HDS does not create.</b> ${esc(po.no_role_note)}</p>`
         : '';
       return (same
         ? `<div class="pbody"><div class="roles">${roleRows(ps[0].posture)}</div>${note(ps[0].posture)}</div>`
@@ -939,7 +939,7 @@ for (const g of groups) {
       <div class="roles">${roleRows(posture)}</div>
       <p class="stmt">${esc(posture.statement)}</p>
       ${posture.no_role_note
-? `<p class="notproc"><b>HDS holds no role here, by design.</b>
+? `<p class="notproc"><b>What building on HDS does not create.</b>
         ${esc(posture.no_role_note)}</p>`
 : ''}
     </div>`).join('');
