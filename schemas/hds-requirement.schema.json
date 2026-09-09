@@ -289,6 +289,13 @@
           ],
           "default": "obligation",
           "description": "'orientation' marks an entry that is NOT a duty: a scope provision telling the reader whether the regime engages at all (GDPR Art.2/Art.3 and their nLPD equivalents), or similar guidance. Orientation entries are always shown and NEVER counted as obligations. Without this, a scope article inflates the obligation count for an implementer who has no obligations, which is how a page that should read 'nothing attaches to you' comes to read '4 obligations apply'."
+        },
+        "basis": {
+          "enum": [
+            "integration",
+            "entity"
+          ],
+          "description": "Where the duty comes from. 'integration': it exists, or takes this shape, because of how you use HDS (grants you mint, the agreement you sign with HDS, TLS on a hop you operate, review of the HDS audit log). 'entity': it attaches to you because of the role you hold and would exist unchanged if you had never heard of HDS (security official, sanctions, workforce training, notice of privacy practices). Author's test: would this obligation vanish if you dropped HDS for another platform? If yes it is integration. Presenting entity duties as consequences of building on HDS is what made an implementer who receives nothing read 49 actions."
         }
       }
     }

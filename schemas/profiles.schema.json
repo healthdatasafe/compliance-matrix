@@ -209,6 +209,26 @@
           },
           "default": {
             "type": "string"
+          },
+          "derive": {
+            "type": "array",
+            "description": "Ordered rules. The first whose condition holds gives the persona. If none holds the implementer holds NO role under this framework, which is a real answer and must be presentable: an app that creates, receives, maintains and transmits nothing is neither a covered entity nor a business associate.",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "persona",
+                "when"
+              ],
+              "properties": {
+                "persona": {
+                  "type": "string"
+                },
+                "when": {
+                  "$ref": "#/$defs/cond"
+                }
+              }
+            }
           }
         }
       }

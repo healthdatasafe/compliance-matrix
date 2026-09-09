@@ -33,6 +33,21 @@ features:
     note: >
       Without one, HIPAA does not reach data an individual stores in their own
       HDS account. Other US regimes do, and this matrix has no scope for them yet.
+  - id: you-are-covered-entity
+    group: population
+    label: >
+      You are yourself a health plan, a clearinghouse, or a healthcare provider
+      that bills or exchanges records electronically
+  - id: acts-for-covered-entity
+    group: population
+    label: >
+      You build or run this application for a US healthcare provider, health
+      plan or clearinghouse, or under contract to one
+    note: >
+      HIPAA reaches you only if you act on a covered entity's behalf AND handle
+      protected health information. An app an individual chose to use, which no
+      covered entity commissioned, is not their business associate.
+
   - id: want-soc2
     group: population
     label: Your customers ask you for SOC 2 assurance
@@ -110,6 +125,18 @@ derived:
 
   # One test could never fire for a Swiss implementer, yet the nLPD transfer
   # rows depended on it. Three tests, one per corridor.
+  # The HIPAA half of processes-personal-data: does anything leave the user's
+  # own device and reach you? 45 CFR 160.103 needs BOTH this and acting on a
+  # covered entity's behalf.
+  - id: handles-user-data
+    any: [reads-data, hds-as-idp, stores-phi-copy, third-parties,
+          ai-aggregate, ai-individual]
+    label: User data reaches your systems
+
+  - id: hipaa-in-play
+    any: [hipaa-relationship, you-are-covered-entity, acts-for-covered-entity]
+    label: A covered entity is somewhere in the picture
+
   - id: transfer-eu-us
     all: [subjects-eu, region-us]
     label: Personal data leaving the EU or EEA for the US region
@@ -160,11 +187,11 @@ scope_applicability:
   - scope: swiss-nlpd
     when: { any: [subjects-ch] }
   - scope: hipaa-security
-    when: { all: [subjects-us, hipaa-relationship] }
+    when: { all: [subjects-us, hipaa-in-play] }
   - scope: hipaa-privacy
-    when: { all: [subjects-us, hipaa-relationship] }
+    when: { all: [subjects-us, hipaa-in-play] }
   - scope: hipaa-breach
-    when: { all: [subjects-us, hipaa-relationship] }
+    when: { all: [subjects-us, hipaa-in-play] }
   - scope: soc2
     when: { any: [want-soc2] }
 
@@ -173,13 +200,14 @@ scope_applicability:
 uncovered:
   - id: us-consumer
     when: { all: [subjects-us] }
-    unless: [hipaa-relationship]
-    title: US consumer health data, with no Covered Entity involved
+    unless: [you-are-covered-entity, acts-for-covered-entity]
+    title: US consumer health data, with no HIPAA role on your side
     message: >
-      HIPAA does not apply to this arrangement. The FTC Health Breach
-      Notification Rule and state consumer-health-data laws do. This matrix
-      has no scope for either yet, so the requirements below are not the whole
-      of your obligations. Take this one to counsel.
+      HIPAA does not reach you here: you neither are a covered entity nor act
+      for one. The FTC Health Breach Notification Rule and state
+      consumer-health-data laws do apply. This matrix has no scope for either
+      yet, so the requirements below are not the whole of your obligations.
+      Take this one to counsel.
 
 # Which persona's obligations to show, per scope and arrangement.
 # `ask` means the implementer picks, because the matrix carries both and they
@@ -187,9 +215,17 @@ uncovered:
 personas:
   gdpr: { default: controller }
   swiss-nlpd: { default: controller }
-  hipaa-security: { ask: [covered-entity, business-associate] }
-  hipaa-privacy: { ask: [covered-entity, business-associate] }
-  hipaa-breach: { ask: [covered-entity, business-associate] }
+  # Derived, never asked. The old version offered a closed choice between
+  # covered-entity and business-associate with the second pre-checked, so an
+  # implementer who receives nothing was told it held a role it cannot hold.
+  hipaa-security: &hipaa-role
+    derive:
+      - persona: covered-entity
+        when: { any: [you-are-covered-entity] }
+      - persona: business-associate
+        when: { all: [acts-for-covered-entity, handles-user-data] }
+  hipaa-privacy: *hipaa-role
+  hipaa-breach: *hipaa-role
   soc2: { default: service-organization }
 
 # ---------------------------------------------------------------------------
