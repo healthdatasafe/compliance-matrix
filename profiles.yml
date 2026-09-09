@@ -1,0 +1,252 @@
+# profiles.yml — the implementer-profile vocabulary.
+#
+# Rows reference these ids from `implementer[].applies_when`. validate.js
+# rejects unknown ids and warns about a feature no row uses, because a checkbox
+# that changes nothing is worse than no checkbox.
+#
+# THE INVARIANT THIS FILE EXISTS TO PROTECT: an obligation may be hidden ONLY
+# when it carries an explicit `applies_when` list and every listed feature is
+# off. An obligation with no `applies_when` is ALWAYS shown, marked "not yet
+# profiled". Silence about an obligation is the one failure that actually harms
+# an implementer, so untagged never means inapplicable.
+
+version: 1
+
+# ---------------------------------------------------------------------------
+# Features: what the implementer tells us about what they are building.
+# ---------------------------------------------------------------------------
+features:
+
+  # --- Who your users are. This decides which regulations apply at all. ---
+  - id: subjects-eu
+    group: population
+    label: Your users are in the EU or EEA, or you are established there
+  - id: subjects-ch
+    group: population
+    label: Your users are in Switzerland, or you are established there
+  - id: subjects-us
+    group: population
+    label: Your users are in the United States
+  - id: hipaa-relationship
+    group: population
+    label: A HIPAA Covered Entity is involved (a provider, health plan or clearinghouse)
+    note: >
+      Without one, HIPAA does not reach data an individual stores in their own
+      HDS account. Other US regimes do, and this matrix has no scope for them yet.
+  - id: you-are-covered-entity
+    group: population
+    label: >
+      You are yourself a health plan, a clearinghouse, or a healthcare provider
+      that bills or exchanges records electronically
+  - id: acts-for-covered-entity
+    group: population
+    label: >
+      You build or run this application for a US healthcare provider, health
+      plan or clearinghouse, or under contract to one
+    note: >
+      HIPAA reaches you only if you act on a covered entity's behalf AND handle
+      protected health information. An app an individual chose to use, which no
+      covered entity commissioned, is not their business associate.
+
+  - id: want-soc2
+    group: population
+    label: Your customers ask you for SOC 2 assurance
+
+  # --- Where the data sits. ---
+  - id: region-ch
+    group: residency
+    label: Data is pinned to the Swiss region
+  - id: region-us
+    group: residency
+    label: Data is pinned to the US region
+
+  # --- What your application actually does. ---
+  - id: reads-data
+    group: application
+    label: Your application reads user data out of HDS (dashboards, sharing with you)
+  - id: hds-as-idp
+    group: application
+    label: Your users sign in to your application with their HDS account
+  - id: stores-phi-copy
+    group: application
+    label: You store a copy of health data outside HDS, including archives and backups
+  - id: holds-contact-data
+    group: application
+    label: You hold contact details outside HDS, for example to send notifications
+  - id: third-parties
+    group: application
+    label: You share data with third parties, or engage subprocessors
+  - id: ai-aggregate
+    group: application
+    label: AI, machine learning or analytics producing only aggregated output
+  - id: ai-individual
+    group: application
+    label: AI or analytics producing output about an identifiable individual
+  - id: automated-decisions
+    group: application
+    label: Automated decisions with a legal or similarly significant effect on a person
+  - id: commercial-use
+    group: application
+    label: Marketing, profiling for marketing, or selling data
+  - id: research-secondary-use
+    group: application
+    label: Research or other use beyond the purpose the data was collected for
+  - id: minors
+    group: application
+    label: Your users include people under the age of digital consent
+
+  # The two below are what actually create obligations for an app that only its
+  # own user touches. They never reach the vault, which is exactly why they are
+  # easy to overlook.
+  - id: app-telemetry
+    group: application
+    label: Your app collects analytics, usage data or crash reports
+    note: >
+      Even with no health data involved, this is personal data you process as a
+      controller in your own right.
+  - id: app-account
+    group: application
+    label: Your app has its own accounts, logins or licences outside HDS
+
+# ---------------------------------------------------------------------------
+# Derived features: the ONLY place AND-logic lives. Row tags stay flat any-of
+# lists, which is what keeps the tagging reviewable and the matching cheap.
+# ---------------------------------------------------------------------------
+derived:
+  # Do you process personal data AT ALL? If an app only lets its own user work on
+  # their own vault, and the developer receives nothing, the developer is neither
+  # controller nor processor of that data: they supply a tool. Almost every duty
+  # below is gated on this, so ticking nothing correctly yields almost nothing.
+  - id: processes-personal-data
+    any: [reads-data, hds-as-idp, stores-phi-copy, holds-contact-data, third-parties,
+          ai-aggregate, ai-individual, automated-decisions, commercial-use,
+          research-secondary-use, minors, app-telemetry, app-account]
+    label: You process personal data of your own
+
+  # One test could never fire for a Swiss implementer, yet the nLPD transfer
+  # rows depended on it. Three tests, one per corridor.
+  # The HIPAA half of processes-personal-data: does anything leave the user's
+  # own device and reach you? 45 CFR 160.103 needs BOTH this and acting on a
+  # covered entity's behalf.
+  - id: handles-user-data
+    any: [reads-data, hds-as-idp, stores-phi-copy, third-parties,
+          ai-aggregate, ai-individual]
+    label: User data reaches your systems
+
+  - id: hipaa-in-play
+    any: [hipaa-relationship, you-are-covered-entity, acts-for-covered-entity]
+    label: A covered entity is somewhere in the picture
+
+  - id: transfer-eu-us
+    all: [subjects-eu, region-us]
+    label: Personal data leaving the EU or EEA for the US region
+  - id: transfer-eu-ch
+    all: [subjects-eu, region-ch]
+    label: Personal data leaving the EU or EEA for Switzerland
+  - id: transfer-ch-us
+    all: [subjects-ch, region-us]
+    label: Personal data leaving Switzerland for the US region
+
+# ---------------------------------------------------------------------------
+# Presets: the four archetypes, as starting points over the same checkboxes.
+# ---------------------------------------------------------------------------
+presets:
+  - id: self-monitoring
+    label: Self-monitoring app
+    summary: >
+      Your application serves the end user only. You receive nothing and store
+      nothing, so almost nothing lands on you.
+    features: []
+  - id: shared-with-you
+    label: Shared with you, sign-in via HDS
+    summary: >
+      Users share data with you and sign in with their HDS account. You still
+      store no health data of your own.
+    features: [reads-data, hds-as-idp]
+  - id: aggregate-ai
+    label: Plus aggregated AI or analytics
+    summary: >
+      As above, plus AI or analytics that produce aggregated reports only. No
+      health data stored outside HDS.
+    features: [reads-data, hds-as-idp, ai-aggregate]
+  - id: stores-copy
+    label: You store a copy of the data
+    summary: >
+      You hold your own copy of health data. That makes you an INDEPENDENT
+      controller of that copy, with your own lawful basis, notice and security
+      duties. It does not make HDS your processor: HDS acts on the individual's
+      permissions, not on your instructions.
+    features: [reads-data, hds-as-idp, stores-phi-copy]
+
+# ---------------------------------------------------------------------------
+# Which regulations apply, given the population selected.
+# ---------------------------------------------------------------------------
+scope_applicability:
+  - scope: gdpr
+    when: { any: [subjects-eu] }
+  - scope: swiss-nlpd
+    when: { any: [subjects-ch] }
+  - scope: hipaa-security
+    when: { all: [subjects-us, hipaa-in-play] }
+  - scope: hipaa-privacy
+    when: { all: [subjects-us, hipaa-in-play] }
+  - scope: hipaa-breach
+    when: { all: [subjects-us, hipaa-in-play] }
+  - scope: soc2
+    when: { any: [want-soc2] }
+
+# Gaps in this matrix's own coverage, surfaced rather than left as silence.
+# A selection that lands here gets a warning, not an empty result.
+uncovered:
+  - id: us-consumer
+    when: { all: [subjects-us] }
+    unless: [you-are-covered-entity, acts-for-covered-entity]
+    title: US consumer health data, with no HIPAA role on your side
+    message: >
+      HIPAA does not reach you here: you neither are a covered entity nor act
+      for one. The FTC Health Breach Notification Rule and state
+      consumer-health-data laws do apply. This matrix has no scope for either
+      yet, so the requirements below are not the whole of your obligations.
+      Take this one to counsel.
+
+# Which persona's obligations to show, per scope and arrangement.
+# `ask` means the implementer picks, because the matrix carries both and they
+# are materially different sets of obligations.
+personas:
+  gdpr: { default: controller }
+  swiss-nlpd: { default: controller }
+  # Derived, never asked. The old version offered a closed choice between
+  # covered-entity and business-associate with the second pre-checked, so an
+  # implementer who receives nothing was told it held a role it cannot hold.
+  hipaa-security: &hipaa-role
+    derive:
+      - persona: covered-entity
+        when: { any: [you-are-covered-entity] }
+      - persona: business-associate
+        when: { all: [acts-for-covered-entity, handles-user-data] }
+  hipaa-privacy: *hipaa-role
+  hipaa-breach: *hipaa-role
+  soc2: { default: service-organization }
+
+# ---------------------------------------------------------------------------
+# SCOPE: the vault product.
+#
+# Individuals hold their own HDS accounts, data enters only with their explicit
+# consent, and they decide who may access it. HDS is therefore the controller of
+# the vault, and is NOT an Art.28 processor for anyone: it acts on the
+# individual's permissions, not on an organisation's instructions, and cannot
+# delete or return an individual's data at a third party's direction.
+#
+# An organisation that receives data an individual chose to share is an
+# INDEPENDENT controller of what it then holds. It needs its own lawful basis,
+# its own notice and its own security measures. It does not need, and cannot
+# have, a DPA with HDS for the vault.
+#
+# HIPAA is different and the business-associate role stands: that test turns on
+# maintaining PHI where a Covered Entity is party to the relationship, not on
+# processing under instructions (hipaa/registers/hipaa-scope, approved
+# 2026-08-26).
+#
+# Known limitation: only the rows the four archetypes touch are tagged so far.
+# Everything untagged shows unfiltered, marked "not yet profiled".
+# ---------------------------------------------------------------------------

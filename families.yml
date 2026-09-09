@@ -1,0 +1,20 @@
+# Scope families — presentation-level grouping only.
+#
+# Scopes that share a `family:` key are shown as ONE regulation on the site
+# (one standing card, one page with sub-sections), while remaining separate
+# YAML files each layered on their own vendor/pryv scope. Nothing about the
+# data model, the refs, the published /ref/<scope>/<slug>.html redirect stubs
+# or official-refs.yml keys changes: merging the files would break all four.
+families:
+  hipaa:
+    title: HIPAA
+    short: HIPAA
+    long: Health Insurance Portability and Accountability Act
+    jurisdiction: US
+    canonical_url: https://www.ecfr.gov/current/title-45/subtitle-A/subchapter-C/part-164
+    # Order the sub-rules are presented in.
+    order: [hipaa-security, hipaa-privacy, hipaa-breach]
+    blurb: >
+      The Security, Privacy and Breach Notification Rules are three parts of one
+      regulation. HDS's position differs across them, so each keeps its own rows,
+      but they are read as one HIPAA posture.

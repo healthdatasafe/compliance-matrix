@@ -80,6 +80,33 @@ if (linked.length || drift.length) process.exit(1);
 
 
 echo "Validating + building..."
+# Verify the standing page's headline figure against the private repo.
+#
+# validate.js cannot check `evidence_backing.rows_approved`: the count of rows
+# whose evidence has completed internal approval is only derivable from
+# compliance-internal, which this PUBLIC repo must not depend on. So the check
+# lands here, at the one point where both repos are on the operator's machine.
+# Without it the most prominent number on the site could drift, or be inflated,
+# with every automated gate still green.
+if node scripts/evidence-status.js > /tmp/cm-evidence-status.txt 2>&1; then
+  if grep -q '(was ' /tmp/cm-evidence-status.txt; then
+    echo "ERROR: hds_posture.evidence_backing is out of date - the standing page would publish wrong figures."
+    grep '(was ' /tmp/cm-evidence-status.txt
+    echo "Refresh, review the diff, and commit:  npm run evidence:status -- --write"
+    exit 1
+  fi
+  echo "[OK]   evidence_backing matches compliance-internal."
+elif grep -q '\[SKIP\]' /tmp/cm-evidence-status.txt; then
+  echo "ERROR: compliance-internal is not checked out, so the standing page's"
+  echo "       approved-documentation figures cannot be verified before publishing."
+  echo "       Check it out beside this repo, or set INTERNAL_REPO, then re-run."
+  exit 1
+else
+  cat /tmp/cm-evidence-status.txt
+  echo "ERROR: evidence-status check failed."
+  exit 1
+fi
+
 npm run build:all
 echo "Generating site..."
 npm run site

@@ -10,6 +10,47 @@ matrix_language: EN
 layered_on_pryv: hipaa-breach
 regions: [us]
 
+family: hipaa
+
+hds_posture:
+  draft: true
+  assessed_at: "2026-09-08"
+  evidence_backing:
+    rows_total: 13
+    rows_evidenced: 12
+    rows_approved: 12
+    as_of: "2026-09-08"
+  roles:
+    - arrangement: covered-entity-relationship
+      role: business-associate
+      applies_to: >
+        HDS's duty on discovering a breach is to notify the covered entity
+        without unreasonable delay; notifying individuals, HHS and the media
+        remains the covered entity's.
+    - arrangement: vault
+      role: not-applicable
+      applies_to: >
+        Direct-to-individual services outside a covered-entity relationship.
+  external_assurance:
+    level: self-assessed
+    detail: >
+      No independent review. The incident and breach procedure has been
+      rehearsed, not tested by a real reportable breach.
+  statement: >
+    HDS can answer the question this rule actually turns on, which is who was
+    affected and what did they hold. The breach-scope primitive is deployed to
+    every core with the access index backfilled, so the blast radius of a
+    compromised token is enumerated rather than estimated, and twelve of the
+    thirteen requirements rest on approved documentation. The notification
+    procedure is approved and rehearsed; no real reportable breach has
+    exercised it.
+  known_gaps:
+    - summary: >
+        No row in this scope has completed review, and the notification
+        procedure has never run against a real incident.
+      severity: medium
+      internal_doc: procedures/security-incident-and-breach
+
 changelog:
   - date: "2026-08-26"
     change: >
@@ -66,11 +107,17 @@ requirements:
           - hipaa/evidence/at-rest-encryption-verification
     implementer:
       - persona: covered-entity
+        nature: orientation
+        basis: integration
+        applies_when: always
         coverage: documented
         overview: |
           Determine which of your data flows on HDS fall inside the unsecured-PHI
           scope and document that determination in your breach-readiness records.
       - persona: business-associate
+        nature: orientation
+        basis: integration
+        applies_when: always
         coverage: documented
         overview: |
           Confirm with HDS, in your BAA, which protections apply to your data and
@@ -114,11 +161,15 @@ requirements:
           - hipaa/risk/at-rest-encryption
     implementer:
       - persona: covered-entity
+        basis: entity
+        applies_when: always
         coverage: documented
         overview: |
           Apply the breach and unsecured-PHI definitions to each incident and
           record the determination, drawing on HDS-supplied audit evidence.
       - persona: business-associate
+        basis: entity
+        applies_when: always
         coverage: documented
         overview: |
           Run the same definitional analysis for incidents in your custody and
@@ -161,11 +212,15 @@ requirements:
           - hipaa/procedures/breach-risk-assessment
     implementer:
       - persona: covered-entity
+        basis: entity
+        applies_when: always
         coverage: documented
         overview: |
           Perform and document the four-factor risk assessment for each
           impermissible use or disclosure, using the HDS-supplied audit inputs.
       - persona: business-associate
+        basis: entity
+        applies_when: always
         coverage: documented
         overview: |
           Conduct the same assessment for incidents you discover and share the
@@ -212,12 +267,16 @@ requirements:
           - hipaa/evidence/at-rest-encryption-verification
     implementer:
       - persona: covered-entity
+        basis: entity
+        applies_when: always
         coverage: documented
         overview: |
           Rely on the at-rest safe harbor for media exposures; assess
           running-system, account or token compromises separately, where it does
           not apply.
       - persona: business-associate
+        basis: entity
+        applies_when: always
         coverage: documented
         overview: |
           Reflect the media-vs-live-system safe-harbor boundary in your own risk
@@ -253,11 +312,15 @@ requirements:
           - hipaa/procedures/breach-notification
     implementer:
       - persona: covered-entity
+        basis: entity
+        applies_when: always
         coverage: documented
         overview: |
           Notify each affected individual within the 60-day window and retain proof
           of the notifications.
       - persona: business-associate
+        basis: entity
+        applies_when: always
         coverage: documented
         overview: |
           If your BAA delegates individual notification to you, perform it;
@@ -295,11 +358,15 @@ requirements:
           - hipaa/procedures/breach-notification
     implementer:
       - persona: covered-entity
+        basis: entity
+        applies_when: always
         coverage: documented
         overview: |
           Track the discovery date and complete notification within 60 days,
           documenting the timeline.
       - persona: business-associate
+        basis: entity
+        applies_when: always
         coverage: documented
         overview: |
           Surface discovery to the covered entity promptly so its 60-day clock is
@@ -338,11 +405,15 @@ requirements:
           - hipaa/procedures/breach-notification
     implementer:
       - persona: covered-entity
+        basis: entity
+        applies_when: always
         coverage: documented
         overview: |
           Author each notice with all required content elements; use HDS audit
           output to populate the PHI-involved description.
       - persona: business-associate
+        basis: entity
+        applies_when: always
         coverage: documented
         overview: |
           Provide the covered entity the factual elements (PHI involved, dates) it
@@ -376,6 +447,8 @@ requirements:
         log delivery attempts as events.
     implementer:
       - persona: covered-entity
+        basis: entity
+        applies_when: always
         coverage: documented
         overview: |
           Select compliant notification methods, deliver the notices, and retain
@@ -409,6 +482,8 @@ requirements:
           - hipaa/procedures/breach-notification
     implementer:
       - persona: covered-entity
+        basis: entity
+        applies_when: always
         coverage: documented
         overview: |
           Where the threshold is met, notify prominent media in the affected
@@ -444,6 +519,8 @@ requirements:
           - hipaa/procedures/breach-notification
     implementer:
       - persona: covered-entity
+        basis: entity
+        applies_when: always
         coverage: documented
         overview: |
           File the required HHS notification on the applicable schedule and keep the
@@ -483,11 +560,15 @@ requirements:
           - hipaa/procedures/breach-notification
     implementer:
       - persona: covered-entity
+        basis: integration
+        applies_when: always
         coverage: documented
         overview: |
           On receipt of an HDS breach notice, run your own §164.404/406/408
           notification obligations.
       - persona: business-associate
+        basis: integration
+        applies_when: always
         coverage: documented
         overview: |
           Notify the covered entity (or upstream BA) you serve within the 60-day
@@ -524,11 +605,15 @@ requirements:
           - hipaa/procedures/breach-notification
     implementer:
       - persona: covered-entity
+        basis: entity
+        applies_when: always
         coverage: documented
         overview: |
           Document any law-enforcement delay request and the resumption of
           notification once the stated period ends.
       - persona: business-associate
+        basis: entity
+        applies_when: always
         coverage: documented
         overview: |
           Honor and record any law-enforcement delay communicated to you and inform
@@ -568,11 +653,15 @@ requirements:
           - hipaa/procedures/breach-notification
     implementer:
       - persona: covered-entity
+        basis: entity
+        applies_when: always
         coverage: documented
         overview: |
           Maintain the documentation that demonstrates notification or a justified
           no-breach determination, retaining it for the required period.
       - persona: business-associate
+        basis: entity
+        applies_when: always
         coverage: documented
         overview: |
           Keep records demonstrating your own notifications and risk assessments to

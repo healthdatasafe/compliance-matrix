@@ -10,6 +10,70 @@ matrix_language: EN
 layered_on_pryv: swiss-nlpd
 regions: [ch]
 
+hds_posture:
+  draft: true
+  assessed_at: "2026-09-08"
+  evidence_backing:
+    rows_total: 30
+    rows_evidenced: 24
+    rows_approved: 13
+    as_of: "2026-09-08"
+  roles:
+    - arrangement: vault
+      role: controller
+      applies_to: >
+        The individual's vault. HDS determines the purposes and means of
+        operating it, so HDS is the controller under the Act. Data enters only with
+        the individual's explicit consent, and the individual decides who may
+        access it afterwards.
+  not_a_processor: >
+    HDS is not an processor for this product, and the matrix does not
+    offer that arrangement. Acting as a processor would require processing on a
+    controller's instructions and returning or deleting the data at its choice. HDS acts on the
+    individual's permissions, the individual exercises their rights directly
+    from their own dashboard, and HDS cannot delete an individual's vault at a
+    third party's direction. An organisation that receives data an individual
+    chose to share with it is an independent controller of what it holds, not a
+    controller instructing HDS. Any future engagement in which HDS genuinely
+    does process on instructions falls outside this matrix and carries its own
+    documentation.
+  external_assurance:
+    level: self-assessed
+    detail: >
+      No FDPIC review, no certification under Art.13 nLPD and no independent
+      audit has been performed. This is HDS's own assessment. Nothing is on
+      file for the Swiss hosting region either: the physical safeguards HDS
+      inherits there are asserted by the provider, not evidenced by a
+      third-party audit.
+  statement: >
+    Swiss residency is the strongest part of this position: the ch region runs
+    on Swiss infrastructure and the data does not leave it, which is what most
+    of this Act's residency and transfer concern is about. Thirteen of the
+    thirty requirements rest on approved documentation and eleven more are
+    evidenced by documents in review, the same pipeline as the GDPR. Six
+    articles are recorded as out of scope because they address federal bodies
+    or obligations that attach only to the controller, marked on the rows
+    themselves rather than omitted.
+  known_gaps:
+    - summary: >
+        Nothing is on file evidencing the Swiss hosting region's physical and
+        environmental controls. The safeguards HDS inherits there are asserted
+        by the provider rather than evidenced by a third-party audit, and the
+        provider's public encryption statement is a product claim, not an
+        attestation.
+      severity: high
+      internal_doc: hipaa/registers/hosting-provider-attestations
+    - summary: >
+        The processor-side register lacks retention periods on the recruitment,
+        CRM and contact-mailbox activities, the same gap as the GDPR Art.30 row.
+      severity: medium
+      refs: ["Art.12"]
+    - summary: >
+        Only one of the thirty rows has completed review. The rest are drafts
+        that state HDS's position but have not been checked by a second reader.
+      severity: medium
+      internal_doc: gdpr/registers/records-of-processing
+
 changelog:
   - date: "2026-09-08"
     change: >
@@ -70,12 +134,14 @@ requirements:
           - hipaa/policies/access-control
     implementer:
       - persona: controller
+        applies_when: [processes-personal-data]
         coverage: documented
         overview: |
           Classify data categories — including the nLPD's broader sensitive
           categories — and design stream topology and permission scopes
           accordingly.
       - persona: processor
+        applies_when: always
         coverage: documented
         overview: |
           Process the categories the controller designates only as instructed.
@@ -114,11 +180,13 @@ requirements:
           - hipaa/policies/access-control
     implementer:
       - persona: controller
+        applies_when: [processes-personal-data]
         coverage: documented
         overview: |
           Determine the lawful purpose, present it recognisably at collection,
           and define a retention and destruction policy.
       - persona: processor
+        applies_when: always
         coverage: documented
         overview: |
           Process only within the controller's stated purpose and instructions.
@@ -158,11 +226,13 @@ requirements:
           - hipaa/policies/access-control
     implementer:
       - persona: controller
+        applies_when: [processes-personal-data]
         coverage: documented
         overview: |
           Configure privacy-protective defaults at deployment — minimal token
           scopes, retention policy and registration notice.
       - persona: processor
+        applies_when: always
         coverage: documented
         overview: |
           Operate within the design and defaults the controller sets.
@@ -204,12 +274,14 @@ requirements:
           - hipaa/evidence/at-rest-encryption-verification
     implementer:
       - persona: controller
+        applies_when: [processes-personal-data]
         coverage: documented
         overview: |
           Assess whether the operated measures meet your security obligation,
           weighing the provider-managed-key residual at rest, and add
           organisational measures.
       - persona: processor
+        applies_when: always
         coverage: documented
         overview: |
           Ensure equivalent security for any processing you perform and report
@@ -247,6 +319,7 @@ requirements:
           - hipaa/policies/notice-of-privacy-practices
     implementer:
       - persona: controller
+        applies_when: [reads-data, holds-contact-data]
         coverage: documented
         overview: |
           Author the information notice, present it at collection and record the
@@ -281,6 +354,7 @@ requirements:
           - hipaa/procedures/security-incident-response
     implementer:
       - persona: controller
+        applies_when: [automated-decisions]
         coverage: documented
         overview: |
           Identify exclusively-automated decisions, inform the subject and offer
@@ -318,11 +392,13 @@ requirements:
           - gdpr/registers/records-of-processing
     implementer:
       - persona: controller
+        applies_when: [ai-individual]
         coverage: documented
         overview: |
           Determine when a DPIA is required, run it, and use the platform
           artefacts as inputs.
       - persona: processor
+        applies_when: [ai-individual]
         coverage: documented
         overview: |
           Assist the controller's DPIA with information about your processing.
@@ -371,11 +447,13 @@ requirements:
           - hipaa/risk/at-rest-encryption
     implementer:
       - persona: controller
+        applies_when: [stores-phi-copy]
         coverage: documented
         overview: |
           Run the risk assessment, notify the Commissioner as soon as possible and
           assess whether subject notification is required.
       - persona: processor
+        applies_when: [stores-phi-copy]
         coverage: documented
         overview: |
           Notify the controller of breaches without undue delay and assist
@@ -424,11 +502,13 @@ requirements:
           You access your own data directly through the standard API or a portal
           built on it.
       - persona: controller
+        applies_when: [reads-data]
         coverage: documented
         overview: |
           Operate the request process, meet the response timeline and supply the
           extended minimum-information set.
       - persona: processor
+        applies_when: [reads-data]
         coverage: documented
         overview: |
           Make data available to the controller to satisfy access requests.
@@ -475,10 +555,12 @@ requirements:
           You export your data in canonical JSON or transmit it to another
           controller via the capability flow.
       - persona: controller
+        applies_when: [processes-personal-data]
         coverage: documented
         overview: |
           Support the portability request and any feasible direct transmission.
       - persona: processor
+        applies_when: always
         coverage: documented
         overview: |
           Provide the controller with the data needed to satisfy portability.
@@ -511,11 +593,13 @@ requirements:
           - hipaa/policies/access-control
     implementer:
       - persona: controller
+        applies_when: [research-secondary-use]
         coverage: documented
         overview: |
           Determine the overriding interest or consent basis and record the cited
           ground on each access.
       - persona: processor
+        applies_when: [research-secondary-use]
         coverage: documented
         overview: |
           Process sensitive data only on the ground the controller records.
@@ -554,11 +638,13 @@ requirements:
         overview: |
           You rectify your data through the API and may request erasure.
       - persona: controller
+        applies_when: [reads-data]
         coverage: documented
         overview: |
           Run the rectification and erasure process and operate retention and
           destruction as automation is not built in.
       - persona: processor
+        applies_when: [reads-data]
         coverage: documented
         overview: |
           Execute rectification and erasure on the controller's instruction.
@@ -595,11 +681,13 @@ requirements:
           - hipaa/registers/hosting-provider-attestations
     implementer:
       - persona: controller
+        applies_when: [transfer-ch-us, third-parties]
         coverage: documented
         overview: |
           Choose the residency region per subject, and where data leaves
           Switzerland record the adequacy or safeguard basis.
       - persona: processor
+        applies_when: [transfer-ch-us, third-parties]
         coverage: documented
         overview: |
           Disclose abroad only on the controller's instruction and recorded basis.
@@ -634,11 +722,13 @@ requirements:
           - gdpr/policies/international-transfers
     implementer:
       - persona: controller
+        applies_when: [transfer-ch-us]
         coverage: documented
         overview: |
           Determine the applicable exception and record it on the disclosing
           access.
       - persona: processor
+        applies_when: always
         coverage: documented
         overview: |
           Transfer under an exception only on the controller's recorded basis.
@@ -674,6 +764,8 @@ requirements:
           - hipaa/policies/access-control
     implementer:
       - persona: controller
+        applies_when: always
+        nature: orientation
         coverage: documented
         overview: |
           Determine whether and how the Act applies to your processing.
@@ -706,10 +798,13 @@ requirements:
           - hipaa/registers/hosting-provider-attestations
     implementer:
       - persona: controller
+        applies_when: always
+        nature: orientation
         coverage: documented
         overview: |
-          Determine territorial applicability and bind subjects to the CH region
-          where appropriate.
+          Work out whether the Act reaches your own processing, if you carry out
+          any. You cannot bind an individual to a region: they choose it when
+          they register their vault.
       - persona: data-subject
         coverage: out-of-scope
 
@@ -738,6 +833,7 @@ requirements:
           - gdpr/policies/international-transfers
     implementer:
       - persona: controller
+        applies_when: [transfer-ch-us, third-parties]
         coverage: documented
         overview: |
           Apply the Art. 34 framework; this row is cross-reference only.
@@ -770,10 +866,12 @@ requirements:
           - hipaa/policies/access-control
     implementer:
       - persona: controller
+        applies_when: [reads-data]
         coverage: documented
         overview: |
           Determine the justification basis and record it on the relevant access.
       - persona: processor
+        applies_when: [reads-data]
         coverage: documented
         overview: |
           Process only on the basis the controller records.
@@ -801,6 +899,8 @@ requirements:
         process. HDS supplies no control specific to this Article.
     implementer:
       - persona: controller
+        applies_when: always
+        nature: orientation
         coverage: documented
         overview: |
           Manage your interaction with the Commissioner; use platform records as
@@ -837,11 +937,13 @@ requirements:
           - hipaa/policies/access-control
     implementer:
       - persona: controller
+        applies_when: [processes-personal-data]
         coverage: documented
         overview: |
           Configure minimal defaults — token scopes, retention and MFA — so
           processing is limited to the minimum required.
       - persona: processor
+        applies_when: always
         coverage: documented
         overview: |
           Operate within the minimal defaults the controller sets.
@@ -876,6 +978,7 @@ requirements:
           - gdpr/procedures/data-subject-rights
     implementer:
       - persona: controller
+        applies_when: [processes-personal-data]
         coverage: documented
         overview: |
           Determine whether a restriction applies and record the basis and
@@ -904,6 +1007,8 @@ requirements:
         relevant operational layer.
     implementer:
       - persona: controller
+        applies_when: always
+        nature: orientation
         coverage: out-of-scope
       - persona: data-subject
         coverage: out-of-scope
@@ -937,11 +1042,15 @@ requirements:
           - hipaa/policies/access-control
     implementer:
       - persona: controller
+        applies_when: [stores-phi-copy, third-parties]
         coverage: documented
         overview: |
-          Execute a DPA, give documented instructions and approve sub-processors.
+          If you engage processors of your own for the copy you hold, contract with them,
+          give documented instructions and approve their sub-processors. This is not an
+          agreement with HDS: HDS is the controller of the vault, not your processor.
         templates: [dpa]
       - persona: processor
+        applies_when: [stores-phi-copy, third-parties]
         coverage: documented
         overview: |
           Process only as instructed, ensure equivalent security and obtain
@@ -990,11 +1099,13 @@ requirements:
           internal_doc: gdpr/registers/records-of-processing
     implementer:
       - persona: controller
+        applies_when: [stores-phi-copy]
         coverage: documented
         overview: |
           Author and maintain your register of processing activities, using
           platform records as input.
       - persona: processor
+        applies_when: [stores-phi-copy]
         coverage: documented
         overview: |
           Maintain your own register of the processing you perform for the
@@ -1023,6 +1134,7 @@ requirements:
         stored alongside the account or notice artefacts for traceability.
     implementer:
       - persona: controller
+        applies_when: [processes-personal-data]
         coverage: documented
         overview: |
           Determine whether an exception applies and document the reasoning.
@@ -1056,6 +1168,7 @@ requirements:
           - hipaa/policies/notice-of-privacy-practices
     implementer:
       - persona: controller
+        applies_when: [processes-personal-data]
         coverage: documented
         overview: |
           Provide the additional information for transfers abroad, automated
@@ -1083,6 +1196,7 @@ requirements:
         controller matter outside the platform's scope.
     implementer:
       - persona: controller
+        applies_when: [processes-personal-data]
         coverage: documented
         overview: |
           Decide whether to adhere to an applicable code of conduct.
@@ -1109,6 +1223,7 @@ requirements:
         decisions outside the platform's scope.
     implementer:
       - persona: controller
+        applies_when: [processes-personal-data]
         coverage: documented
         overview: |
           Determine whether you must designate a Swiss representative and do so if
@@ -1144,15 +1259,18 @@ requirements:
           - gdpr/procedures/breach-notification-72h
     implementer:
       - persona: processor
+        applies_when: always
         coverage: documented
         overview: |
           Notify the controller of breaches without delay and assist with
           data-subject obligations.
         templates: [dpa]
       - persona: controller
+        applies_when: [processes-personal-data]
         coverage: documented
         overview: |
-          Ensure your DPA obliges processors to notify breaches and assist.
+          Ensure the contracts with your own processors oblige them to notify breaches and
+          assist you.
         templates: [dpa]
       - persona: data-subject
         coverage: out-of-scope
@@ -1175,6 +1293,7 @@ requirements:
         controller's own processing operations.
     implementer:
       - persona: controller
+        applies_when: always
         coverage: out-of-scope
       - persona: data-subject
         coverage: out-of-scope
