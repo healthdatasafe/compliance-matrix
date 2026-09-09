@@ -31,60 +31,48 @@
         <span class="as as-self-assessed">self-assessed</span></div>
       <div class="roles">
   <div class="rolerow">
-    <span class="arr">covered-entity-relationship</span>
-    <span class="rl rl-business-associate">Business associate</span>
-    <p>PHI a covered entity or another business associate places on the platform. HDS is the business associate under a signed BAA and carries the Security Rule obligations that flow to that role.
-</p>
-  </div>
-  <div class="rolerow">
     <span class="arr">vault</span>
     <span class="rl rl-not-applicable">Does not apply</span>
-    <p>Services HDS operates directly for individuals and not on behalf of a covered entity. HIPAA attaches through the covered-entity relationship, so it does not reach this arrangement; the GDPR and the nLPD do. Confirm the characterisation of your own arrangement with counsel.
+    <p>The individual's vault. HDS holds the data for the individual, who decides who may see it, so HDS creates, receives, maintains and transmits nothing on a covered entity's behalf. HIPAA does not reach HDS here.
 </p>
   </div></div>
-      <p class="stmt">Every one of the forty-three Security Rule requirements is answered from an approved HDS document. The administrative safeguards are live procedures, not paper: a risk analysis and risk-management plan are approved, workforce training runs against a completion register, backups are provisioned on both regional cores and a first restore rehearsal was executed on 2026-07-29. Nine requirements carry remediation HDS has committed to and not yet delivered; encryption at rest uses provider-managed keys, and customer-held or end-to-end keys are queued rather than shipped.
+      <p class="stmt">HIPAA does not reach HDS in the vault product, so the position below is not a claim that HDS meets the Security Rule: it is what the platform supplies to an implementer who does hold a role. Every one of the forty-three requirements is answered from an approved HDS document, and the operational safeguards behind those answers are live rather than paper: a risk analysis and risk-management plan are approved, workforce training runs against a completion register, backups are provisioned on both regional cores and a first restore rehearsal was executed on 2026-07-29. Nine carry remediation HDS has committed to and not delivered; encryption at rest uses provider-managed keys.
 </p>
-      
+      <p class="notproc"><b>HDS holds no role here, by design.</b>
+        This matrix covers the vault product, and HDS holds no HIPAA role in it. A business associate maintains protected health information ON BEHALF OF a covered entity; in the vault HDS maintains it for the individual, and an organisation reaches that data only through consent the individual grants it directly. Partnership arrangements in which HDS would handle data on an organisation's behalf, and would therefore need a BAA, exist and are documented separately. They are outside this matrix. The requirements below are still the map for an implementer who does hold a HIPAA role of its own.
+</p>
     </div>
     <div class="pstrip">
       <div class="pshead"><b>HIPAA-Privacy</b>
         <span class="as as-self-assessed">self-assessed</span></div>
       <div class="roles">
   <div class="rolerow">
-    <span class="arr">covered-entity-relationship</span>
-    <span class="rl rl-business-associate">Business associate</span>
-    <p>PHI held on behalf of a covered entity. The Privacy Rule reaches HDS through the BAA rather than directly; most of its obligations stay with the covered entity.
-</p>
-  </div>
-  <div class="rolerow">
     <span class="arr">vault</span>
     <span class="rl rl-not-applicable">Does not apply</span>
-    <p>Direct-to-individual services HDS operates outside any covered-entity relationship. Confirm your own characterisation with counsel.
+    <p>The individual's vault. HDS holds the data for the individual, who decides who may see it, so HDS creates, receives, maintains and transmits nothing on a covered entity's behalf. HIPAA does not reach HDS here.
 </p>
   </div></div>
-      <p class="stmt">Thirty-three of the thirty-five requirements rest on approved HDS documentation. Most of this rule is the covered entity's to discharge, and HDS is recorded as facilitating rather than carrying twenty-five of the rows, which is the honest shape of a business associate's position. What HDS does supply directly is the individual-rights machinery, access, amendment, accounting of disclosures and restriction, each an approved procedure. Those procedures have been exercised in rehearsal rather than against production volume.
+      <p class="stmt">HIPAA does not reach HDS in the vault product. Thirty-three of the thirty-five requirements are answered from approved HDS documentation, which is what an implementer holding a covered-entity or business-associate role inherits when it builds here. Most of this rule is the covered entity's to discharge in any case. What the platform supplies directly is the individual-rights machinery, access, amendment, accounting of disclosures and restriction, each an approved procedure, exercised in rehearsal rather than against production volume.
 </p>
-      
+      <p class="notproc"><b>HDS holds no role here, by design.</b>
+        This matrix covers the vault product, and HDS holds no HIPAA role in it. A business associate maintains protected health information ON BEHALF OF a covered entity; in the vault HDS maintains it for the individual, and an organisation reaches that data only through consent the individual grants it directly. Partnership arrangements in which HDS would handle data on an organisation's behalf, and would therefore need a BAA, exist and are documented separately. They are outside this matrix. The requirements below are still the map for an implementer who does hold a HIPAA role of its own.
+</p>
     </div>
     <div class="pstrip">
       <div class="pshead"><b>HIPAA-Breach</b>
         <span class="as as-self-assessed">self-assessed</span></div>
       <div class="roles">
   <div class="rolerow">
-    <span class="arr">covered-entity-relationship</span>
-    <span class="rl rl-business-associate">Business associate</span>
-    <p>HDS's duty on discovering a breach is to notify the covered entity without unreasonable delay; notifying individuals, HHS and the media remains the covered entity's.
-</p>
-  </div>
-  <div class="rolerow">
     <span class="arr">vault</span>
     <span class="rl rl-not-applicable">Does not apply</span>
-    <p>Direct-to-individual services outside a covered-entity relationship.
+    <p>The individual's vault. HDS holds the data for the individual, who decides who may see it, so HDS creates, receives, maintains and transmits nothing on a covered entity's behalf. HIPAA does not reach HDS here.
 </p>
   </div></div>
-      <p class="stmt">HDS can answer the question this rule actually turns on, which is who was affected and what did they hold. The breach-scope primitive is deployed to every core with the access index backfilled, so the blast radius of a compromised token is enumerated rather than estimated, and twelve of the thirteen requirements rest on approved documentation. The notification procedure is approved and rehearsed; no real reportable breach has exercised it.
+      <p class="stmt">HIPAA does not reach HDS in the vault product, but the question this rule turns on is one the platform can answer: who was affected and what did they hold. The breach-scope primitive is deployed to every core with the access index backfilled, so the blast radius of a compromised token is enumerated rather than estimated, and twelve of the thirteen requirements are answered from approved documentation. The notification procedure is approved and rehearsed; no real reportable breach has exercised it.
 </p>
-      
+      <p class="notproc"><b>HDS holds no role here, by design.</b>
+        This matrix covers the vault product, and HDS holds no HIPAA role in it. A business associate maintains protected health information ON BEHALF OF a covered entity; in the vault HDS maintains it for the individual, and an organisation reaches that data only through consent the individual grants it directly. Partnership arrangements in which HDS would handle data on an organisation's behalf, and would therefore need a BAA, exist and are documented separately. They are outside this matrix. The requirements below are still the map for an implementer who does hold a HIPAA role of its own.
+</p>
     </div>
     </details>
     <nav class="subnav"><a href="#hipaa-security">HIPAA-Security <span class="n">43</span></a><a href="#hipaa-privacy">HIPAA-Privacy <span class="n">35</span></a><a href="#hipaa-breach">HIPAA-Breach <span class="n">13</span></a></nav>
@@ -2230,13 +2218,12 @@ via back-to-back agreements tracked in the BAA register.
       <div class="persona">
         <strong>covered-entity</strong> <span class="b documented">documented</span>
         <a class="tpl" href="templates.html#tpl-baa">📄 baa</a>
-        <p>Execute a BAA with HDS before sending any ePHI, and keep it on file.
+        <p>Execute a business associate agreement with every business associate you engage, before any ePHI reaches them, and keep each on file. HDS is not one of them: in the vault it holds data for the individual, who grants you access directly.
 </p>
       </div><div class="persona">
         <strong>business-associate</strong> <span class="b documented">documented</span>
         <a class="tpl" href="templates.html#tpl-baa">📄 baa</a><a class="tpl" href="templates.html#tpl-subcontractor">📄 subcontractor</a>
-        <p>Execute a BAA with HDS and back-to-back agreements with any of your own
-downstream processors.
+        <p>Execute back-to-back agreements with any downstream subcontractor you engage. No agreement with HDS is needed for the vault: it holds the data for the individual, not on your behalf.
 </p>
       </div><div class="persona">
         <strong>individual</strong> <span class="b out-of-scope">out-of-scope</span>
@@ -2344,8 +2331,7 @@ is produced and what evidence it carries.
       <div class="persona">
         <strong>covered-entity</strong> <span class="b documented">documented</span>
         <a class="tpl" href="templates.html#tpl-baa">📄 baa</a>
-        <p>Ensure your BAA with HDS specifies the incident-report channel and
-timing, and integrate HDS reports into your own breach-assessment
+        <p>Ensure each agreement with your own business associates specifies the incident-report channel and timing, and integrate what you receive into your own breach-assessment
 procedure.
 </p>
       </div><div class="persona">
@@ -4601,8 +4587,7 @@ scope and document that determination in your breach-readiness records.
       </div><div class="persona">
         <strong>business-associate</strong> <span class="b documented">documented</span>
         <a class="tpl" href="templates.html#tpl-baa">📄 baa</a>
-        <p>Confirm with HDS, in your BAA, which protections apply to your data and
-which obligations flow down to your own subcontractors.
+        <p>Confirm which protections apply to the data you hold and which obligations flow down to your own subcontractors.
 </p>
       </div><div class="persona">
         <strong>individual</strong> <span class="b out-of-scope">out-of-scope</span>
