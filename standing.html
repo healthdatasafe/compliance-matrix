@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HDS standing — HDS compliance-matrix</title>
+<link rel="stylesheet" href="styles.css">
+</head><body>
+<header class="top">
+  <a class="brand" href="index.html">HDS <b>compliance-matrix</b></a>
+  <nav>
+    <a href="index.html">HDS and compliance</a>
+    <a href="standing.html" class="on">HDS standing</a>
+    <a href="implementer.html">For implementers</a>
+    <a href="templates.html">Templates</a>
+    <a href="https://github.com/healthdatasafe/compliance-matrix">Source</a>
+  </nav>
+</header>
+<main><nav class="pager">
+    <a class="pg prev" href="index.html"><span>Previous</span><b>HDS and compliance</b></a>
+    <a class="pg next" href="implementer.html"><span>Next</span><b>What do I have to do?</b></a>
+  </nav>
+<section class="hero">
+  <h1>Where Health Data Safe stands</h1>
+  <p class="lede">HDS runs a documented compliance programme across four frameworks. This page is
+  about <strong>HDS itself</strong>: the role it holds under each one, what its position rests on,
+  and what it is still working on. For what HDS carries on your behalf, see
+  <a href="implementer.html">the implementer view</a>.</p>
+  <p class="count"><b>149</b> of 229 requirements across 4 frameworks
+  are backed by approved internal documentation, released on request under NDA, signed BAA or audit engagement.</p>
+</section>
+<section class="postures"><article class="pcard">
+    <header>
+      <h3><a href="gdpr.html">General Data Protection Regulation</a> </h3>
+      <p class="meta">EU + EEA (extraterritorial via Art. 3) <span class="rg">CH</span><span class="rg">US</span> · 47 requirements</p>
+    </header>
+
+    <div class="backing">
+      <div class="bknum"><b>3</b> of 47</div>
+      <p class="bklab">requirements backed by approved internal documentation
+        · <span class="muted">38 more evidenced, documentation still in review</span></p>
+      <div class="bkbar"><span class="seg ok" style="width:6%"></span><span class="seg mid" style="width:81%"></span></div>
+    </div>
+
+    
+      <div class="pbody">
+        
+        <div class="roles">
+  <div class="rolerow">
+    <span class="arr">vault</span>
+    <span class="rl rl-controller">Controller</span>
+    <p>The individual's vault. HDS determines the purposes and means of operating it, so HDS is the Art.4(7) controller. Data enters only with the individual's explicit consent, and the individual decides who may access it afterwards.
+</p>
+  </div></div>
+        <p class="stmt">HDS operates a GDPR programme rather than holding a GDPR credential. A Data Protection Officer was designated on 2026-07-17, a processor-side record of processing activities under Art.30 is maintained with eight live activities, and the platform supplies the technical measures the articles require. This is the least settled of the four frameworks on paper: three requirements rest on fully approved documentation and thirty-eight more are evidenced by documents still in review. The two material open items are the transfer stack for the US hosting layer, where the AWS DPA, the EU and Swiss standard contractual clauses and the transfer impact assessment are not yet executed, and HDS's own DPIA process, which is drafted but not yet operating.
+</p>
+        <p class="notproc"><b>HDS is not your processor, by design.</b>
+          HDS is not an Art.28 processor for this product, and the matrix does not offer that arrangement. Art.28(3) requires processing on the controller's documented instructions, assistance with data subject rights, and deletion or return of the data at the controller's choice. HDS acts on the individual's permissions, the individual exercises their rights directly from their own dashboard, and HDS cannot delete an individual's vault at a third party's direction. An organisation that receives data an individual chose to share with it is an independent controller of what it holds, not a controller instructing HDS. Any future engagement in which HDS genuinely does process on instructions falls outside this matrix and carries its own documentation.
+</p>
+      </div>
+
+    <a class="more" href="gdpr.html">Read the requirement rows →</a>
+
+    <footer class="pfoot">
+      <span class="as as-self-assessed">self-assessed</span>
+      <details class="gaps"><summary>6 open items HDS is tracking</summary>
+        <ul><li><span class="sev sev-high">high</span> Nothing is on file evidencing the Swiss hosting region's physical and environmental controls. The safeguards HDS inherits there are asserted by the provider rather than evidenced by a third-party audit, and the provider's public encryption statement is a product claim, not an attestation.
+
+          
+          <span class="lock">🔒 hipaa/registers/hosting-provider-attestations</span></li><li><span class="sev sev-high">high</span> Art.46 transfer stack for the US hosting layer is not executed: the AWS GDPR DPA, EU and Swiss SCCs and the transfer impact assessment are all outstanding.
+
+          <code>Art.46</code>
+          </li><li><span class="sev sev-medium">medium</span> The Art.30 register carries no retention period on the recruitment, CRM and contact-mailbox rows, and its Art.30(2) half stays empty until the first partner DPA is signed.
+
+          <code>Art.30</code>
+          </li><li><span class="sev sev-medium">medium</span> Art.32 encryption rests on provider-managed keys. End-to-end or operator-held-key encryption, where the server never holds plaintext, is queued upstream and not shipped.
+
+          <code>Art.32</code>
+          </li><li><span class="sev sev-medium">medium</span> The audit.onUserDelete pseudonymise mode is refused at boot upstream, so the Art.17 erasure story is complete only in its erase and keep modes.
+
+          <code>Art.17</code>
+          </li><li><span class="sev sev-low">low</span> HDS's own DPIA process is drafted internally but is not yet a running procedure with a first executed assessment.
+
+          <code>Art.35</code>
+          </li></ul>
+      </details>
+      <details class="inh"><summary>Certificates HDS relies on but does not hold</summary><ul><li>AWS ISO/IEC 27001, 27017 and 27018 (us region hosting layer, obtained 2026-07-28)</li></ul>
+          <p class="muted">These belong to the hosting providers and cover their infrastructure, not HDS's own practices.</p></details>
+    </footer>
+  </article><article class="pcard">
+    <header>
+      <h3><a href="hipaa.html">HIPAA</a> <span class="short">3 rules</span></h3>
+      <p class="meta">US <span class="rg">US</span> · 91 requirements</p>
+    </header>
+
+    <div class="backing">
+      <div class="bknum"><b>88</b> of 91</div>
+      <p class="bklab">requirements backed by approved internal documentation
+        </p>
+      <div class="bkbar"><span class="seg ok" style="width:97%"></span><span class="seg mid" style="width:0%"></span></div>
+    </div>
+
+    
+      <div class="pbody">
+        <h4 class="subrule">HIPAA-Security</h4>
+        <div class="roles">
+  <div class="rolerow">
+    <span class="arr">covered-entity-relationship</span>
+    <span class="rl rl-business-associate">Business associate</span>
+    <p>PHI a covered entity or another business associate places on the platform. HDS is the business associate under a signed BAA and carries the Security Rule obligations that flow to that role.
+</p>
+  </div>
+  <div class="rolerow">
+    <span class="arr">vault</span>
+    <span class="rl rl-not-applicable">Does not apply</span>
+    <p>Services HDS operates directly for individuals and not on behalf of a covered entity. HIPAA attaches through the covered-entity relationship, so it does not reach this arrangement; the GDPR and the nLPD do. Confirm the characterisation of your own arrangement with counsel.
+</p>
+  </div></div>
+        <p class="stmt">Every one of the forty-three Security Rule requirements is answered from an approved HDS document. The administrative safeguards are live procedures, not paper: a risk analysis and risk-management plan are approved, workforce training runs against a completion register, backups are provisioned on both regional cores and a first restore rehearsal was executed on 2026-07-29. Nine requirements carry remediation HDS has committed to and not yet delivered; encryption at rest uses provider-managed keys, and customer-held or end-to-end keys are queued rather than shipped.
+</p>
+        
+      </div>
+      <div class="pbody">
+        <h4 class="subrule">HIPAA-Privacy</h4>
+        <div class="roles">
+  <div class="rolerow">
+    <span class="arr">covered-entity-relationship</span>
+    <span class="rl rl-business-associate">Business associate</span>
+    <p>PHI held on behalf of a covered entity. The Privacy Rule reaches HDS through the BAA rather than directly; most of its obligations stay with the covered entity.
+</p>
+  </div>
+  <div class="rolerow">
+    <span class="arr">vault</span>
+    <span class="rl rl-not-applicable">Does not apply</span>
+    <p>Direct-to-individual services HDS operates outside any covered-entity relationship. Confirm your own characterisation with counsel.
+</p>
+  </div></div>
+        <p class="stmt">Thirty-three of the thirty-five requirements rest on approved HDS documentation. Most of this rule is the covered entity's to discharge, and HDS is recorded as facilitating rather than carrying twenty-five of the rows, which is the honest shape of a business associate's position. What HDS does supply directly is the individual-rights machinery, access, amendment, accounting of disclosures and restriction, each an approved procedure. Those procedures have been exercised in rehearsal rather than against production volume.
+</p>
+        
+      </div>
+      <div class="pbody">
+        <h4 class="subrule">HIPAA-Breach</h4>
+        <div class="roles">
+  <div class="rolerow">
+    <span class="arr">covered-entity-relationship</span>
+    <span class="rl rl-business-associate">Business associate</span>
+    <p>HDS's duty on discovering a breach is to notify the covered entity without unreasonable delay; notifying individuals, HHS and the media remains the covered entity's.
+</p>
+  </div>
+  <div class="rolerow">
+    <span class="arr">vault</span>
+    <span class="rl rl-not-applicable">Does not apply</span>
+    <p>Direct-to-individual services outside a covered-entity relationship.
+</p>
+  </div></div>
+        <p class="stmt">HDS can answer the question this rule actually turns on, which is who was affected and what did they hold. The breach-scope primitive is deployed to every core with the access index backfilled, so the blast radius of a compromised token is enumerated rather than estimated, and twelve of the thirteen requirements rest on approved documentation. The notification procedure is approved and rehearsed; no real reportable breach has exercised it.
+</p>
+        
+      </div>
+
+    <a class="more" href="hipaa.html">Read the requirement rows →</a>
+
+    <footer class="pfoot">
+      <span class="as as-self-assessed">self-assessed</span>
+      <details class="gaps"><summary>5 open items HDS is tracking</summary>
+        <ul><li><span class="sev sev-high">high</span> Addressable encryption at rest rests on provider-managed keys. Neither customer-managed keys nor end-to-end encryption is available, so a compromise of the hosting layer is not cryptographically contained.
+
+          <code>164.312(a)(2)(iv)</code>
+          </li><li><span class="sev sev-medium">medium</span> Platform telemetry is mid-migration from a removed vendor agent to a self-hosted collector; the information-system activity review depends on that pipeline landing.
+
+          <code>164.308(a)(1)(ii)(D)</code>
+          </li><li><span class="sev sev-high">high</span> Nothing is on file evidencing the Swiss hosting region's physical and environmental controls, which is where the primary store sits. The safeguards inherited there are asserted by the provider, not evidenced by a third-party audit.
+
+          <code>164.310(d)(1)</code>
+          <span class="lock">🔒 hipaa/registers/hosting-provider-attestations</span></li><li><span class="sev sev-medium">medium</span> Thirty-two of thirty-five rows are unreviewed drafts. The positions are stated but not second-read.
+
+          
+          <span class="lock">🔒 hipaa/policies/privacy-practices</span></li><li><span class="sev sev-medium">medium</span> No row in this scope has completed review, and the notification procedure has never run against a real incident.
+
+          
+          <span class="lock">🔒 procedures/security-incident-and-breach</span></li></ul>
+      </details>
+      <details class="inh"><summary>Certificates HDS relies on but does not hold</summary><ul><li>AWS ISO/IEC 27001 (us-east-1 named in the certified locations), 27017, 27018 — obtained 2026-07-28</li></ul>
+          <p class="muted">These belong to the hosting providers and cover their infrastructure, not HDS's own practices.</p></details>
+    </footer>
+  </article><article class="pcard">
+    <header>
+      <h3><a href="soc2.html">SOC 2 — AICPA Trust Services Criteria (Security, Availability, Confidentiality, Processing Integrity, Privacy)</a> </h3>
+      <p class="meta">United States (AICPA) <span class="rg">US</span><span class="rg">CH</span> · 61 requirements</p>
+    </header>
+
+    <div class="backing">
+      <div class="bknum"><b>45</b> of 61</div>
+      <p class="bklab">requirements backed by approved internal documentation
+        · <span class="muted">16 more evidenced, documentation still in review</span></p>
+      <div class="bkbar"><span class="seg ok" style="width:74%"></span><span class="seg mid" style="width:26%"></span></div>
+    </div>
+
+    
+      <div class="pbody">
+        
+        <div class="roles">
+  <div class="rolerow">
+    <span class="arr">vault</span>
+    <span class="rl rl-service-organization">Service organisation</span>
+    <p>HDS is the service organisation operating the vault; an organisation building on it is a user entity. The hosting providers are subservice organisations, carved in or out depending on the criterion.
+</p>
+  </div></div>
+        <p class="stmt">Forty-five of the sixty-one Trust Services Criteria are answered from approved HDS documentation, and the remaining sixteen are evidenced by documents still moving through review. This is a readiness map: it shows which criteria the existing control environment already meets, which is what a service organisation needs before engaging an auditor. It is not an audit and confers no opinion. Twelve criteria carry open remediation, including change management, vendor management and a tamper-evident audit log.
+</p>
+        
+      </div>
+
+    <a class="more" href="soc2.html">Read the requirement rows →</a>
+
+    <footer class="pfoot">
+      <span class="as as-none">self-assessed, no external audit</span>
+      <details class="gaps"><summary>4 open items HDS is tracking</summary>
+        <ul><li><span class="sev sev-high">high</span> No SOC 2 examination has been engaged, so there is no report to give a user entity that asks for one.
+
+          
+          <span class="lock">🔒 soc2/policies/system-description</span></li><li><span class="sev sev-medium">medium</span> A written change-management process with ticketed approvals, per-change test evidence and rollback is drafted but not operating.
+
+          <code>CC8.1</code>
+          </li><li><span class="sev sev-medium">medium</span> A formal vendor-management programme with scored risk tiers and scheduled re-assessment is drafted but not operating.
+
+          <code>CC9.2</code>
+          </li><li><span class="sev sev-medium">medium</span> The audit log is append-only by convention with no hash chain or signed checkpoint, so it is not tamper-evident against a host-level admin.
+
+          <code>PI1.5</code>
+          </li></ul>
+      </details>
+      <details class="inh"><summary>Certificates HDS relies on but does not hold</summary><ul><li>AWS SOC 2 (hosting layer only, as a subservice organisation)</li></ul>
+          <p class="muted">These belong to the hosting providers and cover their infrastructure, not HDS's own practices.</p></details>
+    </footer>
+  </article><article class="pcard">
+    <header>
+      <h3><a href="swiss-nlpd.html">Swiss Federal Act on Data Protection (revised FADP / nLPD)</a> </h3>
+      <p class="meta">Switzerland (extraterritorial via Art. 3 for processing affecting CH) <span class="rg">CH</span> · 30 requirements</p>
+    </header>
+
+    <div class="backing">
+      <div class="bknum"><b>13</b> of 30</div>
+      <p class="bklab">requirements backed by approved internal documentation
+        · <span class="muted">11 more evidenced, documentation still in review</span></p>
+      <div class="bkbar"><span class="seg ok" style="width:43%"></span><span class="seg mid" style="width:37%"></span></div>
+    </div>
+
+    
+      <div class="pbody">
+        
+        <div class="roles">
+  <div class="rolerow">
+    <span class="arr">vault</span>
+    <span class="rl rl-controller">Controller</span>
+    <p>The individual's vault. HDS determines the purposes and means of operating it, so HDS is the controller under the Act. Data enters only with the individual's explicit consent, and the individual decides who may access it afterwards.
+</p>
+  </div></div>
+        <p class="stmt">Swiss residency is the strongest part of this position: the ch region runs on Swiss infrastructure and the data does not leave it, which is what most of this Act's residency and transfer concern is about. Thirteen of the thirty requirements rest on approved documentation and eleven more are evidenced by documents in review, the same pipeline as the GDPR. Six articles are recorded as out of scope because they address federal bodies or obligations that attach only to the controller, marked on the rows themselves rather than omitted.
+</p>
+        <p class="notproc"><b>HDS is not your processor, by design.</b>
+          HDS is not an processor for this product, and the matrix does not offer that arrangement. Acting as a processor would require processing on a controller's instructions and returning or deleting the data at its choice. HDS acts on the individual's permissions, the individual exercises their rights directly from their own dashboard, and HDS cannot delete an individual's vault at a third party's direction. An organisation that receives data an individual chose to share with it is an independent controller of what it holds, not a controller instructing HDS. Any future engagement in which HDS genuinely does process on instructions falls outside this matrix and carries its own documentation.
+</p>
+      </div>
+
+    <a class="more" href="swiss-nlpd.html">Read the requirement rows →</a>
+
+    <footer class="pfoot">
+      <span class="as as-self-assessed">self-assessed</span>
+      <details class="gaps"><summary>3 open items HDS is tracking</summary>
+        <ul><li><span class="sev sev-high">high</span> Nothing is on file evidencing the Swiss hosting region's physical and environmental controls. The safeguards HDS inherits there are asserted by the provider rather than evidenced by a third-party audit, and the provider's public encryption statement is a product claim, not an attestation.
+
+          
+          <span class="lock">🔒 hipaa/registers/hosting-provider-attestations</span></li><li><span class="sev sev-medium">medium</span> The processor-side register lacks retention periods on the recruitment, CRM and contact-mailbox activities, the same gap as the GDPR Art.30 row.
+
+          <code>Art.12</code>
+          </li><li><span class="sev sev-medium">medium</span> Only one of the thirty rows has completed review. The rest are drafts that state HDS's position but have not been checked by a second reader.
+
+          
+          <span class="lock">🔒 gdpr/registers/records-of-processing</span></li></ul>
+      </details>
+      
+    </footer>
+  </article></section>
+<section class="method">
+  <h2>How to read this page</h2>
+  <p>Each requirement is answered from HDS's own documentation, and the document behind it is named
+  by code on the requirement row. A requirement counts above only when <em>every</em> document it
+  cites has completed internal approval. Open items are listed on each framework rather than
+  omitted, and every framework page carries the same detail at requirement level.</p>
+  <p>HDS's compliance programme is <strong>self-assessed</strong>: it has not been examined by an
+  external auditor, and HDS holds no certification or attestation of its own. Where certificates
+  appear, they belong to the hosting providers and cover their infrastructure. HDS is a non-profit
+  foundation and states this plainly so you can weigh it yourself.</p>
+  <p class="muted">Not legal advice; confirm your obligations with qualified counsel.</p>
+</section>
+<nav class="pager">
+    <a class="pg prev" href="index.html"><span>Previous</span><b>HDS and compliance</b></a>
+    <a class="pg next" href="implementer.html"><span>Next</span><b>What do I have to do?</b></a>
+  </nav></main>
+<footer>
+  <p><strong>Not legal advice.</strong> Engineering &amp; operational guidance; confirm your
+  obligations with qualified counsel.</p>
+  <p>Internal evidence is shown by code only — the document itself is released on request
+  under NDA / signed BAA / audit engagement. Platform layer inherited from
+  <a href="https://github.com/pryv/compliance-matrix">pryv/compliance-matrix</a>.</p>
+</footer>
+</body></html>
