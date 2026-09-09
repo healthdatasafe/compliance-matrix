@@ -37,16 +37,6 @@ features:
     group: population
     label: Your customers ask you for SOC 2 assurance
 
-  # --- The arrangement. Exactly one; it decides who is the controller. ---
-  - id: arrangement-direct
-    group: arrangement
-    exclusive: arrangement
-    label: Your users hold their own HDS accounts, and HDS is the controller of that data
-  - id: arrangement-partner
-    group: arrangement
-    exclusive: arrangement
-    label: You are the controller and HDS processes on your instructions, under a DPA or BAA
-
   # --- Where the data sits. ---
   - id: region-ch
     group: residency
@@ -105,26 +95,30 @@ derived:
 presets:
   - id: self-monitoring
     label: Self-monitoring app
-    summary: Your application serves the end user only. You store nothing.
-    features: [arrangement-direct]
+    summary: >
+      Your application serves the end user only. You receive nothing and store
+      nothing, so almost nothing lands on you.
+    features: []
   - id: shared-with-you
     label: Shared with you, sign-in via HDS
     summary: >
       Users share data with you and sign in with their HDS account. You still
       store no health data of your own.
-    features: [arrangement-direct, reads-data, hds-as-idp]
+    features: [reads-data, hds-as-idp]
   - id: aggregate-ai
     label: Plus aggregated AI or analytics
     summary: >
       As above, plus AI or analytics that produce aggregated reports only. No
       health data stored outside HDS.
-    features: [arrangement-direct, reads-data, hds-as-idp, ai-aggregate]
+    features: [reads-data, hds-as-idp, ai-aggregate]
   - id: stores-copy
     label: You store a copy of the data
     summary: >
-      You hold your own copy of health data. That makes you a controller for
-      that copy, and most of the storage-side obligations become yours.
-    features: [arrangement-partner, reads-data, hds-as-idp, stores-phi-copy]
+      You hold your own copy of health data. That makes you an INDEPENDENT
+      controller of that copy, with your own lawful basis, notice and security
+      duties. It does not make HDS your processor: HDS acts on the individual's
+      permissions, not on your instructions.
+    features: [reads-data, hds-as-idp, stores-phi-copy]
 
 # ---------------------------------------------------------------------------
 # Which regulations apply, given the population selected.
@@ -160,27 +154,32 @@ uncovered:
 # `ask` means the implementer picks, because the matrix carries both and they
 # are materially different sets of obligations.
 personas:
-  gdpr:
-    arrangement-direct: controller
-    arrangement-partner: controller
-  swiss-nlpd:
-    arrangement-direct: controller
-    arrangement-partner: controller
+  gdpr: { default: controller }
+  swiss-nlpd: { default: controller }
   hipaa-security: { ask: [covered-entity, business-associate] }
   hipaa-privacy: { ask: [covered-entity, business-associate] }
   hipaa-breach: { ask: [covered-entity, business-associate] }
-  soc2:
-    arrangement-direct: service-organization
-    arrangement-partner: service-organization
+  soc2: { default: service-organization }
 
 # ---------------------------------------------------------------------------
-# Known limitation, stated in the file that causes it.
+# SCOPE: the vault product.
 #
-# The GDPR and nLPD `controller` obligations were authored for partner mode,
-# where the partner is the controller. In direct mode HDS is the controller and
-# the implementer is a recipient, an independent controller only for what it
-# processes on its own systems. Roughly 30 to 40 of the 77 controller entries
-# read differently under that arrangement. Only the rows the four presets touch
-# are tagged so far; the rest show unfiltered and marked "not yet profiled".
-# The full walk is tracked as follow-on work.
+# Individuals hold their own HDS accounts, data enters only with their explicit
+# consent, and they decide who may access it. HDS is therefore the controller of
+# the vault, and is NOT an Art.28 processor for anyone: it acts on the
+# individual's permissions, not on an organisation's instructions, and cannot
+# delete or return an individual's data at a third party's direction.
+#
+# An organisation that receives data an individual chose to share is an
+# INDEPENDENT controller of what it then holds. It needs its own lawful basis,
+# its own notice and its own security measures. It does not need, and cannot
+# have, a DPA with HDS for the vault.
+#
+# HIPAA is different and the business-associate role stands: that test turns on
+# maintaining PHI where a Covered Entity is party to the relationship, not on
+# processing under instructions (hipaa/registers/hipaa-scope, approved
+# 2026-08-26).
+#
+# Known limitation: only the rows the four archetypes touch are tagged so far.
+# Everything untagged shows unfiltered, marked "not yet profiled".
 # ---------------------------------------------------------------------------
