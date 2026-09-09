@@ -161,29 +161,39 @@ presets:
     features: [connects, stores-phi-copy]
     locked: [connects, stores-phi-copy]
 
-# Step 2: who you serve. Together with an archetype these cover the common
-# cases in two clicks. Everything remains reachable in the refine panel.
-markets:
-  - id: europe
-    label: Europe
-    summary: Users in the EU or EEA, and in Switzerland. Hosted in the Swiss region.
-    features: [subjects-eu, subjects-ch, region-ch, us-role-none]
-  - id: swiss
-    label: Switzerland only
-    summary: Swiss users, Swiss hosting, nothing crossing a border.
-    features: [subjects-ch, region-ch, us-role-none]
-  - id: us-consumer
-    label: United States, direct to consumer
-    summary: >
-      US users, with no healthcare provider, health plan or clearinghouse in the
-      arrangement. HIPAA does not reach you; other US law does.
-    features: [subjects-us, region-us, us-role-none]
-  - id: us-healthcare
-    label: United States, healthcare
-    summary: >
-      US users, and you build for a provider, health plan or clearinghouse, or
-      under contract to one.
-    features: [subjects-us, region-us, us-role-acts-for]
+# Step 2: independent toggles, any combination. Jurisdictions are genuinely
+# additive (serve the EU, Switzerland and the US at once), so exclusive cards
+# were the wrong shape. Switzerland stays its own toggle rather than folding
+# into Europe: the nLPD is a separate framework and a Swiss-only service is not
+# automatically in GDPR scope.
+step2:
+  - id: eu
+    feature: subjects-eu
+    label: Users in the EU or EEA
+    hint: The GDPR applies.
+  - id: ch
+    feature: subjects-ch
+    label: Users in Switzerland
+    hint: The Swiss nLPD applies.
+  - id: us
+    feature: subjects-us
+    label: Users in the United States
+    hint: >
+      The FTC Health Breach Notification Rule and state consumer-health-data
+      law. HIPAA only where a healthcare provider is involved.
+  - id: us-health
+    feature: us-role-acts-for
+    label: You act for, or are, a US healthcare provider, health plan or clearinghouse
+    hint: HIPAA applies to you. Implies users in the United States.
+    implies: [subjects-us]
+    clears: [us-role-none]
+    choice:
+      legend: Which one?
+      options:
+        - feature: us-role-acts-for
+          label: You build for one, or under contract to one
+        - feature: us-role-you-are
+          label: You are one
 
 scope_applicability:
   - scope: gdpr

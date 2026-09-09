@@ -429,10 +429,22 @@ const profilePanel = !PROFILES
       </div>
     </li>
     <li class="step">
-      <h2><span class="num">2</span> Who are your users?</h2>
+      <h2><span class="num">2</span> Tell us more <span class="anymark">tick any that apply</span></h2>
       <div class="cards">
-        ${(PROFILES.markets || []).map((m) => `<button type="button" class="market" data-features="${esc(m.features.join(','))}">
-          <b>${esc(m.label)}</b><span>${esc((m.summary || '').trim())}</span></button>`).join('')}
+        ${(PROFILES.step2 || []).map((s2) => `<div class="s2wrap">
+          <label class="s2" data-id="${esc(s2.id)}">
+            <input type="checkbox" class="s2box" value="${esc(s2.feature)}"
+              data-implies="${esc((s2.implies || []).join(','))}"
+              data-clears="${esc((s2.clears || []).join(','))}">
+            <span><b>${esc(s2.label)}</b>${s2.hint ? `<em>${esc(s2.hint.trim())}</em>` : ''}</span>
+          </label>
+          ${s2.choice
+? `<div class="s2choice" data-for="${esc(s2.id)}" hidden>
+            ${s2.choice.legend ? `<span class="cl">${esc(s2.choice.legend)}</span>` : ''}
+            ${s2.choice.options.map((o, k) => `<label><input type="radio" name="s2-${esc(s2.id)}" value="${esc(o.feature)}"${k === 0 ? ' checked' : ''}> ${esc(o.label)}</label>`).join('')}
+          </div>`
+: ''}
+        </div>`).join('')}
       </div>
     </li>
   </ol>
@@ -491,7 +503,7 @@ short: s.short || s.id,
 
   function on() {
     var s = {};
-    panel.querySelectorAll('input:checked').forEach(function (i) { s[i.value] = true; });
+    panel.querySelectorAll('.fopt input:checked').forEach(function (i) { s[i.value] = true; });
     P.derived.forEach(function (d) {
       if (d.all) s[d.id] = d.all.every(function (x) { return s[x]; });
       if (d.any) s[d.id] = d.any.some(function (x) { return s[x]; });
@@ -701,8 +713,13 @@ short: s.short || s.id,
     var el = document.getElementById('ftsum');
     if (!el) return;
     var set = {};
-    [panel.querySelector('.preset.on'), panel.querySelector('.market.on')].forEach(function (b) {
-      if (b) b.dataset.features.split(',').filter(Boolean).forEach(function (x) { set[x] = 1; });
+    var ap = panel.querySelector('.preset.on');
+    if (ap) ap.dataset.features.split(',').filter(Boolean).forEach(function (x) { set[x] = 1; });
+    panel.querySelectorAll('.s2box, .s2choice input[type=radio]').forEach(function (i) {
+      if (i.checked && !i.disabled) set[i.value] = 1;
+    });
+    (P.step2 || []).forEach(function (s2) {
+      (s2.implies || []).forEach(function (x) { set[x] = 1; });
     });
     var extra = [];
     panel.querySelectorAll('.fopt input:checked').forEach(function (i) {
@@ -712,6 +729,25 @@ short: s.short || s.id,
     });
     el.textContent = extra.length ? '\u00b7 also: ' + extra.join(', ') : '';
   }
+  function reflectStep2() {
+    panel.querySelectorAll('.s2box').forEach(function (box) {
+      var el = panel.querySelector('.fopt input[value="' + box.value + '"]');
+      var wrap = box.closest('.s2wrap');
+      var choice = wrap.querySelector('.s2choice');
+      if (choice) {
+        var any = false;
+        choice.querySelectorAll('input[type=radio]').forEach(function (r) {
+          var f = panel.querySelector('.fopt input[value="' + r.value + '"]');
+          if (f && f.checked) { any = true; r.checked = true; }
+        });
+        box.checked = any;
+        choice.hidden = !any;
+      } else if (el) box.checked = el.checked;
+    });
+  }
+  panel.addEventListener('input', function (ev) {
+    if (ev.target.matches('.fopt input')) reflectStep2();
+  });
   panel.addEventListener('input', summarise);
   panel.addEventListener('input', render);
   out.addEventListener('input', render);
@@ -733,19 +769,48 @@ short: s.short || s.id,
       } else if (!isLocked && badge) badge.remove();
     });
   }
-  // Step 2 sets who you serve and never touches what you build.
-  panel.querySelectorAll('.market').forEach(function (b) {
-    b.addEventListener('click', function () {
-      ['population', 'us-role', 'residency'].forEach(function (g) {
-        panel.querySelectorAll('.fgroup2[data-group="' + g + '"] input').forEach(function (i) { i.checked = false; });
+  // Step 2: independent toggles. Each drives one feature, may imply others
+  // (saying you act for a US provider means you have US users), and may reveal
+  // a radio where one toggle cannot carry the whole answer: acting FOR a
+  // covered entity and BEING one give materially different obligation sets.
+  function syncStep2() {
+    panel.querySelectorAll('.s2box').forEach(function (box) {
+      var wrap = box.closest('.s2wrap');
+      var choice = wrap.querySelector('.s2choice');
+      if (choice) {
+        choice.hidden = !box.checked;
+        choice.querySelectorAll('input[type=radio]').forEach(function (r) { r.disabled = !box.checked; });
+      }
+      var target = panel.querySelector('.fopt input[value="' + box.value + '"]');
+      // A revealed radio overrides the toggle's own feature. Unticking must clear
+      // EVERY option it offered, not just the toggle's default: clearing only the
+      // default left the other option set, so unticking 'you are one' left the
+      // covered-entity role in place and HIPAA still applied.
+      if (choice) {
+        var picked = choice.querySelector('input[type=radio]:checked');
+        choice.querySelectorAll('input[type=radio]').forEach(function (r) {
+          var el = panel.querySelector('.fopt input[value="' + r.value + '"]');
+          if (el) el.checked = box.checked && r === picked;
+        });
+      } else if (target) {
+        target.checked = box.checked;
+      }
+      (box.dataset.implies ? box.dataset.implies.split(',') : []).filter(Boolean).forEach(function (id) {
+        if (!box.checked) return;
+        var el = panel.querySelector('.fopt input[value="' + id + '"]');
+        if (el) el.checked = true;
+        var sib = panel.querySelector('.s2box[value="' + id + '"]');
+        if (sib) sib.checked = true;
       });
-      b.dataset.features.split(',').filter(Boolean).forEach(function (id) {
-        var el = panel.querySelector('input[value="' + id + '"]'); if (el) el.checked = true;
+      (box.dataset.clears ? box.dataset.clears.split(',') : []).filter(Boolean).forEach(function (id) {
+        var el = panel.querySelector('.fopt input[value="' + id + '"]');
+        if (el) el.checked = !box.checked;
       });
-      panel.querySelectorAll('.market').forEach(function (x) { x.classList.remove('on'); });
-      b.classList.add('on');
-      summarise(); render();
     });
+  }
+  panel.addEventListener('change', function (ev) {
+    if (!ev.target.matches('.s2box, .s2choice input')) return;
+    syncStep2(); summarise(); render();
   });
 
   panel.querySelectorAll('.preset').forEach(function (b) {
@@ -758,7 +823,7 @@ short: s.short || s.id,
       });
       var feats = b.dataset.features ? b.dataset.features.split(',').filter(Boolean) : [];
       feats.forEach(function (id) {
-        var el = panel.querySelector('input[value="' + id + '"]'); if (el) el.checked = true; });
+        var el = panel.querySelector('.fopt input[value="' + id + '"]'); if (el) el.checked = true; });
       panel.querySelectorAll('.preset').forEach(function (x) { x.classList.remove('on'); });
       b.classList.add('on');
       applyLocks(b.dataset.locked ? b.dataset.locked.split(',').filter(Boolean) : []);
@@ -775,6 +840,8 @@ short: s.short || s.id,
     active.classList.remove('on');
     applyLocks([]);
   });
+  syncStep2();
+  reflectStep2();
   summarise();
   render();
 })();
@@ -1091,11 +1158,22 @@ main>.pager:last-child{margin-top:2rem}
 .step h2{font-size:1rem;margin:0 0 .6rem;display:flex;align-items:center;gap:.5rem}
 .step .num{display:inline-flex;align-items:center;justify-content:center;width:1.5rem;height:1.5rem;border-radius:999px;background:var(--ink);color:#fff;font-size:.8rem;flex:none}
 .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(14rem,1fr));gap:.6rem}
-.preset,.market{text-align:left;background:#fff;border:1px solid var(--line);border-radius:.5rem;padding:.7rem .8rem;cursor:pointer;font:inherit;color:inherit;transition:border-color .12s,box-shadow .12s}
-.preset:hover,.market:hover{border-color:#1d4ed8}
-.preset.on,.market.on{border-color:#1d4ed8;background:#eff6ff;box-shadow:0 0 0 1px #1d4ed8 inset}
-.preset b,.market b{display:block;font-size:.9rem;margin-bottom:.2rem}
-.preset span,.market span{font-size:.78rem;color:var(--muted);display:block;line-height:1.4}
+.s2wrap{display:flex;flex-direction:column}
+.s2{display:flex;gap:.5rem;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:.5rem;padding:.7rem .8rem;cursor:pointer;height:100%}
+.s2:hover{border-color:#1d4ed8}
+.s2 input{margin-top:.15rem;flex:none}
+.s2 b{display:block;font-size:.86rem;font-weight:600;line-height:1.35}
+.s2 em{display:block;font-style:normal;font-size:.76rem;color:var(--muted);margin-top:.2rem;line-height:1.4}
+.s2:has(input:checked){border-color:#1d4ed8;background:#eff6ff;box-shadow:0 0 0 1px #1d4ed8 inset}
+.s2choice{margin:.4rem 0 0;padding:.5rem .7rem;background:#eff6ff;border:1px solid #bfdbfe;border-radius:.45rem;display:flex;flex-direction:column;gap:.25rem;font-size:.8rem}
+.s2choice .cl{font-size:.7rem;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+.s2choice label{display:flex;gap:.35rem;align-items:flex-start;cursor:pointer}
+.anymark{font-size:.72rem;font-weight:400;color:var(--muted);text-transform:none;letter-spacing:0}
+.preset{text-align:left;background:#fff;border:1px solid var(--line);border-radius:.5rem;padding:.7rem .8rem;cursor:pointer;font:inherit;color:inherit;transition:border-color .12s,box-shadow .12s}
+.preset:hover{border-color:#1d4ed8}
+.preset.on{border-color:#1d4ed8;background:#eff6ff;box-shadow:0 0 0 1px #1d4ed8 inset}
+.preset b{display:block;font-size:.9rem;margin-bottom:.2rem}
+.preset span{font-size:.78rem;color:var(--muted);display:block;line-height:1.4}
 .finetune{margin:1rem 0 0;background:#fff;border:1px solid var(--line);border-radius:.5rem;padding:.6rem .9rem}
 .finetune>summary{cursor:pointer;font-size:.85rem;font-weight:600}
 .ftsum{font-weight:400;color:var(--muted);font-size:.8rem}

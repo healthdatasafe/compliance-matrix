@@ -274,9 +274,11 @@ if (profiles) {
   const scopeIds = new Set(hdsScopes.map(({ scope }) => scope.id));
   // Selecting a scope is a legitimate job for a feature, so record it as use.
   const usedByRules = new Set();
-  for (const m of profiles.markets || []) {
-    for (const id of m.features) {
-      if (!knownIds.has(id)) e(`profiles.yml: market '${m.id}' references unknown feature '${id}'`);
+  for (const s2 of profiles.step2 || []) {
+    const ids = [s2.feature, ...(s2.implies || []), ...(s2.clears || []),
+      ...((s2.choice && s2.choice.options) || []).map((o) => o.feature)];
+    for (const id of ids) {
+      if (!knownIds.has(id)) e(`profiles.yml: step2 '${s2.id}' references unknown feature '${id}'`);
       else usedByRules.add(id);
     }
   }

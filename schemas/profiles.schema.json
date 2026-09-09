@@ -242,37 +242,78 @@
         }
       }
     },
-    "markets": {
+    "step2": {
       "type": "array",
       "minItems": 1,
-      "description": "Step 2 of the selection: who the implementer serves. Sets the population, US-role and residency features. Kept separate from presets so the two questions (what you build, who you serve) stay independent.",
+      "description": "Step 2 of the selection: independent toggles, any combination. Each maps to one feature. A toggle may imply others, clear others, and reveal a radio when its answer is not a single fact.",
       "items": {
         "type": "object",
         "additionalProperties": false,
         "required": [
           "id",
-          "label",
-          "features"
+          "feature",
+          "label"
         ],
         "properties": {
           "id": {
             "type": "string",
             "pattern": "^[a-z][a-z0-9-]*$"
           },
+          "feature": {
+            "type": "string"
+          },
           "label": {
             "type": "string",
             "minLength": 1
           },
-          "summary": {
+          "hint": {
             "type": "string"
           },
-          "features": {
+          "implies": {
             "type": "array",
-            "minItems": 1,
             "items": {
               "type": "string"
             },
             "uniqueItems": true
+          },
+          "clears": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "uniqueItems": true
+          },
+          "choice": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "options"
+            ],
+            "properties": {
+              "legend": {
+                "type": "string"
+              },
+              "options": {
+                "type": "array",
+                "minItems": 2,
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "feature",
+                    "label"
+                  ],
+                  "properties": {
+                    "feature": {
+                      "type": "string"
+                    },
+                    "label": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
