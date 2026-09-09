@@ -337,6 +337,7 @@ for (const s of scopes) {
         templates: o.templates || [],
         when: o.applies_when === undefined ? null : o.applies_when,
         nature: o.nature || 'obligation',
+        basis: o.basis || '',
       });
     }
   }
@@ -373,12 +374,6 @@ const profilePanel = !PROFILES
       </fieldset>`;
     }).join('')}
   </div>
-  <div class="hipaarole" hidden>
-    <b>Your HIPAA role:</b>
-    <label><input type="radio" name="hiparole" value="covered-entity"> Covered Entity</label>
-    <label><input type="radio" name="hiparole" value="business-associate" checked> Business Associate</label>
-  </div>
-</section>
 <section class="result" id="result"></section>`;
 
 const profileJS = !PROFILES
@@ -411,7 +406,6 @@ short: s.short || s.id,
 (function () {
   var P = window.__P, panel = document.querySelector('.profile'), out = document.getElementById('result');
   if (!P || !panel) return;
-  var roleBox = document.querySelector('.hipaarole');
 
   function on() {
     var s = {};
@@ -428,10 +422,19 @@ short: s.short || s.id,
     if (c.any) return c.any.some(function (x) { return s[x]; });
     return false;
   }
+  // The role is DERIVED. It used to be a two-way radio with business-associate
+  // pre-checked, so an implementer that receives nothing was told it held a role
+  // it cannot hold: 45 CFR 160.103 needs both acting on a covered entity's
+  // behalf and handling PHI. Returning null is a real answer, not a failure.
   function personaFor(sid, s) {
     var cfg = P.personas[sid];
     if (!cfg) return null;
-    if (cfg.ask) { var r = document.querySelector('input[name=hiparole]:checked'); return r ? r.value : cfg.ask[0]; }
+    if (cfg.derive) {
+      for (var i = 0; i < cfg.derive.length; i++) {
+        if (cond(cfg.derive[i].when, s)) return cfg.derive[i].persona;
+      }
+      return null;
+    }
     return cfg.default;
   }
 
@@ -439,8 +442,6 @@ short: s.short || s.id,
     var s = on();
     var anyPop = P.features.some(function (f) { return f.group === 'population' && s[f.id]; });
     var scopes = P.scope_applicability.filter(function (r) { return cond(r.when, s); }).map(function (r) { return r.scope; });
-    var hipaa = scopes.some(function (x) { return x.indexOf('hipaa') === 0; });
-    roleBox.hidden = !hipaa;
 
     var warns = P.uncovered.filter(function (u) {
       return cond(u.when, s) && !(u.unless || []).some(function (x) { return s[x]; });
@@ -470,16 +471,32 @@ short: s.short || s.id,
 
     var sections = scopes.map(function (sid) {
       var meta = P.scopes[sid], persona = personaFor(sid, s);
+      if (persona === null) {
+        // No role under this framework. Say so, and say what does apply instead.
+        return '<article class="rscope norole"><h3><a href="' + meta.page + '">' + esc(meta.title) + '</a>' +
+          '<span class="pers none">no role for you</span></h3>' +
+          '<p class="nothingdue"><b>You hold no role under this framework.</b> You neither are a covered ' +
+          'entity nor build for one that handles data on its behalf, so its duties do not attach to you. ' +
+          'The vault itself is covered: see <a href="index.html">where HDS stands</a>, and the ' +
+          '<a href="' + meta.page + '">requirement rows</a> for what HDS carries.</p></article>';
+      }
       var rows = P.obligations.filter(function (o) { return o.scope === sid && o.persona === persona; });
-      var actions = [], orient = [], hidden = 0, unprofiled = 0, determined = 0;
+      var actions = [], entity = [], orient = [], hidden = 0, unprofiled = 0, determined = 0;
       rows.forEach(function (o) {
         if (o.nature === 'orientation') { orient.push(o); return; }
         var vis;
         if (o.when === null) { vis = true; unprofiled++; }
         else if (o.when === 'always') { vis = true; determined++; }
         else { vis = o.when.some(function (x) { return s[x]; }); if (vis) determined++; }
-        if (vis) { actions.push(o); (o.templates || []).forEach(function (t) { tpls[t] = 1; }); }
-        else hidden++;
+        if (vis && o.basis === 'entity') determined--;
+        if (vis) {
+          // A duty you carry as an entity is not an action arising from HDS.
+          // Three quarters of the HIPAA family is this, and presenting it as
+          // integration work is what produced 49 actions for an implementer
+          // who receives nothing.
+          (o.basis === 'entity' ? entity : actions).push(o);
+          (o.templates || []).forEach(function (t) { tpls[t] = 1; });
+        } else hidden++;
       });
       var oblTotal = rows.length - orient.length;
       var nonDuty = P.nonDuties.filter(function (n) { return n.scope === sid && n.persona === persona; }).length;
@@ -540,6 +557,14 @@ short: s.short || s.id,
             return '<li><a class="ref" href="' + o.page + '#' + o.anchor + '"><code>' + esc(o.ref) + '</code> ' + esc(o.title) + '</a>' +
               (o.overview ? '<p>' + esc(o.overview) + '</p>' : '') + '</li>'; }).join('') +
           '</ul><p class="muted">Scope provisions, not duties. They say when the regime engages, so they are listed here rather than counted.</p></details>' : '') +
+        (entity.length ? '<details class="entityblock"><summary>' + entity.length +
+          ' duties you carry as a ' + esc(persona.replace(/-/g, ' ')) +
+          ', independent of HDS</summary><ul>' + entity.map(function (o) {
+            return '<li><a class="ref" href="' + o.page + '#' + o.anchor + '"><code>' + esc(o.ref) + '</code> ' +
+              esc(o.title) + '</a>' + (o.overview ? '<p>' + esc(o.overview) + '</p>' : '') + '</li>';
+          }).join('') + '</ul><p class="muted">These attach to you because of the role you hold. They would ' +
+          'exist unchanged on any other platform, so they are listed here rather than counted as actions ' +
+          'arising from HDS.</p></details>' : '') +
         '<ol class="acts">' + actions.map(function (o) {
           var cls = (o.hdsCoverage === 'implemented' || o.hdsCoverage === 'configurable') ? 'carried'
             : (o.hdsCoverage === 'facilitated' ? 'shared' : 'yours');
@@ -559,7 +584,9 @@ short: s.short || s.id,
     html += '<div class="rhead"><h2>' +
       (totActions
         ? totActions + ' of ' + (Y.needs + Y.not) + ' requirements need action from you'
-        : 'None of the ' + (Y.needs + Y.not) + ' requirements needs action from you') + '</h2>' +
+        : ((Y.needs + Y.not)
+            ? 'None of the ' + (Y.needs + Y.not) + ' requirements needs action from you'
+            : 'Nothing here falls to you')) + '</h2>' +
       '<p class="lede">Across ' + scopes.length + ' framework' + (scopes.length > 1 ? 's' : '') + '. ' +
       (totActions
         ? 'What the vault already does, and what is left for you.'
@@ -1001,6 +1028,15 @@ a.pl{cursor:pointer}
 .covlist li p{margin:.15rem 0 0;color:#4b5563;font-size:.82rem}
 .nothingdue{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:.45rem;padding:.55rem .7rem;margin:.5rem 0;font-size:.85rem;color:#374151}
 .nothingdue b{color:#15803d}
+.pers.none{background:#f3f4f6;color:#6b7280}
+.entityblock{margin:.6rem 0;font-size:.84rem}
+.entityblock>summary{cursor:pointer;color:#4b5563;font-weight:600;font-size:.82rem}
+.entityblock ul{margin:.5rem 0;padding-left:1.1rem}
+.entityblock li{margin:.45rem 0}
+.entityblock li a{text-decoration:none;font-weight:600}
+.entityblock li p{margin:.15rem 0 0;color:#4b5563}
+.norole .nothingdue{background:#f8fafc;border-color:var(--line)}
+.norole .nothingdue b{color:#374151}
 /* ---- action list ---- */
 .acts{list-style:none;counter-reset:a;padding:0;margin:.8rem 0 0}
 .act{counter-increment:a;border-top:1px solid var(--line);padding:.7rem 0 .7rem 2rem;position:relative}

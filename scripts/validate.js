@@ -270,15 +270,19 @@ if (profiles) {
     for (const id of pr.features) if (!knownIds.has(id)) e(`profiles.yml: preset '${pr.id}' references unknown feature '${id}'`);
   }
   const scopeIds = new Set(hdsScopes.map(({ scope }) => scope.id));
+  // Selecting a scope is a legitimate job for a feature, so record it as use.
+  const usedByRules = new Set();
   for (const rule of profiles.scope_applicability) {
     if (!scopeIds.has(rule.scope)) e(`profiles.yml: scope_applicability names unknown scope '${rule.scope}'`);
     for (const id of [...(rule.when.all || []), ...(rule.when.any || [])]) {
       if (!knownIds.has(id)) e(`profiles.yml: scope_applicability '${rule.scope}' references unknown feature '${id}'`);
+      else usedByRules.add(id);
     }
   }
   for (const u of profiles.uncovered || []) {
     for (const id of [...(u.when.all || []), ...(u.when.any || []), ...(u.unless || [])]) {
       if (!knownIds.has(id)) e(`profiles.yml: uncovered '${u.id}' references unknown feature '${id}'`);
+      else usedByRules.add(id);
     }
   }
   for (const sid of Object.keys(profiles.personas || {})) {
@@ -294,6 +298,7 @@ if (profiles) {
   // all 92 out-of-scope entries; making it a rule stops a future entry drifting
   // into the gap, where the implementer page would render an action with no
   // action text in it.
+  const ORG_CHECK = new Set(['covered-entity', 'business-associate']);
   for (const { scope, file } of hdsScopes) {
     const r0 = rel(file);
     for (const r of scope.requirements || []) {
@@ -301,6 +306,12 @@ if (profiles) {
         const hasText = !!(o.overview || '').trim();
         if (o.coverage === 'out-of-scope' && hasText) {
           e(`${r0}: ${r.ref} '${o.persona}' is out-of-scope but carries an overview — say it places no duty, or give it a coverage that matches the text`);
+        }
+        if (o.coverage !== 'out-of-scope' && ORG_CHECK.has(o.persona) && !o.basis) {
+          e(`${r0}: ${r.ref} '${o.persona}' has no basis — say whether the duty arises from using HDS (integration) or attaches to you as an entity`);
+        }
+        if (/^\s*(same\b|as above|likewise|ditto)/i.test(o.overview || '')) {
+          e(`${r0}: ${r.ref} '${o.persona}' text starts by referring to another persona's entry. The implementer page renders one persona at a time, so the antecedent is never on screen. Write it standalone.`);
         }
         if (o.coverage !== 'out-of-scope' && !hasText) {
           e(`${r0}: ${r.ref} '${o.persona}' has coverage '${o.coverage}' but no overview — an obligation with nothing to do is not an obligation`);
@@ -338,8 +349,19 @@ if (profiles) {
       }
     }
   }
+  // A feature may also earn its place by deciding a persona rather than by
+  // tagging a row.
+  for (const cfg of Object.values(profiles.personas || {})) {
+    for (const rule of cfg.derive || []) {
+      for (const id of [...(rule.when.all || []), ...(rule.when.any || [])]) {
+        if (!knownIds.has(id)) e(`profiles.yml: personas derive rule references unknown feature '${id}'`);
+        else usedByRules.add(id);
+      }
+    }
+  }
   for (const id of knownIds) {
-    if (!used.has(id) && !(profiles.derived || []).some((d) => (d.all || d.any || []).includes(id))) {
+    if (!used.has(id) && !usedByRules.has(id) &&
+        !(profiles.derived || []).some((d) => (d.all || d.any || []).includes(id))) {
       const isPopulation = profiles.features.some((f) => f.id === id &&
         (f.group === 'population' || f.group === 'residency'));
       // population/residency features select SCOPES and arrangement selects the
