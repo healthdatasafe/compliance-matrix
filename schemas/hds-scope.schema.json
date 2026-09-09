@@ -126,20 +126,19 @@
             "properties": {
               "arrangement": {
                 "enum": [
-                  "partner-integration",
-                  "hds-operated-service"
-                ]
+                  "vault",
+                  "covered-entity-relationship"
+                ],
+                "description": "The arrangement this role covers. THIS MATRIX SCOPES TO THE VAULT PRODUCT: individuals hold their own accounts, data enters only with their explicit consent, and they control who may access it. 'vault' is that product. 'covered-entity-relationship' is the HIPAA case where a Covered Entity is party to the relationship, which is a different statutory test and does not import a GDPR processor role. Any future engagement where HDS genuinely processes on a controller's instructions is out of this matrix's scope and carries its own documentation."
               },
               "role": {
                 "enum": [
                   "controller",
-                  "processor",
-                  "joint-controller",
-                  "covered-entity",
                   "business-associate",
                   "service-organization",
                   "not-applicable"
-                ]
+                ],
+                "description": "HDS's role in this arrangement. 'processor' is deliberately NOT available: for the vault product HDS cannot satisfy Art.28(3), because it processes on the individual's permissions rather than a controller's instructions, and cannot delete or return an individual's data at a third party's direction."
               },
               "applies_to": {
                 "type": "string",
@@ -275,6 +274,10 @@
               "format": "date"
             }
           }
+        },
+        "not_a_processor": {
+          "type": "string",
+          "description": "Optional. States why HDS does not hold a processor role for this scope, where a reader would otherwise expect one. Present on the scopes whose regime has a processor concept."
         }
       }
     }

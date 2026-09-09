@@ -21,13 +21,13 @@ hds_posture:
     rows_approved: 12
     as_of: "2026-09-08"
   roles:
-    - arrangement: partner-integration
+    - arrangement: covered-entity-relationship
       role: business-associate
       applies_to: >
         HDS's duty on discovering a breach is to notify the covered entity
         without unreasonable delay; notifying individuals, HHS and the media
         remains the covered entity's.
-    - arrangement: hds-operated-service
+    - arrangement: vault
       role: not-applicable
       applies_to: >
         Direct-to-individual services outside a covered-entity relationship.

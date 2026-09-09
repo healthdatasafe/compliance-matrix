@@ -19,16 +19,12 @@ hds_posture:
     rows_approved: 45
     as_of: "2026-09-08"
   roles:
-    - arrangement: partner-integration
+    - arrangement: vault
       role: service-organization
       applies_to: >
-        HDS is the service organisation; the partner is the user entity. The
-        hosting providers are subservice organisations, carved in or out
-        depending on the criterion.
-    - arrangement: hds-operated-service
-      role: service-organization
-      applies_to: >
-        The same control environment operates HDS's own services.
+        HDS is the service organisation operating the vault; an organisation
+        building on it is a user entity. The hosting providers are subservice
+        organisations, carved in or out depending on the criterion.
   external_assurance:
     level: none
     detail: >

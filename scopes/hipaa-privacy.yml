@@ -21,13 +21,13 @@ hds_posture:
     rows_approved: 33
     as_of: "2026-09-08"
   roles:
-    - arrangement: partner-integration
+    - arrangement: covered-entity-relationship
       role: business-associate
       applies_to: >
         PHI held on behalf of a covered entity. The Privacy Rule reaches HDS
         through the BAA rather than directly; most of its obligations stay with
         the covered entity.
-    - arrangement: hds-operated-service
+    - arrangement: vault
       role: not-applicable
       applies_to: >
         Direct-to-individual services HDS operates outside any covered-entity

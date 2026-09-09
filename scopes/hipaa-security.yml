@@ -21,13 +21,13 @@ hds_posture:
     rows_approved: 43
     as_of: "2026-09-08"
   roles:
-    - arrangement: partner-integration
+    - arrangement: covered-entity-relationship
       role: business-associate
       applies_to: >
         PHI a covered entity or another business associate places on the
         platform. HDS is the business associate under a signed BAA and carries
         the Security Rule obligations that flow to that role.
-    - arrangement: hds-operated-service
+    - arrangement: vault
       role: not-applicable
       applies_to: >
         Services HDS operates directly for individuals and not on behalf of a
