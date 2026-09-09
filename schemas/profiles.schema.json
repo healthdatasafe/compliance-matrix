@@ -243,55 +243,88 @@
       }
     },
     "step2": {
-      "type": "array",
-      "minItems": 1,
-      "description": "Step 2 of the selection: independent toggles, any combination. Each maps to one feature. A toggle may imply others, clear others, and reveal a radio when its answer is not a single fact.",
-      "items": {
-        "type": "object",
-        "additionalProperties": false,
-        "required": [
-          "id",
-          "feature",
-          "label"
-        ],
-        "properties": {
-          "id": {
-            "type": "string",
-            "pattern": "^[a-z][a-z0-9-]*$"
-          },
-          "feature": {
-            "type": "string"
-          },
-          "label": {
-            "type": "string",
-            "minLength": 1
-          },
-          "hint": {
-            "type": "string"
-          },
-          "implies": {
-            "type": "array",
-            "items": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "areas"
+      ],
+      "description": "Step 2 of the selection. `areas` is one growing list of places served; adding a country is one entry. `followups` are questions that appear only when a given area is selected, so a US-specific question never shows to a European implementer.",
+      "properties": {
+        "areas": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "title",
+            "options"
+          ],
+          "properties": {
+            "title": {
               "type": "string"
             },
-            "uniqueItems": true
-          },
-          "clears": {
-            "type": "array",
-            "items": {
+            "hint": {
               "type": "string"
             },
-            "uniqueItems": true
-          },
-          "choice": {
+            "options": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "feature",
+                  "label"
+                ],
+                "properties": {
+                  "feature": {
+                    "type": "string"
+                  },
+                  "label": {
+                    "type": "string"
+                  },
+                  "gives": {
+                    "type": "string"
+                  },
+                  "hint": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "followups": {
+          "type": "array",
+          "items": {
             "type": "object",
             "additionalProperties": false,
             "required": [
+              "id",
+              "when",
+              "question",
+              "name",
               "options"
             ],
             "properties": {
-              "legend": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9-]*$"
+              },
+              "when": {
+                "type": "string",
+                "description": "Feature id that must be on for this question to appear."
+              },
+              "title": {
                 "type": "string"
+              },
+              "question": {
+                "type": "string"
+              },
+              "note": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string",
+                "description": "Radio group name; the options are mutually exclusive."
               },
               "options": {
                 "type": "array",
@@ -308,6 +341,12 @@
                       "type": "string"
                     },
                     "label": {
+                      "type": "string"
+                    },
+                    "gives": {
+                      "type": "string"
+                    },
+                    "hint": {
                       "type": "string"
                     }
                   }

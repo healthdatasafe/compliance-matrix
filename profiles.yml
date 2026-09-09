@@ -161,39 +161,45 @@ presets:
     features: [connects, stores-phi-copy]
     locked: [connects, stores-phi-copy]
 
-# Step 2: independent toggles, any combination. Jurisdictions are genuinely
-# additive (serve the EU, Switzerland and the US at once), so exclusive cards
-# were the wrong shape. Switzerland stays its own toggle rather than folding
-# into Europe: the nLPD is a separate framework and a Swiss-only service is not
-# automatically in GDPR scope.
+# Step 2. One growing list of areas, plus follow-up questions that appear only
+# when an area raises them. Adding a country is one row here; nothing else moves.
 step2:
-  - id: eu
-    feature: subjects-eu
-    label: Users in the EU or EEA
-    hint: The GDPR applies.
-  - id: ch
-    feature: subjects-ch
-    label: Users in Switzerland
-    hint: The Swiss nLPD applies.
-  - id: us
-    feature: subjects-us
-    label: Users in the United States
-    hint: >
-      The FTC Health Breach Notification Rule and state consumer-health-data
-      law. HIPAA only where a healthcare provider is involved.
-  - id: us-health
-    feature: us-role-acts-for
-    label: You act for, or are, a US healthcare provider, health plan or clearinghouse
-    hint: HIPAA applies to you. Implies users in the United States.
-    implies: [subjects-us]
-    clears: [us-role-none]
-    choice:
-      legend: Which one?
+  areas:
+    title: Where are your users?
+    hint: Tick every area you serve. More will be added as HDS covers them.
+    options:
+      - feature: subjects-eu
+        label: European Union and EEA
+        gives: GDPR
+      - feature: subjects-ch
+        label: Switzerland
+        gives: Swiss nLPD
+      - feature: subjects-us
+        label: United States
+        gives: FTC rule, state law
+  followups:
+    - id: us-health
+      when: subjects-us
+      title: United States
+      question: >
+        Is a healthcare provider, health plan or clearinghouse part of this?
+      name: us-role
+      note: >
+        HIPAA reaches you only if you act on one's behalf and handle protected
+        health information. It does not reach data an individual simply keeps in
+        their own account.
       options:
+        - feature: us-role-none
+          label: No, none is involved
+        - feature: us-role-ce-involved
+          label: Yes, but not through you
+          hint: Your user's own doctor also has access, say. HIPAA reaches the vault, not you.
         - feature: us-role-acts-for
           label: You build for one, or under contract to one
+          hint: You are their business associate.
         - feature: us-role-you-are
           label: You are one
+          hint: You are a covered entity.
 
 scope_applicability:
   - scope: gdpr

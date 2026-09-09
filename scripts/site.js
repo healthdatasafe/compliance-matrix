@@ -429,21 +429,28 @@ const profilePanel = !PROFILES
       </div>
     </li>
     <li class="step">
-      <h2><span class="num">2</span> Tell us more <span class="anymark">tick any that apply</span></h2>
-      <div class="cards">
-        ${(PROFILES.step2 || []).map((s2) => `<div class="s2wrap">
-          <label class="s2" data-id="${esc(s2.id)}">
-            <input type="checkbox" class="s2box" value="${esc(s2.feature)}"
-              data-implies="${esc((s2.implies || []).join(','))}"
-              data-clears="${esc((s2.clears || []).join(','))}">
-            <span><b>${esc(s2.label)}</b>${s2.hint ? `<em>${esc(s2.hint.trim())}</em>` : ''}</span>
-          </label>
-          ${s2.choice
-? `<div class="s2choice" data-for="${esc(s2.id)}" hidden>
-            ${s2.choice.legend ? `<span class="cl">${esc(s2.choice.legend)}</span>` : ''}
-            ${s2.choice.options.map((o, k) => `<label><input type="radio" name="s2-${esc(s2.id)}" value="${esc(o.feature)}"${k === 0 ? ' checked' : ''}> ${esc(o.label)}</label>`).join('')}
-          </div>`
-: ''}
+      <h2><span class="num">2</span> Where are your users?</h2>
+      <div class="s2grid">
+        <div class="s2card">
+          ${PROFILES.step2.areas.hint ? `<p class="s2hint">${esc(PROFILES.step2.areas.hint.trim())}</p>` : ''}
+          <div class="arealist">
+            ${PROFILES.step2.areas.options.map((o) => `<label class="area">
+              <input type="checkbox" class="s2box" value="${esc(o.feature)}">
+              <span class="al">${esc(o.label)}</span>
+              ${o.gives ? `<span class="gives">${esc(o.gives)}</span>` : ''}
+            </label>`).join('')}
+          </div>
+        </div>
+        ${(PROFILES.step2.followups || []).map((fu) => `<div class="s2card followup" data-when="${esc(fu.when)}" hidden>
+          ${fu.title ? `<p class="futitle">${esc(fu.title)}</p>` : ''}
+          <p class="fuq">${esc(fu.question.trim())}</p>
+          <div class="fuopts">
+            ${fu.options.map((o, k) => `<label class="fuopt">
+              <input type="radio" class="s2radio" name="fu-${esc(fu.id)}" value="${esc(o.feature)}"${k === 0 ? ' checked' : ''}>
+              <span>${esc(o.label)}${o.hint ? `<em>${esc(o.hint.trim())}</em>` : ''}</span>
+            </label>`).join('')}
+          </div>
+          ${fu.note ? `<p class="funote">${esc(fu.note.trim())}</p>` : ''}
         </div>`).join('')}
       </div>
     </li>
@@ -715,11 +722,8 @@ short: s.short || s.id,
     var set = {};
     var ap = panel.querySelector('.preset.on');
     if (ap) ap.dataset.features.split(',').filter(Boolean).forEach(function (x) { set[x] = 1; });
-    panel.querySelectorAll('.s2box, .s2choice input[type=radio]').forEach(function (i) {
+    panel.querySelectorAll('.s2box, .s2radio').forEach(function (i) {
       if (i.checked && !i.disabled) set[i.value] = 1;
-    });
-    (P.step2 || []).forEach(function (s2) {
-      (s2.implies || []).forEach(function (x) { set[x] = 1; });
     });
     var extra = [];
     panel.querySelectorAll('.fopt input:checked').forEach(function (i) {
@@ -769,47 +773,43 @@ short: s.short || s.id,
       } else if (!isLocked && badge) badge.remove();
     });
   }
-  // Step 2: independent toggles. Each drives one feature, may imply others
-  // (saying you act for a US provider means you have US users), and may reveal
-  // a radio where one toggle cannot carry the whole answer: acting FOR a
-  // covered entity and BEING one give materially different obligation sets.
+  // Step 2 writes into the fine-tune panel, which holds the state. A follow-up
+  // appears only when the area that raises it is on, so a US-only question never
+  // shows to a European implementer, and its options live in the SAME card as
+  // the question rather than hanging off a separate one.
   function syncStep2() {
     panel.querySelectorAll('.s2box').forEach(function (box) {
-      var wrap = box.closest('.s2wrap');
-      var choice = wrap.querySelector('.s2choice');
-      if (choice) {
-        choice.hidden = !box.checked;
-        choice.querySelectorAll('input[type=radio]').forEach(function (r) { r.disabled = !box.checked; });
-      }
-      var target = panel.querySelector('.fopt input[value="' + box.value + '"]');
-      // A revealed radio overrides the toggle's own feature. Unticking must clear
-      // EVERY option it offered, not just the toggle's default: clearing only the
-      // default left the other option set, so unticking 'you are one' left the
-      // covered-entity role in place and HIPAA still applied.
-      if (choice) {
-        var picked = choice.querySelector('input[type=radio]:checked');
-        choice.querySelectorAll('input[type=radio]').forEach(function (r) {
-          var el = panel.querySelector('.fopt input[value="' + r.value + '"]');
-          if (el) el.checked = box.checked && r === picked;
-        });
-      } else if (target) {
-        target.checked = box.checked;
-      }
-      (box.dataset.implies ? box.dataset.implies.split(',') : []).filter(Boolean).forEach(function (id) {
-        if (!box.checked) return;
-        var el = panel.querySelector('.fopt input[value="' + id + '"]');
-        if (el) el.checked = true;
-        var sib = panel.querySelector('.s2box[value="' + id + '"]');
-        if (sib) sib.checked = true;
+      var el = panel.querySelector('.fopt input[value="' + box.value + '"]');
+      if (el) el.checked = box.checked;
+    });
+    panel.querySelectorAll('.followup').forEach(function (card) {
+      var on = panel.querySelector('.s2box[value="' + card.dataset.when + '"]');
+      var show = !!(on && on.checked);
+      card.hidden = !show;
+      var picked = card.querySelector('.s2radio:checked');
+      card.querySelectorAll('.s2radio').forEach(function (r) {
+        r.disabled = !show;
+        var f = panel.querySelector('.fopt input[value="' + r.value + '"]');
+        if (f) f.checked = show && r === picked;
       });
-      (box.dataset.clears ? box.dataset.clears.split(',') : []).filter(Boolean).forEach(function (id) {
-        var el = panel.querySelector('.fopt input[value="' + id + '"]');
-        if (el) el.checked = !box.checked;
+    });
+  }
+  function reflectStep2() {
+    panel.querySelectorAll('.s2box').forEach(function (box) {
+      var el = panel.querySelector('.fopt input[value="' + box.value + '"]');
+      if (el) box.checked = el.checked;
+    });
+    panel.querySelectorAll('.followup').forEach(function (card) {
+      var on = panel.querySelector('.s2box[value="' + card.dataset.when + '"]');
+      card.hidden = !(on && on.checked);
+      card.querySelectorAll('.s2radio').forEach(function (r) {
+        var f = panel.querySelector('.fopt input[value="' + r.value + '"]');
+        if (f && f.checked) r.checked = true;
       });
     });
   }
   panel.addEventListener('change', function (ev) {
-    if (!ev.target.matches('.s2box, .s2choice input')) return;
+    if (!ev.target.matches('.s2box, .s2radio')) return;
     syncStep2(); summarise(); render();
   });
 
@@ -1158,17 +1158,25 @@ main>.pager:last-child{margin-top:2rem}
 .step h2{font-size:1rem;margin:0 0 .6rem;display:flex;align-items:center;gap:.5rem}
 .step .num{display:inline-flex;align-items:center;justify-content:center;width:1.5rem;height:1.5rem;border-radius:999px;background:var(--ink);color:#fff;font-size:.8rem;flex:none}
 .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(14rem,1fr));gap:.6rem}
-.s2wrap{display:flex;flex-direction:column}
-.s2{display:flex;gap:.5rem;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:.5rem;padding:.7rem .8rem;cursor:pointer;height:100%}
-.s2:hover{border-color:#1d4ed8}
-.s2 input{margin-top:.15rem;flex:none}
-.s2 b{display:block;font-size:.86rem;font-weight:600;line-height:1.35}
-.s2 em{display:block;font-style:normal;font-size:.76rem;color:var(--muted);margin-top:.2rem;line-height:1.4}
-.s2:has(input:checked){border-color:#1d4ed8;background:#eff6ff;box-shadow:0 0 0 1px #1d4ed8 inset}
-.s2choice{margin:.4rem 0 0;padding:.5rem .7rem;background:#eff6ff;border:1px solid #bfdbfe;border-radius:.45rem;display:flex;flex-direction:column;gap:.25rem;font-size:.8rem}
-.s2choice .cl{font-size:.7rem;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
-.s2choice label{display:flex;gap:.35rem;align-items:flex-start;cursor:pointer}
-.anymark{font-size:.72rem;font-weight:400;color:var(--muted);text-transform:none;letter-spacing:0}
+.s2grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(19rem,1fr));gap:.7rem;align-items:start}
+.s2card{background:#fff;border:1px solid var(--line);border-radius:.5rem;padding:.8rem .9rem}
+.s2hint{font-size:.78rem;color:var(--muted);margin:0 0 .5rem}
+.arealist{display:flex;flex-direction:column}
+.area{display:flex;gap:.55rem;align-items:center;padding:.45rem .2rem;border-top:1px solid var(--line);cursor:pointer}
+.area:first-child{border-top:0}
+.area input{flex:none;margin:0}
+.area .al{font-size:.88rem;font-weight:500}
+.area .gives{margin-left:auto;font-size:.68rem;color:var(--muted);background:#f1f5f9;border-radius:999px;padding:.1rem .45rem;white-space:nowrap}
+.area:has(input:checked) .al{color:#1d4ed8}
+.area:has(input:checked) .gives{background:#dbeafe;color:#1d4ed8}
+.followup{border-color:#bfdbfe;background:#f8fbff}
+.futitle{font-size:.68rem;text-transform:uppercase;letter-spacing:.05em;color:#1d4ed8;margin:0 0 .2rem;font-weight:700}
+.fuq{font-size:.86rem;font-weight:600;margin:0 0 .5rem}
+.fuopts{display:flex;flex-direction:column;gap:.35rem}
+.fuopt{display:flex;gap:.5rem;align-items:flex-start;font-size:.83rem;cursor:pointer}
+.fuopt input{flex:none;margin-top:.15rem}
+.fuopt em{display:block;font-style:normal;font-size:.75rem;color:var(--muted);margin-top:.1rem}
+.funote{font-size:.75rem;color:var(--muted);margin:.6rem 0 0;padding-top:.5rem;border-top:1px dashed #bfdbfe}
 .preset{text-align:left;background:#fff;border:1px solid var(--line);border-radius:.5rem;padding:.7rem .8rem;cursor:pointer;font:inherit;color:inherit;transition:border-color .12s,box-shadow .12s}
 .preset:hover{border-color:#1d4ed8}
 .preset.on{border-color:#1d4ed8;background:#eff6ff;box-shadow:0 0 0 1px #1d4ed8 inset}

@@ -274,14 +274,19 @@ if (profiles) {
   const scopeIds = new Set(hdsScopes.map(({ scope }) => scope.id));
   // Selecting a scope is a legitimate job for a feature, so record it as use.
   const usedByRules = new Set();
-  for (const s2 of profiles.step2 || []) {
-    const ids = [s2.feature, ...(s2.implies || []), ...(s2.clears || []),
-      ...((s2.choice && s2.choice.options) || []).map((o) => o.feature)];
-    for (const id of ids) {
-      if (!knownIds.has(id)) e(`profiles.yml: step2 '${s2.id}' references unknown feature '${id}'`);
-      else usedByRules.add(id);
+  const s2 = profiles.step2 || {};
+  for (const o of (s2.areas && s2.areas.options) || []) {
+    if (!knownIds.has(o.feature)) e(`profiles.yml: step2 area references unknown feature '${o.feature}'`);
+    else usedByRules.add(o.feature);
+  }
+  for (const fu of s2.followups || []) {
+    if (!knownIds.has(fu.when)) e(`profiles.yml: step2 followup '${fu.id}' waits on unknown feature '${fu.when}'`);
+    for (const o of fu.options) {
+      if (!knownIds.has(o.feature)) e(`profiles.yml: step2 followup '${fu.id}' references unknown feature '${o.feature}'`);
+      else usedByRules.add(o.feature);
     }
   }
+
   for (const rule of profiles.scope_applicability) {
     if (!scopeIds.has(rule.scope)) e(`profiles.yml: scope_applicability names unknown scope '${rule.scope}'`);
     for (const id of [...(rule.when.all || []), ...(rule.when.any || [])]) {
@@ -295,11 +300,16 @@ if (profiles) {
       else usedByRules.add(id);
     }
   }
-  for (const sid of Object.keys(profiles.personas || {})) {
+  for (const [sid, cfg] of Object.entries(profiles.personas || {})) {
     if (!scopeIds.has(sid)) e(`profiles.yml: personas names unknown scope '${sid}'`);
+    for (const rule of cfg.derive || []) {
+      for (const id of [...(rule.when.all || []), ...(rule.when.any || [])]) {
+        if (!knownIds.has(id)) e(`profiles.yml: personas derive rule references unknown feature '${id}'`);
+        else usedByRules.add(id);
+      }
+    }
   }
 
-  // Row tags.
   const ORG_PERSONAS = new Set(['partner', 'covered-entity', 'business-associate', 'controller',
     'processor', 'service-organization', 'user-entity', 'subservice-organization']);
 
