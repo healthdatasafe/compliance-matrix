@@ -302,11 +302,26 @@ const totalReqs = groups.reduce((n, g) => n + allReqs(g).length, 0);
 // end-user personas are context, not the implementer's work.
 const ORG_PERSONAS = new Set(['partner', 'covered-entity', 'business-associate', 'controller',
   'processor', 'service-organization', 'user-entity', 'subservice-organization']);
+const HDS_COVER = [];
 const OBLIGATIONS = [];
+// Recorded as placing no duty on this persona. Surfaced as a count so the reader
+// can see the requirement was considered, never rendered as an action.
+const NON_DUTIES = [];
 for (const s of scopes) {
   for (const r of s.requirements || []) {
+    HDS_COVER.push({
+      scope: s.id,
+      ref: r.ref,
+      title: r.title,
+      anchor: refAnchorId(r.ref),
+      page: (s.family && FAMILIES[s.family]) ? `${s.family}.html` : `${s.id}.html`,
+      coverage: r.hds?.coverage || '',
+      effort: r.hds?.effort_saved || '',
+      overview: (r.hds?.overview || '').trim().replace(/\s+/g, ' ').slice(0, 320),
+    });
     for (const o of r.implementer || []) {
       if (!ORG_PERSONAS.has(o.persona)) continue;
+      if (o.coverage === 'out-of-scope') { NON_DUTIES.push({ scope: s.id, ref: r.ref, persona: o.persona }); continue; }
       OBLIGATIONS.push({
         scope: s.id,
         scopeShort: s.short || s.id,
@@ -388,6 +403,8 @@ short: s.short || s.id,
 : null,
   }])),
   obligations: OBLIGATIONS,
+  nonDuties: NON_DUTIES,
+  hdsCover: HDS_COVER,
 })};
 </script>
 <script>
@@ -448,6 +465,7 @@ short: s.short || s.id,
 
     var totActions = 0, totHidden = 0, totUnprofiled = 0, tpls = {};
     var G = { carried: 0, shared: 0, yours: 0 };
+    var Y = { needs: 0, not: 0 };
     var showHidden = document.getElementById('showhidden') && document.getElementById('showhidden').checked;
 
     var sections = scopes.map(function (sid) {
@@ -464,33 +482,57 @@ short: s.short || s.id,
         else hidden++;
       });
       var oblTotal = rows.length - orient.length;
+      var nonDuty = P.nonDuties.filter(function (n) { return n.scope === sid && n.persona === persona; }).length;
       totActions += determined; totHidden += hidden; totUnprofiled += unprofiled;
 
-      // How much of what applies to YOU does HDS already carry? Read from the
-      // HDS layer of each applicable requirement, not from the whole framework.
-      var c = { carried: 0, shared: 0, yours: 0 };
-      actions.forEach(function (o) {
-        if (o.hdsCoverage === 'implemented' || o.hdsCoverage === 'configurable') c.carried++;
-        else if (o.hdsCoverage === 'facilitated') c.shared++;
-        else c.yours++;
+      // Two different questions were being answered by one bar. Depth of HDS's
+      // technical contribution (implemented / facilitated / documented) is not
+      // the same as how much is left for THIS implementer, and the bar sits
+      // where a reader asks the second. So the bar answers the second: when
+      // nothing falls to you it is entirely green, which is what the headline
+      // beside it already says. Contribution depth stays, as secondary detail.
+      var cov = P.hdsCover.filter(function (x) { return x.scope === sid; });
+      var d = { carried: 0, shared: 0, doc: 0, na: 0 };
+      cov.forEach(function (x) {
+        if (x.coverage === 'implemented' || x.coverage === 'configurable') d.carried++;
+        else if (x.coverage === 'facilitated') d.shared++;
+        else if (x.coverage === 'out-of-scope') d.na++;
+        else d.doc++;
       });
-      G.carried += c.carried; G.shared += c.shared; G.yours += c.yours;
-      var n = actions.length || 1;
-      var bar = '<div class="hdsbar" title="' + c.carried + ' carried by HDS, ' + c.shared +
-        ' shared, ' + c.yours + ' yours">' +
-        '<span class="seg carried" style="width:' + (c.carried / n * 100) + '%"></span>' +
-        '<span class="seg shared" style="width:' + (c.shared / n * 100) + '%"></span>' +
-        '<span class="seg yours" style="width:' + (c.yours / n * 100) + '%"></span></div>' +
-        '<p class="hdskey"><span class="k carried"></span>' + c.carried + ' HDS already does' +
-        '<span class="k shared"></span>' + c.shared + ' HDS helps with' +
-        '<span class="k yours"></span>' + c.yours + ' fully yours</p>';
+      G.carried += d.carried; G.shared += d.shared; G.yours += d.doc;
 
+      // The reader's bar: of everything in this framework, how much needs you?
+      var needsYou = determined;
+      var notYours = (rows.length - orient.length) - needsYou;
+      var tot = (needsYou + notYours) || 1;
+      Y.needs += needsYou; Y.not += notYours;
+      var strong = cov.filter(function (x) {
+        return x.coverage === 'implemented' || x.coverage === 'configurable'; });
+
+      var bar = '<div class="hdsbar" title="' + notYours + ' handled without you, ' + needsYou + ' need your action">' +
+        (notYours ? '<span class="seg carried" style="width:' + (notYours / tot * 100) + '%"></span>' : '') +
+        (needsYou ? '<span class="seg act" style="width:' + (needsYou / tot * 100) + '%"></span>' : '') + '</div>' +
+        '<p class="hdskey"><span class="k carried"></span><b>' + notYours + '</b> handled without you' +
+        (needsYou ? '<span class="k act"></span><b>' + needsYou + '</b> need your action' : '') + '</p>' +
+        '<p class="depth">Of the ' + (d.carried + d.shared + d.doc) + ' requirements the vault engages with, HDS ' +
+        'delivers <b>' + d.carried + '</b> outright and supports <b>' + d.shared + '</b> more' +
+        (d.doc ? ', documenting ' + d.doc : '') +
+        (d.na ? '. ' + d.na + ' have no software role for anyone' : '') + '.</p>' +
+        (strong.length ? '<details class="covlist"><summary>What HDS delivers for you here, ' +
+          strong.length + ' requirement' + (strong.length === 1 ? '' : 's') + '</summary><ul>' +
+          strong.map(function (x) {
+            return '<li><a href="' + x.page + '#' + x.anchor + '"><code>' + esc(x.ref) + '</code> ' +
+              esc(x.title) + '</a>' + (x.overview ? '<p>' + esc(x.overview) + '</p>' : '') + '</li>';
+          }).join('') + '</ul></details>' : '');
       return '<article class="rscope"><h3><a href="' + meta.page + '">' + esc(meta.title) + '</a>' +
         '<span class="pers">your role: ' + esc(persona) + '</span></h3>' +
-        (actions.length ? bar : '<p class="meta">Nothing in this framework attaches to you on this selection.</p>') +
+        bar +
+        (actions.length ? '' : '<p class="nothingdue"><b>Nothing in this framework falls to you on this selection.</b> ' +
+          'The requirements above are met by the vault itself.</p>') +
         '<p class="meta"><b>' + determined + '</b> of ' + oblTotal + ' requirements need action from you' +
         (hidden ? ' · ' + hidden + ' ruled out by your selections' : '') +
         (unprofiled ? ' · <span class="npf">' + unprofiled + ' not yet classified, shown in full</span>' : '') +
+        (nonDuty ? ' · ' + nonDuty + ' place no duty on you' : '') +
         (meta.posture && meta.posture.backing ? ' · HDS: ' + meta.posture.backing.rows_approved + ' of ' +
           meta.posture.backing.rows_total + ' backed by approved documentation, <a href="index.html">see standing</a>' : '') + '</p>' +
         (orient.length ? '<details class="scopetest"><summary>Does this framework reach you at all?</summary><ul>' +
@@ -503,7 +545,7 @@ short: s.short || s.id,
             : (o.hdsCoverage === 'facilitated' ? 'shared' : 'yours');
           var lbl = cls === 'carried' ? 'HDS already does this' : (cls === 'shared' ? 'HDS helps' : 'fully yours');
           return '<li class="act ' + cls + '">' +
-            '<p class="do">' + esc(o.overview || o.title) + '</p>' +
+            '<p class="do">' + esc(o.overview) + '</p>' +
             '<p class="src"><span class="tag ' + cls + '">' + lbl + '</span>' +
             '<a href="' + o.page + '#' + o.anchor + '">' + esc(o.scopeShort) + ' <code>' + esc(o.ref) + '</code></a> ' +
             esc(o.title) +
@@ -515,20 +557,20 @@ short: s.short || s.id,
 
     var gn = (G.carried + G.shared + G.yours) || 1;
     html += '<div class="rhead"><h2>' +
-      (totActions ? totActions + ' action' + (totActions === 1 ? '' : 's') + ' for you'
-                  : 'No action is determined to fall to you') + '</h2>' +
+      (totActions
+        ? totActions + ' of ' + (Y.needs + Y.not) + ' requirements need action from you'
+        : 'None of the ' + (Y.needs + Y.not) + ' requirements needs action from you') + '</h2>' +
       '<p class="lede">Across ' + scopes.length + ' framework' + (scopes.length > 1 ? 's' : '') + '. ' +
       (totActions
-        ? 'What you have to do, and how much of it HDS has already done.'
-        : 'On this selection your application never receives personal data of its own, ' +
-          'so the duties do not attach to you. A starting point to confirm with counsel, not a clearance.') + '</p>' +
-      (totActions ? '<div class="gbar"><div class="hdsbar big">' +
-        '<span class="seg carried" style="width:' + (G.carried / gn * 100) + '%"></span>' +
-        '<span class="seg shared" style="width:' + (G.shared / gn * 100) + '%"></span>' +
-        '<span class="seg yours" style="width:' + (G.yours / gn * 100) + '%"></span></div>' +
-        '<p class="hdskey"><span class="k carried"></span><b>' + G.carried + '</b> HDS already does' +
-        '<span class="k shared"></span><b>' + G.shared + '</b> HDS helps with' +
-        '<span class="k yours"></span><b>' + G.yours + '</b> fully yours</p></div>' : '') +
+        ? 'What the vault already does, and what is left for you.'
+        : 'On this selection your application never receives personal data of its own, so no duty ' +
+          'attaches to you: the requirements are met by the vault. A starting point to confirm with ' +
+          'counsel, not a clearance.') + '</p>' +
+      ((Y.needs + Y.not) ? '<div class="gbar"><div class="hdsbar big">' +
+        (Y.not ? '<span class="seg carried" style="width:' + (Y.not / (Y.needs + Y.not) * 100) + '%"></span>' : '') +
+        (Y.needs ? '<span class="seg act" style="width:' + (Y.needs / (Y.needs + Y.not) * 100) + '%"></span>' : '') + '</div>' +
+        '<p class="hdskey"><span class="k carried"></span><b>' + Y.not + '</b> handled without you' +
+        (Y.needs ? '<span class="k act"></span><b>' + Y.needs + '</b> need your action' : '') + '</p></div>' : '') +
       (totUnprofiled ? '<p class="unclass"><b>' + totUnprofiled + ' requirements are not yet classified</b> ' +
         'against these options. They are listed in full rather than hidden, because an ' +
         'unclassified requirement is not the same as one that does not apply.</p>' : '') +
@@ -941,12 +983,24 @@ a.pl{cursor:pointer}
 /* ---- HDS coverage bars ---- */
 .hdsbar{display:flex;height:9px;border-radius:999px;overflow:hidden;background:#e5e7eb;margin:.5rem 0 .3rem}
 .hdsbar.big{height:14px;margin:.7rem 0 .4rem}
+.hdsbar .seg{flex:none}
 .hdsbar .seg.carried{background:#15803d}.hdsbar .seg.shared{background:#ca8a04}.hdsbar .seg.yours{background:#94a3b8}
+.hdsbar .seg.act{background:#ca8a04}
 .hdskey{font-size:.78rem;color:#4b5563;margin:.2rem 0 .5rem;display:flex;gap:.35rem;align-items:center;flex-wrap:wrap}
 .hdskey .k{width:.55rem;height:.55rem;border-radius:2px;display:inline-block;margin-left:.7rem}
 .hdskey .k:first-child{margin-left:0}
 .hdskey .k.carried{background:#15803d}.hdskey .k.shared{background:#ca8a04}.hdskey .k.yours{background:#94a3b8}
+.hdskey .k.act{background:#ca8a04}
 .gbar{margin:.6rem 0 .2rem;max-width:46rem}
+.depth{font-size:.8rem;color:#4b5563;margin:.1rem 0 .4rem}
+.covlist{margin:.3rem 0 .6rem;font-size:.84rem}
+.covlist>summary{cursor:pointer;color:#15803d;font-weight:600;font-size:.82rem}
+.covlist ul{margin:.5rem 0;padding-left:1.1rem}
+.covlist li{margin:.5rem 0}
+.covlist li a{text-decoration:none;font-weight:600}
+.covlist li p{margin:.15rem 0 0;color:#4b5563;font-size:.82rem}
+.nothingdue{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:.45rem;padding:.55rem .7rem;margin:.5rem 0;font-size:.85rem;color:#374151}
+.nothingdue b{color:#15803d}
 /* ---- action list ---- */
 .acts{list-style:none;counter-reset:a;padding:0;margin:.8rem 0 0}
 .act{counter-increment:a;border-top:1px solid var(--line);padding:.7rem 0 .7rem 2rem;position:relative}
