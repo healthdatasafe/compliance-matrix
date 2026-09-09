@@ -45,14 +45,14 @@
         
         <div class="roles">
   <div class="rolerow">
-    <span class="arr">vault</span>
+    <span class="arr">Individual holds the account</span>
     <span class="rl rl-controller">Controller</span>
     <p>The individual's vault. HDS determines the purposes and means of operating it, so HDS is the Art.4(7) controller. Data enters only with the individual's explicit consent, and the individual decides who may access it afterwards.
 </p>
   </div></div>
         <p class="stmt">HDS operates a GDPR programme rather than holding a GDPR credential. A Data Protection Officer was designated on 2026-07-17, a processor-side record of processing activities under Art.30 is maintained with eight live activities, and the platform supplies the technical measures the articles require. This is the least settled of the four frameworks on paper: three requirements rest on fully approved documentation and thirty-eight more are evidenced by documents still in review. The two material open items are the transfer stack for the US hosting layer, where the AWS DPA, the EU and Swiss standard contractual clauses and the transfer impact assessment are not yet executed, and HDS's own DPIA process, which is drafted but not yet operating.
 </p>
-        <p class="notproc"><b>HDS holds no role here, by design.</b> HDS is not an Art.28 processor for this product, and the matrix does not offer that arrangement. Art.28(3) requires processing on the controller's documented instructions, assistance with data subject rights, and deletion or return of the data at the controller's choice. HDS acts on the individual's permissions, the individual exercises their rights directly from their own dashboard, and HDS cannot delete an individual's vault at a third party's direction. An organisation that receives data an individual chose to share with it is an independent controller of what it holds, not a controller instructing HDS. Any future engagement in which HDS genuinely does process on instructions falls outside this matrix and carries its own documentation.
+        <p class="notproc"><b>What building on HDS does not create.</b> HDS is not an Art.28 processor for this product, and the matrix does not offer that arrangement. Art.28(3) requires processing on the controller's documented instructions, assistance with data subject rights, and deletion or return of the data at the controller's choice. HDS acts on the individual's permissions, the individual exercises their rights directly from their own dashboard, and HDS cannot delete an individual's vault at a third party's direction. An organisation that receives data an individual chose to share with it is an independent controller of what it holds, not a controller instructing HDS. Any future engagement in which HDS genuinely does process on instructions falls outside this matrix and carries its own documentation.
 </p>
       </div>
 
@@ -99,30 +99,30 @@
 
     <div class="pbody"><div class="roles">
   <div class="rolerow">
-    <span class="arr">vault</span>
+    <span class="arr">Individual holds the account</span>
     <span class="rl rl-not-applicable">Does not apply</span>
-    <p>The individual's vault. HDS holds the data for the individual, who decides who may see it, so HDS creates, receives, maintains and transmits nothing on a covered entity's behalf. HIPAA does not reach HDS here.
+    <p>Every vault. The individual holds the account and decides who may see the data, so HDS holds it for them and never on a covered entity's behalf, whoever put it there and wherever it physically sits. A business associate is defined by acting on a covered entity's behalf, so HDS is not one here and HIPAA does not reach it.
 </p>
-  </div></div><p class="notproc"><b>HDS holds no role here, by design.</b> This matrix covers the vault product, and HDS holds no HIPAA role in it. A business associate maintains protected health information ON BEHALF OF a covered entity; in the vault HDS maintains it for the individual, and an organisation reaches that data only through consent the individual grants it directly. Partnership arrangements in which HDS would handle data on an organisation's behalf, and would therefore need a BAA, exist and are documented separately. They are outside this matrix. The requirements below are still the map for an implementer who does hold a HIPAA role of its own.
+  </div></div><p class="notproc"><b>What building on HDS does not create.</b> Consent is not delegation. When an individual grants a clinician or an application access to their own vault, that access flows from their consent, not from anyone instructing HDS, so it creates no business associate relationship: not with the clinician, not with the application, and not with HDS. The data sitting on HDS infrastructure does not change on whose behalf it is held. Where an organisation would place protected health information with HDS on its OWN behalf, a BAA would be required; that arrangement is documented separately and is outside this matrix. The requirements below remain the map for an implementer that holds a HIPAA role of its own, and the FTC Health Breach Notification Rule and state consumer-health-data law are what reach the user-sovereign case instead.
 </p></div>
       <div class="pbody">
         <h4 class="subrule">HIPAA-Security</h4>
         
-        <p class="stmt">HIPAA does not reach HDS in the vault product, so the position below is not a claim that HDS meets the Security Rule: it is what the platform supplies to an implementer who does hold a role. Every one of the forty-three requirements is answered from an approved HDS document, and the operational safeguards behind those answers are live rather than paper: a risk analysis and risk-management plan are approved, workforce training runs against a completion register, backups are provisioned on both regional cores and a first restore rehearsal was executed on 2026-07-29. Nine carry remediation HDS has committed to and not delivered; encryption at rest uses provider-managed keys.
+        <p class="stmt">HIPAA does not reach HDS in the vault, so what follows is not a claim that HDS meets the Security Rule: it is what the platform supplies to an implementer that does hold a role. Every one of the forty-three requirements is answered from an approved HDS document, and the safeguards behind those answers are live rather than paper: a risk analysis and risk-management plan are approved, workforce training runs against a completion register, backups are provisioned on both regional cores and a first restore rehearsal was executed on 2026-07-29. Nine carry remediation HDS has committed to and not delivered, and encryption at rest uses provider-managed keys.
 </p>
         
       </div>
       <div class="pbody">
         <h4 class="subrule">HIPAA-Privacy</h4>
         
-        <p class="stmt">HIPAA does not reach HDS in the vault product. Thirty-three of the thirty-five requirements are answered from approved HDS documentation, which is what an implementer holding a covered-entity or business-associate role inherits when it builds here. Most of this rule is the covered entity's to discharge in any case. What the platform supplies directly is the individual-rights machinery, access, amendment, accounting of disclosures and restriction, each an approved procedure, exercised in rehearsal rather than against production volume.
+        <p class="stmt">HIPAA does not reach HDS in the vault. Thirty-three of the thirty-five requirements are answered from approved HDS documentation, which is what an implementer holding a covered-entity or business-associate role inherits when it builds here. Most of this rule is the covered entity's to discharge in any case. What the platform supplies directly is the individual-rights machinery, access, amendment, accounting of disclosures and restriction, each an approved procedure, exercised in rehearsal rather than against production volume.
 </p>
         
       </div>
       <div class="pbody">
         <h4 class="subrule">HIPAA-Breach</h4>
         
-        <p class="stmt">HIPAA does not reach HDS in the vault product, but the question this rule turns on is one the platform can answer: who was affected and what did they hold. The breach-scope primitive is deployed to every core with the access index backfilled, so the blast radius of a compromised token is enumerated rather than estimated, and twelve of the thirteen requirements are answered from approved documentation. The notification procedure is approved and rehearsed; no real reportable breach has exercised it.
+        <p class="stmt">HIPAA does not reach HDS in the vault, but the question this rule turns on is one the platform can answer: who was affected and what did they hold. The breach-scope primitive is deployed to every core with the access index backfilled, so the blast radius of a compromised token is enumerated rather than estimated, and twelve of the thirteen requirements are answered from approved documentation. The notification procedure is approved and rehearsed; no real reportable breach has exercised it.
 </p>
         
       </div>
@@ -170,7 +170,7 @@
         
         <div class="roles">
   <div class="rolerow">
-    <span class="arr">vault</span>
+    <span class="arr">Individual holds the account</span>
     <span class="rl rl-service-organization">Service organisation</span>
     <p>HDS is the service organisation operating the vault; an organisation building on it is a user entity. The hosting providers are subservice organisations, carved in or out depending on the criterion.
 </p>
@@ -220,14 +220,14 @@
         
         <div class="roles">
   <div class="rolerow">
-    <span class="arr">vault</span>
+    <span class="arr">Individual holds the account</span>
     <span class="rl rl-controller">Controller</span>
     <p>The individual's vault. HDS determines the purposes and means of operating it, so HDS is the controller under the Act. Data enters only with the individual's explicit consent, and the individual decides who may access it afterwards.
 </p>
   </div></div>
         <p class="stmt">Swiss residency is the strongest part of this position: the ch region runs on Swiss infrastructure and the data does not leave it, which is what most of this Act's residency and transfer concern is about. Thirteen of the thirty requirements rest on approved documentation and eleven more are evidenced by documents in review, the same pipeline as the GDPR. Six articles are recorded as out of scope because they address federal bodies or obligations that attach only to the controller, marked on the rows themselves rather than omitted.
 </p>
-        <p class="notproc"><b>HDS holds no role here, by design.</b> HDS is not an processor for this product, and the matrix does not offer that arrangement. Acting as a processor would require processing on a controller's instructions and returning or deleting the data at its choice. HDS acts on the individual's permissions, the individual exercises their rights directly from their own dashboard, and HDS cannot delete an individual's vault at a third party's direction. An organisation that receives data an individual chose to share with it is an independent controller of what it holds, not a controller instructing HDS. Any future engagement in which HDS genuinely does process on instructions falls outside this matrix and carries its own documentation.
+        <p class="notproc"><b>What building on HDS does not create.</b> HDS is not an processor for this product, and the matrix does not offer that arrangement. Acting as a processor would require processing on a controller's instructions and returning or deleting the data at its choice. HDS acts on the individual's permissions, the individual exercises their rights directly from their own dashboard, and HDS cannot delete an individual's vault at a third party's direction. An organisation that receives data an individual chose to share with it is an independent controller of what it holds, not a controller instructing HDS. Any future engagement in which HDS genuinely does process on instructions falls outside this matrix and carries its own documentation.
 </p>
       </div>
 
