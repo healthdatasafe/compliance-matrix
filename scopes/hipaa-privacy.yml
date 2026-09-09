@@ -127,12 +127,14 @@ requirements:
           - hipaa/policies/uses-and-disclosures
     implementer:
       - persona: covered-entity
+        basis: entity
         applies_when: always
         coverage: documented
         overview: |
           Decide which uses and disclosures are permitted under the Privacy Rule
           and configure access scopes accordingly.
       - persona: business-associate
+        basis: entity
         applies_when: always
         coverage: documented
         overview: |
@@ -170,12 +172,14 @@ requirements:
           - hipaa/policies/uses-and-disclosures
     implementer:
       - persona: covered-entity
+        basis: entity
         applies_when: [ai-individual]
         coverage: documented
         overview: |
           Classify your workflows as TPO or not and provision purpose-tagged
           accesses accordingly.
       - persona: business-associate
+        basis: entity
         applies_when: [ai-individual]
         coverage: documented
         overview: |
@@ -213,6 +217,7 @@ requirements:
           - hipaa/policies/authorizations
     implementer:
       - persona: covered-entity
+        basis: entity
         applies_when: [ai-individual, commercial-use, research-secondary-use]
         coverage: documented
         overview: |
@@ -224,6 +229,7 @@ requirements:
           You grant and revoke authorizations through the consent flow; each act
           is recorded.
       - persona: business-associate
+        basis: entity
         applies_when: [ai-individual, commercial-use, research-secondary-use]
         coverage: documented
         overview: |
@@ -257,6 +263,7 @@ requirements:
           - hipaa/policies/uses-and-disclosures
     implementer:
       - persona: covered-entity
+        basis: entity
         applies_when: always
         coverage: documented
         overview: |
@@ -293,6 +300,7 @@ requirements:
           - hipaa/policies/uses-and-disclosures
     implementer:
       - persona: covered-entity
+        basis: entity
         applies_when: [research-secondary-use]
         coverage: documented
         overview: |
@@ -328,6 +336,7 @@ requirements:
           - hipaa/policies/de-identification
     implementer:
       - persona: covered-entity
+        basis: entity
         applies_when: [ai-aggregate, research-secondary-use]
         coverage: documented
         overview: |
@@ -369,12 +378,14 @@ requirements:
           - hipaa/evidence/monitoring-telemetry-no-phi
     implementer:
       - persona: covered-entity
+        basis: integration
         applies_when: [reads-data]
         coverage: documented
         overview: |
           Design stream topology and permission scopes so each access is limited
           to the minimum necessary, and document the rationale.
       - persona: business-associate
+        basis: integration
         applies_when: [reads-data]
         coverage: documented
         overview: |
@@ -409,6 +420,7 @@ requirements:
           - hipaa/policies/notice-of-privacy-practices
     implementer:
       - persona: covered-entity
+        basis: entity
         applies_when: always
         coverage: documented
         overview: |
@@ -445,6 +457,7 @@ requirements:
           - hipaa/procedures/restriction-requests
     implementer:
       - persona: covered-entity
+        basis: integration
         applies_when: always
         coverage: documented
         overview: |
@@ -456,6 +469,7 @@ requirements:
           You request restrictions and alternative-communication preferences,
           which are recorded against your account.
       - persona: business-associate
+        basis: integration
         applies_when: always
         coverage: out-of-scope
 
@@ -492,12 +506,14 @@ requirements:
           You access and export your own PHI directly through the standard API or
           a subject portal built on it.
       - persona: covered-entity
+        basis: entity
         applies_when: always
         coverage: documented
         overview: |
           Run the access-request process and meet the response timeline; provide
           any requested non-native export format.
       - persona: business-associate
+        basis: entity
         applies_when: always
         coverage: documented
         overview: |
@@ -531,6 +547,7 @@ requirements:
           - hipaa/procedures/amendment-requests
     implementer:
       - persona: covered-entity
+        basis: entity
         applies_when: always
         coverage: documented
         overview: |
@@ -542,6 +559,7 @@ requirements:
           You request amendments; accepted changes and any disagreement statement
           are preserved with version history.
       - persona: business-associate
+        basis: entity
         applies_when: always
         coverage: out-of-scope
 
@@ -574,6 +592,7 @@ requirements:
           - hipaa/procedures/accounting-of-disclosures
     implementer:
       - persona: covered-entity
+        basis: integration
         applies_when: always
         coverage: documented
         overview: |
@@ -585,6 +604,7 @@ requirements:
           You request an accounting; the audit log provides the underlying
           disclosure record.
       - persona: business-associate
+        basis: integration
         applies_when: always
         coverage: documented
         overview: |
@@ -621,6 +641,7 @@ requirements:
           - hipaa/registers/designated-roles
     implementer:
       - persona: covered-entity
+        basis: entity
         applies_when: always
         coverage: documented
         overview: |
@@ -653,12 +674,14 @@ requirements:
           - hipaa/procedures/workforce-training
     implementer:
       - persona: covered-entity
+        basis: entity
         applies_when: always
         coverage: documented
         overview: |
           Train your workforce on your privacy policies and retain the training
           records.
       - persona: business-associate
+        basis: entity
         applies_when: always
         coverage: documented
         overview: |
@@ -695,6 +718,7 @@ requirements:
           - hipaa/policies/privacy-safeguards
     implementer:
       - persona: covered-entity
+        basis: entity
         applies_when: always
         coverage: documented
         overview: |
@@ -730,12 +754,14 @@ requirements:
           - hipaa/procedures/incident-mitigation
     implementer:
       - persona: covered-entity
+        basis: entity
         applies_when: always
         coverage: documented
         overview: |
           Investigate violations, decide and execute mitigation, and run any
           required notifications.
       - persona: business-associate
+        basis: entity
         applies_when: always
         coverage: documented
         overview: |
@@ -777,12 +803,14 @@ requirements:
           - hipaa/evidence/monitoring-telemetry-no-phi
     implementer:
       - persona: covered-entity
+        basis: integration
         applies_when: [reads-data, ai-aggregate]
         coverage: documented
         overview: |
           Apply minimum-necessary scoping and document where exceptions are
           invoked.
       - persona: business-associate
+        basis: integration
         applies_when: [reads-data, ai-aggregate]
         coverage: documented
         overview: |
@@ -820,6 +848,7 @@ requirements:
           - hipaa/registers/baa-register
     implementer:
       - persona: covered-entity
+        basis: entity
         applies_when: [third-parties]
         coverage: documented
         overview: |
@@ -827,6 +856,7 @@ requirements:
           scope their access to what the BAA covers.
         templates: [baa]
       - persona: business-associate
+        basis: entity
         applies_when: [third-parties]
         coverage: documented
         overview: |
@@ -862,6 +892,7 @@ requirements:
           - hipaa/procedures/complaint-handling
     implementer:
       - persona: covered-entity
+        basis: entity
         applies_when: always
         coverage: documented
         overview: |
@@ -895,12 +926,14 @@ requirements:
           - hipaa/policies/workforce-sanctions
     implementer:
       - persona: covered-entity
+        basis: entity
         applies_when: always
         coverage: documented
         overview: |
           Maintain and apply your workforce sanction policy and document
           enforcement.
       - persona: business-associate
+        basis: entity
         applies_when: always
         coverage: documented
         overview: |
@@ -928,6 +961,7 @@ requirements:
         conduct obligation of the covered entity.
     implementer:
       - persona: covered-entity
+        basis: entity
         applies_when: always
         coverage: documented
         overview: |
@@ -961,12 +995,14 @@ requirements:
           - hipaa/policies/privacy-policy-management
     implementer:
       - persona: covered-entity
+        basis: entity
         applies_when: always
         coverage: documented
         overview: |
           Author, approve and periodically review your privacy policies and
           procedures.
       - persona: business-associate
+        basis: entity
         applies_when: always
         coverage: documented
         overview: |
@@ -1003,6 +1039,7 @@ requirements:
           - hipaa/policies/uses-and-disclosures
     implementer:
       - persona: covered-entity
+        basis: entity
         applies_when: always
         coverage: documented
         overview: |
@@ -1013,6 +1050,7 @@ requirements:
         overview: |
           You identify the persons involved in your care and may object.
       - persona: business-associate
+        basis: entity
         applies_when: always
         coverage: out-of-scope
 
@@ -1043,6 +1081,7 @@ requirements:
           - hipaa/policies/uses-and-disclosures
     implementer:
       - persona: covered-entity
+        basis: entity
         applies_when: always
         coverage: documented
         overview: |
@@ -1078,6 +1117,7 @@ requirements:
           - hipaa/procedures/law-enforcement-requests
     implementer:
       - persona: covered-entity
+        basis: entity
         applies_when: always
         coverage: documented
         overview: |
@@ -1121,6 +1161,7 @@ requirements:
           - hipaa/procedures/individual-right-of-access
     implementer:
       - persona: covered-entity
+        basis: entity
         applies_when: always
         coverage: documented
         overview: |
@@ -1130,6 +1171,7 @@ requirements:
         overview: |
           You submit access requests, which are tracked to a due date.
       - persona: business-associate
+        basis: entity
         applies_when: always
         coverage: out-of-scope
 
@@ -1171,12 +1213,14 @@ requirements:
         overview: |
           You obtain your PHI in canonical JSON or a format your portal produces.
       - persona: covered-entity
+        basis: entity
         applies_when: always
         coverage: documented
         overview: |
           Provide requested formats and summaries and agree applicable fees in
           advance.
       - persona: business-associate
+        basis: entity
         applies_when: always
         coverage: out-of-scope
 
@@ -1208,6 +1252,7 @@ requirements:
           - hipaa/policies/personal-representatives
     implementer:
       - persona: covered-entity
+        basis: entity
         applies_when: always
         coverage: documented
         overview: |
@@ -1219,6 +1264,7 @@ requirements:
           A verified personal representative may act on your behalf with recorded
           basis.
       - persona: business-associate
+        basis: entity
         applies_when: always
         coverage: out-of-scope
 
@@ -1248,12 +1294,14 @@ requirements:
           - hipaa/policies/uses-and-disclosures
     implementer:
       - persona: covered-entity
+        basis: entity
         applies_when: always
         coverage: documented
         overview: |
           Confirm the legal requirement, limit the disclosure to it, and record
           the basis.
       - persona: business-associate
+        basis: entity
         applies_when: always
         coverage: documented
         overview: |
@@ -1288,6 +1336,7 @@ requirements:
           - hipaa/policies/de-identification
     implementer:
       - persona: covered-entity
+        basis: entity
         applies_when: [ai-aggregate, research-secondary-use]
         coverage: documented
         overview: |
@@ -1333,6 +1382,7 @@ requirements:
           - hipaa/policies/de-identification
     implementer:
       - persona: covered-entity
+        basis: entity
         applies_when: [ai-aggregate, research-secondary-use]
         coverage: documented
         overview: |
@@ -1377,6 +1427,7 @@ requirements:
           - hipaa/procedures/accounting-of-disclosures
     implementer:
       - persona: covered-entity
+        basis: integration
         applies_when: always
         coverage: documented
         overview: |
@@ -1387,6 +1438,7 @@ requirements:
         overview: |
           You receive an accounting containing the §528(b) fields.
       - persona: business-associate
+        basis: integration
         applies_when: always
         coverage: documented
         overview: |
@@ -1421,6 +1473,7 @@ requirements:
           - hipaa/registers/baa-register
     implementer:
       - persona: covered-entity
+        basis: entity
         applies_when: [third-parties]
         coverage: documented
         overview: |
@@ -1428,6 +1481,7 @@ requirements:
           handles PHI.
         templates: [baa]
       - persona: business-associate
+        basis: entity
         applies_when: [third-parties]
         coverage: documented
         overview: |
@@ -1457,6 +1511,7 @@ requirements:
         entity's contractual obligations.
     implementer:
       - persona: covered-entity
+        basis: entity
         applies_when: always
         coverage: documented
         overview: |
@@ -1497,12 +1552,14 @@ requirements:
           - hipaa/policies/workforce-sanctions
     implementer:
       - persona: covered-entity
+        basis: entity
         applies_when: always
         coverage: documented
         overview: |
           Recognize the §502(j) protection in your policies and non-retaliation
           handling.
       - persona: business-associate
+        basis: entity
         applies_when: always
         coverage: documented
         overview: |

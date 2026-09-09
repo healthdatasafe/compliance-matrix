@@ -251,12 +251,14 @@ requirements:
         - shared/registers/data-residency-regions
   implementer:
     - persona: covered-entity
+      basis: entity
       applies_when: always
       coverage: documented
       overview: |
         Define, document and maintain your own security-management programme;
         you may reference HDS's technical safeguards as inputs.
     - persona: business-associate
+      basis: entity
       applies_when: always
       coverage: documented
       overview: |
@@ -298,6 +300,7 @@ requirements:
         - hipaa/risk/risk-analysis
   implementer:
     - persona: covered-entity
+      basis: entity
       applies_when: always
       coverage: documented
       overview: |
@@ -305,11 +308,12 @@ requirements:
         may use this matrix and the HDS technology-stack register as inputs to
         asset identification, not as a substitute for the assessment.
     - persona: business-associate
+      basis: entity
       applies_when: always
       coverage: documented
       overview: |
-        Same obligation over the ePHI you process, and it is yours alone: HDS's
-        analysis covers HDS's operator surface, not your workload.
+        Conduct and document your own risk analysis over the ePHI you process. It is yours
+        alone: the HDS analysis covers HDS's operator surface, not your workload.
     - persona: individual
       coverage: out-of-scope
 
@@ -342,6 +346,7 @@ requirements:
         - hipaa/plans/risk-management
   implementer:
     - persona: covered-entity
+      basis: entity
       applies_when: always
       coverage: documented
       overview: |
@@ -349,11 +354,12 @@ requirements:
         identifies; the controls in this matrix are candidate measures, not a
         treatment decision made for you.
     - persona: business-associate
+      basis: entity
       applies_when: always
       coverage: documented
       overview: |
-        Same cycle over your own analysis, with residual risk recorded and
-        accepted by someone with the authority to accept it.
+        Select, implement and record treatments for the risks your own analysis identifies, with
+        residual risk accepted by someone who has the authority to accept it.
     - persona: individual
       coverage: out-of-scope
 
@@ -402,12 +408,14 @@ requirements:
         tracking_url: https://github.com/pryv/open-pryv.io/issues/60
   implementer:
     - persona: covered-entity
+      basis: entity
       applies_when: always
       coverage: documented
       overview: |
         Define and document your review cadence and who performs it, and retain
         the review records per your retention policy.
     - persona: business-associate
+      basis: entity
       applies_when: always
       coverage: documented
       overview: |
@@ -446,11 +454,13 @@ requirements:
         - hipaa/registers/designated-roles
   implementer:
     - persona: covered-entity
+      basis: entity
       applies_when: always
       coverage: documented
       overview: |
         Designate and document your own security official.
     - persona: business-associate
+      basis: entity
       applies_when: always
       coverage: documented
       overview: |
@@ -487,12 +497,14 @@ requirements:
         - hipaa/procedures/access-termination
   implementer:
     - persona: covered-entity
+      basis: entity
       applies_when: always
       coverage: documented
       overview: |
         Document your termination workflow and tie it to revocation of the
         access tokens your workforce holds.
     - persona: business-associate
+      basis: entity
       applies_when: always
       coverage: documented
       overview: |
@@ -528,12 +540,14 @@ requirements:
         - hipaa/policies/access-authorization
   implementer:
     - persona: covered-entity
+      basis: entity
       applies_when: always
       coverage: documented
       overview: |
         Document who may authorise access and on what basis, and capture the
         rationale alongside each grant.
     - persona: business-associate
+      basis: entity
       applies_when: always
       coverage: documented
       overview: |
@@ -575,12 +589,14 @@ requirements:
         - hipaa/procedures/access-review
   implementer:
     - persona: covered-entity
+      basis: entity
       applies_when: always
       coverage: documented
       overview: |
         Document your establishment-and-modification workflow and your periodic
         access-review cadence.
     - persona: business-associate
+      basis: entity
       applies_when: always
       coverage: documented
       overview: |
@@ -627,12 +643,14 @@ requirements:
         internal_doc: hipaa/procedures/workforce-training
   implementer:
     - persona: covered-entity
+      basis: entity
       applies_when: always
       coverage: documented
       overview: |
         Run and document your own periodic security reminders for your
         workforce.
     - persona: business-associate
+      basis: entity
       applies_when: always
       coverage: documented
       overview: |
@@ -668,12 +686,14 @@ requirements:
         - hipaa/policies/malware-protection
   implementer:
     - persona: covered-entity
+      basis: entity
       applies_when: always
       coverage: documented
       overview: |
         Operate and document anti-malware controls on your own endpoints and
         infrastructure.
     - persona: business-associate
+      basis: entity
       applies_when: always
       coverage: documented
       overview: |
@@ -719,12 +739,14 @@ requirements:
         upstream_proposal: vendor/pryv/proposals/rate-limiting-recipes.md
   implementer:
     - persona: covered-entity
+      basis: entity
       applies_when: always
       coverage: documented
       overview: |
         Define and document your discrepancy thresholds and the response when a
         threshold is crossed.
     - persona: business-associate
+      basis: entity
       applies_when: always
       coverage: documented
       overview: |
@@ -759,13 +781,15 @@ requirements:
         - hipaa/procedures/password-management
   implementer:
     - persona: covered-entity
-      applies_when: [hds-as-idp]
+      basis: entity
+      applies_when: always
       coverage: documented
       overview: |
         Document your password policy and whether you require the second factor
         for your workforce.
     - persona: business-associate
-      applies_when: [hds-as-idp]
+      basis: entity
+      applies_when: always
       coverage: documented
       overview: |
         Document password-management procedures for staff handling ePHI.
@@ -804,11 +828,13 @@ requirements:
         - hipaa/procedures/security-incident-response
   implementer:
     - persona: covered-entity
+      basis: entity
       applies_when: always
       coverage: documented
       overview: |
         Run and document your own incident-response procedures.
     - persona: business-associate
+      basis: entity
       applies_when: always
       coverage: documented
       overview: |
@@ -868,12 +894,14 @@ requirements:
         internal_doc: hipaa/procedures/data-backup-plan
   implementer:
     - persona: covered-entity
+      basis: integration
       applies_when: [stores-phi-copy]
       coverage: documented
       overview: |
         Document your backup schedule, storage location and retention, and
         confirm restorability.
     - persona: business-associate
+      basis: integration
       applies_when: [stores-phi-copy]
       coverage: documented
       overview: |
@@ -908,12 +936,14 @@ requirements:
         - hipaa/procedures/disaster-recovery-plan
   implementer:
     - persona: covered-entity
+      basis: integration
       applies_when: [stores-phi-copy]
       coverage: documented
       overview: |
         Document your recovery objectives and the steps to restore data after a
         loss event.
     - persona: business-associate
+      basis: integration
       applies_when: [stores-phi-copy]
       coverage: documented
       overview: |
@@ -949,11 +979,13 @@ requirements:
         - hipaa/procedures/emergency-mode-operation
   implementer:
     - persona: covered-entity
+      basis: integration
       applies_when: [stores-phi-copy]
       coverage: documented
       overview: |
         Define your critical processes and document the emergency-mode runbook.
     - persona: business-associate
+      basis: integration
       applies_when: [stores-phi-copy]
       coverage: documented
       overview: |
@@ -1000,12 +1032,14 @@ requirements:
         internal_doc: hipaa/procedures/contingency-plan-testing
   implementer:
     - persona: covered-entity
+      basis: integration
       applies_when: [stores-phi-copy]
       coverage: documented
       overview: |
         Schedule, run and document periodic tests of your contingency plans and
         revise them based on results.
     - persona: business-associate
+      basis: integration
       applies_when: [stores-phi-copy]
       coverage: documented
       overview: |
@@ -1053,12 +1087,14 @@ requirements:
         upstream_proposal: vendor/pryv/proposals/config-effective-exposure.md
   implementer:
     - persona: covered-entity
+      basis: entity
       applies_when: always
       coverage: documented
       overview: |
         Perform and document your own periodic technical and nontechnical
         evaluation.
     - persona: business-associate
+      basis: entity
       applies_when: always
       coverage: documented
       overview: |
@@ -1109,14 +1145,16 @@ requirements:
         - hipaa/registers/hosting-provider-attestations
   implementer:
     - persona: covered-entity
-      applies_when: always
+      basis: integration
+      applies_when: [reads-data, hds-as-idp, stores-phi-copy]
       coverage: documented
       overview: |
         Rely on the HDS-selected hosting region for the server-side facility
         controls; you remain responsible for the physical security of your own
         offices, endpoints and any workforce devices that access ePHI.
     - persona: business-associate
-      applies_when: always
+      basis: integration
+      applies_when: [reads-data, hds-as-idp, stores-phi-copy]
       coverage: documented
       overview: |
         Inherit the HDS hosting-region facility posture and document it in your own
@@ -1158,17 +1196,19 @@ requirements:
         - hipaa/policies/physical-safeguards
   implementer:
     - persona: covered-entity
-      applies_when: always
+      basis: integration
+      applies_when: [reads-data, hds-as-idp, stores-phi-copy]
       coverage: documented
       overview: |
         Inherit the server-tier facility controls from the HDS hosting region;
         implement and document facility access controls for your own premises.
     - persona: business-associate
-      applies_when: always
+      basis: integration
+      applies_when: [reads-data, hds-as-idp, stores-phi-copy]
       coverage: documented
       overview: |
-        Same as covered entity — server tier inherited, your own facilities are
-        yours to control and document.
+        Inherit the server-tier facility controls from the HDS hosting region, and implement and
+        document facility access controls for your own premises.
     - persona: individual
       coverage: out-of-scope
 
@@ -1211,16 +1251,19 @@ requirements:
         internal_doc: hipaa/standards/byod-workstation
   implementer:
     - persona: covered-entity
+      basis: entity
       applies_when: always
       coverage: documented
       overview: |
         Define and document workstation-use rules for the devices your workforce
         uses to access ePHI through the HDS-hosted application.
     - persona: business-associate
+      basis: entity
       applies_when: always
       coverage: documented
       overview: |
-        Same — your workforce workstation-use policy is yours to author.
+        Define and document workstation-use rules for the devices your workforce uses to reach
+        ePHI.
     - persona: individual
       coverage: out-of-scope
 
@@ -1264,6 +1307,7 @@ requirements:
         internal_doc: hipaa/standards/byod-workstation
   implementer:
     - persona: covered-entity
+      basis: entity
       applies_when: always
       coverage: documented
       overview: |
@@ -1271,10 +1315,12 @@ requirements:
         device management) for endpoints accessing ePHI; revoke HDS access tokens on
         device loss.
     - persona: business-associate
+      basis: entity
       applies_when: always
       coverage: documented
       overview: |
-        Same physical-workstation obligations apply to your own endpoints.
+        Implement physical safeguards on your own endpoints (screen locks, restricted siting,
+        device management), and revoke HDS access tokens on device loss.
     - persona: individual
       coverage: out-of-scope
 
@@ -1333,6 +1379,7 @@ requirements:
         internal_doc: hipaa/registers/hosting-provider-attestations
   implementer:
     - persona: covered-entity
+      basis: integration
       applies_when: [stores-phi-copy]
       coverage: documented
       overview: |
@@ -1340,11 +1387,12 @@ requirements:
         own at-rest encryption to any per-subject export you move off the platform,
         and document the movement.
     - persona: business-associate
+      basis: integration
       applies_when: [stores-phi-copy]
       coverage: documented
       overview: |
-        Same — server-tier inherited, your own media-handling and at-rest encryption
-        of exports is your responsibility.
+        Inherit server-tier media sanitisation from the hosting provider, and apply your own
+        at-rest encryption to any export you move off the platform, documenting the movement.
     - persona: individual
       coverage: out-of-scope
 
@@ -1385,17 +1433,19 @@ requirements:
         - hipaa/policies/access-control
   implementer:
     - persona: covered-entity
-      applies_when: always
+      basis: integration
+      applies_when: [reads-data, hds-as-idp]
       coverage: documented
       overview: |
         Configure your application's use of HDS access tokens to grant least-
         privilege per-stream access, and document your access-authorization rules.
     - persona: business-associate
-      applies_when: always
+      basis: integration
+      applies_when: [reads-data, hds-as-idp]
       coverage: documented
       overview: |
-        Same — model your grants as least-privilege per-stream access tokens and
-        document the authorization scheme.
+        Model your grants as least-privilege per-stream access tokens, and document your
+        access-authorization scheme.
     - persona: individual
       coverage: out-of-scope
 
@@ -1430,16 +1480,19 @@ requirements:
         - hipaa/policies/access-control
   implementer:
     - persona: covered-entity
-      applies_when: [hds-as-idp]
+      basis: integration
+      applies_when: [reads-data, hds-as-idp]
       coverage: documented
       overview: |
         Map each workforce member or program to a distinct identity/access token and
         document the mapping; avoid shared credentials.
     - persona: business-associate
-      applies_when: [hds-as-idp]
+      basis: integration
+      applies_when: [reads-data, hds-as-idp]
       coverage: documented
       overview: |
-        Same — one identity per actor, documented.
+        Map each workforce member or program to a distinct identity and access token, and
+        document the mapping. Avoid shared credentials.
     - persona: individual
       coverage: out-of-scope
 
@@ -1475,18 +1528,21 @@ requirements:
         - hipaa/procedures/emergency-access
   implementer:
     - persona: covered-entity
-      applies_when: always
+      basis: integration
+      applies_when: [reads-data, stores-phi-copy]
       coverage: configurable
       overview: |
         Define and document your emergency-access procedure — who may invoke
         break-glass access, under what conditions, and the mandatory audit review
         afterward.
     - persona: business-associate
-      applies_when: always
+      basis: integration
+      applies_when: [reads-data, stores-phi-copy]
       coverage: configurable
       overview: |
-        Same — author and document your own emergency-access procedure over the
-        platform mechanism.
+        Define and document your emergency-access procedure over the platform mechanism: who may
+        invoke break-glass access, under what conditions, and the mandatory audit review
+        afterward.
     - persona: individual
       coverage: out-of-scope
 
@@ -1522,17 +1578,19 @@ requirements:
         - hipaa/policies/access-control
   implementer:
     - persona: covered-entity
-      applies_when: [hds-as-idp]
+      basis: integration
+      applies_when: [reads-data, hds-as-idp]
       coverage: configurable
       overview: |
         Set session and access-token expiry windows appropriate to your workflow and
         document the inactivity-timeout decision.
     - persona: business-associate
-      applies_when: [hds-as-idp]
+      basis: integration
+      applies_when: [reads-data, hds-as-idp]
       coverage: configurable
       overview: |
-        Same — configure and document timeout windows for your application's
-        sessions and tokens.
+        Set session and access-token expiry windows appropriate to your workflow, and document
+        the inactivity-timeout decision.
     - persona: individual
       coverage: out-of-scope
 
@@ -1590,6 +1648,7 @@ requirements:
         - hipaa/evidence/at-rest-encryption-verification
   implementer:
     - persona: covered-entity
+      basis: integration
       applies_when: [stores-phi-copy]
       coverage: configurable
       overview: |
@@ -1598,11 +1657,13 @@ requirements:
         operator-held-key or application-side encryption of sensitive fields on top,
         and document the addressable decision.
     - persona: business-associate
+      basis: integration
       applies_when: [stores-phi-copy]
       coverage: configurable
       overview: |
-        Same — at-rest encryption is in place (provider-managed keys); evaluate
-        whether to supplement it and document the decision.
+        HDS encrypts ePHI at rest with provider-managed keys. Decide in your own risk analysis
+        whether that key model is sufficient or whether you need application-side encryption on
+        top, and document the addressable decision.
     - persona: individual
       coverage: out-of-scope
 
@@ -1638,16 +1699,19 @@ requirements:
         - hipaa/policies/audit-controls
   implementer:
     - persona: covered-entity
-      applies_when: always
+      basis: integration
+      applies_when: [reads-data, hds-as-idp, stores-phi-copy]
       coverage: documented
       overview: |
         Define and document your audit-review cadence and who performs it; retain
         the review records per your retention policy.
     - persona: business-associate
-      applies_when: always
+      basis: integration
+      applies_when: [reads-data, hds-as-idp, stores-phi-copy]
       coverage: documented
       overview: |
-        Same — own the written review procedure over the platform-provided log.
+        Define and document your audit-review cadence over the platform-provided log, and who
+        performs it. Retain the review records.
     - persona: individual
       coverage: out-of-scope
 
@@ -1685,16 +1749,19 @@ requirements:
         - hipaa/policies/integrity
   implementer:
     - persona: covered-entity
+      basis: entity
       applies_when: [stores-phi-copy]
       coverage: documented
       overview: |
         Author your integrity policy — change-control, who may alter records, and
         how destruction is prevented and recovered — over the platform substrate.
     - persona: business-associate
+      basis: entity
       applies_when: [stores-phi-copy]
       coverage: documented
       overview: |
-        Same — document your integrity-protection procedures.
+        Author your integrity policy over the platform substrate: change control, who may alter
+        records, and how destruction is prevented and recovered.
     - persona: individual
       coverage: out-of-scope
 
@@ -1731,6 +1798,7 @@ requirements:
         - hipaa/policies/integrity
   implementer:
     - persona: covered-entity
+      basis: integration
       applies_when: [stores-phi-copy]
       coverage: configurable
       overview: |
@@ -1738,10 +1806,13 @@ requirements:
         evidence suffices or whether to add content-integrity verification, and
         document the addressable decision.
     - persona: business-associate
+      basis: integration
       applies_when: [stores-phi-copy]
       coverage: configurable
       overview: |
-        Same — assess and document the integrity-corroboration approach.
+        Decide, per your risk analysis, whether the platform's versioning and audit evidence
+        suffices or whether to add content-integrity verification, and document the addressable
+        decision.
     - persona: individual
       coverage: out-of-scope
 
@@ -1777,16 +1848,19 @@ requirements:
         - hipaa/policies/authentication
   implementer:
     - persona: covered-entity
-      applies_when: [hds-as-idp]
+      basis: integration
+      applies_when: [reads-data, hds-as-idp]
       coverage: documented
       overview: |
         Decide and document your authentication strength (e.g. whether MFA is
         required, and for which roles or operations).
     - persona: business-associate
-      applies_when: [hds-as-idp]
+      basis: integration
+      applies_when: [reads-data, hds-as-idp]
       coverage: documented
       overview: |
-        Same — set and document your authentication policy over the platform.
+        Decide and document your authentication strength over the platform, including whether
+        MFA is required and for which roles or operations.
     - persona: individual
       coverage: out-of-scope
 
@@ -1819,16 +1893,19 @@ requirements:
         - hipaa/policies/transmission-security
   implementer:
     - persona: covered-entity
-      applies_when: always
+      basis: integration
+      applies_when: [reads-data, hds-as-idp, stores-phi-copy, third-parties]
       coverage: documented
       overview: |
         Ensure your client and any onward integration hops you control transmit
         ePHI only over TLS; document the transmission-security boundary.
     - persona: business-associate
-      applies_when: always
+      basis: integration
+      applies_when: [reads-data, hds-as-idp, stores-phi-copy, third-parties]
       coverage: documented
       overview: |
-        Same — preserve TLS across any transmission path you operate.
+        Ensure any transmission path you operate carries ePHI only over TLS, and document the
+        transmission-security boundary.
     - persona: individual
       coverage: out-of-scope
 
@@ -1863,16 +1940,19 @@ requirements:
         - hipaa/policies/transmission-security
   implementer:
     - persona: covered-entity
-      applies_when: always
+      basis: integration
+      applies_when: [reads-data, hds-as-idp, stores-phi-copy, third-parties]
       coverage: documented
       overview: |
         Preserve transmission integrity across any hops you operate, and document
         the addressable decision.
     - persona: business-associate
-      applies_when: always
+      basis: integration
+      applies_when: [reads-data, hds-as-idp, stores-phi-copy, third-parties]
       coverage: documented
       overview: |
-        Same — maintain integrity guarantees across your own transmission chain.
+        Preserve transmission integrity across any hops you operate, and document the
+        addressable decision.
     - persona: individual
       coverage: out-of-scope
 
@@ -1906,17 +1986,19 @@ requirements:
         - hipaa/policies/transmission-security
   implementer:
     - persona: covered-entity
-      applies_when: always
+      basis: integration
+      applies_when: [reads-data, hds-as-idp, stores-phi-copy, third-parties]
       coverage: documented
       overview: |
         Document that transmission encryption is in force; separately address
         at-rest encryption per §164.312(a)(2)(iv).
     - persona: business-associate
-      applies_when: always
+      basis: integration
+      applies_when: [reads-data, hds-as-idp, stores-phi-copy, third-parties]
       coverage: documented
       overview: |
-        Same — record the transmission-encryption posture and address at-rest
-        separately.
+        Record that transmission encryption is in force, and address at-rest encryption
+        separately under 164.312(a)(2)(iv).
     - persona: individual
       coverage: out-of-scope
 - ref: 164.314(a)(1)
@@ -1949,13 +2031,15 @@ requirements:
         - hipaa/registers/baa-register
   implementer:
     - persona: covered-entity
-      applies_when: always
+      basis: integration
+      applies_when: [reads-data, hds-as-idp, stores-phi-copy, third-parties]
       coverage: documented
       overview: |
         Execute a BAA with HDS before sending any ePHI, and keep it on file.
       templates: [baa]
     - persona: business-associate
-      applies_when: always
+      basis: integration
+      applies_when: [reads-data, hds-as-idp, stores-phi-copy, third-parties]
       coverage: documented
       overview: |
         Execute a BAA with HDS and back-to-back agreements with any of your own
@@ -1994,14 +2078,16 @@ requirements:
         - hipaa/registers/baa-register
   implementer:
     - persona: covered-entity
-      applies_when: always
+      basis: integration
+      applies_when: [reads-data, hds-as-idp, stores-phi-copy, third-parties]
       coverage: documented
       overview: |
         Confirm that the BAA's safeguards clause reflects the controls you rely
         on, and retain the safeguards exhibit with the executed contract.
       templates: [baa]
     - persona: business-associate
-      applies_when: always
+      basis: integration
+      applies_when: [reads-data, hds-as-idp, stores-phi-copy, third-parties]
       coverage: documented
       overview: |
         Ensure the safeguards you commit to your covered entity are matched by
@@ -2038,7 +2124,8 @@ requirements:
         - hipaa/registers/baa-register
   implementer:
     - persona: covered-entity
-      applies_when: always
+      basis: integration
+      applies_when: [reads-data, hds-as-idp, stores-phi-copy, third-parties]
       coverage: documented
       overview: |
         Ensure your BAA with HDS specifies the incident-report channel and
@@ -2046,7 +2133,8 @@ requirements:
         procedure.
       templates: [baa]
     - persona: business-associate
-      applies_when: always
+      basis: integration
+      applies_when: [reads-data, hds-as-idp, stores-phi-copy, third-parties]
       coverage: documented
       overview: |
         Flow the incident-report obligation through to your covered entity and
@@ -2083,12 +2171,14 @@ requirements:
         - hipaa/registers/baa-register
   implementer:
     - persona: covered-entity
+      basis: integration
       applies_when: [third-parties]
       coverage: documented
       overview: |
         Review HDS's subprocessor list as part of your vendor due diligence.
       templates: [baa]
     - persona: business-associate
+      basis: integration
       applies_when: [third-parties]
       coverage: documented
       overview: |
@@ -2127,12 +2217,14 @@ requirements:
         - hipaa/policies/information-security-policy
   implementer:
     - persona: covered-entity
+      basis: entity
       applies_when: always
       coverage: documented
       overview: |
         Maintain your own reasonable and appropriate policies and procedures for
         the parts of the system and workflow you control.
     - persona: business-associate
+      basis: entity
       applies_when: always
       coverage: documented
       overview: |
@@ -2171,12 +2263,14 @@ requirements:
         - hipaa/policies/documentation-and-retention
   implementer:
     - persona: covered-entity
+      basis: entity
       applies_when: always
       coverage: documented
       overview: |
         Keep your own policies, procedures and required activity records in
         written or electronic form.
     - persona: business-associate
+      basis: entity
       applies_when: always
       coverage: documented
       overview: |
@@ -2213,12 +2307,14 @@ requirements:
         - hipaa/policies/documentation-and-retention
   implementer:
     - persona: covered-entity
+      basis: integration
       applies_when: [stores-phi-copy]
       coverage: documented
       overview: |
         Retain your own Security Rule documentation for at least six years from
         creation or last-effective date.
     - persona: business-associate
+      basis: integration
       applies_when: [stores-phi-copy]
       coverage: documented
       overview: |
@@ -2254,12 +2350,14 @@ requirements:
         - hipaa/policies/documentation-and-retention
   implementer:
     - persona: covered-entity
+      basis: entity
       applies_when: always
       coverage: documented
       overview: |
         Review and update your own documentation periodically and in response to
         operational or environmental changes.
     - persona: business-associate
+      basis: entity
       applies_when: always
       coverage: documented
       overview: |
