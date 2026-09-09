@@ -151,7 +151,7 @@ const layout = (title, body, { active } = {}) => `<!doctype html>
 <main>${body}</main>
 <footer>
   <p><strong>Not legal advice.</strong> Engineering &amp; operational guidance; confirm your
-  obligations with qualified counsel. All rows are <em>draft</em> pending review.</p>
+  obligations with qualified counsel.</p>
   <p>Internal evidence is shown by code only — the document itself is released on request
   under NDA / signed BAA / audit engagement. Platform layer inherited from
   <a href="https://github.com/pryv/compliance-matrix">pryv/compliance-matrix</a>.</p>
@@ -282,19 +282,11 @@ fs.writeFileSync(path.join(OUT, 'index.html'), layout('HDS standing', `
   external auditor, and HDS holds no certification or attestation of its own. Where certificates
   appear, they belong to the hosting providers and cover their infrastructure. HDS is a non-profit
   foundation and states this plainly so you can weigh it yourself.</p>
-  <p class="muted">All rows are draft pending review. Not legal advice; confirm your obligations with qualified counsel.</p>
+  <p class="muted">Not legal advice; confirm your obligations with qualified counsel.</p>
 </section>
 `, { active: 'home' }));
 
 // ---- implementer view: what HDS carries for you ----
-const scopeCards = groups.map((g) => {
-  const reqs = allReqs(g);
-  return `<a class="scopecard" href="${esc(g.page)}">
-    <h3>${esc(g.title)} <span class="short">${esc(g.short)}</span></h3>
-    <p class="meta">${esc(g.jurisdiction || '')} ${regions(regionsOf(g))} · ${reqs.length} requirements</p>
-    ${covBar(reqs)}
-  </a>`;
-}).join('');
 
 const totalReqs = groups.reduce((n, g) => n + allReqs(g).length, 0);
 
@@ -343,37 +335,53 @@ for (const s of scopes) {
   }
 }
 
-const featureGroups = [
-  ['population', 'Who your users are', 'This decides which regulations apply at all.'],
-  ['residency', 'Where the data sits', ''],
-  ['application', 'What your application does', 'Tick everything that will be true.'],
-];
+const groupTitles = {
+  population: 'Where your users are',
+  'us-role': 'Your relationship to US healthcare',
+  residency: 'Where the data is hosted',
+  application: 'What your application does',
+};
 
 const profilePanel = !PROFILES
   ? ''
   : `
 <section class="profile">
-  <h2>Tell us what you are building</h2>
-  <p class="lede">Start from an archetype, or tick the boxes directly. Nothing is sent anywhere:
-  the whole matrix is in this page and the filtering happens in your browser.</p>
-  <div class="presets">
-    ${PROFILES.presets.map((pr, i) => `<button type="button" class="preset" data-features="${esc(pr.features.join(','))}" data-locked="${esc((pr.locked || pr.features).join(','))}">
-      <b>${i + 1}. ${esc(pr.label)}</b><span>${esc((pr.summary || '').trim())}</span></button>`).join('')}
-  </div>
-  <div class="fgrid">
-    ${featureGroups.map(([grp, title, hint]) => {
-      const fs_ = PROFILES.features.filter((f) => f.group === grp);
-      if (!fs_.length) return '';
-      return `<fieldset class="fgroup2" data-group="${esc(grp)}">
-        <legend>${esc(title)}</legend>
-        ${hint ? `<p class="hint">${esc(hint)}</p>` : ''}
-        ${fs_.map((f) => `<label class="fopt">
-          <input type="${f.exclusive ? 'radio' : 'checkbox'}"${f.exclusive ? ` name="${esc(f.exclusive)}"` : ''} value="${esc(f.id)}">
-          <span>${esc(f.label)}${f.note ? `<em class="note">${esc(f.note.trim())}</em>` : ''}</span>
-        </label>`).join('')}
-      </fieldset>`;
-    }).join('')}
-  </div>
+  <ol class="steps">
+    <li class="step">
+      <h2><span class="num">1</span> What are you building?</h2>
+      <div class="cards">
+        ${PROFILES.presets.map((pr) => `<button type="button" class="preset" data-features="${esc(pr.features.join(','))}" data-locked="${esc((pr.locked || pr.features).join(','))}">
+          <b>${esc(pr.label)}</b><span>${esc((pr.summary || '').trim())}</span></button>`).join('')}
+      </div>
+    </li>
+    <li class="step">
+      <h2><span class="num">2</span> Who are your users?</h2>
+      <div class="cards">
+        ${(PROFILES.markets || []).map((m) => `<button type="button" class="market" data-features="${esc(m.features.join(','))}">
+          <b>${esc(m.label)}</b><span>${esc((m.summary || '').trim())}</span></button>`).join('')}
+      </div>
+    </li>
+  </ol>
+
+  <details class="finetune">
+    <summary>Fine tune <span class="ftsum" id="ftsum"></span></summary>
+    <p class="hint">Everything the two steps set, and what they do not. Options an archetype
+    settles are locked to it; choose a different archetype to change them.</p>
+    <div class="fgrid">
+      ${['population', 'us-role', 'residency', 'application'].map((grp) => {
+        const fs_ = PROFILES.features.filter((f) => f.group === grp);
+        if (!fs_.length) return '';
+        return `<fieldset class="fgroup2" data-group="${esc(grp)}">
+          <legend>${esc(groupTitles[grp] || grp)}</legend>
+          ${fs_.map((f) => `<label class="fopt">
+            <input type="${f.exclusive ? 'radio' : 'checkbox'}"${f.exclusive ? ` name="${esc(f.exclusive)}"` : ''} value="${esc(f.id)}">
+            <span>${esc(f.label)}${f.note ? `<em class="note">${esc(f.note.trim())}</em>` : ''}</span>
+          </label>`).join('')}
+        </fieldset>`;
+      }).join('')}
+    </div>
+  </details>
+</section>
 <section class="result" id="result"></section>`;
 
 const profileJS = !PROFILES
@@ -528,9 +536,9 @@ short: s.short || s.id,
 
       var bar = '<div class="hdsbar" title="' + notYours + ' handled without you, ' + needsYou + ' need your action">' +
         (notYours ? '<span class="seg carried" style="width:' + (notYours / tot * 100) + '%"></span>' : '') +
-        (needsYou ? '<span class="seg act" style="width:' + (needsYou / tot * 100) + '%"></span>' : '') + '</div>' +
+        (needsYou ? '<span class="seg needs" style="width:' + (needsYou / tot * 100) + '%"></span>' : '') + '</div>' +
         '<p class="hdskey"><span class="k carried"></span><b>' + notYours + '</b> handled without you' +
-        (needsYou ? '<span class="k act"></span><b>' + needsYou + '</b> need your action' : '') + '</p>' +
+        (needsYou ? '<span class="k todo"></span><b>' + needsYou + '</b> need your action' : '') + '</p>' +
         '<p class="depth">Of the ' + (d.carried + d.shared + d.doc) + ' requirements the vault engages with, HDS ' +
         'delivers <b>' + d.carried + '</b> outright and supports <b>' + d.shared + '</b> more' +
         (d.doc ? ', documenting ' + d.doc : '') +
@@ -595,9 +603,9 @@ short: s.short || s.id,
           'counsel, not a clearance.') + '</p>' +
       ((Y.needs + Y.not) ? '<div class="gbar"><div class="hdsbar big">' +
         (Y.not ? '<span class="seg carried" style="width:' + (Y.not / (Y.needs + Y.not) * 100) + '%"></span>' : '') +
-        (Y.needs ? '<span class="seg act" style="width:' + (Y.needs / (Y.needs + Y.not) * 100) + '%"></span>' : '') + '</div>' +
+        (Y.needs ? '<span class="seg needs" style="width:' + (Y.needs / (Y.needs + Y.not) * 100) + '%"></span>' : '') + '</div>' +
         '<p class="hdskey"><span class="k carried"></span><b>' + Y.not + '</b> handled without you' +
-        (Y.needs ? '<span class="k act"></span><b>' + Y.needs + '</b> need your action' : '') + '</p></div>' : '') +
+        (Y.needs ? '<span class="k todo"></span><b>' + Y.needs + '</b> need your action' : '') + '</p></div>' : '') +
       (totUnprofiled ? '<p class="unclass"><b>' + totUnprofiled + ' requirements are not yet classified</b> ' +
         'against these options. They are listed in full rather than hidden, because an ' +
         'unclassified requirement is not the same as one that does not apply.</p>' : '') +
@@ -614,6 +622,23 @@ short: s.short || s.id,
   function esc(x) { return String(x == null ? '' : x).replace(/[&<>"]/g, function (c) {
     return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]; }); }
 
+  // Fine-tune state must stay readable once the panel is closed.
+  function summarise() {
+    var el = document.getElementById('ftsum');
+    if (!el) return;
+    var set = {};
+    [panel.querySelector('.preset.on'), panel.querySelector('.market.on')].forEach(function (b) {
+      if (b) b.dataset.features.split(',').filter(Boolean).forEach(function (x) { set[x] = 1; });
+    });
+    var extra = [];
+    panel.querySelectorAll('.fopt input:checked').forEach(function (i) {
+      if (set[i.value] || i.value === 'us-role-none') return;
+      var f = P.features.filter(function (x) { return x.id === i.value; })[0];
+      if (f) extra.push(f.label.trim().replace(/\\s+/g, ' ').toLowerCase());
+    });
+    el.textContent = extra.length ? '\u00b7 also: ' + extra.join(', ') : '';
+  }
+  panel.addEventListener('input', summarise);
   panel.addEventListener('input', render);
   out.addEventListener('input', render);
   // An archetype is a claim about what you are building, so the options it
@@ -634,6 +659,21 @@ short: s.short || s.id,
       } else if (!isLocked && badge) badge.remove();
     });
   }
+  // Step 2 sets who you serve and never touches what you build.
+  panel.querySelectorAll('.market').forEach(function (b) {
+    b.addEventListener('click', function () {
+      ['population', 'us-role', 'residency'].forEach(function (g) {
+        panel.querySelectorAll('.fgroup2[data-group="' + g + '"] input').forEach(function (i) { i.checked = false; });
+      });
+      b.dataset.features.split(',').filter(Boolean).forEach(function (id) {
+        var el = panel.querySelector('input[value="' + id + '"]'); if (el) el.checked = true;
+      });
+      panel.querySelectorAll('.market').forEach(function (x) { x.classList.remove('on'); });
+      b.classList.add('on');
+      summarise(); render();
+    });
+  });
+
   panel.querySelectorAll('.preset').forEach(function (b) {
     b.addEventListener('click', function () {
       // A preset says what you BUILD. It must not touch who your users are,
@@ -648,7 +688,7 @@ short: s.short || s.id,
       panel.querySelectorAll('.preset').forEach(function (x) { x.classList.remove('on'); });
       b.classList.add('on');
       applyLocks(b.dataset.locked ? b.dataset.locked.split(',').filter(Boolean) : []);
-      render();
+      summarise(); render();
     });
   });
   // Editing a checkbox by hand means you are no longer describing an archetype.
@@ -661,29 +701,33 @@ short: s.short || s.id,
     active.classList.remove('on');
     applyLocks([]);
   });
+  summarise();
   render();
 })();
 </script>`;
 
 fs.writeFileSync(path.join(OUT, 'implementer.html'), layout('For implementers', `
-<section class="hero">
-  <h1>What HDS carries for you</h1>
-  <p class="lede">How much of each requirement the platform and HDS operations already handle,
-  and what is still on your plate. Each requirement is read across three layers.
-  For HDS's own regulatory position, see <a href="index.html">where HDS stands</a>.</p>
-  <div class="threelayer">
-    <div class="ll pryv"><b>Pryv platform</b><span>what the open-pryv.io software does (inherited)</span></div>
-    <div class="arrow">→</div>
-    <div class="ll hds"><b>HDS</b><span>what HDS-as-operator + the app stack adds</span></div>
-    <div class="arrow">→</div>
-    <div class="ll impl"><b>Implementer</b><span>what's on your plate, per persona (+ agreements to sign)</span></div>
-  </div>
-  <p class="count">${groups.length} regulations · ${totalReqs} requirements · ${templates.length} agreement templates</p>
+<section class="hero tight">
+  <h1>What do I have to do?</h1>
+  <p class="lede">Answer two questions. This tells you which rules reach you, what the vault
+  already covers, and what is left for you. ${groups.length} frameworks, ${totalReqs} requirements.
+  For HDS's own position, see <a href="index.html">where HDS stands</a>.</p>
 </section>
 ${profilePanel}
-<h2 class="allh">All frameworks</h2>
-<section class="scopes">${scopeCards}</section>
 ${profileJS}
+<section class="method">
+  <h2>How this works</h2>
+  <div class="threelayer">
+    <div class="ll pryv"><b>Pryv platform</b><span>what the open-pryv.io software does (inherited)</span></div>
+    <div class="arrow">&rarr;</div>
+    <div class="ll hds"><b>HDS</b><span>what HDS-as-operator and the app stack add</span></div>
+    <div class="arrow">&rarr;</div>
+    <div class="ll impl"><b>You</b><span>what is left on your plate, and the agreements to sign</span></div>
+  </div>
+  <p>Every requirement is read across those three layers. Browse them in full:
+    ${groups.map((g) => `<a href="${esc(g.page)}">${esc(g.short)}</a>`).join(' &middot; ')} &middot;
+    <a href="templates.html">agreement templates</a>.</p>
+</section>
 `, { active: 'implementer' }));
 
 // ---- per-scope pages (with client-side filter) ----
@@ -963,17 +1007,26 @@ a.pl{cursor:pointer}
 .bkbar{display:flex;height:7px;border-radius:999px;overflow:hidden;background:#e5e7eb}
 .bkbar .seg.ok{background:#15803d}.bkbar .seg.mid{background:#a7c4a0}
 .pfoot{margin-top:auto;padding-top:.7rem;border-top:1px solid var(--line)}
-.method{max-width:52rem;margin:2.5rem 0 0;padding-top:1.2rem;border-top:1px solid var(--line)}
+.method{max-width:56rem;margin:2.5rem 0 0;padding-top:1.2rem;border-top:1px solid var(--line)}
+.method .threelayer{margin:.6rem 0}
 .method h2{font-size:.95rem}.method p{font-size:.85rem;color:#4b5563;max-width:52rem}
 /* ---- implementer profile panel ---- */
-.profile{background:#fff;border:1px solid var(--line);border-radius:.6rem;padding:1.1rem 1.2rem;margin:1.5rem 0 1rem}
-.profile h2{font-size:1.1rem;margin:0 0 .3rem}
-.presets{display:grid;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:.6rem;margin:1rem 0}
-.preset{text-align:left;background:#f8fafc;border:1px solid var(--line);border-radius:.5rem;padding:.6rem .7rem;cursor:pointer;font:inherit;color:inherit}
-.preset:hover{border-color:#1d4ed8}.preset.on{border-color:#1d4ed8;background:#eff6ff;box-shadow:0 0 0 1px #1d4ed8 inset}
-.preset b{display:block;font-size:.86rem;margin-bottom:.2rem}
-.preset span{font-size:.78rem;color:var(--muted);display:block}
-.fgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(17rem,1fr));gap:.9rem;margin-top:.8rem}
+.profile{margin:1.2rem 0 1rem}
+.hero.tight{margin-bottom:.5rem}
+.steps{list-style:none;padding:0;margin:0;display:grid;gap:1rem}
+.step h2{font-size:1rem;margin:0 0 .6rem;display:flex;align-items:center;gap:.5rem}
+.step .num{display:inline-flex;align-items:center;justify-content:center;width:1.5rem;height:1.5rem;border-radius:999px;background:var(--ink);color:#fff;font-size:.8rem;flex:none}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(14rem,1fr));gap:.6rem}
+.preset,.market{text-align:left;background:#fff;border:1px solid var(--line);border-radius:.5rem;padding:.7rem .8rem;cursor:pointer;font:inherit;color:inherit;transition:border-color .12s,box-shadow .12s}
+.preset:hover,.market:hover{border-color:#1d4ed8}
+.preset.on,.market.on{border-color:#1d4ed8;background:#eff6ff;box-shadow:0 0 0 1px #1d4ed8 inset}
+.preset b,.market b{display:block;font-size:.9rem;margin-bottom:.2rem}
+.preset span,.market span{font-size:.78rem;color:var(--muted);display:block;line-height:1.4}
+.finetune{margin:1rem 0 0;background:#fff;border:1px solid var(--line);border-radius:.5rem;padding:.6rem .9rem}
+.finetune>summary{cursor:pointer;font-size:.85rem;font-weight:600}
+.ftsum{font-weight:400;color:var(--muted);font-size:.8rem}
+.finetune .hint{font-size:.78rem;color:var(--muted);margin:.5rem 0 .2rem}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(16rem,1fr));gap:.9rem;margin-top:.6rem}
 .fgroup2{border:1px solid var(--line);border-radius:.5rem;padding:.6rem .8rem;margin:0}
 .fgroup2 legend{font-size:.74rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);padding:0 .3rem}
 .fgroup2 .hint{font-size:.76rem;color:var(--muted);margin:.1rem 0 .5rem}
@@ -1012,12 +1065,12 @@ a.pl{cursor:pointer}
 .hdsbar.big{height:14px;margin:.7rem 0 .4rem}
 .hdsbar .seg{flex:none}
 .hdsbar .seg.carried{background:#15803d}.hdsbar .seg.shared{background:#ca8a04}.hdsbar .seg.yours{background:#94a3b8}
-.hdsbar .seg.act{background:#ca8a04}
+.hdsbar .seg.needs{background:#ca8a04}
 .hdskey{font-size:.78rem;color:#4b5563;margin:.2rem 0 .5rem;display:flex;gap:.35rem;align-items:center;flex-wrap:wrap}
 .hdskey .k{width:.55rem;height:.55rem;border-radius:2px;display:inline-block;margin-left:.7rem}
 .hdskey .k:first-child{margin-left:0}
 .hdskey .k.carried{background:#15803d}.hdskey .k.shared{background:#ca8a04}.hdskey .k.yours{background:#94a3b8}
-.hdskey .k.act{background:#ca8a04}
+.hdskey .k.todo{background:#ca8a04}
 .gbar{margin:.6rem 0 .2rem;max-width:46rem}
 .depth{font-size:.8rem;color:#4b5563;margin:.1rem 0 .4rem}
 .covlist{margin:.3rem 0 .6rem;font-size:.84rem}

@@ -267,11 +267,19 @@ if (profiles) {
     }
   }
   for (const pr of profiles.presets) {
-    for (const id of pr.features) if (!knownIds.has(id)) e(`profiles.yml: preset '${pr.id}' references unknown feature '${id}'`);
+    for (const id of [...pr.features, ...(pr.locked || [])]) {
+      if (!knownIds.has(id)) e(`profiles.yml: preset '${pr.id}' references unknown feature '${id}'`);
+    }
   }
   const scopeIds = new Set(hdsScopes.map(({ scope }) => scope.id));
   // Selecting a scope is a legitimate job for a feature, so record it as use.
   const usedByRules = new Set();
+  for (const m of profiles.markets || []) {
+    for (const id of m.features) {
+      if (!knownIds.has(id)) e(`profiles.yml: market '${m.id}' references unknown feature '${id}'`);
+      else usedByRules.add(id);
+    }
+  }
   for (const rule of profiles.scope_applicability) {
     if (!scopeIds.has(rule.scope)) e(`profiles.yml: scope_applicability names unknown scope '${rule.scope}'`);
     for (const id of [...(rule.when.all || []), ...(rule.when.any || [])]) {
@@ -363,7 +371,7 @@ if (profiles) {
     if (!used.has(id) && !usedByRules.has(id) &&
         !(profiles.derived || []).some((d) => (d.all || d.any || []).includes(id))) {
       const isPopulation = profiles.features.some((f) => f.id === id &&
-        (f.group === 'population' || f.group === 'residency'));
+        (f.group === 'population' || f.group === 'residency' || f.group === 'us-role'));
       // population/residency features select SCOPES and arrangement selects the
       // PERSONA, so these legitimately tag no rows.
       if (!isPopulation) w(`profiles.yml: feature '${id}' is not used by any obligation — a checkbox that changes nothing misleads`);

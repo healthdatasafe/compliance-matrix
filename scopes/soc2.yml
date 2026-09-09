@@ -983,16 +983,16 @@ requirements:
         - hipaa/policies/authentication
   implementer:
     - persona: service-organization
-      applies_when: [stores-phi-copy, hds-as-idp]
+      applies_when: [stores-phi-copy, connects]
       coverage: documented
       overview: |
         Configure least-privilege per-stream access grants for your application and
         document your access-authorization rules; decide whether to require MFA.
     - persona: user-entity
-      applies_when: [stores-phi-copy, hds-as-idp]
+      applies_when: [stores-phi-copy, connects]
       coverage: out-of-scope
     - persona: subservice-organization
-      applies_when: [stores-phi-copy, hds-as-idp]
+      applies_when: [stores-phi-copy, connects]
       coverage: documented
       overview: |
         Apply the same logical-access controls to the service you run downstream.
@@ -1034,16 +1034,16 @@ requirements:
         - hipaa/procedures/access-termination
   implementer:
     - persona: service-organization
-      applies_when: [hds-as-idp]
+      applies_when: [connects]
       coverage: documented
       overview: |
         Document who may register and authorize users and at what scope, and tie
         de-provisioning to immediate access revocation.
     - persona: user-entity
-      applies_when: [hds-as-idp]
+      applies_when: [connects]
       coverage: out-of-scope
     - persona: subservice-organization
-      applies_when: [hds-as-idp]
+      applies_when: [connects]
       coverage: documented
       overview: |
         Operate the same registration and de-provisioning lifecycle downstream.
@@ -1084,16 +1084,16 @@ requirements:
         - hipaa/procedures/access-review
   implementer:
     - persona: service-organization
-      applies_when: [hds-as-idp]
+      applies_when: [connects]
       coverage: documented
       overview: |
         Define your role model and least-privilege scopes, map them onto access
         grants, and run a periodic access review over the version history.
     - persona: user-entity
-      applies_when: [hds-as-idp]
+      applies_when: [connects]
       coverage: out-of-scope
     - persona: subservice-organization
-      applies_when: [hds-as-idp]
+      applies_when: [connects]
       coverage: documented
       overview: |
         Apply role-based least-privilege access and segregation of duties
@@ -1963,16 +1963,16 @@ requirements:
         - hipaa/policies/minimum-necessary
   implementer:
     - persona: service-organization
-      applies_when: [stores-phi-copy, ai-aggregate]
+      applies_when: [stores-phi-copy, analytics]
       coverage: documented
       overview: |
         Classify your confidential data, map it to a stream layout, and grant
         least-privilege per-stream access; document the classification scheme.
     - persona: user-entity
-      applies_when: [stores-phi-copy, ai-aggregate]
+      applies_when: [stores-phi-copy, analytics]
       coverage: out-of-scope
     - persona: subservice-organization
-      applies_when: [stores-phi-copy, ai-aggregate]
+      applies_when: [stores-phi-copy, analytics]
       coverage: out-of-scope
 
 - ref: C1.2
@@ -2401,16 +2401,16 @@ requirements:
         - hipaa/policies/access-control
   implementer:
     - persona: service-organization
-      applies_when: [reads-data]
+      applies_when: [connects]
       coverage: documented
       overview: |
         Define each collection purpose and the minimal stream set it needs, and
         grant only that scope; document the mapping.
     - persona: user-entity
-      applies_when: [reads-data]
+      applies_when: [connects]
       coverage: out-of-scope
     - persona: subservice-organization
-      applies_when: [reads-data]
+      applies_when: [connects]
       coverage: out-of-scope
 
 - ref: P3.2
@@ -2448,16 +2448,16 @@ requirements:
         - soc2/policies/privacy-notice
   implementer:
     - persona: service-organization
-      applies_when: [reads-data, ai-individual, commercial-use]
+      applies_when: [connects, analytics, secondary-use]
       coverage: documented
       overview: |
         Present a separate affirmative consent step for sensitive data and gate
         that data behind a distinct access; document the explicit-consent flow.
     - persona: user-entity
-      applies_when: [reads-data, ai-individual, commercial-use]
+      applies_when: [connects, analytics, secondary-use]
       coverage: out-of-scope
     - persona: subservice-organization
-      applies_when: [reads-data, ai-individual, commercial-use]
+      applies_when: [connects, analytics, secondary-use]
       coverage: out-of-scope
 
 - ref: P4.1
@@ -2493,16 +2493,16 @@ requirements:
         - hipaa/policies/access-control
   implementer:
     - persona: service-organization
-      applies_when: [reads-data, ai-aggregate]
+      applies_when: [connects, analytics]
       coverage: documented
       overview: |
         Map each identified purpose to a distinct access scope and document the
         mapping; the platform enforces the boundary.
     - persona: user-entity
-      applies_when: [reads-data, ai-aggregate]
+      applies_when: [connects, analytics]
       coverage: out-of-scope
     - persona: subservice-organization
-      applies_when: [reads-data, ai-aggregate]
+      applies_when: [connects, analytics]
       coverage: out-of-scope
 
 - ref: P4.2
@@ -2547,17 +2547,17 @@ requirements:
         internal_doc: soc2/procedures/data-retention-and-disposal
   implementer:
     - persona: service-organization
-      applies_when: [ai-individual]
+      applies_when: [analytics]
       coverage: documented
       overview: |
         Define your retention schedule, record retention terms on each record,
         and operate the enforcement sweep yourself; document the absence of
         platform auto-expiry as your responsibility.
     - persona: user-entity
-      applies_when: [ai-individual]
+      applies_when: [analytics]
       coverage: out-of-scope
     - persona: subservice-organization
-      applies_when: [ai-individual]
+      applies_when: [analytics]
       coverage: out-of-scope
 
 - ref: P4.3

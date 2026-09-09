@@ -319,7 +319,7 @@ requirements:
           - hipaa/policies/notice-of-privacy-practices
     implementer:
       - persona: controller
-        applies_when: [reads-data, holds-contact-data]
+        applies_when: [connects, own-records]
         coverage: documented
         overview: |
           Author the information notice, present it at collection and record the
@@ -354,7 +354,7 @@ requirements:
           - hipaa/procedures/security-incident-response
     implementer:
       - persona: controller
-        applies_when: [automated-decisions]
+        applies_when: [analytics]
         coverage: documented
         overview: |
           Identify exclusively-automated decisions, inform the subject and offer
@@ -392,13 +392,13 @@ requirements:
           - gdpr/registers/records-of-processing
     implementer:
       - persona: controller
-        applies_when: [ai-individual]
+        applies_when: [analytics]
         coverage: documented
         overview: |
           Determine when a DPIA is required, run it, and use the platform
           artefacts as inputs.
       - persona: processor
-        applies_when: [ai-individual]
+        applies_when: [analytics]
         coverage: documented
         overview: |
           Assist the controller's DPIA with information about your processing.
@@ -502,13 +502,13 @@ requirements:
           You access your own data directly through the standard API or a portal
           built on it.
       - persona: controller
-        applies_when: [reads-data]
+        applies_when: [connects]
         coverage: documented
         overview: |
           Operate the request process, meet the response timeline and supply the
           extended minimum-information set.
       - persona: processor
-        applies_when: [reads-data]
+        applies_when: [connects]
         coverage: documented
         overview: |
           Make data available to the controller to satisfy access requests.
@@ -593,13 +593,13 @@ requirements:
           - hipaa/policies/access-control
     implementer:
       - persona: controller
-        applies_when: [research-secondary-use]
+        applies_when: [secondary-use]
         coverage: documented
         overview: |
           Determine the overriding interest or consent basis and record the cited
           ground on each access.
       - persona: processor
-        applies_when: [research-secondary-use]
+        applies_when: [secondary-use]
         coverage: documented
         overview: |
           Process sensitive data only on the ground the controller records.
@@ -638,13 +638,13 @@ requirements:
         overview: |
           You rectify your data through the API and may request erasure.
       - persona: controller
-        applies_when: [reads-data]
+        applies_when: [connects]
         coverage: documented
         overview: |
           Run the rectification and erasure process and operate retention and
           destruction as automation is not built in.
       - persona: processor
-        applies_when: [reads-data]
+        applies_when: [connects]
         coverage: documented
         overview: |
           Execute rectification and erasure on the controller's instruction.
@@ -866,12 +866,12 @@ requirements:
           - hipaa/policies/access-control
     implementer:
       - persona: controller
-        applies_when: [reads-data]
+        applies_when: [connects]
         coverage: documented
         overview: |
           Determine the justification basis and record it on the relevant access.
       - persona: processor
-        applies_when: [reads-data]
+        applies_when: [connects]
         coverage: documented
         overview: |
           Process only on the basis the controller records.

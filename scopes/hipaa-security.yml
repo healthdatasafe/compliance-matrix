@@ -1146,7 +1146,7 @@ requirements:
   implementer:
     - persona: covered-entity
       basis: integration
-      applies_when: [reads-data, hds-as-idp, stores-phi-copy]
+      applies_when: [connects, stores-phi-copy]
       coverage: documented
       overview: |
         Rely on the HDS-selected hosting region for the server-side facility
@@ -1154,7 +1154,7 @@ requirements:
         offices, endpoints and any workforce devices that access ePHI.
     - persona: business-associate
       basis: integration
-      applies_when: [reads-data, hds-as-idp, stores-phi-copy]
+      applies_when: [connects, stores-phi-copy]
       coverage: documented
       overview: |
         Inherit the HDS hosting-region facility posture and document it in your own
@@ -1197,14 +1197,14 @@ requirements:
   implementer:
     - persona: covered-entity
       basis: integration
-      applies_when: [reads-data, hds-as-idp, stores-phi-copy]
+      applies_when: [connects, stores-phi-copy]
       coverage: documented
       overview: |
         Inherit the server-tier facility controls from the HDS hosting region;
         implement and document facility access controls for your own premises.
     - persona: business-associate
       basis: integration
-      applies_when: [reads-data, hds-as-idp, stores-phi-copy]
+      applies_when: [connects, stores-phi-copy]
       coverage: documented
       overview: |
         Inherit the server-tier facility controls from the HDS hosting region, and implement and
@@ -1434,14 +1434,14 @@ requirements:
   implementer:
     - persona: covered-entity
       basis: integration
-      applies_when: [reads-data, hds-as-idp]
+      applies_when: [connects]
       coverage: documented
       overview: |
         Configure your application's use of HDS access tokens to grant least-
         privilege per-stream access, and document your access-authorization rules.
     - persona: business-associate
       basis: integration
-      applies_when: [reads-data, hds-as-idp]
+      applies_when: [connects]
       coverage: documented
       overview: |
         Model your grants as least-privilege per-stream access tokens, and document your
@@ -1481,14 +1481,14 @@ requirements:
   implementer:
     - persona: covered-entity
       basis: integration
-      applies_when: [reads-data, hds-as-idp]
+      applies_when: [connects]
       coverage: documented
       overview: |
         Map each workforce member or program to a distinct identity/access token and
         document the mapping; avoid shared credentials.
     - persona: business-associate
       basis: integration
-      applies_when: [reads-data, hds-as-idp]
+      applies_when: [connects]
       coverage: documented
       overview: |
         Map each workforce member or program to a distinct identity and access token, and
@@ -1529,7 +1529,7 @@ requirements:
   implementer:
     - persona: covered-entity
       basis: integration
-      applies_when: [reads-data, stores-phi-copy]
+      applies_when: [connects, stores-phi-copy]
       coverage: configurable
       overview: |
         Define and document your emergency-access procedure — who may invoke
@@ -1537,7 +1537,7 @@ requirements:
         afterward.
     - persona: business-associate
       basis: integration
-      applies_when: [reads-data, stores-phi-copy]
+      applies_when: [connects, stores-phi-copy]
       coverage: configurable
       overview: |
         Define and document your emergency-access procedure over the platform mechanism: who may
@@ -1579,14 +1579,14 @@ requirements:
   implementer:
     - persona: covered-entity
       basis: integration
-      applies_when: [reads-data, hds-as-idp]
+      applies_when: [connects]
       coverage: configurable
       overview: |
         Set session and access-token expiry windows appropriate to your workflow and
         document the inactivity-timeout decision.
     - persona: business-associate
       basis: integration
-      applies_when: [reads-data, hds-as-idp]
+      applies_when: [connects]
       coverage: configurable
       overview: |
         Set session and access-token expiry windows appropriate to your workflow, and document
@@ -1700,14 +1700,14 @@ requirements:
   implementer:
     - persona: covered-entity
       basis: integration
-      applies_when: [reads-data, hds-as-idp, stores-phi-copy]
+      applies_when: [connects, stores-phi-copy]
       coverage: documented
       overview: |
         Define and document your audit-review cadence and who performs it; retain
         the review records per your retention policy.
     - persona: business-associate
       basis: integration
-      applies_when: [reads-data, hds-as-idp, stores-phi-copy]
+      applies_when: [connects, stores-phi-copy]
       coverage: documented
       overview: |
         Define and document your audit-review cadence over the platform-provided log, and who
@@ -1849,14 +1849,14 @@ requirements:
   implementer:
     - persona: covered-entity
       basis: integration
-      applies_when: [reads-data, hds-as-idp]
+      applies_when: [connects]
       coverage: documented
       overview: |
         Decide and document your authentication strength (e.g. whether MFA is
         required, and for which roles or operations).
     - persona: business-associate
       basis: integration
-      applies_when: [reads-data, hds-as-idp]
+      applies_when: [connects]
       coverage: documented
       overview: |
         Decide and document your authentication strength over the platform, including whether
@@ -1894,14 +1894,14 @@ requirements:
   implementer:
     - persona: covered-entity
       basis: integration
-      applies_when: [reads-data, hds-as-idp, stores-phi-copy, third-parties]
+      applies_when: [connects, stores-phi-copy, third-parties]
       coverage: documented
       overview: |
         Ensure your client and any onward integration hops you control transmit
         ePHI only over TLS; document the transmission-security boundary.
     - persona: business-associate
       basis: integration
-      applies_when: [reads-data, hds-as-idp, stores-phi-copy, third-parties]
+      applies_when: [connects, stores-phi-copy, third-parties]
       coverage: documented
       overview: |
         Ensure any transmission path you operate carries ePHI only over TLS, and document the
@@ -1941,14 +1941,14 @@ requirements:
   implementer:
     - persona: covered-entity
       basis: integration
-      applies_when: [reads-data, hds-as-idp, stores-phi-copy, third-parties]
+      applies_when: [connects, stores-phi-copy, third-parties]
       coverage: documented
       overview: |
         Preserve transmission integrity across any hops you operate, and document
         the addressable decision.
     - persona: business-associate
       basis: integration
-      applies_when: [reads-data, hds-as-idp, stores-phi-copy, third-parties]
+      applies_when: [connects, stores-phi-copy, third-parties]
       coverage: documented
       overview: |
         Preserve transmission integrity across any hops you operate, and document the
@@ -1987,14 +1987,14 @@ requirements:
   implementer:
     - persona: covered-entity
       basis: integration
-      applies_when: [reads-data, hds-as-idp, stores-phi-copy, third-parties]
+      applies_when: [connects, stores-phi-copy, third-parties]
       coverage: documented
       overview: |
         Document that transmission encryption is in force; separately address
         at-rest encryption per §164.312(a)(2)(iv).
     - persona: business-associate
       basis: integration
-      applies_when: [reads-data, hds-as-idp, stores-phi-copy, third-parties]
+      applies_when: [connects, stores-phi-copy, third-parties]
       coverage: documented
       overview: |
         Record that transmission encryption is in force, and address at-rest encryption
@@ -2032,14 +2032,14 @@ requirements:
   implementer:
     - persona: covered-entity
       basis: integration
-      applies_when: [reads-data, hds-as-idp, stores-phi-copy, third-parties]
+      applies_when: [connects, stores-phi-copy, third-parties]
       coverage: documented
       overview: |
         Execute a BAA with HDS before sending any ePHI, and keep it on file.
       templates: [baa]
     - persona: business-associate
       basis: integration
-      applies_when: [reads-data, hds-as-idp, stores-phi-copy, third-parties]
+      applies_when: [connects, stores-phi-copy, third-parties]
       coverage: documented
       overview: |
         Execute a BAA with HDS and back-to-back agreements with any of your own
@@ -2079,7 +2079,7 @@ requirements:
   implementer:
     - persona: covered-entity
       basis: integration
-      applies_when: [reads-data, hds-as-idp, stores-phi-copy, third-parties]
+      applies_when: [connects, stores-phi-copy, third-parties]
       coverage: documented
       overview: |
         Confirm that the BAA's safeguards clause reflects the controls you rely
@@ -2087,7 +2087,7 @@ requirements:
       templates: [baa]
     - persona: business-associate
       basis: integration
-      applies_when: [reads-data, hds-as-idp, stores-phi-copy, third-parties]
+      applies_when: [connects, stores-phi-copy, third-parties]
       coverage: documented
       overview: |
         Ensure the safeguards you commit to your covered entity are matched by
@@ -2125,7 +2125,7 @@ requirements:
   implementer:
     - persona: covered-entity
       basis: integration
-      applies_when: [reads-data, hds-as-idp, stores-phi-copy, third-parties]
+      applies_when: [connects, stores-phi-copy, third-parties]
       coverage: documented
       overview: |
         Ensure your BAA with HDS specifies the incident-report channel and
@@ -2134,7 +2134,7 @@ requirements:
       templates: [baa]
     - persona: business-associate
       basis: integration
-      applies_when: [reads-data, hds-as-idp, stores-phi-copy, third-parties]
+      applies_when: [connects, stores-phi-copy, third-parties]
       coverage: documented
       overview: |
         Flow the incident-report obligation through to your covered entity and

@@ -353,7 +353,7 @@ requirements:
           - hipaa/policies/integrity
     implementer:
       - persona: controller
-        applies_when: [stores-phi-copy, ai-aggregate, research-secondary-use]
+        applies_when: [stores-phi-copy, analytics, secondary-use]
         coverage: documented
         overview: |
           Establish lawful basis, notices and a retention schedule; HDS does not
@@ -390,7 +390,7 @@ requirements:
           - gdpr/policies/lawful-basis-and-consent
     implementer:
       - persona: controller
-        applies_when: [reads-data, ai-aggregate, commercial-use, research-secondary-use]
+        applies_when: [connects, analytics, secondary-use]
         coverage: documented
         overview: |
           Determine and document the lawful basis for each processing activity
@@ -469,7 +469,7 @@ requirements:
           - hipaa/policies/access-control
     implementer:
       - persona: controller
-        applies_when: [reads-data, stores-phi-copy, ai-individual, research-secondary-use]
+        applies_when: [connects, stores-phi-copy, analytics, secondary-use]
         coverage: documented
         overview: |
           Determine the Art.9(2) condition for each special-category processing
@@ -506,7 +506,7 @@ requirements:
           - gdpr/policies/lawful-basis-and-consent
     implementer:
       - persona: controller
-        applies_when: [minors]
+        applies_when: [processes-personal-data]
         coverage: documented
         overview: |
           Verify age and parental authority in your UX and record the artefacts;
@@ -617,7 +617,7 @@ requirements:
           - gdpr/policies/lawful-basis-and-consent
     implementer:
       - persona: controller
-        applies_when: [reads-data, holds-contact-data, third-parties, ai-individual, commercial-use]
+        applies_when: [connects, own-records, third-parties, analytics, secondary-use]
         coverage: documented
         overview: |
           Author and present the Art.13 disclosures at collection time; record
@@ -652,7 +652,7 @@ requirements:
           - gdpr/policies/lawful-basis-and-consent
     implementer:
       - persona: controller
-        applies_when: [reads-data]
+        applies_when: [connects]
         coverage: documented
         overview: |
           Record the data source and present the Art.14 disclosures within the
@@ -695,7 +695,7 @@ requirements:
           - gdpr/procedures/data-subject-rights
     implementer:
       - persona: controller
-        applies_when: [reads-data]
+        applies_when: [connects]
         coverage: documented
         overview: |
           Run the request-intake process and, if desired, a subject portal; the
@@ -807,7 +807,7 @@ requirements:
           upstream_proposal: vendor/pryv/proposals/audit-on-user-delete.md
     implementer:
       - persona: controller
-        applies_when: [stores-phi-copy, holds-contact-data]
+        applies_when: [stores-phi-copy, own-records]
         coverage: documented
         overview: |
           Decide when an erasure obligation is triggered and invoke deletion;
@@ -936,7 +936,7 @@ requirements:
           - gdpr/procedures/data-subject-rights
     implementer:
       - persona: controller
-        applies_when: [reads-data, ai-individual, commercial-use]
+        applies_when: [connects, analytics, secondary-use]
         coverage: documented
         overview: |
           Run the compelling-grounds assessment where applicable and apply the
@@ -974,7 +974,7 @@ requirements:
           - gdpr/procedures/data-subject-rights
     implementer:
       - persona: controller
-        applies_when: [reads-data, third-parties]
+        applies_when: [connects, third-parties]
         coverage: documented
         overview: |
           Identify the recipients from the active accesses and notify each of the
@@ -1010,7 +1010,7 @@ requirements:
           - gdpr/procedures/data-subject-rights
     implementer:
       - persona: controller
-        applies_when: [automated-decisions]
+        applies_when: [analytics]
         coverage: documented
         overview: |
           Implement the safeguards (basis, human intervention) and record the
@@ -1357,13 +1357,13 @@ requirements:
           upstream_proposal: vendor/pryv/proposals/e2e-encryption.md
     implementer:
       - persona: controller
-        applies_when: [reads-data, stores-phi-copy, hds-as-idp]
+        applies_when: [connects, stores-phi-copy]
         coverage: documented
         overview: |
           Assess the residual at-rest-encryption risk, run regular security
           testing and document your incident procedures.
       - persona: processor
-        applies_when: [reads-data, stores-phi-copy, hds-as-idp]
+        applies_when: [connects, stores-phi-copy]
         coverage: documented
         overview: |
           Evidence your own security measures and the at-rest controls applied at
@@ -1456,7 +1456,7 @@ requirements:
           - hipaa/procedures/security-incident-response
     implementer:
       - persona: controller
-        applies_when: [stores-phi-copy, holds-contact-data]
+        applies_when: [stores-phi-copy, own-records]
         coverage: documented
         overview: |
           Derive the affected-subject roster, render and deliver the
@@ -1501,7 +1501,7 @@ requirements:
           internal_doc: gdpr/procedures/dpia
     implementer:
       - persona: controller
-        applies_when: [ai-individual, automated-decisions, research-secondary-use]
+        applies_when: [analytics, secondary-use]
         coverage: documented
         overview: |
           Run the DPIA where required, using the platform's technical inputs and
@@ -1526,7 +1526,7 @@ requirements:
       regions: [ch, us]
     implementer:
       - persona: controller
-        applies_when: [ai-individual, automated-decisions, research-secondary-use]
+        applies_when: [analytics, secondary-use]
         coverage: documented
         overview: |
           Consult the supervisory authority where your DPIA indicates an

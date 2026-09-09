@@ -17,124 +17,104 @@ version: 1
 # ---------------------------------------------------------------------------
 features:
 
-  # --- Who your users are. This decides which regulations apply at all. ---
+  # --- Step 1. Where your users are. Nothing works until this is answered. ---
   - id: subjects-eu
     group: population
-    label: Your users are in the EU or EEA, or you are established there
+    label: In the EU or EEA
   - id: subjects-ch
     group: population
-    label: Your users are in Switzerland, or you are established there
+    label: In Switzerland
   - id: subjects-us
     group: population
-    label: Your users are in the United States
-  - id: hipaa-relationship
-    group: population
-    label: A HIPAA Covered Entity is involved (a provider, health plan or clearinghouse)
+    label: In the United States
+
+  # --- Step 1b. Only meaningful when US users are involved. One question, four
+  # answers, because the three HIPAA facts form a hierarchy: being a covered
+  # entity implies one is involved. Asking them as three checkboxes let a reader
+  # tick a combination that means nothing. ---
+  - id: us-role-none
+    group: us-role
+    exclusive: us-role
+    label: No US healthcare provider, health plan or clearinghouse is involved
+  - id: us-role-ce-involved
+    group: us-role
+    exclusive: us-role
+    label: One is involved, but not through you (your user's own doctor, say)
+  - id: us-role-acts-for
+    group: us-role
+    exclusive: us-role
+    label: You build or run this application for one, or under contract to one
+  - id: us-role-you-are
+    group: us-role
+    exclusive: us-role
+    label: You are one
+
+  # --- Step 2. What reaches your systems. ---
+  - id: connects
+    group: application
+    label: Data from your users' vaults reaches your systems
     note: >
-      Without one, HIPAA does not reach data an individual stores in their own
-      HDS account. Other US regimes do, and this matrix has no scope for them yet.
-  - id: you-are-covered-entity
-    group: population
-    label: >
-      You are yourself a health plan, a clearinghouse, or a healthcare provider
-      that bills or exchanges records electronically
-  - id: acts-for-covered-entity
-    group: population
-    label: >
-      You build or run this application for a US healthcare provider, health
-      plan or clearinghouse, or under contract to one
+      They share it with you, or they sign in to your application with their HDS
+      account. Either way you hold personal data.
+  - id: stores-phi-copy
+    group: application
+    label: You keep your own copy of health data, including backups and exports
+  - id: own-records
+    group: application
+    label: You keep your own user records outside HDS
     note: >
-      HIPAA reaches you only if you act on a covered entity's behalf AND handle
-      protected health information. An app an individual chose to use, which no
-      covered entity commissioned, is not their business associate.
+      Accounts, email addresses, crash reports, usage analytics. None of this
+      touches the vault, and all of it is personal data you control.
+  - id: third-parties
+    group: application
+    label: Other companies touch the data
+    note: >
+      Your cloud host, your email or analytics vendors, partners you pass data
+      to. Hosting counts.
+  - id: analytics
+    group: application
+    label: You compute on the data
+    note: >
+      Reports, scores, alerts, AI or machine learning, whether the output is
+      aggregated or about one person.
+  - id: secondary-use
+    group: application
+    label: You use the data for your own ends
+    note: >
+      Research, product improvement, marketing, or selling it: anything beyond
+      the service the user signed up for.
+
+  # --- Step 3. Hosting. ---
+  - id: region-ch
+    group: residency
+    exclusive: region
+    label: Switzerland
+  - id: region-us
+    group: residency
+    exclusive: region
+    label: United States
 
   - id: want-soc2
     group: population
     label: Your customers ask you for SOC 2 assurance
 
-  # --- Where the data sits. ---
-  - id: region-ch
-    group: residency
-    label: Data is pinned to the Swiss region
-  - id: region-us
-    group: residency
-    label: Data is pinned to the US region
-
-  # --- What your application actually does. ---
-  - id: reads-data
-    group: application
-    label: Your application reads user data out of HDS (dashboards, sharing with you)
-  - id: hds-as-idp
-    group: application
-    label: Your users sign in to your application with their HDS account
-  - id: stores-phi-copy
-    group: application
-    label: You store a copy of health data outside HDS, including archives and backups
-  - id: holds-contact-data
-    group: application
-    label: You hold contact details outside HDS, for example to send notifications
-  - id: third-parties
-    group: application
-    label: You share data with third parties, or engage subprocessors
-  - id: ai-aggregate
-    group: application
-    label: AI, machine learning or analytics producing only aggregated output
-  - id: ai-individual
-    group: application
-    label: AI or analytics producing output about an identifiable individual
-  - id: automated-decisions
-    group: application
-    label: Automated decisions with a legal or similarly significant effect on a person
-  - id: commercial-use
-    group: application
-    label: Marketing, profiling for marketing, or selling data
-  - id: research-secondary-use
-    group: application
-    label: Research or other use beyond the purpose the data was collected for
-  - id: minors
-    group: application
-    label: Your users include people under the age of digital consent
-
-  # The two below are what actually create obligations for an app that only its
-  # own user touches. They never reach the vault, which is exactly why they are
-  # easy to overlook.
-  - id: app-telemetry
-    group: application
-    label: Your app collects analytics, usage data or crash reports
-    note: >
-      Even with no health data involved, this is personal data you process as a
-      controller in your own right.
-  - id: app-account
-    group: application
-    label: Your app has its own accounts, logins or licences outside HDS
-
-# ---------------------------------------------------------------------------
-# Derived features: the ONLY place AND-logic lives. Row tags stay flat any-of
-# lists, which is what keeps the tagging reviewable and the matching cheap.
-# ---------------------------------------------------------------------------
 derived:
   # Do you process personal data AT ALL? If an app only lets its own user work on
   # their own vault, and the developer receives nothing, the developer is neither
-  # controller nor processor of that data: they supply a tool. Almost every duty
-  # below is gated on this, so ticking nothing correctly yields almost nothing.
+  # controller nor processor: they supply a tool. Almost every duty is gated on
+  # this, so ticking nothing correctly yields almost nothing.
   - id: processes-personal-data
-    any: [reads-data, hds-as-idp, stores-phi-copy, holds-contact-data, third-parties,
-          ai-aggregate, ai-individual, automated-decisions, commercial-use,
-          research-secondary-use, minors, app-telemetry, app-account]
+    any: [connects, stores-phi-copy, own-records, third-parties, analytics, secondary-use]
     label: You process personal data of your own
 
-  # One test could never fire for a Swiss implementer, yet the nLPD transfer
-  # rows depended on it. Three tests, one per corridor.
-  # The HIPAA half of processes-personal-data: does anything leave the user's
-  # own device and reach you? 45 CFR 160.103 needs BOTH this and acting on a
-  # covered entity's behalf.
+  # The HIPAA half: 45 CFR 160.103 needs BOTH acting for a covered entity AND
+  # handling protected health information.
   - id: handles-user-data
-    any: [reads-data, hds-as-idp, stores-phi-copy, third-parties,
-          ai-aggregate, ai-individual]
+    any: [connects, stores-phi-copy, third-parties, analytics]
     label: User data reaches your systems
 
   - id: hipaa-in-play
-    any: [hipaa-relationship, you-are-covered-entity, acts-for-covered-entity]
+    any: [us-role-ce-involved, us-role-acts-for, us-role-you-are]
     label: A covered entity is somewhere in the picture
 
   - id: transfer-eu-us
@@ -147,40 +127,64 @@ derived:
     all: [subjects-ch, region-us]
     label: Personal data leaving Switzerland for the US region
 
-# ---------------------------------------------------------------------------
-# Presets: the four archetypes, as starting points over the same checkboxes.
-# ---------------------------------------------------------------------------
+# Presets: the four archetypes. `locked` lists what the archetype settles, on or
+# off; anything else stays free, because it describes your organisation rather
+# than the thing you are building.
 presets:
   - id: self-monitoring
     label: Self-monitoring app
     summary: >
-      Your application serves the end user only. You receive nothing and store
-      nothing, so almost nothing lands on you.
+      Your application serves the end user only. Nothing reaches you, so almost
+      nothing lands on you.
     features: []
+    locked: [connects, stores-phi-copy, analytics, secondary-use]
   - id: shared-with-you
-    label: Shared with you, sign-in via HDS
+    label: Users share data with you
     summary: >
-      Users share data with you and sign in with their HDS account. You still
-      store no health data of your own.
-    features: [reads-data, hds-as-idp]
+      They share from their vault, or sign in with their HDS account. You still
+      keep no copy of your own.
+    features: [connects]
+    locked: [connects, stores-phi-copy, analytics]
   - id: aggregate-ai
-    label: Plus aggregated AI or analytics
+    label: Plus reports or AI
     summary: >
-      As above, plus AI or analytics that produce aggregated reports only. No
-      health data stored outside HDS.
-    features: [reads-data, hds-as-idp, ai-aggregate]
+      As above, plus reports, scores or models computed on the data. Still no
+      copy kept outside HDS.
+    features: [connects, analytics]
+    locked: [connects, analytics, stores-phi-copy]
   - id: stores-copy
-    label: You store a copy of the data
+    label: You keep your own copy
     summary: >
-      You hold your own copy of health data. That makes you an INDEPENDENT
+      You hold health data on your own systems. That makes you an INDEPENDENT
       controller of that copy, with your own lawful basis, notice and security
-      duties. It does not make HDS your processor: HDS acts on the individual's
-      permissions, not on your instructions.
-    features: [reads-data, hds-as-idp, stores-phi-copy]
+      duties. It does not make HDS your processor.
+    features: [connects, stores-phi-copy]
+    locked: [connects, stores-phi-copy]
 
-# ---------------------------------------------------------------------------
-# Which regulations apply, given the population selected.
-# ---------------------------------------------------------------------------
+# Step 2: who you serve. Together with an archetype these cover the common
+# cases in two clicks. Everything remains reachable in the refine panel.
+markets:
+  - id: europe
+    label: Europe
+    summary: Users in the EU or EEA, and in Switzerland. Hosted in the Swiss region.
+    features: [subjects-eu, subjects-ch, region-ch, us-role-none]
+  - id: swiss
+    label: Switzerland only
+    summary: Swiss users, Swiss hosting, nothing crossing a border.
+    features: [subjects-ch, region-ch, us-role-none]
+  - id: us-consumer
+    label: United States, direct to consumer
+    summary: >
+      US users, with no healthcare provider, health plan or clearinghouse in the
+      arrangement. HIPAA does not reach you; other US law does.
+    features: [subjects-us, region-us, us-role-none]
+  - id: us-healthcare
+    label: United States, healthcare
+    summary: >
+      US users, and you build for a provider, health plan or clearinghouse, or
+      under contract to one.
+    features: [subjects-us, region-us, us-role-acts-for]
+
 scope_applicability:
   - scope: gdpr
     when: { any: [subjects-eu] }
@@ -195,12 +199,10 @@ scope_applicability:
   - scope: soc2
     when: { any: [want-soc2] }
 
-# Gaps in this matrix's own coverage, surfaced rather than left as silence.
-# A selection that lands here gets a warning, not an empty result.
 uncovered:
   - id: us-consumer
     when: { all: [subjects-us] }
-    unless: [you-are-covered-entity, acts-for-covered-entity]
+    unless: [us-role-you-are, us-role-acts-for]
     title: US consumer health data, with no HIPAA role on your side
     message: >
       HIPAA does not reach you here: you neither are a covered entity nor act
@@ -209,21 +211,15 @@ uncovered:
       yet, so the requirements below are not the whole of your obligations.
       Take this one to counsel.
 
-# Which persona's obligations to show, per scope and arrangement.
-# `ask` means the implementer picks, because the matrix carries both and they
-# are materially different sets of obligations.
 personas:
   gdpr: { default: controller }
   swiss-nlpd: { default: controller }
-  # Derived, never asked. The old version offered a closed choice between
-  # covered-entity and business-associate with the second pre-checked, so an
-  # implementer who receives nothing was told it held a role it cannot hold.
   hipaa-security: &hipaa-role
     derive:
       - persona: covered-entity
-        when: { any: [you-are-covered-entity] }
+        when: { any: [us-role-you-are] }
       - persona: business-associate
-        when: { all: [acts-for-covered-entity, handles-user-data] }
+        when: { all: [us-role-acts-for, handles-user-data] }
   hipaa-privacy: *hipaa-role
   hipaa-breach: *hipaa-role
   soc2: { default: service-organization }

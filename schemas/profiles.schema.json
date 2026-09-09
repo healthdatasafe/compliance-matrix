@@ -36,6 +36,7 @@
           "group": {
             "enum": [
               "population",
+              "us-role",
               "residency",
               "application"
             ]
@@ -131,6 +132,14 @@
             },
             "uniqueItems": true,
             "description": "May be empty: an archetype that ticks nothing is a legitimate starting point."
+          },
+          "locked": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "uniqueItems": true,
+            "description": "Options this archetype settles, on or off. They render disabled: unticking 'you keep your own copy' while the copy archetype is selected would describe something that is not that archetype. Anything not listed stays free."
           }
         }
       }
@@ -229,6 +238,41 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "markets": {
+      "type": "array",
+      "minItems": 1,
+      "description": "Step 2 of the selection: who the implementer serves. Sets the population, US-role and residency features. Kept separate from presets so the two questions (what you build, who you serve) stay independent.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "label",
+          "features"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]*$"
+          },
+          "label": {
+            "type": "string",
+            "minLength": 1
+          },
+          "summary": {
+            "type": "string"
+          },
+          "features": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string"
+            },
+            "uniqueItems": true
           }
         }
       }
