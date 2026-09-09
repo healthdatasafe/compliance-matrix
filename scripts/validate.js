@@ -288,6 +288,26 @@ if (profiles) {
   // Row tags.
   const ORG_PERSONAS = new Set(['partner', 'covered-entity', 'business-associate', 'controller',
     'processor', 'service-organization', 'user-entity', 'subservice-organization']);
+
+  // An implementer entry is either a duty (it says what to do) or it is not one
+  // (coverage out-of-scope, and nothing to say). Those two coincided exactly on
+  // all 92 out-of-scope entries; making it a rule stops a future entry drifting
+  // into the gap, where the implementer page would render an action with no
+  // action text in it.
+  for (const { scope, file } of hdsScopes) {
+    const r0 = rel(file);
+    for (const r of scope.requirements || []) {
+      for (const o of r.implementer || []) {
+        const hasText = !!(o.overview || '').trim();
+        if (o.coverage === 'out-of-scope' && hasText) {
+          e(`${r0}: ${r.ref} '${o.persona}' is out-of-scope but carries an overview — say it places no duty, or give it a coverage that matches the text`);
+        }
+        if (o.coverage !== 'out-of-scope' && !hasText) {
+          e(`${r0}: ${r.ref} '${o.persona}' has coverage '${o.coverage}' but no overview — an obligation with nothing to do is not an obligation`);
+        }
+      }
+    }
+  }
   const used = new Set();
   let orgObligations = 0;
   let profiled = 0;
@@ -296,7 +316,7 @@ if (profiles) {
     for (const r of scope.requirements || []) {
       const seen = new Map(); // persona -> {untagged, always}
       for (const o of r.implementer || []) {
-        if (ORG_PERSONAS.has(o.persona)) orgObligations++;
+        if (ORG_PERSONAS.has(o.persona) && o.coverage !== 'out-of-scope') orgObligations++;
         const aw = o.applies_when;
         if (aw === undefined) {
           const s = seen.get(o.persona) || {};
@@ -304,7 +324,7 @@ if (profiles) {
           seen.set(o.persona, { ...s, untagged: true });
           continue;
         }
-        if (ORG_PERSONAS.has(o.persona)) profiled++;
+        if (ORG_PERSONAS.has(o.persona) && o.coverage !== 'out-of-scope') profiled++;
         if (aw === 'always') {
           const s = seen.get(o.persona) || {};
           if (s.always) e(`${r0}: ${r.ref} has two 'always' '${o.persona}' obligations`);
