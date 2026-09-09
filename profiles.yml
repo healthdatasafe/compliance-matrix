@@ -80,14 +80,45 @@ features:
     group: application
     label: Your users include people under the age of digital consent
 
+  # The two below are what actually create obligations for an app that only its
+  # own user touches. They never reach the vault, which is exactly why they are
+  # easy to overlook.
+  - id: app-telemetry
+    group: application
+    label: Your app collects analytics, usage data or crash reports
+    note: >
+      Even with no health data involved, this is personal data you process as a
+      controller in your own right.
+  - id: app-account
+    group: application
+    label: Your app has its own accounts, logins or licences outside HDS
+
 # ---------------------------------------------------------------------------
 # Derived features: the ONLY place AND-logic lives. Row tags stay flat any-of
 # lists, which is what keeps the tagging reviewable and the matching cheap.
 # ---------------------------------------------------------------------------
 derived:
-  - id: transfer-out-of-region
+  # Do you process personal data AT ALL? If an app only lets its own user work on
+  # their own vault, and the developer receives nothing, the developer is neither
+  # controller nor processor of that data: they supply a tool. Almost every duty
+  # below is gated on this, so ticking nothing correctly yields almost nothing.
+  - id: processes-personal-data
+    any: [reads-data, hds-as-idp, stores-phi-copy, holds-contact-data, third-parties,
+          ai-aggregate, ai-individual, automated-decisions, commercial-use,
+          research-secondary-use, minors, app-telemetry, app-account]
+    label: You process personal data of your own
+
+  # One test could never fire for a Swiss implementer, yet the nLPD transfer
+  # rows depended on it. Three tests, one per corridor.
+  - id: transfer-eu-us
     all: [subjects-eu, region-us]
     label: Personal data leaving the EU or EEA for the US region
+  - id: transfer-eu-ch
+    all: [subjects-eu, region-ch]
+    label: Personal data leaving the EU or EEA for Switzerland
+  - id: transfer-ch-us
+    all: [subjects-ch, region-us]
+    label: Personal data leaving Switzerland for the US region
 
 # ---------------------------------------------------------------------------
 # Presets: the four archetypes, as starting points over the same checkboxes.
