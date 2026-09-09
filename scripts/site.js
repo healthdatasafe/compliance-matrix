@@ -317,9 +317,11 @@ for (const s of scopes) {
         persona: o.persona,
         coverage: o.coverage,
         hdsCoverage: r.hds?.coverage || '',
+        effort: r.hds?.effort_saved || '',
         overview: (o.overview || '').trim(),
         templates: o.templates || [],
         when: o.applies_when === undefined ? null : o.applies_when,
+        nature: o.nature || 'obligation',
       });
     }
   }
@@ -339,7 +341,7 @@ const profilePanel = !PROFILES
   <p class="lede">Start from an archetype, or tick the boxes directly. Nothing is sent anywhere:
   the whole matrix is in this page and the filtering happens in your browser.</p>
   <div class="presets">
-    ${PROFILES.presets.map((pr, i) => `<button type="button" class="preset" data-features="${esc(pr.features.join(','))}">
+    ${PROFILES.presets.map((pr, i) => `<button type="button" class="preset" data-features="${esc(pr.features.join(','))}" data-locked="${esc((pr.locked || pr.features).join(','))}">
       <b>${i + 1}. ${esc(pr.label)}</b><span>${esc((pr.summary || '').trim())}</span></button>`).join('')}
   </div>
   <div class="fgrid">
@@ -444,43 +446,93 @@ short: s.short || s.id,
       out.innerHTML = html; return;
     }
 
-    var totShown = 0, totHidden = 0, tpls = {};
+    var totActions = 0, totHidden = 0, totUnprofiled = 0, tpls = {};
+    var G = { carried: 0, shared: 0, yours: 0 };
     var showHidden = document.getElementById('showhidden') && document.getElementById('showhidden').checked;
 
     var sections = scopes.map(function (sid) {
       var meta = P.scopes[sid], persona = personaFor(sid, s);
       var rows = P.obligations.filter(function (o) { return o.scope === sid && o.persona === persona; });
-      var shown = [], hidden = 0, unprofiled = 0;
+      var actions = [], orient = [], hidden = 0, unprofiled = 0, determined = 0;
       rows.forEach(function (o) {
+        if (o.nature === 'orientation') { orient.push(o); return; }
         var vis;
         if (o.when === null) { vis = true; unprofiled++; }
-        else if (o.when === 'always') vis = true;
-        else vis = o.when.some(function (x) { return s[x]; });
-        if (vis) { shown.push(o); (o.templates || []).forEach(function (t) { tpls[t] = 1; }); }
+        else if (o.when === 'always') { vis = true; determined++; }
+        else { vis = o.when.some(function (x) { return s[x]; }); if (vis) determined++; }
+        if (vis) { actions.push(o); (o.templates || []).forEach(function (t) { tpls[t] = 1; }); }
         else hidden++;
       });
-      totShown += shown.length; totHidden += hidden;
-      var b = meta.posture && meta.posture.backing;
+      var oblTotal = rows.length - orient.length;
+      totActions += determined; totHidden += hidden; totUnprofiled += unprofiled;
+
+      // How much of what applies to YOU does HDS already carry? Read from the
+      // HDS layer of each applicable requirement, not from the whole framework.
+      var c = { carried: 0, shared: 0, yours: 0 };
+      actions.forEach(function (o) {
+        if (o.hdsCoverage === 'implemented' || o.hdsCoverage === 'configurable') c.carried++;
+        else if (o.hdsCoverage === 'facilitated') c.shared++;
+        else c.yours++;
+      });
+      G.carried += c.carried; G.shared += c.shared; G.yours += c.yours;
+      var n = actions.length || 1;
+      var bar = '<div class="hdsbar" title="' + c.carried + ' carried by HDS, ' + c.shared +
+        ' shared, ' + c.yours + ' yours">' +
+        '<span class="seg carried" style="width:' + (c.carried / n * 100) + '%"></span>' +
+        '<span class="seg shared" style="width:' + (c.shared / n * 100) + '%"></span>' +
+        '<span class="seg yours" style="width:' + (c.yours / n * 100) + '%"></span></div>' +
+        '<p class="hdskey"><span class="k carried"></span>' + c.carried + ' HDS already does' +
+        '<span class="k shared"></span>' + c.shared + ' HDS helps with' +
+        '<span class="k yours"></span>' + c.yours + ' fully yours</p>';
+
       return '<article class="rscope"><h3><a href="' + meta.page + '">' + esc(meta.title) + '</a>' +
         '<span class="pers">your role: ' + esc(persona) + '</span></h3>' +
-        (b ? '<p class="meta">HDS: ' + b.rows_approved + ' of ' + b.rows_total +
-          ' requirements backed by approved documentation · <a href="index.html">how HDS stands</a></p>' : '') +
-        '<p class="meta">' + shown.length + ' of ' + rows.length + ' obligations apply to you' +
-        (hidden ? ' · ' + hidden + ' hidden by your selections' : '') +
-        (unprofiled ? ' · <span class="npf">' + unprofiled + ' not yet profiled, shown to everyone</span>' : '') + '</p>' +
-        '<ul class="obl">' + shown.map(function (o) {
-          return '<li><a class="ref" href="' + o.page + '#' + o.anchor + '"><code>' + esc(o.ref) + '</code> ' + esc(o.title) + '</a>' +
-            (o.when === null ? ' <span class="npf">not yet profiled</span>' : '') +
-            (o.overview ? '<p>' + esc(o.overview) + '</p>' : '') +
+        (actions.length ? bar : '<p class="meta">Nothing in this framework attaches to you on this selection.</p>') +
+        '<p class="meta"><b>' + determined + '</b> of ' + oblTotal + ' requirements need action from you' +
+        (hidden ? ' · ' + hidden + ' ruled out by your selections' : '') +
+        (unprofiled ? ' · <span class="npf">' + unprofiled + ' not yet classified, shown in full</span>' : '') +
+        (meta.posture && meta.posture.backing ? ' · HDS: ' + meta.posture.backing.rows_approved + ' of ' +
+          meta.posture.backing.rows_total + ' backed by approved documentation, <a href="index.html">see standing</a>' : '') + '</p>' +
+        (orient.length ? '<details class="scopetest"><summary>Does this framework reach you at all?</summary><ul>' +
+          orient.map(function (o) {
+            return '<li><a class="ref" href="' + o.page + '#' + o.anchor + '"><code>' + esc(o.ref) + '</code> ' + esc(o.title) + '</a>' +
+              (o.overview ? '<p>' + esc(o.overview) + '</p>' : '') + '</li>'; }).join('') +
+          '</ul><p class="muted">Scope provisions, not duties. They say when the regime engages, so they are listed here rather than counted.</p></details>' : '') +
+        '<ol class="acts">' + actions.map(function (o) {
+          var cls = (o.hdsCoverage === 'implemented' || o.hdsCoverage === 'configurable') ? 'carried'
+            : (o.hdsCoverage === 'facilitated' ? 'shared' : 'yours');
+          var lbl = cls === 'carried' ? 'HDS already does this' : (cls === 'shared' ? 'HDS helps' : 'fully yours');
+          return '<li class="act ' + cls + '">' +
+            '<p class="do">' + esc(o.overview || o.title) + '</p>' +
+            '<p class="src"><span class="tag ' + cls + '">' + lbl + '</span>' +
+            '<a href="' + o.page + '#' + o.anchor + '">' + esc(o.scopeShort) + ' <code>' + esc(o.ref) + '</code></a> ' +
+            esc(o.title) +
+            (o.when === null ? ' <span class="npf">not yet classified</span>' : '') + '</p>' +
             (o.templates || []).map(function (t) {
               return '<a class="tpl" href="templates.html#tpl-' + t + '">📄 ' + t + '</a>'; }).join('') +
-            '</li>'; }).join('') + '</ul></article>';
+            '</li>'; }).join('') + '</ol></article>';
     }).join('');
 
-    html += '<div class="rhead"><h2>' + totShown + ' obligations apply to you</h2>' +
-      '<p class="lede">Across ' + scopes.length + ' framework' + (scopes.length > 1 ? 's' : '') +
-      '. This tells you what to look at. It does not tell you that you are compliant.</p>' +
-      (totHidden ? '<label class="showh"><input type="checkbox" id="showhidden"' + (showHidden ? ' checked' : '') + '> show the ' + totHidden + ' obligations your selections rule out</label>' : '') +
+    var gn = (G.carried + G.shared + G.yours) || 1;
+    html += '<div class="rhead"><h2>' +
+      (totActions ? totActions + ' action' + (totActions === 1 ? '' : 's') + ' for you'
+                  : 'No action is determined to fall to you') + '</h2>' +
+      '<p class="lede">Across ' + scopes.length + ' framework' + (scopes.length > 1 ? 's' : '') + '. ' +
+      (totActions
+        ? 'What you have to do, and how much of it HDS has already done.'
+        : 'On this selection your application never receives personal data of its own, ' +
+          'so the duties do not attach to you. A starting point to confirm with counsel, not a clearance.') + '</p>' +
+      (totActions ? '<div class="gbar"><div class="hdsbar big">' +
+        '<span class="seg carried" style="width:' + (G.carried / gn * 100) + '%"></span>' +
+        '<span class="seg shared" style="width:' + (G.shared / gn * 100) + '%"></span>' +
+        '<span class="seg yours" style="width:' + (G.yours / gn * 100) + '%"></span></div>' +
+        '<p class="hdskey"><span class="k carried"></span><b>' + G.carried + '</b> HDS already does' +
+        '<span class="k shared"></span><b>' + G.shared + '</b> HDS helps with' +
+        '<span class="k yours"></span><b>' + G.yours + '</b> fully yours</p></div>' : '') +
+      (totUnprofiled ? '<p class="unclass"><b>' + totUnprofiled + ' requirements are not yet classified</b> ' +
+        'against these options. They are listed in full rather than hidden, because an ' +
+        'unclassified requirement is not the same as one that does not apply.</p>' : '') +
+      (totHidden ? '<label class="showh"><input type="checkbox" id="showhidden"' + (showHidden ? ' checked' : '') + '> show the ' + totHidden + ' requirements your selections rule out</label>' : '') +
       '</div>';
     var tl = Object.keys(tpls);
     if (tl.length) {
@@ -489,20 +541,56 @@ short: s.short || s.id,
     }
     out.innerHTML = html + sections;
   }
+
   function esc(x) { return String(x == null ? '' : x).replace(/[&<>"]/g, function (c) {
     return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]; }); }
 
   panel.addEventListener('input', render);
   out.addEventListener('input', render);
+  // An archetype is a claim about what you are building, so the options it
+  // implies are locked on: unticking "you store a copy" while archetype 4 is
+  // selected would describe something that is not archetype 4.
+  function applyLocks(locked) {
+    panel.querySelectorAll('.fopt').forEach(function (l) {
+      var i = l.querySelector('input');
+      var isLocked = locked.indexOf(i.value) !== -1;
+      i.disabled = isLocked;
+      l.classList.toggle('locked', isLocked);
+      var badge = l.querySelector('.lockb');
+      if (isLocked && !badge) {
+        var sp = document.createElement('span');
+        sp.className = 'lockb'; sp.textContent = 'part of this type';
+        sp.title = 'Implied by the implementer type you picked. Choose a different type, or start from the checkboxes, to change it.';
+        l.querySelector('span').appendChild(sp);
+      } else if (!isLocked && badge) badge.remove();
+    });
+  }
   panel.querySelectorAll('.preset').forEach(function (b) {
     b.addEventListener('click', function () {
-      panel.querySelectorAll('input').forEach(function (i) { i.checked = false; });
-      b.dataset.features.split(',').forEach(function (id) {
+      // A preset says what you BUILD. It must not touch who your users are,
+      // where the data is hosted, or your HIPAA role: clearing those dropped the
+      // page back to "start by saying where your users are".
+      panel.querySelectorAll('.fgroup2[data-group="application"] input').forEach(function (i) {
+        i.disabled = false; i.checked = false;
+      });
+      var feats = b.dataset.features ? b.dataset.features.split(',').filter(Boolean) : [];
+      feats.forEach(function (id) {
         var el = panel.querySelector('input[value="' + id + '"]'); if (el) el.checked = true; });
       panel.querySelectorAll('.preset').forEach(function (x) { x.classList.remove('on'); });
       b.classList.add('on');
+      applyLocks(b.dataset.locked ? b.dataset.locked.split(',').filter(Boolean) : []);
       render();
     });
+  });
+  // Editing a checkbox by hand means you are no longer describing an archetype.
+  panel.addEventListener('change', function (ev) {
+    if (!ev.target.matches('.fopt input')) return;
+    var active = panel.querySelector('.preset.on');
+    if (!active) return;
+    var locked = active.dataset.locked ? active.dataset.locked.split(',').filter(Boolean) : [];
+    if (locked.indexOf(ev.target.value) === -1) return;
+    active.classList.remove('on');
+    applyLocks([]);
   });
   render();
 })();
@@ -827,6 +915,12 @@ a.pl{cursor:pointer}
 .hipaarole label{display:inline-flex;gap:.3rem;align-items:center;cursor:pointer}
 .result{margin-bottom:2rem}
 .rhead{margin:1.2rem 0 .6rem}.rhead h2{font-size:1.25rem;margin:0}
+.scopetest{margin:.6rem 0;font-size:.84rem}
+.scopetest>summary{cursor:pointer;color:var(--muted);font-size:.8rem}
+.scopetest ul{margin:.5rem 0;padding-left:1.1rem}
+.scopetest li{margin:.4rem 0}
+.scopetest p{margin:.2rem 0;font-size:.82rem;color:#4b5563}
+.unclass{font-size:.82rem;color:#4b5563;background:#f8fafc;border:1px solid var(--line);border-left:3px solid #9ca3af;border-radius:.4rem;padding:.5rem .7rem;margin:.5rem 0;max-width:52rem}
 .showh{display:inline-flex;gap:.35rem;align-items:center;font-size:.8rem;color:var(--muted);margin-top:.4rem;cursor:pointer}
 .empty,.uncov{background:#fff;border:1px solid var(--line);border-radius:.6rem;padding:.9rem 1.1rem;margin:1rem 0}
 .uncov{border-left:4px solid #b45309}.uncov b{color:#b45309}
@@ -844,6 +938,31 @@ a.pl{cursor:pointer}
 .obl p{margin:.25rem 0 .3rem;font-size:.83rem;color:#4b5563;white-space:pre-line}
 .npf{font-size:.66rem;background:#f3f4f6;color:#6b7280;padding:.05rem .35rem;border-radius:999px;white-space:nowrap}
 .allh{font-size:1rem;margin:2rem 0 .3rem;padding-top:1.2rem;border-top:1px solid var(--line)}
+/* ---- HDS coverage bars ---- */
+.hdsbar{display:flex;height:9px;border-radius:999px;overflow:hidden;background:#e5e7eb;margin:.5rem 0 .3rem}
+.hdsbar.big{height:14px;margin:.7rem 0 .4rem}
+.hdsbar .seg.carried{background:#15803d}.hdsbar .seg.shared{background:#ca8a04}.hdsbar .seg.yours{background:#94a3b8}
+.hdskey{font-size:.78rem;color:#4b5563;margin:.2rem 0 .5rem;display:flex;gap:.35rem;align-items:center;flex-wrap:wrap}
+.hdskey .k{width:.55rem;height:.55rem;border-radius:2px;display:inline-block;margin-left:.7rem}
+.hdskey .k:first-child{margin-left:0}
+.hdskey .k.carried{background:#15803d}.hdskey .k.shared{background:#ca8a04}.hdskey .k.yours{background:#94a3b8}
+.gbar{margin:.6rem 0 .2rem;max-width:46rem}
+/* ---- action list ---- */
+.acts{list-style:none;counter-reset:a;padding:0;margin:.8rem 0 0}
+.act{counter-increment:a;border-top:1px solid var(--line);padding:.7rem 0 .7rem 2rem;position:relative}
+.act:first-child{border-top:0}
+.act::before{content:counter(a);position:absolute;left:0;top:.75rem;width:1.4rem;height:1.4rem;border-radius:999px;background:#f1f5f9;color:#475569;font-size:.72rem;font-weight:700;display:flex;align-items:center;justify-content:center}
+.act.carried::before{background:#dcfce7;color:#15803d}
+.act.shared::before{background:#fef9c3;color:#a16207}
+.act .do{margin:0 0 .3rem;font-size:.92rem;color:#111827;white-space:pre-line;font-weight:500}
+.act .src{margin:0;font-size:.76rem;color:var(--muted)}
+.act .src a{text-decoration:none}
+.tag{display:inline-block;font-size:.64rem;font-weight:700;text-transform:uppercase;letter-spacing:.02em;padding:.05rem .35rem;border-radius:.25rem;margin-right:.4rem}
+.tag.carried{background:#dcfce7;color:#15803d}.tag.shared{background:#fef9c3;color:#a16207}.tag.yours{background:#f1f5f9;color:#475569}
+/* ---- locked options ---- */
+.fopt.locked{opacity:.85}
+.fopt.locked input{cursor:not-allowed}
+.lockb{display:inline-block;font-size:.62rem;background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe;border-radius:999px;padding:.02rem .4rem;margin-left:.4rem;white-space:nowrap;vertical-align:middle}
 .as{display:inline-block;padding:.1rem .45rem;border-radius:.25rem;font-size:.68rem;font-weight:600;letter-spacing:.01em;color:#6b7280;background:#f3f4f6;border:1px solid var(--line)}
 .as-independent-readiness-review{background:#e0f2fe;color:#0369a1}
 .as-third-party-attested,.as-certified{background:#dcfce7;color:#15803d}
