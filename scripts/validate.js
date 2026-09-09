@@ -321,7 +321,7 @@ if (profiles) {
   for (const id of knownIds) {
     if (!used.has(id) && !(profiles.derived || []).some((d) => (d.all || d.any || []).includes(id))) {
       const isPopulation = profiles.features.some((f) => f.id === id &&
-        (f.group === 'population' || f.group === 'residency' || f.group === 'arrangement'));
+        (f.group === 'population' || f.group === 'residency'));
       // population/residency features select SCOPES and arrangement selects the
       // PERSONA, so these legitimately tag no rows.
       if (!isPopulation) w(`profiles.yml: feature '${id}' is not used by any obligation — a checkbox that changes nothing misleads`);
