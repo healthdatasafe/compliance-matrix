@@ -1,0 +1,1073 @@
+# HIPAA Privacy Rule (hipaa-privacy) — full text
+
+Part of the HDS Compliance Matrix. Summary and matching rules: https://compliance.datasafe.dev/llms.txt
+All frameworks in one file: https://compliance.datasafe.dev/llms-full.txt
+
+NOT LEGAL ADVICE. This matrix covers the HDS vault product: HDS is the controller of the vault,
+is nobody's Art.28 processor, and holds no HIPAA role in it.
+
+HDS's own position on HIPAA-Privacy:
+  - vault: HDS is not-applicable. Every vault. The individual holds the account and decides who may see the data, so HDS holds it for them and never on a covered entity's behalf, whoever put it there and wherever it physically sits. A business associate is defined by acting on a covered entity's behalf, so HDS is not one here and HIPAA does not reach it.
+  External assurance: self-assessed. No independent Privacy Rule assessment covers HDS.
+  Evidence: 33 of 35 requirements answered from approved HDS documentation (33 cite internal evidence), as of 2026-09-08.
+  HIPAA does not reach HDS in the vault. Thirty-three of the thirty-five requirements are
+  answered from approved HDS documentation, which is what an implementer holding a
+  covered-entity or business-associate role inherits when it builds here. Most of this
+  rule is the covered entity's to discharge in any case. What the platform supplies
+  directly is the individual-rights machinery, access, amendment, accounting of
+  disclosures and restriction, each an approved procedure, exercised in rehearsal rather
+  than against production volume.
+  NOTE: Consent is not delegation. When an individual grants a clinician or an application
+  access to their own vault, that access flows from their consent, not from anyone
+  instructing HDS, so it creates no business associate relationship: not with the
+  clinician, not with the application, and not with HDS. The data sitting on HDS
+  infrastructure does not change on whose behalf it is held. Where an organisation would
+  place protected health information with HDS on its OWN behalf, a BAA would be required;
+  that arrangement is documented separately and is outside this matrix. The requirements
+  below remain the map for an implementer that holds a HIPAA role of its own, and the FTC
+  Health Breach Notification Rule and state consumer-health-data law are what reach the
+  user-sovereign case instead.
+  Known gaps in HDS's own position:
+  - [medium] Thirty-two of thirty-five rows are unreviewed drafts. The positions are stated but not second-read.
+
+## hipaa-privacy 164.502 — Uses and disclosures of PHI — general rules
+  Requirement: A covered entity, or a business associate acting on its behalf, may use or
+  disclose protected health information only as permitted or required by the Privacy Rule.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-502
+  PRYV PLATFORM: facilitated (mode: primitive)
+    Pryv's permission model is the technical enforcement layer for Article 502: an app or
+    counterparty can only read or write streams its access permits. The "permitted or
+    required by the Privacy Rule" determination, which use cases are TPO, when authorization
+    is required, what minimum-necessary means in your workflow, is your programmatic
+    decision; Pryv enforces whatever scope you grant.
+    Detail: Workforce, apps, and counterparties act on PHI only by holding an access whose
+    `permissions[]` allows the specific stream + level. Disclosures to third parties (via
+    shared accesses or CMC capability flows) inherit the same enforcement model. The audit
+    log makes every use / disclosure attributable to a specific access at a specific time,
+    which is the substrate for §164.528 accounting.
+  HDS: facilitated (effort saved: medium) (mode: primitive)
+    On top of Pryv's permission model, HDS operates the platform that enforces it: as a
+    business associate, HDS uses or discloses PHI only as its BAA and the covered entity's
+    instructions permit. The substantive determination of which uses are permitted remains
+    the covered entity's.
+    Detail: Every workforce, app, and counterparty action on PHI is mediated by an access
+    whose permissions bound the streams and levels reachable. HDS configures no use or
+    disclosure of customer PHI for its own purposes, and the audit log makes each use
+    attributable to a specific access at a specific time.
+    Evidence: internal:hipaa/policies/uses-and-disclosures
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: always; basis: entity
+    Decide which uses and disclosures are permitted under the Privacy Rule and configure
+    access scopes accordingly.
+  IMPLEMENTER [business-associate] coverage: documented
+    applies_when: always; basis: entity
+    Use or disclose PHI only as your BAA and the covered entity's instructions permit.
+    Templates to sign: baa
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-privacy 164.506 — Uses and disclosures for treatment, payment, healthcare operations (TPO)
+  Requirement: Use and disclosure of PHI is permitted for the entity's own treatment,
+  payment and healthcare operations, and under defined conditions for another entity's
+  TPO.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-506
+  PRYV PLATFORM: facilitated (mode: storage)
+    TPO is the largest category of permitted uses. Pryv lets you mint accesses tagged with
+    the TPO purpose in `clientData` (e.g., `purpose: "treatment"`); the permission model
+    enforces the scope. The TPO-vs-not classification of any specific workflow is your
+    programmatic judgement; Pryv carries it forward into the audit trail.
+    Detail: A common pattern: separate accesses per purpose (one "treatment-app" access; one
+    "billing-app" access; one "ops-analytics" access), each independently revocable and
+    auditable. `access.clientData.purpose` makes the classification an artefact rather than
+    a verbal claim.
+  HDS: facilitated (effort saved: medium) (mode: storage)
+    HDS provides the means to mint per-purpose accesses tagged with the TPO purpose, each
+    independently revocable and auditable. The classification of any given workflow as TPO
+    is the covered entity's judgement, which HDS carries forward into the audit trail.
+    Detail: A common pattern separates accesses by purpose — one per treatment, billing and
+    operations workflow — so the TPO classification becomes a durable artefact rather than a
+    verbal claim. HDS stores the purpose tag and preserves it across the access version
+    chain.
+    Evidence: internal:hipaa/policies/uses-and-disclosures
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: [analytics]; basis: entity
+    Classify your workflows as TPO or not and provision purpose-tagged accesses accordingly.
+  IMPLEMENTER [business-associate] coverage: documented
+    applies_when: [analytics]; basis: entity
+    Act on TPO data only within the scope your BAA permits.
+    Templates to sign: baa
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-privacy 164.508 — Uses and disclosures requiring authorization
+  Requirement: Uses and disclosures not otherwise permitted require a written
+  authorization from the individual that meets defined content requirements.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-508
+  PRYV PLATFORM: implemented
+    The authorization Pryv mints when your subject grants an access IS the §164.508
+    authorization record, versioned, immutable per version, with the granted scope
+    (permissions) and the authorization text (clientData or a `consent/request-cmc` event)
+    inseparable. Withdrawal is a single API call. For cross-account / cross-entity
+    authorizations, the CMC plugin carries the negotiation state.
+    Detail: Section 508(c) elements (description, identification, signature equivalent,
+    expiration, right to revoke, etc.) map naturally to access + clientData fields: -
+    description of information disclosed → `permissions[]` - description of authorized
+    recipients → access type + counterparty (CMC pair) - signature equivalent → the act of
+    granting the access through the auth flow (auditable) - expiration → `access.expires` -
+    right to revoke → `accesses.delete` + audit row at revocation - re-disclosure statement
+    → `clientData.redisclosure_notice` Implementer responsibility: ensure the consent UX
+    presents the §508(c) elements at the grant moment.
+  HDS: facilitated (effort saved: high) (mode: primitive)
+    HDS exposes consent primitives (the @pryv/cmc consent flow and access grant) so the
+    authorization captured when an individual grants an access is a versioned, immutable
+    record binding the granted scope to the authorization text. Withdrawal is a single API
+    call.
+    Detail: The §164.508(c) elements map onto access and client-data fields: the information
+    disclosed onto permissions, the recipient onto the access counterparty, the signature
+    equivalent onto the auditable grant act, the expiration onto the access expiry, and the
+    right to revoke onto access deletion. HDS ships the primitives; presenting the §508(c)
+    elements at the grant moment is the covered entity's UX responsibility.
+    Evidence: internal:hipaa/policies/authorizations
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: [analytics, secondary-use]; basis: entity
+    Ensure your consent surface presents all §508(c) authorization elements and retains the
+    authorization record.
+  IMPLEMENTER [individual] coverage: facilitated
+    applies_when: NOT YET CLASSIFIED (always shown)
+    You grant and revoke authorizations through the consent flow; each act is recorded.
+  IMPLEMENTER [business-associate] coverage: documented
+    applies_when: [analytics, secondary-use]; basis: entity
+    Honour and record authorizations as instructed by the covered entity.
+    Templates to sign: baa
+
+## hipaa-privacy 164.510 — Uses and disclosures requiring opportunity to agree or object
+  Requirement: Disclosures to family or friends, or for facility-directory purposes, may
+  proceed if the individual is given the opportunity to agree or object and no objection
+  is reasonably inferred.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-510
+  PRYV PLATFORM: facilitated (mode: storage)
+    The opportunity-to-agree-or- object construct is operational. Pryv lets you record the
+    offered choice and the individual's response as durable artefacts (clientData on the
+    relevant access, or a `consent/notice-cmc` / custom event), so the §164.510
+    reasonable-inference becomes a record rather than recollection.
+  HDS: facilitated (effort saved: low) (mode: storage)
+    HDS provides durable storage for the offered choice and the individual's response as
+    client-data on the relevant access or as a consent event, so the reasonable-inference
+    standard rests on a record rather than recollection. The operational offer itself is the
+    covered entity's.
+    Detail: The opportunity-to-agree-or-object construct is operational and
+    circumstance-driven. HDS stores the offered choice and the recorded response so the
+    §164.510 determination is reconstructable later.
+    Evidence: internal:hipaa/policies/uses-and-disclosures
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: always; basis: entity
+    Offer the opportunity to agree or object and record the individual's response.
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-privacy 164.512 — Uses and disclosures for which authorization or opportunity is not required
+  Requirement: Twelve categories of disclosures are permitted without authorization
+  (public health, law enforcement and others), each subject to specific conditions.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-512
+  PRYV PLATFORM: facilitated (mode: storage)
+    Section 512 disclosures are operationally driven by the circumstances (subpoena, public-
+    health request, etc.). Pryv's contribution is durability: every such disclosure must
+    still go through an access, and the audit log captures it. Recording the §512 category
+    and rationale in `access.clientData.legal_basis` makes the disclosure justification
+    recoverable later.
+    Detail: Recommended pattern: mint a purpose-specific access per §512 invocation
+    (`clientData.disclosure_category: "law_enforcement"`, `clientData.statute: "..."` etc.),
+    execute the disclosure, and revoke the access. The audit trail then shows the full
+    lifecycle attached to the legal-basis claim.
+  HDS: facilitated (effort saved: low) (mode: storage)
+    HDS contributes durability: every §164.512 disclosure still rides on an access and is
+    captured in the audit log, and the §512 category and rationale can be recorded against
+    the access. Whether a disclosure qualifies is the covered entity's legal determination.
+    Detail: The recommended pattern mints a purpose-specific access per §512 invocation,
+    records the disclosure category and statutory basis, executes the disclosure, then
+    revokes the access. The audit trail shows the full lifecycle attached to the legal-basis
+    claim.
+    Evidence: internal:hipaa/policies/uses-and-disclosures
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: [secondary-use]; basis: entity
+    Determine whether each disclosure qualifies under §512 and record its category and
+    statutory basis.
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-privacy 164.514(a) — De-identification of PHI
+  Requirement: PHI de-identified by the Safe Harbor method or by Expert Determination is
+  no longer subject to the Privacy Rule.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-514-a
+  PRYV PLATFORM: facilitated (mode: storage)
+    Pryv stores whatever event content you write; de-identification is a transformation you
+    perform on the data before storage (or before disclosure). Custom event types + the
+    per-stream design let you keep an identified and a de-identified copy under separate
+    permission scopes, simplifying §514(a) workflows.
+    Detail: A typical pattern: identified events on a `clinical/*` stream tree with
+    restricted access; a parallel `research/*` stream tree holding de-identified
+    projections, accessible to a broader analyst group. The de-identification logic itself
+    (e.g., Safe Harbor's 18-identifier list) is your application code; Pryv stores the
+    output.
+  HDS: facilitated (effort saved: low) (mode: storage)
+    HDS stores whatever event content is written and lets identified and de-identified
+    copies sit under separate permission scopes, simplifying §514(a) workflows. The
+    de-identification determination and transformation are the covered entity's.
+    Detail: A typical layout keeps identified events on a restricted clinical stream tree
+    and de-identified projections on a parallel tree accessible to a broader analyst group.
+    The de-identification logic is the covered entity's application code; HDS stores its
+    output.
+    Evidence: internal:hipaa/policies/de-identification
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: [analytics, secondary-use]; basis: entity
+    Choose the de-identification method, perform the transformation, and retain the
+    determination record.
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-privacy 164.514(d) — Minimum necessary use, disclosure and requests
+  Requirement: Reasonable efforts must be made to limit PHI to the minimum necessary to
+  accomplish the intended purpose.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-514-d
+  PRYV PLATFORM: implemented
+    Per-stream permissions are the minimum-necessary primitive: each access carries only the
+    streams + levels needed for its purpose, so by construction the holder cannot see more
+    PHI than granted. Your stream layout + permission-design choices determine the
+    granularity at which "minimum necessary" can be enforced technically.
+    Detail: Practical guidance: - Design stream topology so distinct purposes live on
+    distinct subtrees (treatment / billing / research / ops). - Mint per-purpose accesses
+    with `permissions[]` pointing at the smallest necessary subtree. - Avoid blanket `*`
+    permissions except for personal-token / admin roles where unrestricted access is the
+    stated need.
+  HDS: facilitated (effort saved: high) (mode: primitive)
+    Per-stream, per-level access tokens are the minimum-necessary primitive HDS exposes:
+    each access carries only the streams and levels its purpose needs, so by construction
+    the holder cannot see more PHI than granted. The granularity of "minimum necessary"
+    follows the covered entity's stream and permission design.
+    Detail: HDS facilitates a stream topology where distinct purposes live on distinct
+    subtrees and per-purpose accesses point at the smallest necessary subtree, avoiding
+    blanket permissions except for stated unrestricted roles. The same discipline is applied
+    to HDS's own operational telemetry, whose contents are evidenced as carrying no PHI and
+    no individually identifiable health information: the operator channel is a place
+    minimum-necessary can quietly fail, so it is evidenced rather than assumed.
+    Evidence: internal:hipaa/policies/minimum-necessary, internal:hipaa/evidence/monitoring-telemetry-no-phi
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: [connects]; basis: integration
+    Design stream topology and permission scopes so each access is limited to the minimum
+    necessary, and document the rationale.
+  IMPLEMENTER [business-associate] coverage: documented
+    applies_when: [connects]; basis: integration
+    Request only the minimum-necessary scope for your processing.
+    Templates to sign: baa
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-privacy 164.520 — Notice of privacy practices
+  Requirement: A notice must be provided that adequately describes the entity's uses and
+  disclosures of PHI and the individual's rights.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-520
+  PRYV PLATFORM: facilitated (mode: storage)
+    The notice itself is your editorial content. Pryv preserves the notice text shown to
+    each subject, typically on `access.clientData.privacy_notice` or as a dedicated event,
+    so the same words presented are recoverable per subject per time. The customer-facing
+    `app-web-auth3` template is the surface where the notice typically appears.
+  HDS: facilitated (effort saved: medium) (mode: storage)
+    HDS preserves the notice text shown to each individual, on the relevant access
+    client-data or as a dedicated event, so the exact words presented are recoverable per
+    individual and per time. The notice content is the covered entity's editorial
+    responsibility.
+    Detail: The customer-facing authentication surface is where the notice typically appears
+    at grant time. HDS stores the presented notice as a durable artefact bound to the
+    individual's session.
+    Evidence: internal:hipaa/policies/notice-of-privacy-practices
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: always; basis: entity
+    Author and maintain your notice of privacy practices and present it to individuals as
+    required.
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-privacy 164.522 — Right to request restriction; confidential communications
+  Requirement: An individual may request restrictions on uses and disclosures and may
+  request to receive confidential communications by alternative means or at alternative
+  locations.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-522
+  PRYV PLATFORM: configurable
+    A granted restriction is a scope-down on the relevant access (`accesses.update` to
+    narrower permissions) or a revocation (`accesses.delete`). The access-version chain
+    proves what state was in force before the restriction and from when it applies.
+    Confidential-communications choices (alternate address, phone) live in
+    `account.clientData` or a dedicated event.
+    Detail: Note that §522(a)(1)(vi) (post-HITECH) made restrictions on disclosures to a
+    health plan for out-of-pocket-paid services mandatory on request. The Pryv pattern is
+    the same, mint / narrow the access tied to the health-plan workflow, but you must apply
+    it without operational discretion when this specific condition is met.
+  HDS: configurable (effort saved: medium)
+    A granted restriction is configured as a scope-down or revocation of the relevant
+    access, and the access version chain proves what state was in force before and from when
+    the restriction applies. Confidential- communication preferences are stored as account
+    client-data or a dedicated event.
+    Detail: Post-HITECH §522(a)(1)(vi) makes restrictions on disclosure to a health plan for
+    out-of-pocket-paid services mandatory on request; the configuration pattern is
+    identical, but the covered entity must apply it without discretion when that condition
+    is met.
+    Evidence: internal:hipaa/procedures/restriction-requests
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: always; basis: integration
+    Evaluate restriction and confidential-communication requests and apply the corresponding
+    access changes.
+  IMPLEMENTER [individual] coverage: facilitated
+    applies_when: NOT YET CLASSIFIED (always shown)
+    You request restrictions and alternative-communication preferences, which are recorded
+    against your account.
+  IMPLEMENTER [business-associate] coverage: out-of-scope
+    applies_when: always; basis: integration; PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-privacy 164.524 — Right of access by the individual
+  Requirement: An individual has the right to inspect and obtain a copy of their PHI in a
+  designated record set, in the form and format requested if readily producible.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-524
+  PRYV PLATFORM: implemented
+    Your subject, holding a personal token, reads everything via the standard Pryv API,
+    events, streams, accesses (with history), audit records, attachments, in the canonical
+    event-type schemas. Wrap that in a subject-portal app and you have §164.524 covered
+    end-to-end. The 30-day response timeline is your process target, not a software latency.
+    Detail: Form-and-format: events return as canonical JSON validated against `data-types`
+    schemas, structured, machine-readable, and arbitrary JSON-consumer-friendly. Attachments
+    download in their stored MIME-type. If a subject requests a specific format Pryv doesn't
+    natively produce (e.g., CDA C-CDA), your portal layer transforms.
+  HDS: implemented (effort saved: high)
+    Pryv is user-centric: the individual owns their data and, holding a personal token,
+    reads everything through the standard API — events, streams, accesses with history,
+    audit records and attachments. HDS operates this access capability end-to-end across
+    every region.
+    Detail: Events return as canonical JSON validated against the data-type schemas —
+    structured, machine-readable and consumer-friendly — and attachments download in their
+    stored MIME type. The 30-day response timeline is the covered entity's process target,
+    not a software latency, and any non-native export format is produced by the
+    implementer's portal.
+    Evidence: internal:hipaa/procedures/individual-right-of-access
+  IMPLEMENTER [individual] coverage: facilitated
+    applies_when: NOT YET CLASSIFIED (always shown)
+    You access and export your own PHI directly through the standard API or a subject portal
+    built on it.
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: always; basis: entity
+    Run the access-request process and meet the response timeline; provide any requested
+    non-native export format.
+  IMPLEMENTER [business-associate] coverage: documented
+    applies_when: always; basis: entity
+    Make PHI available to the covered entity to satisfy access requests.
+    Templates to sign: baa
+
+## hipaa-privacy 164.526 — Right to amend
+  Requirement: An individual has the right to have a covered entity amend PHI or a record
+  about the individual in a designated record set.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-526
+  PRYV PLATFORM: implemented
+    `events.update` is the amendment primitive; event versioning preserves the prior content
+    so the amendment trail is auditable. The §164.526 process (request → decision → action →
+    notice) is yours to run; the technical record-keeping is shipped.
+    Detail: For denied amendments where the individual files a statement of disagreement
+    (§526(d)), store the statement as a separate event on a designated-record-set stream
+    linked back to the original via `clientData.amends_event_id`, so the disagreement
+    travels with the data on subsequent disclosures.
+  HDS: facilitated (effort saved: high) (mode: evidence)
+    HDS exposes event update as the amendment primitive, with event versioning preserving
+    prior content so the amendment trail is auditable. The §164.526 process of request,
+    decision, action and notice is the covered entity's to run.
+    Detail: For denied amendments where the individual files a statement of disagreement,
+    the statement can be stored as a separate event on the designated-record-set stream
+    linked back to the original, so the disagreement travels with the data on subsequent
+    disclosures.
+    Evidence: internal:hipaa/procedures/amendment-requests
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: always; basis: entity
+    Run the amendment request, decision and notice process and record accepted amendments
+    and statements of disagreement.
+  IMPLEMENTER [individual] coverage: facilitated
+    applies_when: NOT YET CLASSIFIED (always shown)
+    You request amendments; accepted changes and any disagreement statement are preserved
+    with version history.
+  IMPLEMENTER [business-associate] coverage: out-of-scope
+    applies_when: always; basis: entity; PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-privacy 164.528 — Accounting of disclosures
+  Requirement: An individual has the right to an accounting of disclosures of their PHI
+  made in the six years prior to the request, with specified exceptions.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-528
+  PRYV PLATFORM: implemented
+    Pryv's audit log is the §164.528 substrate: every API method call attributed to an
+    access (with version) is recorded. Filtering by access category, TPO accesses, §164.512
+    disclosures, etc., lets you derive the §164.528-eligible subset (which excludes TPO).
+    Six-year retention of the audit log is your operator-side configuration.
+    Detail: The accounting must include: date, recipient, brief description of PHI
+    disclosed, purpose. Each field has a Pryv source: - date → audit row timestamp -
+    recipient → access holder (`access.id`) or counterparty (for shared / CMC accesses) -
+    description → API method + URL query/path params recorded in audit. **The audit log does
+    NOT capture the request body**, so the description is "what was disclosed" at the
+    API-shape level (e.g., `events.get` on a given stream), not the per-event content,
+    sufficient under §164.528 and favourable for data minimisation (the audit row carries no
+    residual PHI when the underlying event is later erased). See `docs/pryv-primitives.md`
+    audit entry for the full capture catalogue. - purpose → `access.clientData.purpose`
+    recorded at grant time Pre-computing per-subject accounting reports periodically (and
+    storing them on a dedicated stream) is a useful operational pattern for fast response to
+    requests.
+  HDS: facilitated (effort saved: high) (mode: evidence)
+    The audit log is the §164.528 substrate: every API method call attributed to an access
+    and version is recorded, and filtering by access category lets the covered entity derive
+    the accountable subset. Six-year retention of the audit log is an HDS-operated
+    configuration on every region.
+    Detail: Each accounting field has an audit-log source: date from the row timestamp,
+    recipient from the access holder or counterparty, description from the recorded API
+    method and path, and purpose from the access purpose tag. The audit log does not capture
+    request bodies, so the description is at the API-shape level — sufficient under §164.528
+    and favourable for data minimisation.
+    Evidence: internal:hipaa/procedures/accounting-of-disclosures
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: always; basis: integration
+    Compile and deliver the accounting, applying the §164.528 exceptions and your retention
+    policy.
+  IMPLEMENTER [individual] coverage: facilitated
+    applies_when: NOT YET CLASSIFIED (always shown)
+    You request an accounting; the audit log provides the underlying disclosure record.
+  IMPLEMENTER [business-associate] coverage: documented
+    applies_when: always; basis: integration
+    Provide the covered entity with the disclosure records you hold.
+    Templates to sign: baa
+
+## hipaa-privacy 164.530(a) — Privacy officer / contact person
+  Requirement: A covered entity must designate a privacy official and a contact person
+  responsible for receiving complaints.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-530-a
+  PRYV PLATFORM: facilitated (mode: evidence)
+    Designation is organizational. Pryv's contribution is indirect: the audit log gives the
+    privacy official a concrete artifact to review when investigating complaints or auditing
+    internal use.
+  HDS: implemented (effort saved: low)
+    HDS has designated its own Privacy Official under its BA role: a distinct holder from
+    the Security Official, appointed by the CEO effective 2026-07-15 and recorded in the
+    designated-roles register (disclosed on request; the source documents are still moving
+    through internal approval). The audit log gives that official a concrete artefact to
+    review when investigating complaints or internal use. The covered entity's own
+    privacy-official designation remains its organizational decision.
+    Detail: HDS operates as a business associate and names its own responsible official and
+    contact; the covered entity's privacy-official designation is a programme element
+    outside HDS's scope.
+    Evidence: internal:hipaa/policies/privacy-program-governance, internal:hipaa/registers/designated-roles
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: always; basis: entity
+    Designate and document your privacy official and complaint contact.
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-privacy 164.530(b) — Training
+  Requirement: A covered entity must train all workforce members on its privacy policies
+  and procedures.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-530-b
+  PRYV PLATFORM: facilitated (mode: evidence)
+    Training itself is your programme. Pryv's contribution to operationalizing it: the audit
+    log + observability data make training-effectiveness measurable (e.g., does role X
+    exercise access patterns matching policy after training?). The training content +
+    record-keeping are yours.
+  HDS: documented (effort saved: low)
+    Workforce privacy training is the covered entity's programme. HDS trains its own
+    workforce on its privacy and security policies as a business associate and retains the
+    training records; the customer's programme is out of HDS's scope.
+    Detail: Audit and observability data can make training effectiveness measurable by
+    revealing whether access patterns match policy after training, but the training content
+    and record-keeping belong to the implementer.
+    Evidence: internal:hipaa/procedures/workforce-training
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: always; basis: entity
+    Train your workforce on your privacy policies and retain the training records.
+  IMPLEMENTER [business-associate] coverage: documented
+    applies_when: always; basis: entity
+    Train your own workforce on safeguarding PHI under your BAA.
+    Templates to sign: baa
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-privacy 164.530(c) — Safeguards
+  Requirement: A covered entity must have appropriate administrative, technical and
+  physical safeguards to protect the privacy of PHI.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-530-c
+  PRYV PLATFORM: facilitated (mode: awareness)
+    Section 530(c) is the Privacy Rule's pointer to the Security Rule and to physical /
+    administrative safeguards. See the HIPAA-Security rows for the technical safeguards Pryv
+    contributes; §164.310 (Physical) for the operator's hosting environment. Together those
+    rows constitute the §530(c) answer for this Pryv deployment.
+  HDS: facilitated (effort saved: medium) (mode: infrastructure)
+    Section 530(c) points to the Security Rule and to physical and administrative
+    safeguards. HDS supplies the technical and hosting safeguards documented in the
+    HIPAA-Security scope — access control, audit, encryption in transit and at rest,
+    regional residency — that partly answer §530(c) for an HDS deployment.
+    Detail: See the HIPAA-Security rows for the technical safeguards HDS operates and the
+    physical-safeguard coverage of the hosting environment. Together they constitute the
+    §530(c) technical and physical answer; the administrative safeguards remain the covered
+    entity's.
+    Evidence: internal:hipaa/policies/privacy-safeguards
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: always; basis: entity
+    Maintain administrative safeguards and document how the technical and physical
+    safeguards meet §530(c).
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-privacy 164.530(f) — Mitigation
+  Requirement: A covered entity must mitigate, to the extent practicable, any harmful
+  effect of a use or disclosure in violation of its policies or the Privacy Rule.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-530-f
+  PRYV PLATFORM: facilitated (mode: evidence)
+    Audit log + access version chain let you scope what was disclosed to whom and when, the
+    first step in any mitigation. `bin/backup.js --restore` is available if mitigation
+    involves rolling back data state; `accesses.delete` is the primitive to revoke access
+    from the offending counterparty.
+  HDS: facilitated (effort saved: medium) (mode: evidence)
+    Audit log and access version chain let the covered entity scope what was disclosed, to
+    whom and when — the first step in any mitigation. HDS provides access revocation and
+    operates backup and restore should mitigation require rolling back data state.
+    Detail: HDS exposes access deletion to revoke an offending counterparty and operates the
+    backup-restore capability across every region; the mitigation decision and any breach
+    notification follow the covered entity's process.
+    Evidence: internal:hipaa/procedures/incident-mitigation
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: always; basis: entity
+    Investigate violations, decide and execute mitigation, and run any required
+    notifications.
+  IMPLEMENTER [business-associate] coverage: documented
+    applies_when: always; basis: entity
+    Report incidents to the covered entity and assist mitigation per your BAA.
+    Templates to sign: baa
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-privacy 164.502(b) — Minimum necessary uses, disclosures and requests
+  Requirement: Reasonable efforts must be made to limit PHI to the minimum necessary,
+  subject to enumerated exceptions including treatment disclosures, disclosures to the
+  individual, authorized disclosures and disclosures required by law.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-502-b
+  PRYV PLATFORM: implemented
+    Same primitive mapping as §164.514(d) minimum-necessary: per- stream permissions are the
+    technical control; the holder cannot see more PHI than the granted scope permits.
+    §502(b)(2) exceptions are programmatic, the implementer leaves those accesses unscoped
+    per the exception's permission, and the audit log records the broader access for
+    accountability.
+  HDS: facilitated (effort saved: high) (mode: primitive)
+    Per-stream permissions are the same minimum-necessary control as §164.514(d): the holder
+    cannot see more PHI than the granted scope permits. The §502(b)(2) exceptions are
+    programmatic, and the audit log records any broader access for accountability.
+    Detail: Where an exception applies, the implementer leaves the access scoped per that
+    exception's permission; HDS records the broader access so it remains accountable. The
+    substantive minimum-necessary policy is the covered entity's. On HDS's own side, the
+    operational telemetry it collects as operator is evidenced as carrying no PHI and no
+    individually identifiable health information.
+    Evidence: internal:hipaa/policies/minimum-necessary, internal:hipaa/evidence/monitoring-telemetry-no-phi
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: [connects, analytics]; basis: integration
+    Apply minimum-necessary scoping and document where exceptions are invoked.
+  IMPLEMENTER [business-associate] coverage: documented
+    applies_when: [connects, analytics]; basis: integration
+    Limit your requests and uses of PHI to the minimum necessary.
+    Templates to sign: baa
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-privacy 164.502(e)(1) — Disclosures to business associates
+  Requirement: A covered entity may disclose PHI to a business associate, and allow it to
+  create, receive, maintain or transmit PHI on its behalf, only with satisfactory
+  assurances — typically a written BAA — that the business associate will appropriately
+  safeguard the information.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-502-e-1
+  PRYV PLATFORM: facilitated (mode: storage)
+    The technical disclosure is mediated by the access primitive, mint a BA-specific access
+    with `clientData.role = "business_associate"` + `clientData.baa_id = "<contract-ref>"`,
+    scoped to the subjects / streams covered by the BAA. Cross-platform BA arrangements
+    (where the BA runs their own Pryv) inherit the CMC capability pattern for cross- account
+    flow.
+  HDS: facilitated (effort saved: medium) (mode: storage)
+    HDS offers a Business Associate Agreement and the technical disclosure mechanism: a
+    BA-specific access tagged with its role and contract reference, scoped to the subjects
+    and streams the BAA covers. HDS itself signs a BAA when it acts as the business
+    associate.
+    Detail: Cross-platform business-associate arrangements inherit the cross-account
+    capability pattern. The access carries its business-associate role and contract
+    reference so disclosures are attributable to the BAA, while the contract itself is
+    signed between the parties.
+    Evidence: internal:hipaa/registers/baa-register
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: [third-parties]; basis: entity
+    Execute a BAA with each business associate before disclosing PHI and scope their access
+    to what the BAA covers.
+    Templates to sign: baa
+  IMPLEMENTER [business-associate] coverage: documented
+    applies_when: [third-parties]; basis: entity
+    Sign the BAA and flow obligations down to any subcontractors.
+    Templates to sign: baa
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-privacy 164.530(d) — Complaints to the covered entity
+  Requirement: A covered entity must provide a process for individuals to complain about
+  its policies, procedures or compliance, and must document complaints received and their
+  disposition.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-530-d
+  PRYV PLATFORM: facilitated (mode: storage)
+    A complaint-intake workflow stores each complaint as an event on a designated
+    `complaints/*` stream with `clientData.disposition` tracking outcome. The audit log
+    captures the timestamp + actor on each disposition update, making the §530(d)(2)
+    documentation requirement an automatic byproduct of normal record-keeping.
+  HDS: facilitated (effort saved: medium) (mode: storage)
+    HDS provides the means to store each complaint as an event on a dedicated stream with a
+    disposition field, and the audit log captures the timestamp and actor on each
+    disposition update. The complaint-handling process is the covered entity's.
+    Detail: Storing complaints and dispositions as data makes the §530(d)(2) documentation
+    requirement a byproduct of normal record-keeping. The intake workflow and response are
+    the implementer's.
+    Evidence: internal:hipaa/procedures/complaint-handling
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: always; basis: entity
+    Operate the complaint process and document complaints and their dispositions.
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-privacy 164.530(e) — Sanctions
+  Requirement: A covered entity must have and apply appropriate sanctions against
+  workforce members who fail to comply with its privacy policies and procedures.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-530-e
+  PRYV PLATFORM: out-of-scope
+    Sanctions are an HR / disciplinary process. No software role at the sanction-decision
+    layer; the audit log gives the underlying evidence ("did this person actually access
+    X?") that HR processes evaluate.
+  HDS: documented (effort saved: low)
+    Sanctions are an HR and disciplinary process with no software role at the decision
+    layer. HDS maintains its own workforce sanction policy as a business associate; the
+    audit log supplies the underlying evidence that disciplinary processes evaluate.
+    Detail: HDS documents and applies sanctions for its own workforce, but the covered
+    entity's sanction programme is outside HDS's scope.
+    Evidence: internal:hipaa/policies/workforce-sanctions
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: always; basis: entity
+    Maintain and apply your workforce sanction policy and document enforcement.
+  IMPLEMENTER [business-associate] coverage: documented
+    applies_when: always; basis: entity
+    Maintain sanctions for your own workforce under your BAA.
+    Templates to sign: baa
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-privacy 164.530(g) — Refraining from intimidating and retaliatory acts
+  Requirement: A covered entity may not intimidate, threaten, coerce, discriminate against
+  or retaliate against an individual for exercising any right under the Privacy Rule.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-530-g
+  PRYV PLATFORM: out-of-scope
+    Anti-retaliation is an organizational policy + culture commitment; no software role.
+  HDS: out-of-scope
+    Anti-retaliation is an organizational policy and culture commitment with no software
+    role. It rests entirely with the covered entity's programme.
+    Detail: HDS provides no technical control bearing on this requirement; it is a conduct
+    obligation of the covered entity.
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: always; basis: entity
+    Maintain and enforce an anti-retaliation policy.
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-privacy 164.530(i) — Policies and procedures
+  Requirement: A covered entity must implement policies and procedures designed to comply
+  with the standards and implementation specifications of the Privacy Rule.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-530-i
+  PRYV PLATFORM: facilitated (mode: storage)
+    Same pattern as HIPAA- Security §164.316(a): policies-as-data on a
+    `compliance/policies/*` stream get versioning + retention + audit. The drafting +
+    approval + review-cycle procedure is the privacy officer's. Cross-link to §164.316(a)
+    preserves the Security Rule's parallel obligation.
+  HDS: facilitated (effort saved: medium) (mode: storage)
+    As with the Security Rule's documentation requirement, HDS provides the means to hold
+    policies as versioned, retained, audited data on a dedicated stream. The drafting,
+    approval and review cycle is the privacy officer's, and HDS maintains its own privacy
+    policies as a BA.
+    Detail: Policies-as-data on a dedicated compliance stream inherit versioning, retention
+    and audit. The covered entity's policy programme is its own; HDS documents the policies
+    governing its operations.
+    Evidence: internal:hipaa/policies/privacy-policy-management
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: always; basis: entity
+    Author, approve and periodically review your privacy policies and procedures.
+  IMPLEMENTER [business-associate] coverage: documented
+    applies_when: always; basis: entity
+    Maintain policies and procedures for safeguarding PHI under your BAA.
+    Templates to sign: baa
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-privacy 164.510(b) — Disclosures for involvement in care and for notification purposes
+  Requirement: A covered entity may disclose to a family member, relative, close friend or
+  other person identified by the individual PHI directly relevant to that person's
+  involvement in the individual's care or payment for care.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-510-b
+  PRYV PLATFORM: facilitated (mode: storage)
+    The §510(b) "directly relevant" determination + relationship verification are
+    clinical-workflow concerns. Pryv pattern: mint a time-bounded access for the involved
+    person with permissions narrowed to "directly relevant" streams +
+    `clientData.relationship` capturing the §510(b)(1) basis (family member name, role,
+    individual's opportunity-to-object record).
+  HDS: facilitated (effort saved: medium) (mode: storage)
+    HDS supports minting a time-bounded access for the involved person, with permissions
+    narrowed to the directly-relevant streams and client-data capturing the relationship and
+    the §510(b) basis. The directly-relevant determination and relationship verification are
+    clinical-workflow concerns of the covered entity.
+    Detail: The access records the relationship, the involved person's role, and the
+    individual's opportunity-to-object record. HDS stores and enforces the narrowed scope;
+    the disclosure decision is the implementer's.
+    Evidence: internal:hipaa/policies/uses-and-disclosures
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: always; basis: entity
+    Determine directly-relevant scope, verify the relationship, and record the disclosure
+    basis.
+  IMPLEMENTER [individual] coverage: facilitated
+    applies_when: NOT YET CLASSIFIED (always shown)
+    You identify the persons involved in your care and may object.
+  IMPLEMENTER [business-associate] coverage: out-of-scope
+    applies_when: always; basis: entity; PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-privacy 164.512(b) — Uses and disclosures for public-health activities
+  Requirement: A covered entity may disclose PHI for public-health activities to
+  authorities authorized by law to collect or receive it, including disease and injury
+  reporting, vital-event reporting and public-health surveillance.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-512-b
+  PRYV PLATFORM: facilitated (mode: storage)
+    Public-health-authority recipient is recorded on the access's
+    `clientData.recipient_authority` + `clientData.statute` for the §512(b) statutory basis.
+    Audit log anchors the disclosure to a specific timestamp + event range. The "authorized
+    by law" determination is the covered entity's legal judgement.
+  HDS: facilitated (effort saved: low) (mode: storage)
+    HDS lets the recipient authority and statutory basis be recorded on the access, and the
+    audit log anchors the disclosure to a timestamp and event range. The authorized-by-law
+    determination is the covered entity's legal judgement.
+    Detail: A per-instance access carries the public-health-authority recipient and the
+    statutory basis; the audit trail preserves the disclosure. HDS makes no public-health
+    disclosure of customer PHI on its own initiative.
+    Evidence: internal:hipaa/policies/uses-and-disclosures
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: always; basis: entity
+    Confirm the public-health authority's legal basis and record the disclosure.
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-privacy 164.512(f) — Uses and disclosures for law-enforcement purposes
+  Requirement: A covered entity may disclose PHI for law-enforcement purposes under
+  specific conditions, such as court order or warrant, administrative request,
+  identification and location, victim of crime, or decedent.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-512-f
+  PRYV PLATFORM: facilitated (mode: storage)
+    §512(f) categories drive vocabulary for `clientData.law_enforcement_basis` (e.g.,
+    `"f_1_i_court_order"`, `"f_2_ii_subpoena"`, `"f_4_victim"`). Per-instance disclosure
+    access minted + revoked; audit log preserves the chain. The decision of whether the
+    request qualifies under §512(f) is legal counsel's, not Pryv's.
+  HDS: facilitated (effort saved: low) (mode: storage)
+    HDS supports recording the §512(f) category as the law-enforcement basis on a
+    per-instance access that is minted and revoked around the disclosure, with the audit log
+    preserving the chain. Whether the request qualifies under §512(f) is legal counsel's
+    decision.
+    Detail: The access carries the specific §512(f) basis vocabulary; HDS stores and audits
+    the disclosure but makes no law-enforcement disclosure of customer PHI on its own
+    initiative outside legal process served on it.
+    Evidence: internal:hipaa/procedures/law-enforcement-requests
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: always; basis: entity
+    Evaluate law-enforcement requests against §512(f) conditions and record the basis.
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-privacy 164.524(b) — Right of access — requests and responses
+  Requirement: A covered entity may require written access requests within reasonable
+  limits and must act within 30 days, with one 30-day extension permitted on written
+  notice.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-524-b
+  PRYV PLATFORM: facilitated (mode: storage)
+    Request-intake workflow stores each request as an event on a designated
+    `access-requests/*` stream with `clientData.due_by` computed from receipt timestamp. The
+    30/30-day operational cadence is the covered entity's process; once the response is
+    ready, the individual exercises §524 directly via the standard Pryv API (see the
+    §164.524 parent row).
+  HDS: facilitated (effort saved: medium) (mode: storage)
+    HDS supports storing each access request as an event on a dedicated stream with a
+    computed due date, so the 30/30-day cadence is trackable. The operational cadence and
+    decision remain the covered entity's; for individuals who can self-authenticate, the
+    app-portability self-service tool bypasses the 30-day clock entirely (the individual
+    obtains the data immediately, without a written-request intake).
+    Detail: The request-intake artefact records receipt time and the resulting due date. The
+    substantive response is delivered through the §164.524 access capability described in
+    the parent row. Self-service via app-portability eliminates the need for a §524(b)(2)
+    timely-response procedure on the individual-direct path; the timeline obligation remains
+    operative on the partner-mediated path (covered entity intake → HDS-as-BA fulfilment).
+    Evidence: doc:https://demo-portability.datasafe.dev, doc:https://portability.hds.ngo, internal:hipaa/procedures/individual-right-of-access
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: always; basis: entity
+    Operate the request intake and meet the §524(b) response timeline.
+  IMPLEMENTER [individual] coverage: facilitated
+    applies_when: NOT YET CLASSIFIED (always shown)
+    You submit access requests, which are tracked to a due date.
+  IMPLEMENTER [business-associate] coverage: out-of-scope
+    applies_when: always; basis: entity; PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-privacy 164.524(c) — Right of access — provision of access
+  Requirement: A covered entity must provide access in the form and format requested if
+  readily producible, otherwise in readable hard copy or another agreed form, and must
+  provide a summary if the individual agrees in advance.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-524-c
+  PRYV PLATFORM: implemented
+    The Pryv API delivers events in canonical JSON (data-types schemas), "readily
+    producible" in the §524(c) sense. Implementer's portal can transform to PDF / printed
+    format where requested. Summaries are application-layer constructions from the same
+    source events.
+  HDS: implemented (effort saved: high)
+    The HDS-operated API delivers events in canonical JSON validated against the data-type
+    schemas — readily producible in the §524(c) sense — across every region. The
+    app-portability self-service web app gives individuals a one-click ZIP download of their
+    full PHI dump; transformation to PDF or print and summary construction remain
+    application-layer work on the same source events.
+    Detail: HDS operates the standard read path that returns structured, machine-readable
+    PHI. The app-portability tool (portability.hds.ngo) packages it into ZIPs the individual
+    can keep or forward to another covered entity. Non-native formats and summaries are
+    built by the implementer's portal from the same source events.
+    Evidence: doc:https://demo-portability.datasafe.dev, doc:https://portability.hds.ngo, doc:https://github.com/healthdatasafe/app-portability, internal:hipaa/procedures/individual-right-of-access
+  IMPLEMENTER [individual] coverage: facilitated
+    applies_when: NOT YET CLASSIFIED (always shown)
+    You obtain your PHI in canonical JSON or a format your portal produces.
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: always; basis: entity
+    Provide requested formats and summaries and agree applicable fees in advance.
+  IMPLEMENTER [business-associate] coverage: out-of-scope
+    applies_when: always; basis: entity; PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-privacy 164.502(g) — Personal representatives
+  Requirement: A covered entity must treat a personal representative as the individual for
+  uses and disclosures of PHI, subject to exceptions for abuse, neglect or endangerment
+  concerns.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-502-g
+  PRYV PLATFORM: facilitated (mode: storage)
+    Pryv pattern: the personal representative holds an `app` or `shared` access to the
+    subject's data with full scope (the effective "treat as individual" technical
+    permission). The access's `clientData.representative_relationship` +
+    `clientData.legal_basis` capture the relationship; the revocation-by-exception pattern
+    is `accesses.update` to narrow / `accesses.delete` to remove. The "abuse / neglect /
+    endangerment" determination is clinical / legal judgement.
+  HDS: facilitated (effort saved: low) (mode: storage)
+    HDS supports the representative holding an access to the individual's data with the
+    appropriate scope — the technical "treat as the individual" permission — with the
+    relationship and legal basis recorded as client-data. The abuse, neglect and
+    endangerment exceptions are clinical and legal judgements of the covered entity.
+    Detail: The exception pattern narrows or deletes the representative's access. HDS stores
+    the representative relationship and legal basis; the determination of whether an
+    exception applies is the implementer's.
+    Evidence: internal:hipaa/policies/personal-representatives
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: always; basis: entity
+    Verify representative status, grant appropriate access, and apply exceptions where
+    warranted.
+  IMPLEMENTER [individual] coverage: facilitated
+    applies_when: NOT YET CLASSIFIED (always shown)
+    A verified personal representative may act on your behalf with recorded basis.
+  IMPLEMENTER [business-associate] coverage: out-of-scope
+    applies_when: always; basis: entity; PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-privacy 164.512(a) — Uses and disclosures required by law
+  Requirement: A covered entity may use or disclose PHI to the extent required by law,
+  limited to the relevant requirements of that law.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-512-a
+  PRYV PLATFORM: facilitated (mode: storage)
+    "Required by law" disclosures still ride on accesses; record the statutory basis in
+    `clientData.statute` so the audit chain ties the disclosure to the legal authority. The
+    compliance burden of the cited law is separate.
+  HDS: facilitated (effort saved: low) (mode: storage)
+    Required-by-law disclosures still ride on accesses, and HDS lets the statutory basis be
+    recorded so the audit chain ties the disclosure to its legal authority. The compliance
+    burden of the cited law is the covered entity's.
+    Detail: The access carries the statute reference; the audit trail preserves the
+    disclosure. HDS responds to legal process served on it as a business associate per its
+    BAA and applicable law.
+    Evidence: internal:hipaa/policies/uses-and-disclosures
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: always; basis: entity
+    Confirm the legal requirement, limit the disclosure to it, and record the basis.
+  IMPLEMENTER [business-associate] coverage: documented
+    applies_when: always; basis: entity
+    Disclose as required by law and notify the covered entity per your BAA.
+    Templates to sign: baa
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-privacy 164.514(b) — De-identification — implementation specifications
+  Requirement: De-identification may use Expert Determination that re-identification risk
+  is very small, or Safe Harbor removal of the 18 enumerated identifiers with no actual
+  knowledge of residual re-identifiability.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-514-b
+  PRYV PLATFORM: out-of-scope
+    Choice of method + execution are app-side. Pryv stores the output of either method as
+    ordinary events on the de-identified streams.
+  HDS: documented (effort saved: low)
+    The choice of method and its execution are application-side decisions of the covered
+    entity. HDS stores the output of either method as ordinary events on the de-identified
+    streams and provides no de-identification determination of its own.
+    Detail: HDS documents that de-identification is the covered entity's responsibility; the
+    platform simply persists whatever events the implementer's de-identification process
+    produces.
+    Evidence: internal:hipaa/policies/de-identification
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: [analytics, secondary-use]; basis: entity
+    Select and execute Expert Determination or Safe Harbor and retain the documentation.
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-privacy 164.514(c) — De-identification — re-identification
+  Requirement: A covered entity may assign a re-identification code to de-identified
+  information, provided the code is not derived from information about the individual and
+  is not used or disclosed for any other purpose.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-514-c
+  PRYV PLATFORM: facilitated (mode: primitive)
+    `accesses.create {randomAlias:true}` provides the re-identification code directly: it
+    mints a platform-unique `r-XXXXXXXX` alias that is random by construction (does not
+    encode PHI), so it satisfies §514(c)(1)(ii) out of the box. The platform holds the
+    alias-to-user mapping and the aliased access exposes only the alias, the covered entity
+    re-identifies by resolving the alias, and the code is used for no other purpose. When
+    the workflow instead needs an explicit code-to-PHI map, keep it on a dedicated
+    `re-id-map/*` system- stream-adjacent subtree with access permitted only to the
+    re-identification administrator role; the code generation method (random /
+    hash-of-non-PHI) must not encode PHI per §514(c)(1)(ii).
+  HDS: facilitated (effort saved: low) (mode: storage)
+    The platform's alias primitive provides the re-identification code directly:
+    `accesses.create {randomAlias:true}` (deployed on the HDS cores since 2026-07-28) mints
+    a platform-unique `r-XXXXXXXX` alias that is random by construction — it does not encode
+    PHI, satisfying §514(c)(1)(ii) out of the box — and the platform holds the alias-to-user
+    mapping. Where a workflow instead needs an explicit code-to-PHI map, HDS supports
+    keeping it as a tightly scoped resource reachable only by the re-identification
+    administrator role; the code-generation method must then not encode PHI, which is the
+    covered entity's editorial requirement.
+    Detail: With the alias path, the aliased access exposes only the alias and the covered
+    entity re-identifies by resolving it through the platform — the code is used for no
+    other purpose. With an explicit map, the mapping lives on a dedicated subtree with
+    access permitted only to the re-identification role; HDS enforces the scope and stores
+    the mapping, and ensuring the code is random or derived from non-PHI is the
+    implementer's.
+    Evidence: internal:hipaa/policies/de-identification
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: [analytics, secondary-use]; basis: entity
+    Generate codes that do not encode PHI and restrict their use to re-identification.
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-privacy 164.528(b) — Accounting of disclosures — implementation specifications
+  Requirement: Each accounting entry must include the disclosure date, the recipient, a
+  brief description of the PHI disclosed, and a brief statement of purpose or a copy of
+  the written request.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-528-b
+  PRYV PLATFORM: implemented
+    Each §528(b)(2) field has a Pryv source (date / name / PHI description / purpose), see
+    the §164.528 parent row for the mapping. The pre-computed accounting report pattern
+    (storing results on a dedicated stream) keeps the §528 response window tractable.
+  HDS: facilitated (effort saved: high) (mode: evidence)
+    Each §528(b)(2) field has an audit-log source — date, recipient, PHI description and
+    purpose — as mapped in the parent accounting row. HDS operates the audit log that
+    supplies these fields across every region. The audit log is included verbatim in every
+    app-portability backup (`audit_logs.json`), so individuals receive the raw §528 source
+    data alongside their PHI in a single self-service download.
+    Detail: Pre-computing per-subject accounting reports and storing them on a dedicated
+    stream keeps the §528 response window tractable. Compiling and delivering the accounting
+    is the covered entity's process. The app-portability tool ships the unfiltered
+    audit-event stream (with timestamps, requesting access tokens, methods invoked) —
+    sufficient source material for the covered entity to assemble the formal §528(b)
+    accounting.
+    Evidence: doc:https://demo-portability.datasafe.dev, doc:https://portability.hds.ngo, internal:hipaa/procedures/accounting-of-disclosures
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: always; basis: integration
+    Compile each accounting entry's required fields from the audit log and your records.
+  IMPLEMENTER [individual] coverage: facilitated
+    applies_when: NOT YET CLASSIFIED (always shown)
+    You receive an accounting containing the §528(b) fields.
+  IMPLEMENTER [business-associate] coverage: documented
+    applies_when: always; basis: integration
+    Provide the covered entity with the disclosure details you hold.
+    Templates to sign: baa
+
+## hipaa-privacy 164.504(e) — Organizational requirements — business associate contracts
+  Requirement: A covered entity may permit a business associate to create, receive,
+  maintain or transmit PHI on its behalf only with satisfactory assurances via a written
+  contract meeting the BAA content requirements of §164.504(e)(2).
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-504-e
+  PRYV PLATFORM: facilitated (mode: storage)
+    The §164.504(e) BAA content is contractual. Pryv-side support for executing the contract
+    terms: BA access tagged with `clientData.baa_id` + `clientData.role =
+    "business_associate"`, scope narrowed to subjects + streams covered by the BAA,
+    audit-log accountability for every action under the BA access.
+  HDS: facilitated (effort saved: medium) (mode: storage)
+    HDS offers a BAA template and the technical means to execute its terms: a
+    business-associate access tagged with the contract reference and role, scoped to the
+    covered subjects and streams, with full audit-log accountability. The contract content
+    itself is contractual.
+    Detail: HDS signs BAAs as a business associate and flows obligations down to its own
+    subcontractors. The access tags and audit log support enforcement and evidence of the
+    §164.504(e) terms.
+    Evidence: internal:hipaa/registers/baa-register
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: [third-parties]; basis: entity
+    Execute a BAA meeting §164.504(e)(2) before any business associate handles PHI.
+    Templates to sign: baa
+  IMPLEMENTER [business-associate] coverage: documented
+    applies_when: [third-parties]; basis: entity
+    Sign the BAA and execute back-to-back subcontractor agreements with downstream
+    processors.
+    Templates to sign: baa
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-privacy 164.504(g) — Organizational requirements — group health plans
+  Requirement: A group health plan may disclose PHI to a plan sponsor only after receiving
+  certification that the plan documents have been amended to incorporate the §164.504(f)
+  restrictions.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-504-g
+  PRYV PLATFORM: out-of-scope
+    Group-health-plan / plan-sponsor arrangements are organizational / contractual. No
+    software role.
+  HDS: out-of-scope
+    Group health plan and plan-sponsor arrangements are organizational and contractual, with
+    no software role. HDS provides no technical control specific to this requirement.
+    Detail: The plan-document amendment and certification are entirely the covered entity's
+    contractual obligations.
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: always; basis: entity
+    Obtain the plan-sponsor certification before disclosing PHI to the sponsor.
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-privacy 164.502(j) — Disclosures by whistleblowers and workforce-member crime victims
+  Requirement: A workforce member's or business associate's disclosure of PHI to a
+  regulatory, oversight or law-enforcement authority is not a violation where made in
+  good-faith belief of unlawful conduct and meeting the §502(j) conditions.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-502-j
+  PRYV PLATFORM: out-of-scope
+    Whistleblower protections are legal framing. No software role; the disclosing person's
+    audit-trail evidence under their access may be cited in subsequent proceedings.
+  HDS: documented (effort saved: low)
+    The protection itself is a matter of law and has no software role, but HDS does carry a
+    control for it: its workforce sanctions policy states that a good-faith protected
+    disclosure to a regulatory, oversight or law-enforcement authority is not sanctionable
+    conduct, and covers disclosure outside HDS as well as internal reporting.
+    Detail: HDS neither enables nor restricts good-faith whistleblower disclosures beyond
+    ordinary access controls. What it holds is the organizational half: a written
+    non-retaliation position inside the sanctions policy, so a workforce member making a
+    §502(j) disclosure is not exposed to the graduated-sanctions process for having made it.
+    The audit trail of a disclosing person's access remains available as evidence in
+    subsequent proceedings. The implementer still states the protection in their own
+    policies; HDS's control binds HDS's own workforce.
+    Evidence: internal:hipaa/policies/workforce-sanctions
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: always; basis: entity
+    Recognize the §502(j) protection in your policies and non-retaliation handling.
+  IMPLEMENTER [business-associate] coverage: documented
+    applies_when: always; basis: entity
+    Understand the §502(j) good-faith disclosure protection.
+    Templates to sign: baa
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA

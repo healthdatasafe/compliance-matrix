@@ -1,0 +1,893 @@
+# Swiss Federal Act on Data Protection (revised FADP / nLPD) (swiss-nlpd) — full text
+
+Part of the HDS Compliance Matrix. Summary and matching rules: https://compliance.datasafe.dev/llms.txt
+All frameworks in one file: https://compliance.datasafe.dev/llms-full.txt
+
+NOT LEGAL ADVICE. This matrix covers the HDS vault product: HDS is the controller of the vault,
+is nobody's Art.28 processor, and holds no HIPAA role in it.
+
+HDS's own position on Swiss nLPD:
+  - vault: HDS is controller. The individual's vault. HDS determines the purposes and means of operating it, so HDS is the controller under the Act. Data enters only with the individual's explicit consent, and the individual decides who may access it afterwards.
+  External assurance: self-assessed. No FDPIC review, no certification under Art.13 nLPD and no independent audit has been performed. This is HDS's own assessment. Nothing is on file for the Swiss hosting region either: the physical safeguards HDS inherits there are asserted by the provider, not evidenced by a third-party audit.
+  Evidence: 13 of 30 requirements answered from approved HDS documentation (24 cite internal evidence), as of 2026-09-08.
+  Swiss residency is the strongest part of this position: the ch region runs on Swiss
+  infrastructure and the data does not leave it, which is what most of this Act's
+  residency and transfer concern is about. Thirteen of the thirty requirements rest on
+  approved documentation and eleven more are evidenced by documents in review, the same
+  pipeline as the GDPR. Six articles are recorded as out of scope because they address
+  federal bodies or obligations that attach only to the controller, marked on the rows
+  themselves rather than omitted.
+  NOTE: HDS is not an processor for this product, and the matrix does not offer that
+  arrangement. Acting as a processor would require processing on a controller's
+  instructions and returning or deleting the data at its choice. HDS acts on the
+  individual's permissions, the individual exercises their rights directly from their own
+  dashboard, and HDS cannot delete an individual's vault at a third party's direction. An
+  organisation that receives data an individual chose to share with it is an independent
+  controller of what it holds, not a controller instructing HDS. Any future engagement in
+  which HDS genuinely does process on instructions falls outside this matrix and carries
+  its own documentation.
+  Known gaps in HDS's own position:
+  - [high] Nothing is on file evidencing the Swiss hosting region's physical and environmental controls. The safeguards HDS inherits there are asserted by the provider rather than evidenced by a third-party audit, and the provider's public encryption statement is a product claim, not an attestation.
+  - [medium] The processor-side register lacks retention periods on the recruitment, CRM and contact-mailbox activities, the same gap as the GDPR Art.30 row. (refs: Art.12)
+  - [medium] Only one of the thirty rows has completed review. The rest are drafts that state HDS's position but have not been checked by a second reader.
+
+## swiss-nlpd Art.5 — Definitions
+  Requirement: Defines key terms including personal data, sensitive personal data,
+  processing, controller and processor. The nLPD's sensitive-data category is broader than
+  GDPR Art. 9, adding social-assistance measures and data on administrative or criminal
+  proceedings and sanctions.
+  Anchor: https://compliance.datasafe.dev/swiss-nlpd.html#req-art-5
+  PRYV PLATFORM: facilitated (mode: primitive)
+    The same primitive mapping that handles GDPR Art. 4 carries here (event = personal data,
+    access = consent / authorization, etc.). The Swiss- specific item is the broader
+    "sensitive personal data" category: implementer responsibility to design the stream
+    layout so social-assistance / administrative-proceeding data sit on streams permissioned
+    at the heightened-protection scope you apply to it.
+    Detail: Practical Pryv pattern: dedicate stream subtrees per sensitive- data category
+    (e.g., `health/`, `social-assistance/`, `criminal-record/`), and grant accesses with
+    `permissions[]` restricted to the smallest necessary subtree. Sensitive-data
+    classification of a category is a written editorial decision, Pryv carries the
+    classification but doesn't assign it.
+  HDS: facilitated (effort saved: medium) (mode: primitive)
+    On top of Pryv's primitive model, HDS operates the platform on which the controller
+    designs the stream layout. The classification of a data category as sensitive —
+    including the nLPD's broader categories — is the controller's editorial decision, which
+    HDS carries into the access and audit record.
+    Detail: The recommended pattern dedicates separate stream subtrees per sensitive-data
+    category and grants accesses scoped to the smallest necessary subtree, so the
+    heightened-protection posture follows the topology. HDS stores and enforces that layout;
+    it does not assign the sensitivity classification.
+    Evidence: internal:hipaa/policies/access-control
+  IMPLEMENTER [controller] coverage: documented
+    applies_when: [processes-personal-data]
+    Classify data categories — including the nLPD's broader sensitive categories — and
+    design stream topology and permission scopes accordingly.
+  IMPLEMENTER [processor] coverage: documented
+    applies_when: always
+    Process the categories the controller designates only as instructed.
+    Templates to sign: dpa
+  IMPLEMENTER [data-subject] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## swiss-nlpd Art.6 — Principles of processing
+  Requirement: Processing must be lawful, in good faith and proportionate. Personal data
+  may be collected only for a purpose recognisable to the data subject; accuracy must be
+  ensured and data destroyed or anonymised when no longer needed.
+  Anchor: https://compliance.datasafe.dev/swiss-nlpd.html#req-art-6
+  PRYV PLATFORM: implemented
+    Same Pryv contributions as GDPR Art. 5: permissions enforce purpose-limitation
+    technically; audit + access versioning give the accountability artefact; events.update
+    with version history addresses accuracy. The Swiss-specific "recognisability" criterion
+    (purpose recognisable to the subject at collection) maps to the consent UX layer, where
+    the purpose written into `access.clientData.purpose` should be the same purpose
+    presented to the subject.
+    Detail: Storage limitation: see Art.17-equivalent (GDPR Art.17 erasure; revFADP Art. 32
+    §2 lit c on data destruction when no longer needed). The configurable erasure mechanics
+    from `gdpr.Art.17` apply equivalently.
+  HDS: implemented (effort saved: high)
+    HDS operates the platform whose permission model enforces purpose limitation technically
+    and whose audit log and access version history provide the accountability artefact.
+    Event update with version preservation supports the accuracy duty. The substantive
+    purpose and proportionality judgements remain the controller's.
+    Detail: The purpose written into the access client-data should mirror the purpose
+    presented to the data subject, satisfying the nLPD's recognisability criterion as a
+    durable record. Storage limitation is operated through the same erasure mechanics
+    described under Art. 32; automated retention enforcement is a known gap that the
+    controller must cover by process.
+    Evidence: internal:hipaa/policies/minimum-necessary, internal:hipaa/policies/access-control
+  IMPLEMENTER [controller] coverage: documented
+    applies_when: [processes-personal-data]
+    Determine the lawful purpose, present it recognisably at collection, and define a
+    retention and destruction policy.
+  IMPLEMENTER [processor] coverage: documented
+    applies_when: always
+    Process only within the controller's stated purpose and instructions.
+    Templates to sign: dpa
+  IMPLEMENTER [data-subject] coverage: facilitated
+    applies_when: NOT YET CLASSIFIED (always shown)
+    You exercise rectification through the platform; prior versions are preserved.
+
+## swiss-nlpd Art.7 — Data protection by design and by default
+  Requirement: The controller must ensure, from planning through implementation, that
+  processing complies with the Act through suitable technical and organisational measures,
+  with privacy-protective default settings.
+  Anchor: https://compliance.datasafe.dev/swiss-nlpd.html#req-art-7
+  PRYV PLATFORM: facilitated (mode: infrastructure)
+    Pryv's architecture is designed to satisfy Art. 7's "from planning through
+    implementation" directive, per-user storage isolation, stream- scoped permissions,
+    separate personal/app/shared access types, system streams for privileged data,
+    audit-by-default. What stays on the implementer is the per-deployment default
+    configuration (token scopes minted, retention chosen, notice shown at registration).
+  HDS: facilitated (effort saved: high) (mode: infrastructure)
+    The Pryv architecture HDS operates is privacy-protective by construction — per-user
+    storage isolation, stream-scoped permissions, distinct access types, system streams for
+    privileged data and audit-by-default. HDS runs this baseline; the per-deployment default
+    configuration is the controller's.
+    Detail: What stays on the controller is the deployment-time choice of token scopes
+    minted, retention selected and the notice shown at registration. HDS supplies and
+    operates the privacy-by-design substrate that those choices configure.
+    Evidence: internal:hipaa/policies/access-control
+  IMPLEMENTER [controller] coverage: documented
+    applies_when: [processes-personal-data]
+    Configure privacy-protective defaults at deployment — minimal token scopes, retention
+    policy and registration notice.
+  IMPLEMENTER [processor] coverage: documented
+    applies_when: always
+    Operate within the design and defaults the controller sets.
+    Templates to sign: dpa
+  IMPLEMENTER [data-subject] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## swiss-nlpd Art.8 — Data security
+  Requirement: The controller and processor must ensure data security through appropriate
+  technical and organisational measures; the Federal Council may set minimum requirements
+  through the Ordinance on Data Protection.
+  Anchor: https://compliance.datasafe.dev/swiss-nlpd.html#req-art-8
+  PRYV PLATFORM: facilitated (mode: infrastructure)
+    Pryv contributes the same multi-aspect technical baseline as for GDPR Art. 32: TLS in
+    transit (letsEncrypt-integration); operator-side at-rest encryption; AES-256-GCM for
+    at-rest operator secrets; stream- scoped permissions; MFA; multi-core HA via rqlite;
+    `bin/backup.js` restoration. The OPDP minimum-requirements detailing remains the
+    operator's compliance verification work.
+  HDS: facilitated (effort saved: high) (mode: infrastructure)
+    HDS operates the technical security baseline: TLS in transit, stream-scoped permissions,
+    MFA, multi-core high availability, operated backup and restore, and at-rest encryption
+    of the event store via hosting-layer volume encryption (in place since 2026-06-26;
+    provider-managed keys — the accepted residual is recorded in the cited risk record).
+    Detail: The OPDP minimum-requirements detailing and the organisational measures remain
+    the controller's and processor's compliance work. HDS supplies the technical and hosting
+    safeguards and operates them; at-rest volume encryption covers stored event data, with
+    provider-held keys as the documented residual (operator-held-key or end-to-end
+    encryption remain optional strengthenings).
+    Evidence: internal:hipaa/policies/transmission-security, internal:hipaa/policies/encryption, internal:hipaa/risk/at-rest-encryption, internal:hipaa/evidence/at-rest-encryption-verification
+  IMPLEMENTER [controller] coverage: documented
+    applies_when: [processes-personal-data]
+    Assess whether the operated measures meet your security obligation, weighing the
+    provider-managed-key residual at rest, and add organisational measures.
+  IMPLEMENTER [processor] coverage: documented
+    applies_when: always
+    Ensure equivalent security for any processing you perform and report measures to the
+    controller.
+    Templates to sign: dpa
+  IMPLEMENTER [data-subject] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## swiss-nlpd Art.19 — Information duty when collecting personal data
+  Requirement: The controller must inform the data subject of any acquisition of personal
+  data, whether collected from the subject or from a third party, including controller
+  identity, purpose, recipients and any transfer abroad.
+  Anchor: https://compliance.datasafe.dev/swiss-nlpd.html#req-art-19
+  PRYV PLATFORM: facilitated (mode: storage)
+    Same mapping as GDPR Art. 13/14: notice text lives in `access.clientData.privacy_notice`
+    (or a dedicated `consent/*` event when CMC is in play), preserved immutably. The
+    customer- facing `app-web-auth3` template is the surface where the notice is typically
+    shown. Pryv records what you presented; presentation itself is your editorial
+    responsibility.
+    Detail: revFADP Art. 19 unifies the GDPR Art. 13 (direct collection) and Art. 14
+    (indirect collection) into a single information duty. The Pryv artefact set is the same,
+    `access.clientData` + provenance metadata on event.clientData when data didn't come from
+    the subject directly.
+  HDS: facilitated (effort saved: medium) (mode: storage)
+    HDS preserves the notice text presented to each data subject as client-data on the
+    relevant access or as a dedicated consent event, so what was shown is recoverable per
+    subject and per time. The notice content and its presentation are the controller's
+    editorial responsibility.
+    Detail: The nLPD unifies direct and indirect collection into a single information duty;
+    where data did not come from the subject, provenance metadata on the event client-data
+    records the source. HDS stores these artefacts; presenting the notice is the
+    controller's.
+    Evidence: internal:hipaa/policies/notice-of-privacy-practices
+  IMPLEMENTER [controller] coverage: documented
+    applies_when: [connects, own-records]
+    Author the information notice, present it at collection and record the source where data
+    is acquired indirectly.
+  IMPLEMENTER [data-subject] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## swiss-nlpd Art.21 — Automated individual decisions
+  Requirement: The controller must inform the data subject of a decision based exclusively
+  on automated processing that has a legal effect or significantly affects them; the
+  subject may state their view.
+  Anchor: https://compliance.datasafe.dev/swiss-nlpd.html#req-art-21
+  PRYV PLATFORM: facilitated (mode: evidence)
+    Automated decisioning is the implementer's application logic, not Pryv's. What Pryv
+    contributes: the audit log lets you record when automated- decision processing ran and
+    on which input data, and `events` are the carrier for the subject's expressed view
+    (e.g., a `decision/objection` event on a designated stream).
+  HDS: facilitated (effort saved: low) (mode: evidence)
+    Automated decisioning is the controller's application logic, not HDS's. HDS contributes
+    the audit log, which records when automated-decision processing ran and on which inputs,
+    and events as the carrier for the subject's expressed view.
+    Detail: A typical pattern records the subject's objection or statement as a dedicated
+    event on a designated stream, time-anchored by the audit log. The decision logic and the
+    duty to inform are the controller's.
+    Evidence: internal:hipaa/procedures/security-incident-response
+  IMPLEMENTER [controller] coverage: documented
+    applies_when: [analytics]
+    Identify exclusively-automated decisions, inform the subject and offer the opportunity
+    to state a view.
+  IMPLEMENTER [data-subject] coverage: facilitated
+    applies_when: NOT YET CLASSIFIED (always shown)
+    You may record your view on an automated decision as an event.
+
+## swiss-nlpd Art.22 — Data protection impact assessment
+  Requirement: The controller must carry out a data protection impact assessment in
+  advance where processing may entail a high risk to the personality or fundamental rights
+  of the data subject.
+  Anchor: https://compliance.datasafe.dev/swiss-nlpd.html#req-art-22
+  PRYV PLATFORM: facilitated (mode: evidence)
+    The DPIA itself is a written assessment artefact that you (the controller) produce. Pryv
+    contributes to its inputs: the data-residency primitive tells you where each subject's
+    data lives; audit + access-version data describe the processing-flow technical layer
+    with concrete artefacts; system-streams isolation gives a defensible "scope of sensitive
+    data" boundary. The legal-side methodology + the writing of the assessment remain yours.
+  HDS: facilitated (effort saved: low) (mode: evidence)
+    The DPIA is a written assessment the controller produces. HDS contributes its inputs:
+    data residency tells you where each subject's data lives, the audit and access-version
+    data describe the processing-flow technical layer, and system-stream isolation gives a
+    defensible sensitive-data boundary.
+    Detail: The methodology and the writing of the assessment remain the controller's. HDS
+    supplies concrete technical artefacts that populate the data-flow and residency sections
+    of the DPIA.
+    Evidence: internal:gdpr/registers/records-of-processing
+  IMPLEMENTER [controller] coverage: documented
+    applies_when: [analytics]
+    Determine when a DPIA is required, run it, and use the platform artefacts as inputs.
+  IMPLEMENTER [processor] coverage: documented
+    applies_when: [analytics]
+    Assist the controller's DPIA with information about your processing.
+    Templates to sign: dpa
+  IMPLEMENTER [data-subject] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## swiss-nlpd Art.24 — Notification of data security breaches
+  Requirement: The controller must notify the Federal Data Protection and Information
+  Commissioner of a breach likely to result in a high risk to the personality or
+  fundamental rights of the data subject as soon as possible; subject notification is
+  required only where needed for their protection or on the Commissioner's request.
+  Anchor: https://compliance.datasafe.dev/swiss-nlpd.html#req-art-24
+  PRYV PLATFORM: facilitated (mode: evidence)
+    Same Pryv contribution as GDPR Art. 33: the shipped `bin/breach-scope.js` toolchain +
+    audit data + access-version chain let you scope the breach (which subject, which streams
+    in scope, by which access). The Swiss-specific point: revFADP Art. 24 says "as soon as
+    possible" rather than GDPR's 72-hour hard cap, but the FDPIC 2025-02-06 guideline still
+    expects "immediately" for high-risk breaches. Plan your incident-response cadence to
+    match either regime if you face both.
+    Detail: The downstream subject-notification trigger differs from GDPR (revFADP Art. 24
+    makes it more conditional). Your incident- response decision matrix should encode: "high
+    risk to subject? → notify FDPIC immediately + assess whether subject notification
+    necessary for their protection". Pryv data feeds both the risk assessment (audit scope
+    of access) and the safe-harbor determination (was the leaked artefact encrypted at
+    rest?).
+  HDS: facilitated (effort saved: medium) (mode: evidence)
+    HDS operates the audit log and access version chain that let the controller scope a
+    breach — which subjects, which streams, by which access — now automated by the deployed
+    breach-scope primitive (`bin/breach-scope.js` + `GET /system/accesses/:accessId`, on all
+    HDS cores since 2026-07-29). The nLPD's "as soon as possible" timeline is the
+    controller's to meet; HDS provides the underlying scoping evidence.
+    Detail: As a processor, HDS notifies the controller of breaches it detects so the
+    controller can meet its Commissioner-notification duty. The scoping report (compromised
+    access → owner, affected subjects/streams, scoped exposure) is emitted by
+    `bin/breach-scope.js` from the audit + access-version data. The subject notification
+    trigger is more conditional than under GDPR; the controller's incident-response matrix
+    should encode both regimes where it faces both. The event store is encrypted at rest
+    (hosting-layer volume encryption, since 2026-06-26), which strengthens the safe-harbour
+    assessment of a leaked at-rest artefact — a lost or decommissioned medium is protected;
+    a live-system compromise reaches decrypted content and is assessed on its facts.
+    Evidence: internal:hipaa/procedures/security-incident-response, internal:gdpr/procedures/breach-notification-72h, internal:hipaa/risk/at-rest-encryption
+  IMPLEMENTER [controller] coverage: documented
+    applies_when: [stores-phi-copy]
+    Run the risk assessment, notify the Commissioner as soon as possible and assess whether
+    subject notification is required.
+  IMPLEMENTER [processor] coverage: documented
+    applies_when: [stores-phi-copy]
+    Notify the controller of breaches without undue delay and assist scoping.
+    Templates to sign: dpa
+  IMPLEMENTER [data-subject] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## swiss-nlpd Art.25 — Right to information (data-subject access)
+  Requirement: A data subject may request information from the controller as to whether
+  personal data about them is processed, with the information needed to assert their
+  rights — purpose, categories, recipients, retention, source and any automated decisions.
+  Anchor: https://compliance.datasafe.dev/swiss-nlpd.html#req-art-25
+  PRYV PLATFORM: implemented
+    Same implementation as GDPR Art. 15: subject holding a personal token reads everything
+    via the standard Pryv API (events, streams, accesses with history, audit, attachments)
+    in the canonical data-types JSON shape. revFADP Art. 25 §2 lists an extended
+    minimum-information set (purpose, categories, recipients, retention, source, automated
+    decisions), same artefacts as GDPR + a Swiss-specific "source" duty that maps to
+    `event.clientData.source` when data wasn't from the subject directly.
+  HDS: implemented (effort saved: high)
+    Pryv is user-centric: the data subject, holding a personal token, reads everything
+    through the standard API — events, streams, accesses with history, audit records and
+    attachments — in canonical JSON. HDS operates this access capability end-to-end and
+    ships the app-portability self-service web app (portability.hds.ngo) so subjects can
+    obtain a full account dump without operator involvement.
+    Detail: The nLPD's extended minimum-information set maps onto the same artefacts as a
+    GDPR access request, plus a Swiss-specific source duty satisfied by the provenance
+    recorded on event client-data when data did not come from the subject directly. The
+    response timeline is the controller's process target.
+    Evidence: doc:https://demo-portability.datasafe.dev, doc:https://portability.hds.ngo, doc:https://github.com/healthdatasafe/app-portability, internal:gdpr/procedures/data-subject-rights, internal:hipaa/procedures/security-incident-response
+  IMPLEMENTER [data-subject] coverage: facilitated
+    applies_when: NOT YET CLASSIFIED (always shown)
+    You access your own data directly through the standard API or a portal built on it.
+  IMPLEMENTER [controller] coverage: documented
+    applies_when: [connects]
+    Operate the request process, meet the response timeline and supply the extended
+    minimum-information set.
+  IMPLEMENTER [processor] coverage: documented
+    applies_when: [connects]
+    Make data available to the controller to satisfy access requests.
+    Templates to sign: dpa
+
+## swiss-nlpd Art.28 — Right to data portability
+  Requirement: The data subject has the right to receive personal data they have provided
+  to the controller in a commonly used electronic format and to have it transmitted to
+  another controller where feasible.
+  Anchor: https://compliance.datasafe.dev/swiss-nlpd.html#req-art-28
+  PRYV PLATFORM: implemented
+    Same implementation as GDPR Art. 20: `events.get` + `streams.get` return canonical JSON
+    validated against `data-types` schemas. For controller-to-controller transmission (§2),
+    the CMC capability- access flow mints a URL the receiving controller can read; no
+    operational lift on the subject's side.
+  HDS: implemented (effort saved: high)
+    The HDS-operated API returns events and streams as canonical JSON validated against the
+    data-type schemas — a commonly used electronic format. The app-portability web app
+    (portability.hds.ngo) packages the full account into ZIP files the subject downloads in
+    one self-service flow. For direct controller-to-controller transmission, the consent and
+    capability-access flow mints a URL the receiving controller can read.
+    Detail: Portability requires no operational lift on the data subject's side. The ZIP
+    format matches the upstream pryv-account-backup CLI restore format, so the subject can
+    re-hydrate on a self-hosted or partner-hosted node. HDS adds an `hds-manifest.json`
+    (data-model version pin, app version, deploy URL, completion timestamp) for provenance.
+    Evidence: doc:https://demo-portability.datasafe.dev, doc:https://portability.hds.ngo, doc:https://github.com/healthdatasafe/app-portability, internal:gdpr/procedures/data-subject-rights
+  IMPLEMENTER [data-subject] coverage: facilitated
+    applies_when: NOT YET CLASSIFIED (always shown)
+    You export your data in canonical JSON or transmit it to another controller via the
+    capability flow.
+  IMPLEMENTER [controller] coverage: documented
+    applies_when: [processes-personal-data]
+    Support the portability request and any feasible direct transmission.
+  IMPLEMENTER [processor] coverage: documented
+    applies_when: always
+    Provide the controller with the data needed to satisfy portability.
+    Templates to sign: dpa
+
+## swiss-nlpd Art.31 — Justification for processing sensitive personal data
+  Requirement: Processing of sensitive personal data without consent requires an
+  overriding private or public interest, with enumerated grounds such as medical care,
+  social assistance and statistics under conditions.
+  Anchor: https://compliance.datasafe.dev/swiss-nlpd.html#req-art-31
+  PRYV PLATFORM: facilitated (mode: storage)
+    Same approach as GDPR Art. 9: legal-ground determination is your programmatic decision;
+    Pryv preserves the cited ground per access in `access.clientData.legal_ground` so the
+    justification travels with the technical authorization and lives in the audit trail. The
+    Swiss-specific enumeration (Art. 31 §2 list) drives the vocabulary your implementer uses
+    for the `legal_ground` values.
+  HDS: facilitated (effort saved: low) (mode: storage)
+    The legal-ground determination is the controller's programmatic decision. HDS preserves
+    the cited ground per access in client-data so the justification travels with the
+    technical authorization and lives in the audit trail.
+    Detail: The nLPD's enumerated grounds drive the vocabulary the controller uses for the
+    recorded legal-ground values. HDS stores and audits the ground; it does not determine
+    which ground applies.
+    Evidence: internal:hipaa/policies/access-control
+  IMPLEMENTER [controller] coverage: documented
+    applies_when: [secondary-use]
+    Determine the overriding interest or consent basis and record the cited ground on each
+    access.
+  IMPLEMENTER [processor] coverage: documented
+    applies_when: [secondary-use]
+    Process sensitive data only on the ground the controller records.
+    Templates to sign: dpa
+  IMPLEMENTER [data-subject] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## swiss-nlpd Art.32 — Rectification, erasure and destruction of personal data
+  Requirement: The controller must take appropriate measures to keep personal data
+  accurate; the data subject may request rectification, erasure or destruction of
+  inaccurate or no-longer-needed personal data.
+  Anchor: https://compliance.datasafe.dev/swiss-nlpd.html#req-art-32
+  PRYV PLATFORM: implemented
+    Rectification and erasure: same mapping as GDPR Art. 16 + 17. `events.update` for
+    rectification (with version preservation); `system.users.delete` for erasure (with the
+    same engine-dependent backup semantics noted under GDPR Art. 17).
+  HDS: implemented (effort saved: high)
+    HDS exposes event update as the rectification primitive with version preservation, and
+    operates account deletion as the erasure path. The backup semantics of erasure depend on
+    the configured storage engine, and retention automation is a known gap the controller
+    covers by process.
+    Detail: Rectification preserves prior versions for auditability; erasure removes the
+    account, with engine-dependent backup behaviour the controller should account for.
+    Automated time-based destruction is not implemented and must be operated as a controller
+    process.
+    Evidence: internal:gdpr/procedures/data-subject-rights
+  IMPLEMENTER [data-subject] coverage: facilitated
+    applies_when: NOT YET CLASSIFIED (always shown)
+    You rectify your data through the API and may request erasure.
+  IMPLEMENTER [controller] coverage: documented
+    applies_when: [connects]
+    Run the rectification and erasure process and operate retention and destruction as
+    automation is not built in.
+  IMPLEMENTER [processor] coverage: documented
+    applies_when: [connects]
+    Execute rectification and erasure on the controller's instruction.
+    Templates to sign: dpa
+
+## swiss-nlpd Art.34 — Disclosure of personal data abroad
+  Requirement: Personal data may be disclosed abroad only where the receiving state
+  guarantees adequate protection or, in defined cases, with appropriate safeguards such as
+  standard contractual clauses or Federal Council approval.
+  Anchor: https://compliance.datasafe.dev/swiss-nlpd.html#req-art-34
+  PRYV PLATFORM: configurable
+    The `data-residency` primitive is the technical control here: bind each subject's data
+    to a hosting whose jurisdiction matches your transfer regime. For CH data, route
+    subjects to a CH hosting and Art. 34 is moot (no disclosure abroad). For legitimate
+    transfers (e.g., CH → EU with adequacy + appropriate safeguards), the per-user `hosting`
+    field exposes which jurisdiction the data sits in, recoverable for audit.
+    Detail: Cross-account / CMC disclosures across hostings inherit the same control: the
+    counterparty access's `apiEndpoint` reveals which hosting (= jurisdiction) the receiving
+    deployment lives in; document the legal basis (adequacy decision, BCRs, etc.) on the
+    originating access's `clientData.cross_border_basis`. **Residency guarantee level**:
+    core-level, enforced by architecture (see `context/core-affinity-architecture.md`).
+    Cores share no event / stream / audit data; the data plane is core-affine + the client ↔
+    core path is direct over TLS with no Pryv-shipped intermediary. A CH-assigned subject's
+    data lives exclusively on the CH core. The CMC-counterparty pattern is the one runtime
+    case where a cross-jurisdiction read can happen (a foreign counterparty's client
+    connects to the CH `apiEndpoint`), and that's the moment the implementer records the
+    Art.34 legal basis on the access.
+  HDS: configurable (effort saved: high)
+    Data residency is the technical control: HDS hosts CH-region data in Switzerland, so
+    binding a subject to the CH region keeps the data in Switzerland and the cross-border
+    question moot. For legitimate transfers the per-user hosting field exposes which
+    jurisdiction the data sits in, recoverable for audit.
+    Detail: Cross-account disclosures inherit the same control: the counterparty access
+    endpoint reveals the receiving jurisdiction, and the legal basis — adequacy, standard
+    contractual clauses or another safeguard — is recorded on the originating access
+    client-data. The CH region is operated in Switzerland; residency is enforced at the core
+    level by architecture.
+    Evidence: internal:gdpr/policies/international-transfers, internal:hipaa/registers/hosting-provider-attestations
+  IMPLEMENTER [controller] coverage: documented
+    applies_when: [transfer-ch-us, third-parties]
+    Choose the residency region per subject, and where data leaves Switzerland record the
+    adequacy or safeguard basis.
+  IMPLEMENTER [processor] coverage: documented
+    applies_when: [transfer-ch-us, third-parties]
+    Disclose abroad only on the controller's instruction and recorded basis.
+    Templates to sign: dpa
+  IMPLEMENTER [data-subject] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## swiss-nlpd Art.35 — Disclosure of personal data abroad — particular cases
+  Requirement: Disclosure abroad without adequate protection requires one of the defined
+  exceptions, such as the subject's consent, performance of a contract or an overriding
+  interest.
+  Anchor: https://compliance.datasafe.dev/swiss-nlpd.html#req-art-35
+  PRYV PLATFORM: facilitated (mode: storage)
+    Exception-based transfers require recording the legal basis. Pryv pattern: the access
+    authorising the disclosure carries the exception type in `clientData.transfer_exception`
+    (e.g., `"art_35_consent"`, `"art_35_contract"`); the audit row at disclosure time
+    anchors the exception to the specific event(s) transferred.
+  HDS: facilitated (effort saved: low) (mode: storage)
+    Exception-based transfers require recording the legal basis. HDS stores the exception
+    type on the access authorising the disclosure, and the audit row at disclosure time
+    anchors the exception to the specific events transferred.
+    Detail: The exception vocabulary follows the nLPD enumeration; HDS preserves the cited
+    exception and the disclosure event. Whether an exception applies is the controller's
+    legal judgement.
+    Evidence: internal:gdpr/policies/international-transfers
+  IMPLEMENTER [controller] coverage: documented
+    applies_when: [transfer-ch-us]
+    Determine the applicable exception and record it on the disclosing access.
+  IMPLEMENTER [processor] coverage: documented
+    applies_when: always
+    Transfer under an exception only on the controller's recorded basis.
+    Templates to sign: dpa
+  IMPLEMENTER [data-subject] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## swiss-nlpd Art.2 — Material scope
+  Requirement: The Act applies to the processing of personal data of natural persons by
+  private persons and federal bodies; it does not apply to purely personal use,
+  parliamentary proceedings, or pending judicial or administrative procedures.
+  Anchor: https://compliance.datasafe.dev/swiss-nlpd.html#req-art-2
+  PRYV PLATFORM: facilitated (mode: awareness)
+    Your Pryv deployment is fully in scope as automated processing of personal data. The
+    "purely personal use" exception (§2 §1 lit a) doesn't reach a hosted Pryv deployment
+    where you act as operator / controller for others.
+  HDS: facilitated (effort saved: low) (mode: awareness)
+    An HDS deployment is fully in scope as automated processing of personal data. The
+    purely-personal-use exception does not reach a hosted deployment where the controller
+    acts for others. HDS contributes awareness, not a scope-determining control.
+    Detail: HDS makes no scope determination; the controller establishes whether and how the
+    Act applies to its processing. The platform's audit and access records evidence that
+    processing occurs.
+    Evidence: internal:hipaa/policies/access-control
+  IMPLEMENTER [controller] coverage: documented
+    applies_when: always; nature: orientation (not a duty)
+    Determine whether and how the Act applies to your processing.
+  IMPLEMENTER [data-subject] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## swiss-nlpd Art.3 — Territorial scope
+  Requirement: The Act applies to facts that have an effect in Switzerland, even if
+  initiated abroad.
+  Anchor: https://compliance.datasafe.dev/swiss-nlpd.html#req-art-3
+  PRYV PLATFORM: facilitated (mode: infrastructure)
+    Whether revFADP applies depends on whether processing affects CH data subjects, not on
+    where infrastructure lives. Pryv's data-residency primitive lets you bind subjects to CH
+    hostings explicitly when CH jurisdiction is the chosen regime, see Art. 34 for the
+    cross-border transfer side.
+  HDS: facilitated (effort saved: low) (mode: infrastructure)
+    Applicability turns on whether processing affects data subjects in Switzerland, not on
+    where infrastructure lives. HDS operates a CH region in Switzerland to which subjects
+    can be bound explicitly when CH jurisdiction is the chosen regime.
+    Detail: The cross-border transfer side is handled under Art. 34. HDS supplies the
+    residency mechanism; the determination of territorial applicability is the controller's.
+    Evidence: internal:hipaa/registers/hosting-provider-attestations
+  IMPLEMENTER [controller] coverage: documented
+    applies_when: always; nature: orientation (not a duty)
+    Work out whether the Act reaches your own processing, if you carry out any. You cannot
+    bind an individual to a region: they choose it when they register their vault.
+  IMPLEMENTER [data-subject] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## swiss-nlpd Art.16 — Disclosure of personal data abroad — principles (cross-link)
+  Requirement: Personal data may be disclosed abroad only where adequate protection has
+  been determined or appropriate safeguards are in place; Art. 34 sets out the operative
+  framework.
+  Anchor: https://compliance.datasafe.dev/swiss-nlpd.html#req-art-16
+  PRYV PLATFORM: facilitated (mode: awareness)
+    Framing row pointing at Art. 34 for the operative Pryv mapping and at GDPR Chapter V
+    (Art. 44-50) for the parallel EU regime.
+  HDS: facilitated (effort saved: low) (mode: awareness)
+    This is a framing row pointing at Art. 34 for the operative HDS mapping. HDS's
+    contribution — data residency and recorded transfer basis — is described there.
+    Detail: See Art. 34 for the data-residency control and the basis-recording pattern that
+    satisfy the cross-border principle in practice.
+    Evidence: internal:gdpr/policies/international-transfers
+  IMPLEMENTER [controller] coverage: documented
+    applies_when: [transfer-ch-us, third-parties]
+    Apply the Art. 34 framework; this row is cross-reference only.
+  IMPLEMENTER [data-subject] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## swiss-nlpd Art.30 — Justification of breaches of privacy
+  Requirement: Processing that breaches privacy is unlawful unless justified by the
+  subject's consent, an overriding private or public interest, or by law.
+  Anchor: https://compliance.datasafe.dev/swiss-nlpd.html#req-art-30
+  PRYV PLATFORM: facilitated (mode: storage)
+    Same pattern as GDPR Art. 6, justification basis is recorded on the access's
+    `clientData.legal_basis` (Swiss-specific vocabulary drawn from Art. 30 §2 list).
+    Determination of which basis applies is your editorial / legal judgement.
+  HDS: facilitated (effort saved: low) (mode: storage)
+    HDS records the justification basis on the access client-data, drawing on the nLPD's
+    vocabulary, so the basis travels with the technical authorization and lives in the audit
+    trail. Determining which basis applies is the controller's editorial and legal
+    judgement.
+    Detail: The pattern mirrors lawful-basis recording: the cited basis is stored per access
+    and anchored in time by the audit log. HDS stores and audits it; it does not select it.
+    Evidence: internal:hipaa/policies/access-control
+  IMPLEMENTER [controller] coverage: documented
+    applies_when: [connects]
+    Determine the justification basis and record it on the relevant access.
+  IMPLEMENTER [processor] coverage: documented
+    applies_when: [connects]
+    Process only on the basis the controller records.
+    Templates to sign: dpa
+  IMPLEMENTER [data-subject] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## swiss-nlpd Art.4 — Federal Data Protection and Information Commissioner (FDPIC)
+  Requirement: The Commissioner supervises application of data-protection law by federal
+  bodies and private persons, advises them, investigates breaches and issues
+  recommendations and orders.
+  Anchor: https://compliance.datasafe.dev/swiss-nlpd.html#req-art-4
+  PRYV PLATFORM: out-of-scope
+    The FDPIC is a regulator; no software role. When an FDPIC investigation involves a Pryv
+    deployment, the audit log + access-version chain are the evidence layer the controller
+    provides, but interaction with the FDPIC is the controller's legal / regulatory process.
+  HDS: out-of-scope
+    The Commissioner is a regulator; there is no software role. Where an investigation
+    involves an HDS deployment, the audit log and access version chain are the evidence
+    layer the controller can provide.
+    Detail: Interaction with the Commissioner is the controller's legal and regulatory
+    process. HDS supplies no control specific to this Article.
+  IMPLEMENTER [controller] coverage: documented
+    applies_when: always; nature: orientation (not a duty)
+    Manage your interaction with the Commissioner; use platform records as evidence where
+    needed.
+  IMPLEMENTER [data-subject] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## swiss-nlpd Art.23 — Privacy by default
+  Requirement: The controller must by default ensure processing is limited to the minimum
+  required for the purpose, in particular through appropriate technical settings.
+  Anchor: https://compliance.datasafe.dev/swiss-nlpd.html#req-art-23
+  PRYV PLATFORM: facilitated (mode: primitive)
+    Pryv defaults lean privacy- protective by construction: smallest-permission default is
+    "none"; system streams isolate privileged data; per-user storage isolates subjects. The
+    operator's deployment-time choices (token-scope defaults, retention policy, MFA-on)
+    determine whether the by-default posture is fully exercised.
+  HDS: facilitated (effort saved: medium) (mode: primitive)
+    The platform HDS operates leans privacy-protective by construction: the
+    smallest-permission default is none, system streams isolate privileged data, and
+    per-user storage isolates subjects. Whether the by-default posture is fully exercised
+    depends on the controller's deployment-time choices.
+    Detail: Token-scope defaults, retention policy and MFA settings are the controller's
+    configuration. HDS supplies the minimum-by-default primitives those settings exercise.
+    Evidence: internal:hipaa/policies/minimum-necessary, internal:hipaa/policies/access-control
+  IMPLEMENTER [controller] coverage: documented
+    applies_when: [processes-personal-data]
+    Configure minimal defaults — token scopes, retention and MFA — so processing is limited
+    to the minimum required.
+  IMPLEMENTER [processor] coverage: documented
+    applies_when: always
+    Operate within the minimal defaults the controller sets.
+    Templates to sign: dpa
+  IMPLEMENTER [data-subject] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## swiss-nlpd Art.26 — Restriction of the right to information
+  Requirement: The right to information under Art. 25 may be restricted, refused or
+  deferred where a law so provides, where an overriding third-party interest requires it,
+  or where the request is manifestly unfounded.
+  Anchor: https://compliance.datasafe.dev/swiss-nlpd.html#req-art-26
+  PRYV PLATFORM: facilitated (mode: storage)
+    When a controller invokes Art. 26 to restrict / refuse / defer a DSAR, the rationale is
+    recorded as a `dsar/restricted` event on a designated stream with
+    `clientData.art26_basis` capturing the §1 letter (a / b / c). Audit log anchors the
+    decision in time. Whether a given restriction is justified is the controller's legal
+    judgement.
+  HDS: facilitated (effort saved: low) (mode: storage)
+    When the controller invokes Art. 26 to restrict, refuse or defer an access request, HDS
+    supports recording the rationale as an event on a designated stream with the cited
+    statutory letter, time-anchored by the audit log. Whether the restriction is justified
+    is the controller's legal judgement.
+    Detail: The restriction record travels with the request artefacts so the decision is
+    reconstructable later. HDS stores and audits the rationale; it makes no determination of
+    justification.
+    Evidence: internal:gdpr/procedures/data-subject-rights
+  IMPLEMENTER [controller] coverage: documented
+    applies_when: [processes-personal-data]
+    Determine whether a restriction applies and record the basis and rationale.
+  IMPLEMENTER [data-subject] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## swiss-nlpd Art.33 — Cross-border international cooperation
+  Requirement: The Federal Council may conclude international treaties on the cross-border
+  exchange of personal data, including treaties on mutual data-protection cooperation.
+  Anchor: https://compliance.datasafe.dev/swiss-nlpd.html#req-art-33
+  PRYV PLATFORM: out-of-scope
+    Treaty-level activity. No software role; no implementer obligation arises from this
+    Article alone.
+  HDS: out-of-scope
+    This is treaty-level activity with no software role. No implementer obligation arises
+    from this Article alone, and HDS supplies no control specific to it.
+    Detail: The Article addresses inter-state instruments rather than processing operations;
+    HDS's residency and transfer controls under Art. 34 are the relevant operational layer.
+  IMPLEMENTER [controller] coverage: out-of-scope
+    applies_when: always; nature: orientation (not a duty); PLACES NO DUTY ON THIS PERSONA
+  IMPLEMENTER [data-subject] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## swiss-nlpd Art.9 — Processing by a processor
+  Requirement: The controller may entrust processing to a processor only where the
+  processor processes data solely as instructed, ensures equivalent data security, and
+  obtains controller approval before engaging a sub-processor.
+  Anchor: https://compliance.datasafe.dev/swiss-nlpd.html#req-art-9
+  PRYV PLATFORM: facilitated (mode: storage)
+    Same pattern as GDPR Art. 28: when the Pryv operator is a processor distinct from the
+    controller, the DPA + sub-processor list are the operator's contractual artefacts.
+    Pryv's audit log enforces "only as instructed" demonstrability; the
+    observability-provider primitive is the sole built-in subprocessor candidate (default
+    disabled).
+  HDS: facilitated (effort saved: medium) (mode: storage)
+    Where HDS acts as processor distinct from the controller, it offers a Data Processing
+    Agreement and maintains a sub-processor register. The audit log makes processing
+    demonstrably attributable to instructed accesses, so the only-as-instructed duty rests
+    on a record.
+    Detail: Sub-processor engagement follows the DPA's approval and flow-down terms. HDS
+    keeps the sub-processor register and uses the audit and access primitives to evidence
+    instructed-only processing; the substantive instructions are the controller's.
+    Evidence: internal:hipaa/registers/subprocessor-register, internal:hipaa/policies/access-control
+  IMPLEMENTER [controller] coverage: documented
+    applies_when: [stores-phi-copy, third-parties]
+    If you engage processors of your own for the copy you hold, contract with them, give
+    documented instructions and approve their sub-processors. This is not an agreement with
+    HDS: HDS is the controller of the vault, not your processor.
+    Templates to sign: dpa
+  IMPLEMENTER [processor] coverage: documented
+    applies_when: [stores-phi-copy, third-parties]
+    Process only as instructed, ensure equivalent security and obtain approval before
+    engaging sub-processors.
+    Templates to sign: dpa, subprocessor
+  IMPLEMENTER [data-subject] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## swiss-nlpd Art.12 — Register of processing activities
+  Requirement: Each controller and processor must maintain a register of processing
+  activities, subject to an exception for smaller enterprises whose processing poses a low
+  risk; content parallels GDPR Art. 30.
+  Anchor: https://compliance.datasafe.dev/swiss-nlpd.html#req-art-12
+  PRYV PLATFORM: implemented
+    Same primitive-set mapping as GDPR Art. 30: access + clientData + audit + CMC +
+    data-residency form the technical register substrate. Swiss-specific note: the SME
+    exception (Ordinance on Data Protection) drops register obligation for companies < 250
+    personnel processing low-risk data. The register substrate is available regardless;
+    whether it's required is operator-side legal judgement.
+  HDS: facilitated (effort saved: high) (mode: evidence)
+    HDS supplies the technical register substrate — access, client-data, audit and
+    data-residency records describe much of the processing. The register as a maintained
+    document is a known gap: HDS does not generate or keep the controller's register, which
+    the controller must author.
+    Detail: The nLPD's small-enterprise exception drops the obligation for low-risk
+    processing under the prescribed threshold; whether it applies is the controller's legal
+    judgement. The substrate is available regardless, but the register document itself is
+    the controller's and processor's to maintain.
+    Evidence: internal:gdpr/registers/records-of-processing
+    PLANNED (doc, impact low): HDS's processor-side register is populated with its live processing activities. What remains is narrower: retention periods are not set for the recruitment, CRM and contact-mailbox rows, and the Art.30(2) half stays empty until the first partner DPA is executed, which the register states rather than filling with a fictional row.
+  IMPLEMENTER [controller] coverage: documented
+    applies_when: [stores-phi-copy]
+    Author and maintain your register of processing activities, using platform records as
+    input.
+  IMPLEMENTER [processor] coverage: documented
+    applies_when: [stores-phi-copy]
+    Maintain your own register of the processing you perform for the controller.
+    Templates to sign: dpa
+  IMPLEMENTER [data-subject] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## swiss-nlpd Art.17 — Exceptions to the duty to inform
+  Requirement: The information duty may be waived where the subject already has the
+  information, the processing is provided for by law, the controller is bound by
+  professional secrecy, or informing would be disproportionate.
+  Anchor: https://compliance.datasafe.dev/swiss-nlpd.html#req-art-17
+  PRYV PLATFORM: out-of-scope
+    Exception-applicability is the controller's legal judgement; no software role. Where the
+    exception applies, the controller's reasoning is documentable in
+    `account.clientData.art17_basis` for auditor questions.
+  HDS: out-of-scope
+    Exception applicability is the controller's legal judgement with no software role. Where
+    an exception applies, HDS supports documenting the reasoning as client-data so it is
+    available for auditor questions.
+    Detail: HDS makes no exception determination. The controller's reasoning can be stored
+    alongside the account or notice artefacts for traceability.
+  IMPLEMENTER [controller] coverage: documented
+    applies_when: [processes-personal-data]
+    Determine whether an exception applies and document the reasoning.
+  IMPLEMENTER [data-subject] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## swiss-nlpd Art.18 — Information when collecting personal data — specific cases
+  Requirement: Beyond the Art. 19 baseline, the controller must provide additional
+  information when transferring abroad, when processing involves automated
+  decision-making, and in cases involving sensitive personal data.
+  Anchor: https://compliance.datasafe.dev/swiss-nlpd.html#req-art-18
+  PRYV PLATFORM: facilitated (mode: storage)
+    Additional disclosures are stored alongside the baseline notice in
+    `access.clientData.privacy_notice` (or as additional `consent/notice` events for
+    clarity). The cross-border transfer element ties to Art. 34; automated-decision element
+    ties to Art. 21.
+  HDS: facilitated (effort saved: low) (mode: storage)
+    HDS stores the additional disclosures alongside the baseline notice as client-data or
+    dedicated notice events. The cross-border element ties to Art. 34 and the
+    automated-decision element to Art. 21; HDS preserves what was presented.
+    Detail: The content of the additional disclosures is the controller's editorial
+    responsibility. HDS makes the presented text recoverable per subject and per time as a
+    durable artefact.
+    Evidence: internal:hipaa/policies/notice-of-privacy-practices
+  IMPLEMENTER [controller] coverage: documented
+    applies_when: [processes-personal-data]
+    Provide the additional information for transfers abroad, automated decisions and
+    sensitive data, and record what was presented.
+  IMPLEMENTER [data-subject] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## swiss-nlpd Art.11 — Codes of conduct
+  Requirement: Professional, sector or trade associations may submit codes of conduct to
+  the Commissioner, who takes a position on the code.
+  Anchor: https://compliance.datasafe.dev/swiss-nlpd.html#req-art-11
+  PRYV PLATFORM: out-of-scope
+    Sector-level instrument; see GDPR Art. 40 for parallel framing. Adherence is recorded as
+    one of the Art. 8 "appropriate measures" indicators on the deployment.
+  HDS: out-of-scope
+    Codes of conduct are a sector-level instrument with no software role. Adherence to a
+    code may be cited as one of the appropriate-measures indicators on a deployment, but HDS
+    supplies no control specific to this Article.
+    Detail: Drafting, submitting and adhering to a code is an association and controller
+    matter outside the platform's scope.
+  IMPLEMENTER [controller] coverage: documented
+    applies_when: [processes-personal-data]
+    Decide whether to adhere to an applicable code of conduct.
+  IMPLEMENTER [data-subject] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## swiss-nlpd Art.14 — Representative in Switzerland
+  Requirement: A controller established abroad whose processing concerns persons in
+  Switzerland on a large scale, regularly and with high risk must designate a
+  representative in Switzerland.
+  Anchor: https://compliance.datasafe.dev/swiss-nlpd.html#req-art-14
+  PRYV PLATFORM: out-of-scope
+    Representative designation is a contractual / regulatory registration step for non-Swiss
+    controllers; no software role.
+  HDS: out-of-scope
+    Designating a Swiss representative is a contractual and regulatory registration step for
+    non-Swiss controllers with no software role. HDS supplies no control specific to this
+    requirement.
+    Detail: Whether the threshold is met and who is designated are the controller's
+    decisions outside the platform's scope.
+  IMPLEMENTER [controller] coverage: documented
+    applies_when: [processes-personal-data]
+    Determine whether you must designate a Swiss representative and do so if required.
+  IMPLEMENTER [data-subject] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## swiss-nlpd Art.15 — Duty of the processor to inform the controller
+  Requirement: The processor must inform the controller of all data security breaches
+  without delay and cooperate with the controller in fulfilling its obligations toward
+  data subjects.
+  Anchor: https://compliance.datasafe.dev/swiss-nlpd.html#req-art-15
+  PRYV PLATFORM: facilitated (mode: evidence)
+    When Pryv operator acts as processor, the breach-notification channel to the controller
+    is the operator's contractual commitment. Pryv's audit + observability + access
+    primitives give the operator the scoping data needed for the notification; CMC's
+    cross-platform messaging is a structured channel when both sides run Pryv.
+  HDS: facilitated (effort saved: medium) (mode: evidence)
+    Where HDS acts as processor, breach notification to the controller is its contractual
+    commitment under the DPA. HDS uses the audit and access primitives to give the
+    controller the scoping data needed for the notification and to cooperate on data-subject
+    rights.
+    Detail: The notification channel and the assistance on subject requests are DPA-defined.
+    HDS supplies the scoping evidence and cooperates; the duties toward subjects are
+    ultimately the controller's.
+    Evidence: internal:hipaa/procedures/security-incident-response, internal:gdpr/procedures/breach-notification-72h
+  IMPLEMENTER [processor] coverage: documented
+    applies_when: always
+    Notify the controller of breaches without delay and assist with data-subject
+    obligations.
+    Templates to sign: dpa
+  IMPLEMENTER [controller] coverage: documented
+    applies_when: [processes-personal-data]
+    Ensure the contracts with your own processors oblige them to notify breaches and assist
+    you.
+    Templates to sign: dpa
+  IMPLEMENTER [data-subject] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## swiss-nlpd Art.29 — Information from official registers
+  Requirement: Anyone may obtain information from official registers under the conditions
+  set out in special legislation.
+  Anchor: https://compliance.datasafe.dev/swiss-nlpd.html#req-art-29
+  PRYV PLATFORM: out-of-scope
+    Public-register access is regulatory framing; no software role.
+  HDS: out-of-scope
+    Access to official public registers is a regulatory framing with no software role. HDS
+    supplies no control specific to this Article.
+    Detail: The Article concerns statutory public-register access rather than the
+    controller's own processing operations.
+  IMPLEMENTER [controller] coverage: out-of-scope
+    applies_when: always; PLACES NO DUTY ON THIS PERSONA
+  IMPLEMENTER [data-subject] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA

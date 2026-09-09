@@ -1,0 +1,2077 @@
+# SOC 2 — AICPA Trust Services Criteria (Security, Availability, Confidentiality, Processing Integrity, Privacy) (soc2) — full text
+
+Part of the HDS Compliance Matrix. Summary and matching rules: https://compliance.datasafe.dev/llms.txt
+All frameworks in one file: https://compliance.datasafe.dev/llms-full.txt
+
+NOT LEGAL ADVICE. This matrix covers the HDS vault product: HDS is the controller of the vault,
+is nobody's Art.28 processor, and holds no HIPAA role in it.
+
+HDS's own position on SOC 2:
+  - vault: HDS is service-organization. HDS is the service organisation operating the vault; an organisation building on it is a user entity. The hosting providers are subservice organisations, carved in or out depending on the criterion.
+  External assurance: none. HDS holds NO SOC 2 report. There is no Type I and no Type II, no audit period has been defined and no CPA firm has been engaged. Nothing on this site should be read as a SOC 2 opinion.
+  Certificates HDS relies on but does NOT hold: AWS SOC 2 (hosting layer only, as a subservice organisation)
+  Evidence: 45 of 61 requirements answered from approved HDS documentation (61 cite internal evidence), as of 2026-09-08.
+  Forty-five of the sixty-one Trust Services Criteria are answered from approved HDS
+  documentation, and the remaining sixteen are evidenced by documents still moving through
+  review. This is a readiness map: it shows which criteria the existing control
+  environment already meets, which is what a service organisation needs before engaging an
+  auditor. It is not an audit and confers no opinion. Twelve criteria carry open
+  remediation, including change management, vendor management and a tamper-evident audit
+  log.
+  Known gaps in HDS's own position:
+  - [high] No SOC 2 examination has been engaged, so there is no report to give a user entity that asks for one.
+  - [medium] A written change-management process with ticketed approvals, per-change test evidence and rollback is drafted but not operating. (refs: CC8.1)
+  - [medium] A formal vendor-management programme with scored risk tiers and scheduled re-assessment is drafted but not operating. (refs: CC9.2)
+  - [medium] The audit log is append-only by convention with no hash chain or signed checkpoint, so it is not tamper-evident against a host-level admin. (refs: PI1.5)
+
+## soc2 CC1.1 — CC1.1 — Commitment to integrity and ethical values
+  Requirement: The service organization demonstrates a commitment to integrity and ethical
+  values as a foundation for its system of internal control.
+  Anchor: https://compliance.datasafe.dev/soc2.html#req-cc1-1
+  PRYV PLATFORM: out-of-scope
+    Integrity + ethics are a management-and-culture matter. Pryv has no software role at the
+    values / code-of-conduct layer; your audit log can later evidence whether workforce
+    behaviour matched the stated values, but the commitment itself is yours to make and
+    document.
+  HDS: documented (effort saved: low)
+    Integrity and ethical values are a matter of organizational culture, not software. HDS
+    maintains a written code of conduct and information-security policy that set the ethical
+    baseline for its own workforce operating the platform; the service organization building
+    on HDS sets and documents its own. The platform contributes only after the fact: the
+    per-user audit log can evidence whether workforce behaviour matched the stated values.
+    Detail: HDS holds this as an operator governance artefact rather than a platform
+    feature. Its commitment to integrity is expressed in a documented code of conduct and
+    the umbrella information-security policy referenced throughout this matrix; both are
+    reviewed periodically. A partner attesting under SOC 2 cannot inherit HDS's culture
+    controls — they author their own — but may cite the audit log as the substrate that
+    holds individuals accountable to whatever ethical baseline they set.
+    Evidence: internal:hipaa/policies/information-security-policy
+  IMPLEMENTER [service-organization] coverage: documented
+    applies_when: always
+    Establish and document your own code of conduct and ethical-values baseline; this is a
+    management and culture obligation HDS cannot carry for you.
+  IMPLEMENTER [user-entity] coverage: out-of-scope
+    applies_when: always; PLACES NO DUTY ON THIS PERSONA
+  IMPLEMENTER [subservice-organization] coverage: documented
+    applies_when: always
+    Maintain your own integrity and ethics programme for the workforce that operates any
+    downstream service.
+
+## soc2 CC1.2 — CC1.2 — Board independence and oversight
+  Requirement: The board of directors operates independently of management and oversees
+  the development and performance of internal control.
+  Anchor: https://compliance.datasafe.dev/soc2.html#req-cc1-2
+  PRYV PLATFORM: out-of-scope
+    Board governance is organizational. No software contribution; this matrix + the audit
+    log feed the oversight pack the board reviews, but the oversight function is yours.
+  HDS: documented (effort saved: low)
+    Board governance and oversight are organizational structures with no software role. HDS
+    documents its own governance and oversight arrangements internally; the service
+    organization documents its own board's independence and oversight function. This matrix
+    and the audit log can feed the oversight pack a board reviews, but the oversight
+    function itself is a governance obligation.
+    Detail: HDS treats board-level oversight as an operator governance artefact, held
+    privately and available on request. Where HDS operates the platform, this matrix doubles
+    as a control inventory the partner's own board can review, and the audit log supplies
+    control-operation evidence. The independence and oversight obligation cannot be
+    inherited; each attesting organization carries its own.
+    Evidence: internal:soc2/policies/governance-and-oversight
+  IMPLEMENTER [service-organization] coverage: documented
+    applies_when: always
+    Document your own board's independence and its oversight of internal control; a
+    governance obligation outside the platform.
+  IMPLEMENTER [user-entity] coverage: out-of-scope
+    applies_when: always; PLACES NO DUTY ON THIS PERSONA
+  IMPLEMENTER [subservice-organization] coverage: documented
+    applies_when: always
+    Document the equivalent oversight arrangements for your own organization.
+
+## soc2 CC1.3 — CC1.3 — Management structures, reporting lines, and authorities
+  Requirement: Management, with board oversight, establishes structures, reporting lines,
+  and appropriate authorities and responsibilities in pursuit of the entity's objectives.
+  Anchor: https://compliance.datasafe.dev/soc2.html#req-cc1-3
+  PRYV PLATFORM: out-of-scope
+    Org structure + authority assignment are management artefacts. Pryv enforces the
+    *technical* half of "appropriate authorities" once you've decided them (see CC6.3
+    least-privilege), but the reporting-line design itself is yours.
+  HDS: documented (effort saved: low)
+    Organizational structure and authority assignment are management artefacts. HDS
+    documents the reporting lines and authorities for its own platform operation, including
+    the named security official accountable for the programme. The platform enforces the
+    technical half of "appropriate authorities" once they are decided (least-privilege
+    access, see CC6.3), but the structure design itself is management work.
+    Detail: HDS holds its own management structure, reporting lines and authority
+    assignments as documented operator artefacts. The technical realisation of authority —
+    who may exercise which permissions — is carried by the access-token model and recorded
+    in the audit log; the design of the reporting lines and the assignment of
+    responsibilities are governance decisions each attesting organization makes for itself.
+    Evidence: internal:hipaa/policies/access-control, internal:soc2/policies/governance-and-oversight
+  IMPLEMENTER [service-organization] coverage: documented
+    applies_when: always
+    Define and document your own reporting lines and authority assignments; map the
+    resulting authorities onto least-privilege access grants.
+  IMPLEMENTER [user-entity] coverage: out-of-scope
+    applies_when: always; PLACES NO DUTY ON THIS PERSONA
+  IMPLEMENTER [subservice-organization] coverage: documented
+    applies_when: always
+    Document your own management structure and authorities for the service you operate
+    downstream.
+
+## soc2 CC1.4 — CC1.4 — Commitment to competence
+  Requirement: The entity demonstrates a commitment to attract, develop, and retain
+  competent individuals in alignment with its objectives.
+  Anchor: https://compliance.datasafe.dev/soc2.html#req-cc1-4
+  PRYV PLATFORM: out-of-scope
+    Hiring + training + retention is an HR programme. No software role.
+  HDS: documented (effort saved: low)
+    Hiring, training and retention of competent staff is an HR programme with no software
+    role. HDS runs and documents its own competence programme for the workforce operating
+    the platform; formal, verified security-awareness training is a known gap being matured.
+    The service organization runs its own.
+    Detail: HDS treats workforce competence as an operator governance artefact. Its
+    documented programme covers role-relevant skills for staff operating the platform. The
+    platform makes no contribution at this layer. HDS is honest that formal verified
+    training delivery is still being formalised; a partner attesting under SOC 2 maintains
+    its own competence programme.
+    Evidence: internal:soc2/policies/workforce-competence
+    PLANNED (procedure, impact medium): The workforce-training procedure is approved and the completion register holds dated third-party certifications for every workforce member, with expiry reminders wired to the internal tasks board. What remains is the HDS-specific curriculum, the recorded acknowledgements, and letting the monthly cadence run a first full cycle: no per-occurrence execution record has been filed yet.
+  IMPLEMENTER [service-organization] coverage: documented
+    applies_when: always
+    Run and document your own hiring, training and competence programme; HDS cannot carry
+    this for you.
+  IMPLEMENTER [user-entity] coverage: out-of-scope
+    applies_when: always; PLACES NO DUTY ON THIS PERSONA
+  IMPLEMENTER [subservice-organization] coverage: documented
+    applies_when: always
+    Maintain a competence programme for your own downstream workforce.
+
+## soc2 CC1.5 — CC1.5 — Accountability for internal control responsibilities
+  Requirement: The entity holds individuals accountable for their internal control
+  responsibilities in pursuit of its objectives.
+  Anchor: https://compliance.datasafe.dev/soc2.html#req-cc1-5
+  PRYV PLATFORM: facilitated (mode: evidence)
+    Pryv gives you the technical accountability substrate: every API call is attributable to
+    an access (accessId + accessSerial) in the per-user audit log, so "who did what, when"
+    is recoverable when you need to hold an individual to account. Defining the
+    responsibilities and the consequence process is your management activity; Pryv supplies
+    the evidence trail.
+  HDS: facilitated (effort saved: medium) (mode: evidence)
+    The platform HDS operates supplies the technical accountability substrate: every API
+    call is attributable to a specific access identity in the per-user audit log, so "who
+    did what, when" is recoverable when an individual must be held to account. HDS layers
+    its own sanction and accountability policy on top and documents it; defining
+    responsibilities and the consequence process is each organization's management activity.
+    Detail: Accountability has two halves. The evidence half is platform-native — the audit
+    log attributes each action to an access identity, giving an objective record against
+    which responsibilities can be enforced. The policy half (which responsibilities, what
+    consequences) is governance; HDS documents the accountability and sanction policy it
+    operates for its own workforce. A partner inherits the audit substrate but authors its
+    own accountability framework.
+    Evidence: internal:hipaa/policies/audit-controls, internal:soc2/policies/accountability-and-sanctions
+  IMPLEMENTER [service-organization] coverage: documented
+    applies_when: always
+    Define the internal-control responsibilities and the consequence process; use the
+    per-user audit log as the accountability evidence trail.
+  IMPLEMENTER [user-entity] coverage: out-of-scope
+    applies_when: always; PLACES NO DUTY ON THIS PERSONA
+  IMPLEMENTER [subservice-organization] coverage: documented
+    applies_when: always
+    Hold your own workforce accountable using the audit substrate and your own sanction
+    policy.
+
+## soc2 CC2.1 — CC2.1 — Quality information to support internal control
+  Requirement: The entity obtains or generates and uses relevant, quality information to
+  support the functioning of internal control.
+  Anchor: https://compliance.datasafe.dev/soc2.html#req-cc2-1
+  PRYV PLATFORM: facilitated (mode: evidence)
+    Pryv produces two streams of control-relevant information: the per-user audit log
+    (application-level activity, attributable to an access) and observability metrics
+    (operational + security KPIs via the pluggable provider). What you monitor and how you
+    act on it is your programme; Pryv supplies the quality data.
+  HDS: facilitated (effort saved: medium) (mode: evidence)
+    The platform produces two streams of control-relevant information that HDS operates: the
+    per-user audit log (application-level activity, attributable to an access identity) and
+    operational monitoring (security and operational KPIs across every data-residency
+    option). What to monitor and how to act on it is each organization's programme; HDS
+    supplies the quality data and runs its own monitoring over the platform.
+    Detail: Quality information for internal control comes from the audit log and HDS's
+    operational monitoring, which is wired end to end with alerting before any component is
+    treated as in production. HDS documents the monitoring it operates. A partner consumes
+    the same substrate to feed its own control-monitoring process and defines its own
+    thresholds and review cadence.
+    Evidence: internal:hipaa/policies/audit-controls, internal:soc2/procedures/control-monitoring
+  IMPLEMENTER [service-organization] coverage: documented
+    applies_when: always
+    Define what control-relevant information you collect and how you act on it, drawing on
+    the audit log and monitoring substrate HDS exposes.
+  IMPLEMENTER [user-entity] coverage: out-of-scope
+    applies_when: always; PLACES NO DUTY ON THIS PERSONA
+  IMPLEMENTER [subservice-organization] coverage: documented
+    applies_when: always
+    Operate your own monitoring and information-quality process over the substrate you run
+    downstream.
+
+## soc2 CC2.2 — CC2.2 — Internal communication of objectives and responsibilities
+  Requirement: The entity internally communicates information, including objectives and
+  responsibilities for internal control, needed to support its functioning.
+  Anchor: https://compliance.datasafe.dev/soc2.html#req-cc2-2
+  PRYV PLATFORM: out-of-scope
+    Internal communication of objectives is a management activity. No software role at the
+    communication-content layer.
+  HDS: documented (effort saved: low)
+    Internal communication of objectives is a management activity with no software role at
+    the communication-content layer. HDS documents how it communicates security objectives
+    and responsibilities to its own workforce; the service organization runs its own
+    internal-communication programme.
+    Detail: HDS holds this as an operator governance artefact: its information-security
+    policy and internal communication channels convey control responsibilities to staff. The
+    platform contributes nothing at the content layer. Each attesting organization authors
+    and operates its own internal communication of objectives and responsibilities.
+    Evidence: internal:hipaa/policies/information-security-policy
+  IMPLEMENTER [service-organization] coverage: documented
+    applies_when: always
+    Communicate internal-control objectives and responsibilities to your own workforce; a
+    management obligation outside the platform.
+  IMPLEMENTER [user-entity] coverage: out-of-scope
+    applies_when: always; PLACES NO DUTY ON THIS PERSONA
+  IMPLEMENTER [subservice-organization] coverage: documented
+    applies_when: always
+    Communicate the equivalent objectives and responsibilities to your own downstream
+    workforce.
+
+## soc2 CC2.3 — CC2.3 — External communication on internal control matters
+  Requirement: The entity communicates with external parties about matters affecting the
+  functioning of internal control.
+  Anchor: https://compliance.datasafe.dev/soc2.html#req-cc2-3
+  PRYV PLATFORM: facilitated (mode: awareness)
+    For the slice of external communication that concerns the Pryv platform itself,
+    open-pryv.io's public release process is the channel: tagged releases, CHANGELOG-v2 +
+    CHANGELOG-v2-back, and (when shipped) the vulnerability-disclosure programme. You layer
+    your own customer / subprocessor / auditor communications on top.
+  HDS: facilitated (effort saved: low) (mode: awareness)
+    For the slice of external communication that concerns the platform itself, the public
+    release process is the channel: tagged releases and published change notes communicate
+    what changed in the substrate. HDS layers its own external-communication programme
+    (customer, subprocessor and auditor communications) on top and documents it. The service
+    organization runs its own.
+    Detail: External communication about internal control has a platform half and an
+    operator half. The platform half rides on the public open-source release process. The
+    operator half — how HDS communicates security and incident matters to its customers and
+    subprocessors — is documented as an operator artefact and backed by the subprocessor
+    register. A partner attesting under SOC 2 authors its own external-communication
+    programme.
+    Evidence: internal:hipaa/policies/information-security-policy, internal:hipaa/registers/subprocessor-register
+  IMPLEMENTER [service-organization] coverage: documented
+    applies_when: always
+    Author your own external communications about internal control to customers,
+    subprocessors, regulators and auditors.
+  IMPLEMENTER [user-entity] coverage: out-of-scope
+    applies_when: always; PLACES NO DUTY ON THIS PERSONA
+  IMPLEMENTER [subservice-organization] coverage: documented
+    applies_when: always
+    Communicate control matters to the parties you serve and to your own upstream service
+    organization.
+
+## soc2 CC3.1 — CC3.1 — Objectives specified with sufficient clarity
+  Requirement: The entity specifies objectives with enough clarity to enable the
+  identification and assessment of risks relating to them.
+  Anchor: https://compliance.datasafe.dev/soc2.html#req-cc3-1
+  PRYV PLATFORM: out-of-scope
+    Objective-setting is your management exercise. Pryv has no role in authoring objectives;
+    the matrix supports the downstream risk-to-control mapping once your objectives exist.
+  HDS: documented (effort saved: low)
+    Objective-setting is a management exercise; the platform has no role in authoring
+    objectives. HDS documents the security and availability objectives it sets for its own
+    platform operation. This matrix supports the downstream risk-to-control mapping once an
+    organization's objectives exist.
+    Detail: HDS holds its own service objectives (confidentiality, integrity, availability
+    targets for the operated platform) as documented operator artefacts that anchor its risk
+    assessment. A partner cannot inherit these — it specifies its own objectives — but can
+    use this matrix to map identified risks onto the platform controls that address them.
+    Evidence: internal:soc2/policies/system-description
+  IMPLEMENTER [service-organization] coverage: documented
+    applies_when: always
+    Specify and document your own service objectives with enough clarity to drive your risk
+    assessment.
+  IMPLEMENTER [user-entity] coverage: out-of-scope
+    applies_when: always; PLACES NO DUTY ON THIS PERSONA
+  IMPLEMENTER [subservice-organization] coverage: documented
+    applies_when: always
+    Specify your own objectives for the service you operate downstream.
+
+## soc2 CC3.2 — CC3.2 — Identification and analysis of risk
+  Requirement: The entity identifies risks to the achievement of its objectives across the
+  entity and analyzes them as a basis for deciding how they should be managed.
+  Anchor: https://compliance.datasafe.dev/soc2.html#req-cc3-2
+  PRYV PLATFORM: facilitated (mode: evidence)
+    Your risk-assessment methodology and the specific findings are yours. Pryv contributes
+    the inventory of technical controls (this matrix, particularly the CC6 access +
+    CC6.6/6.7 boundary + cryptography rows), when you identify a confidentiality / integrity
+    / availability risk, the matrix surfaces which Pryv primitive addresses it, so control
+    applicability is mechanical rather than judgemental.
+  HDS: documented (effort saved: medium)
+    A formal risk assessment is each organization's own methodology and findings. HDS is
+    honest that its own formal risk assessment is not yet conducted — a known gap being
+    matured. What HDS contributes is the inventory of technical controls (this matrix,
+    especially the CC6 access and CC6.6/6.7 boundary and cryptography rows), so when a
+    confidentiality, integrity or availability risk is identified, the control that
+    addresses it is mechanical to locate.
+    Detail: HDS treats its own risk assessment as an operator obligation in progress and
+    states the gap plainly rather than claiming a completed assessment. Its contribution to
+    a partner's risk assessment is the control inventory in this matrix plus the audit and
+    monitoring substrate that surfaces emerging risk signals. The risk-assessment
+    methodology and the specific findings are each attesting organization's own.
+    Evidence: internal:soc2/procedures/risk-assessment
+    PLANNED (doc, impact medium): The formal risk analysis is conducted, rated and approved for the security objective. Extending it to the non-security trust-services objectives (availability, confidentiality, processing integrity, privacy) is the tracked remainder; the fraud consideration is carried at CC3.3.
+  IMPLEMENTER [service-organization] coverage: documented
+    applies_when: always
+    Conduct and document your own risk assessment; use this matrix to map identified risks
+    onto the platform controls that mitigate them.
+  IMPLEMENTER [user-entity] coverage: out-of-scope
+    applies_when: always; PLACES NO DUTY ON THIS PERSONA
+  IMPLEMENTER [subservice-organization] coverage: documented
+    applies_when: always
+    Conduct your own risk assessment for the service you operate downstream.
+
+## soc2 CC3.3 — CC3.3 — Consideration of the potential for fraud
+  Requirement: The entity considers the potential for fraud when assessing risks to the
+  achievement of its objectives.
+  Anchor: https://compliance.datasafe.dev/soc2.html#req-cc3-3
+  PRYV PLATFORM: facilitated (mode: evidence)
+    Pryv's audit log + observability metrics are the detection substrate for insider-misuse
+    and anomalous-access fraud scenarios (every access is attributable; unusual read/write
+    patterns surface). The fraud-risk analysis itself, which scenarios matter, what
+    thresholds trigger review, is your assessment.
+  HDS: facilitated (effort saved: low) (mode: evidence)
+    The audit log and operational monitoring are the detection substrate for insider-misuse
+    and anomalous-access fraud scenarios — every access is attributable, and unusual read or
+    write patterns surface. HDS operates this substrate; the fraud-risk analysis itself
+    (which scenarios matter, what thresholds trigger review) is each organization's
+    assessment.
+    Detail: HDS contributes the technical means to detect the fraud scenarios an assessment
+    identifies: attributable audit records and anomaly signals from monitoring. The
+    analytical step — deciding which fraud risks are in scope and how to respond — is
+    governance and depends on the formal risk assessment (see CC3.2, a known gap on the HDS
+    side). A partner runs its own fraud-risk analysis over the same substrate.
+    Evidence: internal:hipaa/policies/audit-controls, internal:soc2/procedures/risk-assessment
+  IMPLEMENTER [service-organization] coverage: documented
+    applies_when: always
+    Analyze fraud risk as part of your risk assessment; use the audit log and monitoring as
+    the detection substrate for the scenarios you identify.
+  IMPLEMENTER [user-entity] coverage: out-of-scope
+    applies_when: always; PLACES NO DUTY ON THIS PERSONA
+  IMPLEMENTER [subservice-organization] coverage: documented
+    applies_when: always
+    Consider fraud risk for the service you operate downstream.
+
+## soc2 CC3.4 — CC3.4 — Identification and assessment of changes affecting internal control
+  Requirement: The entity identifies and assesses changes that could significantly affect
+  its system of internal control.
+  Anchor: https://compliance.datasafe.dev/soc2.html#req-cc3-4
+  PRYV PLATFORM: facilitated (mode: evidence)
+    For changes to the Pryv platform, open-pryv.io's CHANGELOGs + tagged releases announce
+    what changed; the audit log shows when config-driven behaviour changed observably in
+    your deployment. The change-impact assessment process is yours.
+  HDS: facilitated (effort saved: low) (mode: evidence)
+    For changes to the platform substrate, the public release notes announce what changed,
+    and the audit log shows when config-driven behaviour changed observably in a deployment.
+    HDS assesses substrate changes as part of its own operations. The change-impact
+    assessment process for an organization's wider control system is its own.
+    Detail: Change identification on the platform half is supported by published change
+    notes and the audit log's record of observable behaviour change. HDS folds these into
+    its own change handling. A partner uses the same signals to feed its change-impact
+    assessment over its broader control system, which it authors itself. HDS's own
+    formalised change-management programme is still being matured (see CC8.1).
+    Evidence: internal:hipaa/policies/audit-controls, internal:soc2/policies/change-management
+  IMPLEMENTER [service-organization] coverage: documented
+    applies_when: always
+    Identify and assess changes affecting your control system; use platform release notes
+    and the audit log as inputs.
+  IMPLEMENTER [user-entity] coverage: out-of-scope
+    applies_when: always; PLACES NO DUTY ON THIS PERSONA
+  IMPLEMENTER [subservice-organization] coverage: documented
+    applies_when: always
+    Assess control-affecting changes in the service you operate downstream.
+
+## soc2 CC4.1 — CC4.1 — Ongoing and separate evaluations
+  Requirement: The entity selects, develops, and performs ongoing and/or separate
+  evaluations to ascertain whether the components of internal control are present and
+  functioning.
+  Anchor: https://compliance.datasafe.dev/soc2.html#req-cc4-1
+  PRYV PLATFORM: facilitated (mode: evidence)
+    Pryv supplies the data an ongoing evaluation samples: the audit log evidences
+    control-effectiveness (e.g., that access scoping actually blocks out-of-scope reads),
+    observability evidences operational health. You define the evaluation cadence and the
+    sampling method.
+  HDS: facilitated (effort saved: medium) (mode: evidence)
+    The platform supplies the data an ongoing evaluation samples: the audit log evidences
+    control effectiveness (e.g. that access scoping actually blocks out-of-scope reads), and
+    operational monitoring evidences operational health. HDS runs its own periodic
+    evaluation over the platform and documents it. The evaluation cadence and sampling
+    method for an organization's own controls are its own.
+    Detail: HDS performs a periodic evaluation of its security programme drawing on audit
+    samples, monitoring data and this matrix as the control inventory, and documents the
+    cadence and findings. A partner consumes the same substrate to sample its own controls
+    and defines its own evaluation programme. This matrix doubles as the control inventory
+    an evaluation assesses against.
+    Evidence: internal:hipaa/procedures/periodic-evaluation, internal:soc2/procedures/control-monitoring
+  IMPLEMENTER [service-organization] coverage: documented
+    applies_when: always
+    Define and run your own ongoing and separate evaluations of internal control, sampling
+    the audit and monitoring substrate HDS exposes.
+  IMPLEMENTER [user-entity] coverage: out-of-scope
+    applies_when: always; PLACES NO DUTY ON THIS PERSONA
+  IMPLEMENTER [subservice-organization] coverage: documented
+    applies_when: always
+    Evaluate the controls of the service you operate downstream.
+
+## soc2 CC4.2 — CC4.2 — Evaluation and communication of deficiencies
+  Requirement: The entity evaluates and communicates internal-control deficiencies in a
+  timely manner to the parties responsible for taking corrective action.
+  Anchor: https://compliance.datasafe.dev/soc2.html#req-cc4-2
+  PRYV PLATFORM: facilitated (mode: evidence)
+    Pryv-side deficiency signals (audit anomalies, observability alerts) feed your
+    deficiency-tracking process. CAPA-style records can themselves ride on Pryv events on a
+    dedicated stream. The evaluation + communication workflow is your procedure.
+  HDS: facilitated (effort saved: low) (mode: evidence)
+    Deficiency signals from the platform side — audit anomalies, monitoring alerts — feed a
+    deficiency-tracking process. HDS operates its own deficiency-evaluation and
+    corrective-action flow and documents it; corrective records can themselves ride on the
+    platform as events on a dedicated stream. The evaluation and communication workflow is
+    each organization's procedure.
+    Detail: HDS runs a documented process for evaluating and communicating deficiencies it
+    observes in its own operation, fed by audit and monitoring signals and tied to its
+    incident and periodic-evaluation procedures. A partner authors its own deficiency
+    workflow over the same substrate. The platform can host the corrective-action records
+    themselves as attributable events.
+    Evidence: internal:hipaa/procedures/periodic-evaluation, internal:soc2/procedures/control-monitoring
+  IMPLEMENTER [service-organization] coverage: documented
+    applies_when: always
+    Define how you evaluate, track and communicate control deficiencies and their corrective
+    actions.
+  IMPLEMENTER [user-entity] coverage: out-of-scope
+    applies_when: always; PLACES NO DUTY ON THIS PERSONA
+  IMPLEMENTER [subservice-organization] coverage: documented
+    applies_when: always
+    Operate your own deficiency-tracking and communication process downstream.
+
+## soc2 CC5.1 — CC5.1 — Selection and development of control activities
+  Requirement: The entity selects and develops control activities that contribute to
+  mitigating risks to the achievement of objectives to acceptable levels.
+  Anchor: https://compliance.datasafe.dev/soc2.html#req-cc5-1
+  PRYV PLATFORM: facilitated (mode: primitive)
+    Several of your control activities ARE Pryv primitives: permission-scoped access tokens
+    (purpose limitation), system streams (privileged-data isolation), encryption of operator
+    secrets at rest. You select which to deploy against which risk; Pryv provides the
+    activities ready-made rather than as something you build.
+  HDS: facilitated (effort saved: medium) (mode: primitive)
+    Several control activities are platform primitives HDS operates ready-made:
+    permission-scoped access tokens (purpose limitation), system-level isolation of
+    privileged data, and encryption of operator secrets at rest. An organization selects
+    which to deploy against which risk; HDS provides the activities as shipped controls
+    rather than something to build, and documents the configuration it runs.
+    Detail: The control-activity selection step is governance, but a meaningful subset of
+    the activities themselves are platform-native: least-privilege access grants,
+    privileged-namespace isolation, and at-rest encryption of operator secrets. HDS operates
+    these and documents its access-control configuration. A partner selects and operates the
+    activities appropriate to its risk assessment over the same primitives.
+    Evidence: internal:hipaa/policies/access-control, internal:soc2/procedures/control-monitoring
+  IMPLEMENTER [service-organization] coverage: documented
+    applies_when: always
+    Select the control activities appropriate to your risks; deploy the platform primitives
+    (scoped access, isolation, secret encryption) that implement them.
+  IMPLEMENTER [user-entity] coverage: out-of-scope
+    applies_when: always; PLACES NO DUTY ON THIS PERSONA
+  IMPLEMENTER [subservice-organization] coverage: documented
+    applies_when: always
+    Select and operate control activities for the service you run downstream.
+
+## soc2 CC5.2 — CC5.2 — General control activities over technology
+  Requirement: The entity selects and develops general control activities over technology
+  to support the achievement of its objectives.
+  Anchor: https://compliance.datasafe.dev/soc2.html#req-cc5-2
+  PRYV PLATFORM: facilitated (mode: primitive)
+    The technology general controls SOC 2 examines, logical access, authentication,
+    encryption in transit + at rest for secrets, audit logging, secure inter-core transport,
+    are shipped Pryv primitives, enforced at the API surface rather than left to your
+    configuration discipline. The CC6 + CC7 rows below detail each. Your role is selecting
+    and operating them.
+  HDS: implemented (effort saved: high)
+    The technology general controls SOC 2 examines — logical access, authentication,
+    encryption in transit, audit logging, secure inter-core transport — are shipped platform
+    controls HDS operates, enforced at the API surface rather than left to configuration
+    discipline. The CC6 and CC7 rows detail each. An organization's role is selecting and
+    operating them; the mechanisms are in place.
+    Detail: General IT controls are where the platform contribution is strongest: access
+    control and authentication are enforced on every request, transmission is TLS by
+    default, the audit log is always-on, and inter-core transport is mutually authenticated.
+    HDS operates this stack across every data-residency option. At-rest encryption of event
+    data is in force at the hosting layer in every region (full-volume encryption, since
+    2026-06-26; see CC6.7 for the provider-managed-key residual). A partner selects,
+    configures and operates these controls; it does not build them.
+    Evidence: internal:hipaa/policies/access-control, internal:hipaa/policies/audit-controls, internal:hipaa/policies/transmission-security
+  IMPLEMENTER [service-organization] coverage: documented
+    applies_when: always
+    Select, configure and operate the platform general IT controls; document the
+    configuration and weigh the provider-managed-key at-rest residual in your risk analysis.
+  IMPLEMENTER [user-entity] coverage: out-of-scope
+    applies_when: always; PLACES NO DUTY ON THIS PERSONA
+  IMPLEMENTER [subservice-organization] coverage: documented
+    applies_when: always
+    Operate equivalent general IT controls for the service you run downstream.
+
+## soc2 CC5.3 — CC5.3 — Deployment of control activities through policies and procedures
+  Requirement: The entity deploys control activities through policies that establish what
+  is expected and procedures that put those policies into action.
+  Anchor: https://compliance.datasafe.dev/soc2.html#req-cc5-3
+  PRYV PLATFORM: out-of-scope
+    Policy + procedure authoring is your editorial work. Pryv enforces what the policies
+    decide (access rules, encryption), but the policy text and the operating procedures are
+    yours.
+  HDS: documented (effort saved: medium)
+    Policy and procedure authoring is editorial governance work. HDS maintains its own
+    information-security policy set and the operating procedures that put it into action
+    over the platform; the platform enforces what the policies decide (access rules,
+    encryption in transit), but the policy text and procedures are an organization's own.
+    Detail: HDS's documented policies and procedures are referenced throughout this matrix
+    as the administrative backing for the technical controls, and they are reviewed
+    periodically. The platform enforces the decisions those policies make but does not
+    author them. A partner attesting under SOC 2 keeps its own policy and procedure set; it
+    cannot inherit HDS's, though it can cite HDS's programme where HDS operates the
+    underlying system.
+    Evidence: internal:hipaa/policies/information-security-policy, internal:soc2/procedures/control-monitoring
+  IMPLEMENTER [service-organization] coverage: documented
+    applies_when: always
+    Author and maintain your own policies and operating procedures that deploy your selected
+    control activities.
+  IMPLEMENTER [user-entity] coverage: out-of-scope
+    applies_when: always; PLACES NO DUTY ON THIS PERSONA
+  IMPLEMENTER [subservice-organization] coverage: documented
+    applies_when: always
+    Maintain your own policies and procedures for the service you run downstream.
+
+## soc2 CC6.1 — CC6.1 — Logical access security over protected information assets
+  Requirement: The entity implements logical access security software, infrastructure, and
+  architectures over protected information assets to protect them from security events.
+  Anchor: https://compliance.datasafe.dev/soc2.html#req-cc6-1
+  PRYV PLATFORM: implemented
+    Logical access is enforced by Pryv at the API surface: every read/write is checked
+    against the access's per-stream + level permissions, token-based authentication is the
+    default, and MFA is available via the mfa.* methods when you enable it. System streams
+    isolate privileged data (credentials, MFA state). No plaintext transport path ships. You
+    define who gets which access; Pryv enforces it.
+    Detail: **OAuth2 as a second logical-access path.** Alongside token + MFA
+    authentication, Pryv ships a standards-based OAuth2 authorization-code + PKCE
+    authorization server (`open-pryv.io/components/oauth2/`, open-pryv.io 2.0.0-rc.8):
+    discovery at `GET /.well-known/oauth-authorization-server`, `GET /oauth2/authorize`, and
+    `POST /oauth2/token`. PKCE is mandatory (S256 only); presented redirect URIs are
+    validated by exact string match with a single loopback-port carve-out (RFC 8252 / 9700)
+    and fragment-bearing redirect URIs are rejected
+    (`open-pryv.io/components/oauth2/src/clientRegistry.ts`). Client registration is
+    curated-only, the operator promotes an account to an OAuth client via
+    `bin/oauth-client.js`; open self-service registration (`POST /oauth2/register`) is
+    deliberately disabled. **Credential transmission to third parties.** When a credential
+    must be handed to a counterparty, the shared-secrets endpoints
+    (`open-pryv.io/components/shared-secrets/`) replace URL-embedded tokens with a one-time
+    random key: redeemable exactly once (with atomic single-winner semantics under
+    concurrent redemption), mandatory TTL, only the SHA-256 of the key's random half stored
+    server-side, payload scrubbed when the item leaves the pending state (on redemption, on
+    a signature mismatch, and on the first retrieval attempt after the TTL; expiry is
+    enforced on access, not by a background sweeper, so an untouched expired secret keeps
+    its payload until something reaches it or you delete it), optional passphrase / HMAC
+    signature on redemption. Browser history, referrer headers, and access logs therefore
+    stop carrying live credentials. A `secretSharing: forbidden` feature permission,
+    inherited by child accesses and not strippable via `accesses.update`, lets you exclude
+    designated access classes from minting shared secrets at all.
+    PLANNED (enhancement, impact medium): Reference TOTP / WebAuthn MFA plugins + AAL-tier mapping strengthen the CC6.1 authentication-strength evidence
+  HDS: implemented (effort saved: high)
+    Logical access is enforced by the HDS-operated platform at the API surface: every read
+    or write is checked against the access's per-stream and per-level permissions,
+    token-based authentication is the default, multi-factor authentication is available, and
+    privileged data is held on a separately controlled namespace. No plaintext transport
+    path is served. An organization defines who gets which access; HDS operates the
+    enforcement.
+    Detail: Logical access security is a technical property of the API boundary, not a
+    downstream policy layer. Each request must present a valid access token whose
+    per-stream, per-level permissions are checked before any data is touched; credentials
+    and privileged state live on a separately controlled namespace; MFA strengthens the
+    login where configured. HDS operates this stack across every data-residency option and
+    documents its access-control and authentication policy. The implementer configures which
+    grants its application mints.
+    Evidence: internal:hipaa/policies/access-control, internal:hipaa/policies/authentication
+  IMPLEMENTER [service-organization] coverage: documented
+    applies_when: [stores-phi-copy, connects]
+    Configure least-privilege per-stream access grants for your application and document
+    your access-authorization rules; decide whether to require MFA.
+  IMPLEMENTER [user-entity] coverage: out-of-scope
+    applies_when: [stores-phi-copy, connects]; PLACES NO DUTY ON THIS PERSONA
+  IMPLEMENTER [subservice-organization] coverage: documented
+    applies_when: [stores-phi-copy, connects]
+    Apply the same logical-access controls to the service you run downstream.
+
+## soc2 CC6.2 — CC6.2 — Registration, credential issuance, and de-provisioning
+  Requirement: Before issuing credentials and granting access, the entity registers and
+  authorizes new users; credentials are removed when access is no longer authorized.
+  Anchor: https://compliance.datasafe.dev/soc2.html#req-cc6-2
+  PRYV PLATFORM: implemented
+    The full credential lifecycle is Pryv primitives: registration mints an account;
+    accesses.create issues a scoped credential; accesses.update modifies scope (writing the
+    prior version to history); accesses.delete revokes; system.users.delete removes the
+    account entirely. Each stage lands in the audit log. The authorization decision (who may
+    register, what scope is appropriate) is your policy; the mechanism is shipped.
+    Detail: **OAuth2 client credential issuance is curated.** For delegated-app credentials,
+    Pryv issues OAuth2 client identities only through the operator CLI
+    (`bin/oauth-client.js`, register / rotate-secret / list), not through open dynamic
+    registration: the discovery document advertises no registration endpoint and `POST
+    /oauth2/register` (RFC 7591 open mode) is intentionally deferred,
+    `oauth.clientRegistration.mode: curated` is the only supported value and `open` is
+    rejected. Each client carries an exact-match set of registered redirect URIs and, for
+    confidential clients, a rotatable `client_secret`. The authorization decision (who
+    becomes a client, which redirect URIs + scopes are appropriate) stays your policy; the
+    issuance + rotation mechanism is shipped (`open-pryv.io/components/oauth2/`,
+    open-pryv.io 2.0.0-rc.8).
+  HDS: implemented (effort saved: high)
+    The full credential lifecycle is platform-native and HDS-operated: registration mints an
+    account, a scoped access token issues a credential, updating an access modifies its
+    scope (writing the prior version to history), and revocation or account deletion removes
+    it. Each stage lands in the audit log. The authorization decision (who may register,
+    what scope is appropriate) is an organization's policy; the mechanism is shipped.
+    Detail: Registration, issuance, modification and de-provisioning are all first-class
+    operations: an access token is the credential, its scope is adjustable with full version
+    history, and revocation takes effect immediately. Account deletion removes the identity
+    entirely. Every step is audited. HDS operates this lifecycle and documents the
+    access-authorization and termination procedures it follows for its own workforce; the
+    implementer applies the same primitives to its users.
+    Evidence: internal:hipaa/policies/access-authorization, internal:hipaa/procedures/access-termination
+  IMPLEMENTER [service-organization] coverage: documented
+    applies_when: [connects]
+    Document who may register and authorize users and at what scope, and tie de-provisioning
+    to immediate access revocation.
+  IMPLEMENTER [user-entity] coverage: out-of-scope
+    applies_when: [connects]; PLACES NO DUTY ON THIS PERSONA
+  IMPLEMENTER [subservice-organization] coverage: documented
+    applies_when: [connects]
+    Operate the same registration and de-provisioning lifecycle downstream.
+
+## soc2 CC6.3 — CC6.3 — Role-based access, least privilege, and segregation of duties
+  Requirement: The entity authorizes, modifies, and removes access based on roles and the
+  system design, applying least privilege and segregation of duties.
+  Anchor: https://compliance.datasafe.dev/soc2.html#req-cc6-3
+  PRYV PLATFORM: implemented
+    Least privilege is native: an access carries only the stream+level tuples it needs (none
+    / create-only / read / contribute / manage), so a credential cannot touch out-of-scope
+    data. Segregation of duties is expressed by issuing distinct narrow accesses per role,
+    with system streams isolating privileged functions. accesses.update / .delete cover
+    modify + remove; access version history is the review-evidence layer. Role definitions
+    live in your IdP / policy; Pryv records and enforces the resulting access state.
+    Detail: For workforce / role-scale deployments, Pryv composes with an external IdP / IGA
+    system rather than implementing roles + groups itself, two integration patterns (group
+    access + callerId audit suffix; seed access + sub-access derivation) are documented in
+    context/workforce-access-patterns.md. The IdP stays the source of truth for identity;
+    Pryv records the access state + per-individual audit trail. **OAuth2 revoke +
+    refresh-chain teardown.** For delegated apps, the durable consent behind an OAuth2 grant
+    is a cross-account CMC data-grant; revoking it (deleting the counterparty access) kills
+    the refresh chain, the next `refresh_token` exchange sees the data-grant gone and fails
+    `invalid_grant`, so no fresh access is minted
+    (`open-pryv.io/components/oauth2/src/grants/refresh_token.ts`, open-pryv.io 2.0.0-rc.8).
+    Access modification propagates the same way: narrowing the granted permissions on the
+    data-grant narrows what the next rotated token can do; widening requires a fresh
+    consent, never a refresh. **Operator client revocation reaches live tokens.** Revoking a
+    delegated app (`bin/oauth-client.js revoke <clientId>`) no longer merely blocks new
+    grants while issued tokens live out their TTL: it writes a platform-wide tombstone and
+    every core rejects that client's existing access tokens at validation time within
+    `oauth.clientRevokeCheckSeconds` (default 30 s), open socket.io connections are swept
+    and dropped too. So "remove access for app X, everywhere, now" is one operator command
+    with a bounded propagation window (open-pryv.io `7b6321aa`). For DPoP-bound apps the
+    same is available per client key (`revoke-key <jkt>`, open-pryv.io `4c0a5ade`).
+  HDS: implemented (effort saved: high)
+    Least privilege is native to the HDS-operated platform: an access carries only the
+    per-stream, per-level permissions it needs, so a credential cannot touch out-of-scope
+    data. Segregation of duties is expressed by issuing distinct narrow accesses per role,
+    with privileged functions isolated on a separate namespace. Modification and removal are
+    audited operations with version history as the review-evidence layer.
+    Detail: The permission model makes least privilege the default rather than an aim: each
+    access lists exactly the streams and levels it may exercise. Distinct roles map to
+    distinct narrow accesses, giving segregation of duties; privileged namespaces isolate
+    sensitive functions. Access updates and revocations are audited and
+    version-history-tracked. Role definitions live in an organization's identity system or
+    policy; HDS records and enforces the resulting access state and documents its own
+    access-review cadence.
+    Evidence: internal:hipaa/policies/access-control, internal:hipaa/procedures/access-review
+  IMPLEMENTER [service-organization] coverage: documented
+    applies_when: [connects]
+    Define your role model and least-privilege scopes, map them onto access grants, and run
+    a periodic access review over the version history.
+  IMPLEMENTER [user-entity] coverage: out-of-scope
+    applies_when: [connects]; PLACES NO DUTY ON THIS PERSONA
+  IMPLEMENTER [subservice-organization] coverage: documented
+    applies_when: [connects]
+    Apply role-based least-privilege access and segregation of duties downstream.
+
+## soc2 CC6.4 — CC6.4 — Physical access to facilities and protected assets
+  Requirement: The entity restricts physical access to facilities and protected
+  information assets to authorized personnel.
+  Anchor: https://compliance.datasafe.dev/soc2.html#req-cc6-4
+  PRYV PLATFORM: out-of-scope
+    Physical access control (data-center entry, badge systems, media vaults) is facility
+    scope, outside Pryv's software boundary. Your hosting provider carries this, an HDS- or
+    ISO 27001-certified hoster typically inherits it from the underlying CSP and provides
+    the attestation you reference.
+  HDS: facilitated (effort saved: medium) (mode: infrastructure)
+    Physical access control (data-centre entry, media handling) is facility scope, outside
+    the platform software boundary. HDS carries this layer by selecting certified hosting
+    providers for each region (EU/Switzerland and US data-residency options) and holding
+    their facility-control attestations on file, so an organization inherits a vetted
+    physical posture for the server tier rather than sourcing it itself.
+    Detail: HDS does not operate its own data centres; it deploys the platform onto
+    certified infrastructure whose physical access controls are independently attested, and
+    records which attestation backs each region in its hosting-provider register. The
+    server-tier physical-access obligation is satisfied by inheritance; an organization's
+    own facilities (offices where workforce access the service) remain its responsibility.
+    Evidence: internal:hipaa/registers/hosting-provider-attestations
+  IMPLEMENTER [service-organization] coverage: documented
+    applies_when: always
+    Inherit the server-tier facility controls from the HDS hosting region and reference the
+    attestation; control and document physical access to your own premises.
+  IMPLEMENTER [user-entity] coverage: out-of-scope
+    applies_when: always; PLACES NO DUTY ON THIS PERSONA
+  IMPLEMENTER [subservice-organization] coverage: documented
+    applies_when: always
+    Document the physical controls for any facilities you operate downstream.
+
+## soc2 CC6.5 — CC6.5 — Protections over data and software on disposed assets
+  Requirement: The entity removes logical and physical protections over physical assets
+  only after the ability to read or recover the data and software from them has been
+  diminished and is no longer required.
+  Anchor: https://compliance.datasafe.dev/soc2.html#req-cc6-5
+  PRYV PLATFORM: configurable
+    Logical destruction is per-user: system.users.delete removes the user's data from the
+    live store; event- and stream-level deletion cover per-record needs. Whether destruction
+    extends to backups is engine-dependent, SQLite stores one file per user (unlink = gone),
+    PostgreSQL deletes rows but historical pg_dump artefacts retain them until rotated.
+    Choose the engine that matches your destruction policy; physical media sanitisation is
+    your hosting procedure.
+  HDS: configurable (effort saved: medium)
+    Logical destruction is per-user on the HDS-operated platform: account deletion removes a
+    user's data from the live store, and event- and stream-level deletion cover per-record
+    needs. Whether destruction extends to backups is storage-engine-dependent, so the engine
+    is chosen to match the destruction policy. Physical media sanitisation at the server
+    tier is the certified hosting provider's procedure.
+    Detail: Per-user erasure gives a clean logical-destruction path; backup reach depends on
+    the configured storage engine (a per-user file model unlinks cleanly, a shared
+    relational store retains rows in historical dump artefacts until rotated). HDS documents
+    the engine posture it operates and relies on the hosting provider's attested
+    media-sanitisation for physical disposal. An organization selects the engine matching
+    its disposal commitment.
+    Evidence: internal:hipaa/registers/hosting-provider-attestations
+  IMPLEMENTER [service-organization] coverage: configurable
+    applies_when: [stores-phi-copy]
+    Choose the storage engine that matches your destruction policy and document how
+    backup-resident copies are aged out.
+  IMPLEMENTER [user-entity] coverage: out-of-scope
+    applies_when: [stores-phi-copy]; PLACES NO DUTY ON THIS PERSONA
+  IMPLEMENTER [subservice-organization] coverage: configurable
+    applies_when: [stores-phi-copy]
+    Make the same engine and sanitisation choices for the service you run downstream.
+
+## soc2 CC6.6 — CC6.6 — Boundary protection against external threats
+  Requirement: The entity implements logical access security measures to protect against
+  threats originating outside its system boundaries.
+  Anchor: https://compliance.datasafe.dev/soc2.html#req-cc6-6
+  PRYV PLATFORM: implemented
+    The external boundary is the TLS-terminating HTTPS API: TLS 1.3 in transit with the
+    built-in ACME integration (auto-renewal + cluster-replicated rotation), token-gated
+    access on every request, no plaintext path. Inter-core traffic in a cluster runs over
+    mTLS on a private CA, separating the control plane from the user-facing plane. Edge
+    controls (WAF, firewall, rate limiting) sit in your reverse proxy by design, see
+    context/rate-limiting-and-dos-protection.md.
+  HDS: implemented (effort saved: high)
+    The external boundary is the TLS-terminating HTTPS API HDS operates: TLS in transit with
+    automated certificate renewal, token-gated access on every request, and no plaintext
+    path. Inter-core traffic in a cluster runs over mutually authenticated transport,
+    separating the control plane from the user-facing plane. Edge controls (WAF, firewall,
+    rate limiting) sit in the operator's reverse proxy by design.
+    Detail: Boundary protection is enforced technically: every request crosses a TLS
+    boundary and presents a valid access token before reaching data, and cluster-internal
+    transport is mutually authenticated on a private CA. HDS operates the certificate
+    lifecycle and the edge controls (rate limiting, firewalling) at the reverse proxy in
+    each region. An organization inherits this boundary and configures any additional edge
+    policy its risk analysis requires.
+    Evidence: internal:hipaa/policies/transmission-security, internal:hipaa/policies/access-control
+  IMPLEMENTER [service-organization] coverage: documented
+    applies_when: always
+    Inherit the TLS and token boundary; configure and document any additional edge controls
+    (WAF, rate limits) your risk analysis calls for.
+  IMPLEMENTER [user-entity] coverage: out-of-scope
+    applies_when: always; PLACES NO DUTY ON THIS PERSONA
+  IMPLEMENTER [subservice-organization] coverage: documented
+    applies_when: always
+    Operate equivalent boundary protection for the service you run downstream.
+
+## soc2 CC6.7 — CC6.7 — Restriction and protection of information in transmission and movement
+  Requirement: The entity restricts the transmission, movement, and removal of information
+  to authorized users and processes, and protects it during transmission, movement, or
+  removal.
+  Anchor: https://compliance.datasafe.dev/soc2.html#req-cc6-7
+  PRYV PLATFORM: implemented
+    Transmission is TLS 1.3 end-to-end (client ↔ core direct, no Pryv-shipped intermediary
+    that could log or cache). Movement is restricted by the permission model, a credential
+    only moves the data its scope permits. Operator secrets at rest use AES-256-GCM
+    (HKDF-derived per-key); bootstrap bundles for core-to-core movement are AES-256-GCM
+    (scrypt). Bulk event-data at-rest encryption is an operator-side storage-layer choice
+    (LUKS / SSE-KMS / customer keys).
+  HDS: implemented (effort saved: high)
+    Transmission is protected by TLS end to end (client to core direct, with no HDS-shipped
+    intermediary that could log or cache), and movement is restricted by the permission
+    model — a credential only moves the data its scope permits. Operator secrets at rest and
+    bootstrap bundles for core-to-core movement are encrypted with authenticated encryption.
+    Bulk event data is encrypted at rest at the hosting/storage layer in every region (since
+    2026-06-26), with provider-managed keys as the documented residual.
+    Detail: The transmission half is default-on TLS with no plaintext path; the movement
+    half is bounded by the access permission model, so data only moves where a scope permits
+    and there is no out-of-band dump path. Operator secrets and core-to-core bootstrap
+    material use authenticated encryption at rest. Event data at rest is protected by
+    hosting-layer full-volume encryption in each region; keys are provider-managed, so
+    platform-managed content encryption (operator-held-key volumes or end-to-end) remains an
+    optional strengthening an organization weighs in its risk analysis.
+    Evidence: internal:hipaa/policies/transmission-security, internal:hipaa/policies/encryption, internal:hipaa/risk/at-rest-encryption, internal:hipaa/evidence/at-rest-encryption-verification
+    PLANNED (platform, impact medium): End-to-end / operator-held-key encryption is queued upstream as the strengthening for the provider-managed-key at-rest residual; claimable here only after pryv ships it AND HDS deploys and enables it on all cores.
+  IMPLEMENTER [service-organization] coverage: configurable
+    applies_when: [stores-phi-copy]
+    Rely on default-on TLS and the permission-bounded movement model; weigh the
+    provider-managed-key at-rest residual in your risk analysis and add application-side
+    encryption where your assessment requires it.
+  IMPLEMENTER [user-entity] coverage: out-of-scope
+    applies_when: [stores-phi-copy]; PLACES NO DUTY ON THIS PERSONA
+  IMPLEMENTER [subservice-organization] coverage: configurable
+    applies_when: [stores-phi-copy]
+    Make the same transmission and at-rest choices for the service you run downstream.
+
+## soc2 CC6.8 — CC6.8 — Prevention and detection of unauthorized or malicious software
+  Requirement: The entity implements controls to prevent, or detect and act upon, the
+  introduction of unauthorized or malicious software.
+  Anchor: https://compliance.datasafe.dev/soc2.html#req-cc6-8
+  PRYV PLATFORM: facilitated (mode: evidence)
+    Anti-malware / endpoint protection is a host-and-network control, not shipped in Pryv.
+    Pryv's contribution is detection-adjacent: server-side event-type validation rejects
+    malformed payloads at ingest, the dependency-audit pipeline guards the software supply
+    chain, and audit + observability surface anomalous behaviour. AV +
+    application-allowlisting on the hosts is your operator scope.
+  HDS: facilitated (effort saved: low) (mode: infrastructure)
+    Anti-malware and endpoint protection are host-and-network controls, not platform
+    features. HDS operates malware protection and patching at the hosting layer for the
+    environments it runs, documented internally. The platform contributes detection-adjacent
+    properties: server-side payload validation rejects malformed input at ingest, and the
+    audit and monitoring substrate surfaces anomalous behaviour.
+    Detail: HDS carries malware protection as operator-side infrastructure hardening for the
+    environments it runs; the platform software itself ships no antivirus. Its indirect
+    contribution is structural input validation at ingest and the anomaly signal from audit
+    and monitoring. An organization protects its own endpoints and any infrastructure it
+    operates outside HDS, and operates application-allowlisting on its hosts.
+    Evidence: internal:hipaa/policies/malware-protection
+  IMPLEMENTER [service-organization] coverage: documented
+    applies_when: always
+    Operate and document anti-malware and application-allowlisting on your own endpoints and
+    any infrastructure you run outside HDS.
+  IMPLEMENTER [user-entity] coverage: out-of-scope
+    applies_when: always; PLACES NO DUTY ON THIS PERSONA
+  IMPLEMENTER [subservice-organization] coverage: documented
+    applies_when: always
+    Operate equivalent malware controls for the infrastructure you run downstream.
+
+## soc2 CC7.1 — CC7.1 — Detection of configuration changes and vulnerabilities
+  Requirement: The entity uses detection and monitoring procedures to identify
+  configuration changes that introduce new vulnerabilities and susceptibility to newly
+  discovered vulnerabilities.
+  Anchor: https://compliance.datasafe.dev/soc2.html#req-cc7-1
+  PRYV PLATFORM: facilitated (mode: evidence)
+    Pryv-side substrate-vulnerability detection now has an active, CI-enforced feed
+    (open-pryv.io master merge `9e2ee7ff`): a runtime-dependency audit gate fails every
+    build on high or critical advisories in the shipped npm tree (accepted advisories live
+    in a documented allowlist, not silenced), a CycloneDX SBOM is emitted and Grype-scanned
+    on every CI run (build fails on critical findings), the base image is digest-pinned with
+    the rqlite download checksum-verified, and release images are cosign-signed with a SLSA
+    build-provenance attestation. Dependabot alerts, CHANGELOG announcements, and a
+    config-validation step that fails fast on malformed configuration at master start round
+    this out; observability + audit surface runtime anomalies. Base-image OS-level CVEs
+    remain visible to the scanners (a slimmer-base migration is a tracked follow-up). Your
+    own scanning cadence for the layers you add sits on top.
+  HDS: facilitated (effort saved: low) (mode: evidence)
+    Substrate-vulnerability detection on the platform side is partial: a committed
+    dependency lockfile, dependency alerts on the open-source codebase, published fix
+    announcements, and a config-validation step that fails fast on malformed configuration
+    at start. Operational monitoring and the audit log surface runtime anomalies. HDS
+    operates this and layers its own patching cadence; an organization's own
+    vulnerability-scanning cadence sits on top.
+    Detail: The platform contributes passive detection (lockfile, dependency alerts,
+    fail-fast config validation) plus the runtime anomaly signal from monitoring and audit.
+    HDS operates a patching and update process over the platform and documents it. A partner
+    defines its own vulnerability-scanning and configuration-drift detection cadence over
+    the same substrate.
+    Evidence: internal:hipaa/policies/audit-controls, internal:soc2/procedures/control-monitoring
+  IMPLEMENTER [service-organization] coverage: documented
+    applies_when: always
+    Define your own vulnerability-scanning and configuration-drift detection cadence over
+    the platform and your own infrastructure.
+  IMPLEMENTER [user-entity] coverage: out-of-scope
+    applies_when: always; PLACES NO DUTY ON THIS PERSONA
+  IMPLEMENTER [subservice-organization] coverage: documented
+    applies_when: always
+    Operate equivalent vulnerability detection for the service you run downstream.
+
+## soc2 CC7.2 — CC7.2 — Monitoring for anomalies indicative of security events
+  Requirement: The entity monitors system components for anomalies indicative of malicious
+  acts, natural disasters, and errors, and analyzes them to determine whether they
+  represent security events.
+  Anchor: https://compliance.datasafe.dev/soc2.html#req-cc7-2
+  PRYV PLATFORM: facilitated (mode: evidence)
+    The pluggable observability provider gives system-level anomaly signal (latency, error
+    rate, request volume); the per-user audit log gives application-level activity,
+    attributable to an access. Anomaly-detection logic on the audit stream itself is a
+    natural extension you build; the raw signal is shipped.
+  HDS: facilitated (effort saved: medium) (mode: evidence)
+    HDS's operational monitoring gives system-level anomaly signal (latency, error rate,
+    request volume) across every data-residency option, wired end to end with alerting
+    before any component is treated as in production; the per-user audit log gives
+    application-level activity attributable to an access. HDS operates this monitoring;
+    deciding which anomalies are security events is an organization's analysis.
+    Detail: Two signal sources back anomaly monitoring: HDS's infrastructure monitoring and
+    the audit log. HDS treats end-to-end alert wiring as a precondition for treating any
+    component as in production, so silent failures are caught. The analytical step —
+    classifying an anomaly as a security event — is governance and is each organization's
+    own, fed by the raw signal HDS exposes and operates.
+    Evidence: internal:hipaa/policies/audit-controls, internal:hipaa/procedures/login-monitoring
+  IMPLEMENTER [service-organization] coverage: documented
+    applies_when: always
+    Define your anomaly thresholds and the analysis that classifies an anomaly as a security
+    event, drawing on the monitoring and audit substrate.
+  IMPLEMENTER [user-entity] coverage: out-of-scope
+    applies_when: always; PLACES NO DUTY ON THIS PERSONA
+  IMPLEMENTER [subservice-organization] coverage: documented
+    applies_when: always
+    Operate equivalent anomaly monitoring for the service you run downstream.
+
+## soc2 CC7.3 — CC7.3 — Evaluation of security events
+  Requirement: The entity evaluates security events to determine whether they could
+  result, or have resulted, in a failure to meet its objectives, and takes action.
+  Anchor: https://compliance.datasafe.dev/soc2.html#req-cc7-3
+  PRYV PLATFORM: facilitated (mode: evidence)
+    Event-vs-incident classification is your decision. Pryv supplies the evaluation inputs,
+    audit row patterns, observability anomalies, but the categorisation rule and the
+    response trigger are your policy.
+  HDS: facilitated (effort saved: low) (mode: evidence)
+    Event-versus-incident classification is each organization's decision. The platform and
+    HDS monitoring supply the evaluation inputs — audit-row patterns and monitoring
+    anomalies — but the categorisation rule and the response trigger are policy. HDS
+    operates its own event-evaluation step as part of its incident-response procedure and
+    documents it.
+    Detail: HDS evaluates the security events it observes in its own operation using audit
+    and monitoring inputs, against the criteria in its incident-response procedure. A
+    partner authors its own classification rule and response triggers over the same inputs.
+    The substrate is operated; the judgement is governance.
+    Evidence: internal:hipaa/procedures/security-incident-response
+  IMPLEMENTER [service-organization] coverage: documented
+    applies_when: always
+    Define how you classify a security event as an incident and what response it triggers.
+  IMPLEMENTER [user-entity] coverage: out-of-scope
+    applies_when: always; PLACES NO DUTY ON THIS PERSONA
+  IMPLEMENTER [subservice-organization] coverage: documented
+    applies_when: always
+    Operate your own event-evaluation step for the service you run downstream.
+
+## soc2 CC7.4 — CC7.4 — Incident response program
+  Requirement: The entity responds to identified security incidents through a defined
+  program to understand, contain, remediate, and communicate them.
+  Anchor: https://compliance.datasafe.dev/soc2.html#req-cc7-4
+  PRYV PLATFORM: facilitated (mode: evidence)
+    Pryv contributes the technical halves of incident response: detection + scoping (audit +
+    observability) and containment (accesses.delete revokes a compromised credential
+    immediately). The external intake channel for substrate-vulnerability reports is
+    published in `SECURITY.md` (coordinated disclosure policy: private GHSA flow +
+    `security-dev@` mailbox + SLA + scope + safe harbor; private vulnerability reporting
+    enabled on the published repositories). The incident-response program itself, roles,
+    escalation, communications, lessons-learned, is yours to define and rehearse.
+    PLANNED (feature, impact low): Chained / signed audit log strengthens forensic evidence during incident analysis (F:Evidence Med → High)
+  HDS: facilitated (effort saved: medium) (mode: evidence)
+    The platform contributes the technical halves of incident response: detection and
+    scoping (audit log plus monitoring) and containment (immediate revocation of a
+    compromised access). HDS runs its own incident-response programme as operator — roles,
+    escalation, communications — and documents it; that programme feeds the notification
+    obligations a partner carries. The partner defines and rehearses its own programme.
+    Detail: HDS operates an incident-response procedure: detection draws on audit and
+    monitoring, containment uses immediate access revocation or scope reduction, and a
+    documented flow governs escalation and communication. The procedure is held internally
+    and shared on request, and feeds breach-notification timing a partner must honour. For
+    substrate vulnerabilities, the upstream open-pryv.io project's coordinated vulnerability
+    disclosure program (private GitHub Security Advisories plus a security mailbox, GHSA/CVE
+    issuance) is the external intake channel; a published advisory affecting the deployed
+    release enters HDS's procedure as a provider notification. A partner authors and
+    rehearses its own incident-response programme over the same technical substrate.
+    Evidence: internal:hipaa/procedures/security-incident-response
+  IMPLEMENTER [service-organization] coverage: documented
+    applies_when: always
+    Define and rehearse your own incident-response programme — roles, escalation,
+    containment, communication, lessons learned — over the platform detection and
+    containment primitives.
+  IMPLEMENTER [user-entity] coverage: out-of-scope
+    applies_when: always; PLACES NO DUTY ON THIS PERSONA
+  IMPLEMENTER [subservice-organization] coverage: documented
+    applies_when: always
+    Run your own incident-response programme and notify your upstream service organization
+    of incidents affecting their data.
+
+## soc2 CC7.5 — CC7.5 — Recovery from identified security incidents
+  Requirement: The entity identifies, develops, and implements activities to recover from
+  identified security incidents.
+  Anchor: https://compliance.datasafe.dev/soc2.html#req-cc7-5
+  PRYV PLATFORM: facilitated (mode: infrastructure)
+    Recovery primitives: bin/backup.js + --restore rebuild a user from backup; a multi-core
+    cluster gives in-line Raft replication + cluster-replicated TLS certs so a surviving
+    core keeps serving when a peer fails. The recovery-objective targets (RTO / RPO) and the
+    drill cadence are your policy.
+  HDS: facilitated (effort saved: medium) (mode: infrastructure)
+    Recovery primitives ship and HDS operates them: per-user backup and restore rebuild a
+    subject from backup, and a replicated multi-core topology with cluster-replicated
+    certificates keeps a surviving core serving when a peer fails. HDS documents the
+    recovery objectives and runbook it operates; the recovery-objective targets and drill
+    cadence for an organization's own service are its own.
+    Detail: Recovery rests on two layers HDS operates: cold restore from per-user backups as
+    the canonical path, and live replication across cores so a single-region failure does
+    not lose live data. HDS documents the recovery objectives it targets; verified,
+    regularly tested recovery drilling is being matured (see CC4.1 evaluation). A partner
+    sets its own recovery-objective targets and drill cadence over the same primitives.
+    Evidence: internal:hipaa/procedures/disaster-recovery-plan, internal:hipaa/procedures/security-incident-response
+  IMPLEMENTER [service-organization] coverage: documented
+    applies_when: always
+    Set your recovery-objective targets and drill cadence, and document the recovery runbook
+    over the platform backup and replication primitives.
+  IMPLEMENTER [user-entity] coverage: out-of-scope
+    applies_when: always; PLACES NO DUTY ON THIS PERSONA
+  IMPLEMENTER [subservice-organization] coverage: documented
+    applies_when: always
+    Operate your own recovery activities for the service you run downstream.
+
+## soc2 CC8.1 — CC8.1 — Authorized changes to infrastructure, data, software, and procedures
+  Requirement: The entity authorizes, designs, develops or acquires, configures,
+  documents, tests, approves, and implements changes to infrastructure, data, software,
+  and procedures.
+  Anchor: https://compliance.datasafe.dev/soc2.html#req-cc8-1
+  PRYV PLATFORM: facilitated (mode: evidence)
+    Pryv-side change evidence: tagged releases, SHA-pinned Docker images, CHANGELOG-v2 +
+    CHANGELOG-v2-back per release, an engine-agnostic forward-only schema-migration
+    framework (bin/migrate.js, with autoRunOnStart), and a public CI test matrix (PostgreSQL
+    + SQLite). Separate dev / test / prod environments are supported via independent core
+    deployments. The audit log records config-driven behaviour changes in your deployment.
+    Your change-approval workflow (windows, sign-off, rollback) sits on top.
+  HDS: documented (effort saved: low)
+    Platform-side change evidence is strong: tagged releases, SHA-pinned images, per-release
+    change notes, a forward-only schema-migration framework, and a public CI test matrix;
+    separate environments are supported via independent deployments, and the audit log
+    records config-driven behaviour change. HDS is honest, though, that its own formalised
+    change-management programme (windows, sign-off, rollback) is still being matured — a
+    known gap.
+    Detail: The substrate supplies the raw change artefacts an auditor samples. What is not
+    yet fully formalised is HDS's own change-approval workflow as a documented, verified
+    programme — HDS states this gap plainly rather than claiming an implemented
+    change-management control. HDS documents its current change handling and is maturing it.
+    A partner authors its own change-management programme over the platform's
+    change-evidence substrate.
+    Evidence: internal:hipaa/policies/audit-controls, internal:soc2/policies/change-management
+    PLANNED (doc, impact medium): A written change-management process (ticketed approvals, documented test evidence per change, rollback) is drafted in the internal pipeline; its formalisation is the tracked remediation.
+  IMPLEMENTER [service-organization] coverage: documented
+    applies_when: always
+    Author and document your own change-management workflow — authorization, testing,
+    approval, rollback — using the platform change-evidence artefacts.
+  IMPLEMENTER [user-entity] coverage: out-of-scope
+    applies_when: always; PLACES NO DUTY ON THIS PERSONA
+  IMPLEMENTER [subservice-organization] coverage: documented
+    applies_when: always
+    Operate your own change-management programme for the service you run downstream.
+
+## soc2 CC9.1 — CC9.1 — Risk mitigation for business disruptions
+  Requirement: The entity identifies, selects, and develops risk-mitigation activities for
+  risks arising from potential business disruptions.
+  Anchor: https://compliance.datasafe.dev/soc2.html#req-cc9-1
+  PRYV PLATFORM: facilitated (mode: infrastructure)
+    Disruption-mitigation inheritance: multi-core HA + Raft replication, backup-restore,
+    cluster-replicated TLS certificates, and a clean cloud-exit path (re-issue the cluster
+    onto new infrastructure from a bootstrap bundle). The business-continuity objectives and
+    the insurance / contractual mitigation choices are yours.
+  HDS: facilitated (effort saved: medium) (mode: infrastructure)
+    Disruption-mitigation primitives are inherited and HDS-operated: multi-core high
+    availability with replication, per-user backup and restore, cluster-replicated
+    certificates, and a clean cloud-exit path (re-issue the cluster onto new infrastructure
+    from a bootstrap bundle). HDS documents the continuity posture it operates; the
+    business-continuity objectives and any insurance or contractual mitigation choices are
+    an organization's own.
+    Detail: HDS operates the technical continuity substrate — HA replication, backup and
+    restore, replicated TLS certificates, portable cluster re-issue — across both
+    data-residency options and documents it. The non-technical mitigation choices
+    (continuity objectives, insurance, contractual risk transfer) are governance and belong
+    to each attesting organization. HDS's own formal risk assessment that would prioritise
+    these mitigations is a known gap (see CC3.2).
+    Evidence: internal:hipaa/procedures/disaster-recovery-plan, internal:hipaa/procedures/data-backup-plan
+  IMPLEMENTER [service-organization] coverage: documented
+    applies_when: always
+    Set your business-continuity objectives and choose your non-technical mitigations over
+    the platform HA and backup substrate HDS operates.
+  IMPLEMENTER [user-entity] coverage: out-of-scope
+    applies_when: always; PLACES NO DUTY ON THIS PERSONA
+  IMPLEMENTER [subservice-organization] coverage: documented
+    applies_when: always
+    Operate equivalent disruption mitigation for the service you run downstream.
+
+## soc2 CC9.2 — CC9.2 — Vendor and business-partner risk management
+  Requirement: The entity assesses and manages risks associated with its vendors and
+  business partners.
+  Anchor: https://compliance.datasafe.dev/soc2.html#req-cc9-2
+  PRYV PLATFORM: facilitated (mode: awareness)
+    Where Pryv is your vendor (open-pryv.io as a third-party, BSD-licensed platform), the
+    public release process + CHANGELOGs + this compliance matrix are the vendor-monitoring
+    artefact set you reference. Your broader vendor-risk programme (assessment criteria, SLA
+    reviews, subprocessor inventory) sits on top.
+    Detail: Supply-chain risk on the Pryv substrate is actively managed upstream: committed
+    lockfile + Dependabot, a CI runtime-dependency audit gate, CycloneDX SBOM emission with
+    Grype scanning, a digest-pinned base image, and cosign-signed release images with SLSA
+    provenance (open-pryv.io merge `9e2ee7ff`). The SBOM + signature + CHANGELOG set is the
+    vendor-monitoring artefact you cite when Pryv is the vendor under review. See CC7.1.
+  HDS: documented (effort saved: low)
+    Where the platform is an organization's vendor, the public release process, change notes
+    and this compliance matrix are the vendor-monitoring artefact set it references. HDS
+    maintains a subprocessor register for its own downstream vendors. HDS is honest that a
+    formalised vendor-management programme (assessment criteria, SLA reviews) is still being
+    matured — a known gap.
+    Detail: HDS's contribution has two parts. As a vendor it exposes a transparent release
+    process and this matrix for monitoring. As an operator it holds a subprocessor register
+    listing its own downstream vendors, available to partners for their due diligence. HDS
+    states plainly that its full vendor-risk programme — assessment criteria, periodic
+    reassessment, SLA review — is not yet formalised. A partner runs its own vendor-risk
+    programme, treating HDS as one assessed vendor.
+    Evidence: internal:hipaa/registers/subprocessor-register, internal:soc2/policies/vendor-management
+    PLANNED (doc, impact medium): A formal vendor-management programme (assessment criteria, scored risk tiers, scheduled re-assessment and SLA review) is drafted in the internal pipeline; its formalisation is the tracked remediation.
+  IMPLEMENTER [service-organization] coverage: documented
+    applies_when: [third-parties]
+    Run your own vendor-risk programme; assess HDS as a vendor using its release process,
+    this matrix and its subprocessor register.
+    Templates to sign: subprocessor
+  IMPLEMENTER [user-entity] coverage: out-of-scope
+    applies_when: [third-parties]; PLACES NO DUTY ON THIS PERSONA
+  IMPLEMENTER [subservice-organization] coverage: documented
+    applies_when: [third-parties]
+    Manage the risk of your own downstream vendors and flow obligations through to them.
+    Templates to sign: subcontractor
+
+## soc2 A1.1 — A1.1 — Capacity management
+  Requirement: The entity maintains, monitors, and evaluates current processing capacity
+  and use of system components to manage capacity demand and to enable additional capacity
+  in support of its objectives.
+  Anchor: https://compliance.datasafe.dev/soc2.html#req-a1-1
+  PRYV PLATFORM: facilitated (mode: infrastructure)
+    Capacity signal comes from per-core observability metrics (memory, CPU, latency, request
+    volume); capacity grows by adding cores to the cluster (each serves its bound users
+    behind the shared rqlite control plane). The capacity-planning cadence and provisioning
+    automation are yours.
+  HDS: facilitated (effort saved: medium) (mode: infrastructure)
+    HDS runs the platform on a topology that scales horizontally (cores added to a cluster),
+    and operates infrastructure-level monitoring of memory, CPU, latency and request volume
+    across both the US and Switzerland data-residency options. The capacity-planning cadence
+    — thresholds, provisioning triggers — is an operator procedure HDS documents; the
+    user-entity inherits the headroom rather than sizing it.
+    Detail: Capacity signal comes from the platform's observability metrics plus HDS's own
+    infrastructure telemetry. HDS evaluates utilisation against headroom on a defined
+    cadence and adds capacity by extending the cluster. The written capacity-management
+    procedure HDS operates is held internally and shared on request; a user-entity running
+    its own deployment performs its own capacity planning.
+    Evidence: internal:soc2/procedures/capacity-management
+  IMPLEMENTER [service-organization] coverage: documented
+    applies_when: [stores-phi-copy]
+    Define and document your own capacity-planning thresholds and the provisioning workflow
+    if you operate your own deployment; otherwise rely on the HDS-operated capacity posture
+    and reference it.
+  IMPLEMENTER [user-entity] coverage: out-of-scope
+    applies_when: [stores-phi-copy]; PLACES NO DUTY ON THIS PERSONA
+  IMPLEMENTER [subservice-organization] coverage: documented
+    applies_when: [stores-phi-copy]
+    Where a hosting subservice carries the underlying compute, its capacity commitments back
+    this control; record the reliance.
+
+## soc2 A1.2 — A1.2 — Environmental protections, backup, and recovery infrastructure
+  Requirement: The entity authorizes, designs, implements, operates, maintains, and
+  monitors environmental protections, software, data back-up processes, and recovery
+  infrastructure to meet its objectives.
+  Anchor: https://compliance.datasafe.dev/soc2.html#req-a1-2
+  PRYV PLATFORM: facilitated (mode: infrastructure)
+    Backup + recovery infrastructure ships: bin/backup.js produces per-user backups,
+    multi-core topology gives in-line Raft replication, TLS certs replicate across the
+    cluster so a surviving core stays user-facing. Environmental protections (power,
+    cooling, fire suppression) are facility-side; your hoster's certification covers them.
+    Backup cadence, retention, and offsite policy are yours.
+  HDS: facilitated (effort saved: high) (mode: infrastructure)
+    The platform ships per-user backup and restore and a replicated multi-core topology, and
+    HDS operates these on a schedule with cluster-replicated TLS so a surviving core stays
+    user-facing. Environmental protections (power, cooling, fire suppression) are inherited
+    from the certified hosting provider per region. Automated, regularly verified backups
+    are still being formalised, so this is facilitated rather than fully implemented.
+    Detail: HDS runs the backup primitive on a schedule, relies on multi-core replication
+    for hot redundancy, and documents the recovery infrastructure it operates. Environmental
+    controls at the facility tier are covered by the hosting provider's attestation, which
+    HDS records. Verified, automatically tested backups are a known gap being matured; the
+    backup-and-recovery plan as it stands is cited as an internal document. A user-entity
+    running its own deployment defines its own schedule.
+    Evidence: internal:hipaa/procedures/data-backup-plan, internal:hipaa/procedures/disaster-recovery-plan
+    PLANNED (procedure, impact medium): The scheduled backup cycle is running on both regional cores as of 2026-07-30, producing encrypted off-host in-region copies, and an archive has been retrieved and decrypted with the off-host key to show the copies are usable. The tracked remainder is the per-region production restore drill at non-trivial scale and confirmation of the storage lifecycle backstop.
+  IMPLEMENTER [service-organization] coverage: documented
+    applies_when: [stores-phi-copy]
+    Document your backup schedule, retention and offsite policy, and confirm restorability;
+    if you operate your own deployment, run the backup and replication primitives yourself.
+  IMPLEMENTER [user-entity] coverage: out-of-scope
+    applies_when: [stores-phi-copy]; PLACES NO DUTY ON THIS PERSONA
+  IMPLEMENTER [subservice-organization] coverage: documented
+    applies_when: [stores-phi-copy]
+    The hosting subservice carries environmental protections at the facility tier; obtain
+    and retain its attestation.
+
+## soc2 A1.3 — A1.3 — Recovery plan testing
+  Requirement: The entity tests recovery plan procedures supporting system recovery to
+  meet its objectives.
+  Anchor: https://compliance.datasafe.dev/soc2.html#req-a1-3
+  PRYV PLATFORM: facilitated (mode: evidence)
+    Pryv gives you a testable recovery path (restore a user from a backup file into a clean
+    core; fail a core and confirm a peer keeps serving). The recovery drill, scheduling it,
+    evidencing the result, feeding gaps back into the plan, is your operating procedure.
+  HDS: facilitated (effort saved: low) (mode: evidence)
+    The platform provides a testable recovery path (restore a user from a backup into a
+    clean core; fail a core and confirm a peer keeps serving), and HDS documents the
+    intended recovery-test cadence. Regular, verified execution of the drill is a known gap
+    being matured, so HDS facilitates this rather than evidencing a fully operated test
+    programme.
+    Detail: Restore and failover are exercisable against the platform primitives. HDS
+    documents the recovery-test procedure it intends to run and feeds gaps back into the
+    plan; scheduled, verified drills with retained evidence are being formalised and are
+    stated plainly as a gap. A user-entity runs and evidences its own recovery tests for its
+    workload.
+    Evidence: internal:hipaa/procedures/contingency-plan-testing
+    PLANNED (procedure, impact medium): The contingency-test procedure is approved and a first restore rehearsal was performed on 2026-07-29 with a retained execution record. It covered a single account, not a full per-region restore, so recovery at production scale is the tracked remainder.
+  IMPLEMENTER [service-organization] coverage: documented
+    applies_when: [stores-phi-copy]
+    Schedule, run and document recovery-plan tests for the parts of the system you operate,
+    and revise the plan from the results.
+  IMPLEMENTER [user-entity] coverage: out-of-scope
+    applies_when: [stores-phi-copy]; PLACES NO DUTY ON THIS PERSONA
+  IMPLEMENTER [subservice-organization] coverage: out-of-scope
+    applies_when: [stores-phi-copy]; PLACES NO DUTY ON THIS PERSONA
+
+## soc2 C1.1 — C1.1 — Identification and maintenance of confidential information
+  Requirement: The entity identifies and maintains confidential information to meet its
+  objectives related to confidentiality.
+  Anchor: https://compliance.datasafe.dev/soc2.html#req-c1-1
+  PRYV PLATFORM: facilitated (mode: primitive)
+    Pryv lets you identify + isolate confidential data by stream layout: dedicate subtrees
+    per confidentiality tier and gate each with a distinct permission scope, so confidential
+    streams are reachable only by credentials granted them. System streams add a privileged
+    tier independent of your scheme; clientData / event type can carry machine-readable
+    classification labels. Masking is by projection (stream + permissions), not value
+    transformation, see context/data-masking-projection-vs-transformation.md.
+    PLANNED (feature, impact low): End-to-end (proxy re-encryption / BYOK) keeps confidential content opaque to the operator; the natural future confidentiality primitive
+  HDS: implemented (effort saved: high)
+    Confidential data is identified and isolated structurally on the HDS-operated platform:
+    subject data is per-user isolated, and confidential streams are reachable only by access
+    tokens granted the matching per-stream permission, with privileged namespaces
+    (credentials) separately controlled. Where the account identity is itself confidential,
+    the platform's alias primitive (`accesses.create {randomAlias:true}`, deployed on the
+    HDS cores since 2026-07-28) lets a grant expose a random routable alias in place of the
+    username. HDS operates this access-controlled isolation and documents its
+    confidentiality and access-control posture.
+    Detail: Identification and maintenance of confidential information is enforced by stream
+    layout plus the permission model rather than left to downstream policy: a credential can
+    reach only the confidential streams it was granted, at the level granted, on every API
+    call. HDS operates this stack and documents the access-control and minimum-necessary
+    policies behind it. The user-entity decides which streams carry which confidentiality
+    tier and which grants its application mints.
+    Evidence: internal:hipaa/policies/access-control, internal:hipaa/policies/minimum-necessary
+  IMPLEMENTER [service-organization] coverage: documented
+    applies_when: [stores-phi-copy, analytics]
+    Classify your confidential data, map it to a stream layout, and grant least-privilege
+    per-stream access; document the classification scheme.
+  IMPLEMENTER [user-entity] coverage: out-of-scope
+    applies_when: [stores-phi-copy, analytics]; PLACES NO DUTY ON THIS PERSONA
+  IMPLEMENTER [subservice-organization] coverage: out-of-scope
+    applies_when: [stores-phi-copy, analytics]; PLACES NO DUTY ON THIS PERSONA
+
+## soc2 C1.2 — C1.2 — Disposal of confidential information
+  Requirement: The entity disposes of confidential information to meet its objectives
+  related to confidentiality.
+  Anchor: https://compliance.datasafe.dev/soc2.html#req-c1-2
+  PRYV PLATFORM: configurable
+    Confidential-data disposal uses the same per-user erasure path as CC6.5:
+    system.users.delete for whole-account, event/stream deletion for per-record. Backup
+    reach is engine-dependent (SQLite per-user file vs PostgreSQL row + pg_dump rotation),
+    pick the engine that matches your disposal commitment.
+  HDS: facilitated (effort saved: medium) (mode: storage)
+    The platform provides per-user erasure (whole-account deletion, plus event- and
+    stream-level deletion) from the live store, which HDS operates. Whether disposal reaches
+    backups is storage-engine-dependent, and formal, scheduled data-disposal automation is
+    not yet shipped — so HDS facilitates this and documents the boundary rather than
+    claiming full disposal.
+    Detail: Logical destruction in the live store is concrete: account deletion removes a
+    user's data, and event/stream deletion covers per-record needs. Backup reach depends on
+    the configured engine, and a documented retention-and- disposal schedule with verified
+    backup pruning is a known gap being matured. HDS documents the disposal path and its
+    limits; the user-entity chooses the engine that matches its disposal commitment and
+    applies media sanitisation at the hosting tier.
+    Evidence: internal:hipaa/policies/minimum-necessary, internal:soc2/procedures/data-retention-and-disposal
+    PLANNED (doc, impact low): A documented retention-and-disposal schedule with verified backup pruning is drafted in the internal pipeline; its formalisation is the tracked remediation.
+  IMPLEMENTER [service-organization] coverage: documented
+    applies_when: [stores-phi-copy]
+    Define your disposal schedule and triggers, choose a storage engine whose backup
+    behaviour matches it, and document the procedure.
+  IMPLEMENTER [user-entity] coverage: out-of-scope
+    applies_when: [stores-phi-copy]; PLACES NO DUTY ON THIS PERSONA
+  IMPLEMENTER [subservice-organization] coverage: documented
+    applies_when: [stores-phi-copy]
+    The hosting subservice carries physical media sanitisation; obtain and record its
+    attestation.
+
+## soc2 PI1.1 — PI1.1 — Quality information about processing objectives
+  Requirement: The entity obtains or generates, uses, and communicates relevant, quality
+  information regarding the objectives related to processing, including definitions of
+  data processed and service specifications.
+  Anchor: https://compliance.datasafe.dev/soc2.html#req-pi1-1
+  PRYV PLATFORM: facilitated (mode: evidence)
+    The canonical event-type schemas (class/format JSON Schemas in the data-types repo) are
+    the machine-readable definition of "data processed", what each event type means and what
+    shape it takes. You extend the catalogue with your own types via the service.eventTypes
+    URL. The processing-objective specifications themselves are your product definitions.
+  HDS: facilitated (effort saved: low) (mode: evidence)
+    The platform's canonical event-type schemas are the machine-readable definition of what
+    data each processing path handles, and the HDS-operated deployment serves these
+    consistently. Authoring the processing-objective specifications — what the service does
+    with the data and to what end — is the service organization's product definition; HDS
+    facilitates by supplying the data-definition substrate.
+    Detail: Event-type schemas define the shape and meaning of data processed, and a
+    deployment can extend the catalogue with custom types. HDS operates the deployment so
+    these definitions are applied uniformly. The processing objectives and service
+    specifications themselves remain the implementer's editorial work; HDS documents the
+    data-quality posture it operates.
+    Evidence: internal:soc2/policies/data-quality
+  IMPLEMENTER [service-organization] coverage: documented
+    applies_when: always
+    Define and communicate your processing objectives and service specifications; declare
+    the event types your application processes.
+  IMPLEMENTER [user-entity] coverage: out-of-scope
+    applies_when: always; PLACES NO DUTY ON THIS PERSONA
+  IMPLEMENTER [subservice-organization] coverage: out-of-scope
+    applies_when: always; PLACES NO DUTY ON THIS PERSONA
+
+## soc2 PI1.2 — PI1.2 — Completeness and accuracy of inputs
+  Requirement: The entity implements controls over system inputs, including controls over
+  completeness and accuracy, to result in services that meet its objectives.
+  Anchor: https://compliance.datasafe.dev/soc2.html#req-pi1-2
+  PRYV PLATFORM: facilitated (mode: primitive)
+    Input accuracy is enforced structurally at ingest: events.create and events.update run
+    every payload through the event type's JSON Schema (ajv-draft-04), unknown types and
+    schema violations are rejected with HTTP 400, no silent truncation or downgrade. This is
+    the structural-accuracy layer; semantic accuracy (is this the *right* blood-pressure
+    reading) stays in your application. Tighten structural strictness by declaring
+    min/max/pattern in a custom catalogue, see
+    context/data-accuracy-structural-vs-semantic.md.
+  HDS: facilitated (effort saved: medium) (mode: primitive)
+    Input accuracy is enforced structurally at ingest on the HDS-operated platform: every
+    payload is validated against its event-type schema and schema violations are rejected
+    outright, with no silent truncation. This is the structural-completeness-and-accuracy
+    layer; semantic correctness of a value remains the service organization's application
+    logic.
+    Detail: Creates and updates run each payload through the event type's JSON Schema;
+    unknown types and violations are rejected with an error rather than stored partially.
+    HDS operates this validation by default and documents the data-quality and integrity
+    posture. Tighter structural constraints (min/max/pattern) are available via a custom
+    catalogue. Judging whether a structurally valid value is the right value stays with the
+    implementer.
+    Evidence: internal:hipaa/policies/integrity, internal:soc2/policies/data-quality
+  IMPLEMENTER [service-organization] coverage: documented
+    applies_when: always
+    Define your event types and any tighter structural constraints, and own the
+    semantic-validation logic your application applies on top.
+  IMPLEMENTER [user-entity] coverage: out-of-scope
+    applies_when: always; PLACES NO DUTY ON THIS PERSONA
+  IMPLEMENTER [subservice-organization] coverage: out-of-scope
+    applies_when: always; PLACES NO DUTY ON THIS PERSONA
+
+## soc2 PI1.3 — PI1.3 — Completeness and accuracy of processing
+  Requirement: The entity implements controls over system processing to result in services
+  that meet its objectives.
+  Anchor: https://compliance.datasafe.dev/soc2.html#req-pi1-3
+  PRYV PLATFORM: facilitated (mode: primitive)
+    Pryv's processing model is deterministic + attributable: events are
+    immutable-when-written (history-only append for audit/consent/attestation),
+    events.update snapshots prior state into version history, and every mutation is
+    authorised by the permission model and recorded in the audit log. The business-logic
+    processing your application performs on top is your control responsibility.
+  HDS: facilitated (effort saved: medium) (mode: primitive)
+    The platform's processing model is deterministic and attributable: writes are authorised
+    by the permission model, updates snapshot the prior state into version history, and
+    every mutation is recorded in the per-user audit log. HDS operates this substrate so
+    processing is traceable; the business-logic processing the application performs is the
+    service organization's own control.
+    Detail: Each mutation is gated by per-stream permissions and recorded with its acting
+    access identity; version history preserves prior states so a processing step can be
+    reconstructed and checked. HDS operates and documents this integrity substrate. The
+    application-level processing the implementer builds on top — calculations,
+    transformations, workflows — is its own completeness-and-accuracy responsibility.
+    Evidence: internal:hipaa/policies/integrity
+  IMPLEMENTER [service-organization] coverage: documented
+    applies_when: always
+    Implement and document completeness-and-accuracy controls over your own processing
+    logic; rely on the platform substrate for traceability.
+  IMPLEMENTER [user-entity] coverage: out-of-scope
+    applies_when: always; PLACES NO DUTY ON THIS PERSONA
+  IMPLEMENTER [subservice-organization] coverage: out-of-scope
+    applies_when: always; PLACES NO DUTY ON THIS PERSONA
+
+## soc2 PI1.4 — PI1.4 — Completeness, accuracy, and timeliness of outputs
+  Requirement: The entity implements controls to make available or deliver output
+  completely, accurately, and timely in accordance with specifications to meet its
+  objectives.
+  Anchor: https://compliance.datasafe.dev/soc2.html#req-pi1-4
+  PRYV PLATFORM: facilitated (mode: primitive)
+    Output delivery is deterministic: events.get / streams.get return canonical
+    serialisations; the audit log carries an integrity checksum of the affected event when a
+    method mutates one, so output can be tied back to a verified state. Webhooks notify
+    subscribers of change (signal-only, the receiver fetches the authoritative state via
+    authenticated GET, so the delivered output is always the current canonical value).
+    Delivery SLAs to your end recipients are your specification.
+  HDS: facilitated (effort saved: low) (mode: primitive)
+    Output delivery from the HDS-operated platform is deterministic: reads return canonical
+    serialisations of the current authoritative state, and change notifications signal
+    subscribers to fetch that state over an authenticated channel rather than pushing a
+    possibly-stale copy. Delivery SLAs to the implementer's own end recipients are the
+    service organization's specification.
+    Detail: Gets return the canonical value; webhooks notify of change as a signal only, so
+    the receiver always retrieves the current authoritative output. HDS operates this
+    delivery substrate. Defining output specifications and the timeliness commitments to
+    downstream recipients, and verifying they are met, is the implementer's control.
+    Evidence: internal:soc2/policies/data-quality
+  IMPLEMENTER [service-organization] coverage: documented
+    applies_when: always
+    Define your output specifications and delivery SLAs and verify outputs meet them; the
+    platform supplies the canonical-state delivery substrate.
+  IMPLEMENTER [user-entity] coverage: out-of-scope
+    applies_when: always; PLACES NO DUTY ON THIS PERSONA
+  IMPLEMENTER [subservice-organization] coverage: out-of-scope
+    applies_when: always; PLACES NO DUTY ON THIS PERSONA
+
+## soc2 PI1.5 — PI1.5 — Completeness and accuracy of stored information
+  Requirement: The entity implements controls to store inputs, items in processing, and
+  outputs completely, accurately, and timely in accordance with system specifications to
+  meet its objectives.
+  Anchor: https://compliance.datasafe.dev/soc2.html#req-pi1-5
+  PRYV PLATFORM: facilitated (mode: storage)
+    Storage integrity: event version history preserves prior states, the audit log can carry
+    a per-event integrity checksum, and backup-restore provides a recoverable copy. Together
+    these give an accuracy + completeness signal for stored data. Tamper-evidence on the
+    audit log itself (hash chaining) is a future primitive, see the CC7.4 chain proposal.
+  HDS: facilitated (effort saved: medium) (mode: storage)
+    Storage integrity on the HDS-operated platform rests on event version history (prior
+    states preserved), the per-user audit log (every change attributed), and operational
+    backup-restore (a recoverable copy). Together these give an accuracy-and-completeness
+    signal for stored data. HDS operates the substrate and the backup schedule; verified
+    backups are a known gap.
+    Detail: Stored data is protected against silent loss by versioning and by the audit
+    trail of every mutation, and against destruction by the backup path HDS operates.
+    Tamper-evidence on the audit log itself (hash chaining) is a future platform primitive,
+    and automatically verified backups are being matured — both stated plainly. HDS
+    documents the integrity posture; the implementer owns the surrounding storage-control
+    procedure.
+    Evidence: internal:hipaa/policies/integrity, internal:hipaa/procedures/data-backup-plan
+    PLANNED (platform, impact medium): A hash-chained (tamper-evident) audit log is queued upstream; the tamper-evidence half of this row becomes claimable after it ships and HDS deploys it.
+  IMPLEMENTER [service-organization] coverage: documented
+    applies_when: always
+    Document your storage-integrity controls and retention, and assess the verified-backup
+    gap in your own risk analysis.
+  IMPLEMENTER [user-entity] coverage: out-of-scope
+    applies_when: always; PLACES NO DUTY ON THIS PERSONA
+  IMPLEMENTER [subservice-organization] coverage: out-of-scope
+    applies_when: always; PLACES NO DUTY ON THIS PERSONA
+
+## soc2 P1.1 — P1.1 — Notice of privacy practices
+  Requirement: The entity provides notice to data subjects about its privacy practices to
+  meet its objectives related to privacy, and updates and communicates the notice in a
+  timely manner when those practices change.
+  Anchor: https://compliance.datasafe.dev/soc2.html#req-p1-1
+  PRYV PLATFORM: facilitated (mode: infrastructure)
+    Pryv gives you the surface to present notice: app-web-auth3 is the forkable consent /
+    auth web page where notice text is shown at authorization time, and the durable access
+    record (with clientData) can carry the notice version the subject saw. Authoring the
+    notice content and keeping it current is your editorial obligation; Pryv carries it
+    through the consent flow and records what was presented.
+  HDS: facilitated (effort saved: medium) (mode: infrastructure)
+    The platform supplies the surface to present notice at authorization time — a forkable
+    consent/auth web page — and the durable access record can carry the notice version the
+    subject saw. HDS operates this surface; authoring the notice content and keeping it
+    current is the service organization's editorial obligation.
+    Detail: Notice text can be shown in the consent flow, and the granted access can record
+    which notice version was presented, giving an evidentiary link between the subject and
+    the practices disclosed. HDS operates the deployment that carries this. The
+    privacy-notice content, its review cadence and its communication on change are the
+    implementer's; HDS documents the consent- flow substrate it provides.
+    Evidence: internal:soc2/policies/privacy-notice
+  IMPLEMENTER [service-organization] coverage: documented
+    applies_when: always
+    Author your privacy notice, present it in the consent flow, and keep it current; record
+    the version each subject was shown.
+  IMPLEMENTER [user-entity] coverage: out-of-scope
+    applies_when: always; PLACES NO DUTY ON THIS PERSONA
+  IMPLEMENTER [subservice-organization] coverage: out-of-scope
+    applies_when: always; PLACES NO DUTY ON THIS PERSONA
+
+## soc2 P2.1 — P2.1 — Choice and consent
+  Requirement: The entity communicates choices regarding the collection, use, retention,
+  disclosure, and disposal of personal information to data subjects and obtains consent,
+  as required, to meet its objectives related to privacy.
+  Anchor: https://compliance.datasafe.dev/soc2.html#req-p2-1
+  PRYV PLATFORM: implemented
+    The access IS the durable, versioned consent record: it carries the granted permissions
+    (the scope the subject agreed to), and its clientData holds the consent text / purposes
+    / lawful basis. CMC carries cross-account consent state transitions via typed consent/*
+    events. app-web-auth3 is the choice-presentation UX, and the audit chain proves the
+    consent state at any moment. You design the choices; Pryv records and enforces them.
+  HDS: implemented (effort saved: high)
+    On the HDS-operated platform the access token IS the durable, versioned consent record:
+    it carries the permissions the subject agreed to, its metadata holds the consent text
+    and lawful basis, and the audit trail proves the consent state at any moment. The
+    subject's own credentials let them grant and revoke directly. HDS operates this
+    user-centric consent substrate; the service organization designs the choices presented.
+    Detail: Consent is enforced, not merely recorded: a grant authorises exactly the scope
+    the subject chose and nothing more, and revocation takes effect immediately. The
+    consent-presentation UX is the forkable consent web page, and cross-account consent
+    transitions are captured as typed events. HDS operates and documents this stack as part
+    of its access-control and consent posture. Designing the choice set is the implementer's
+    product decision.
+    Evidence: internal:hipaa/policies/access-control, internal:soc2/policies/privacy-notice
+  IMPLEMENTER [service-organization] coverage: documented
+    applies_when: always
+    Design the choices you present and the consent text, and map each choice to the access
+    scope it grants; the platform records and enforces it.
+  IMPLEMENTER [user-entity] coverage: out-of-scope
+    applies_when: always; PLACES NO DUTY ON THIS PERSONA
+  IMPLEMENTER [subservice-organization] coverage: out-of-scope
+    applies_when: always; PLACES NO DUTY ON THIS PERSONA
+
+## soc2 P3.1 — P3.1 — Collection consistent with objectives
+  Requirement: Personal information is collected consistent with the entity's objectives
+  related to privacy.
+  Anchor: https://compliance.datasafe.dev/soc2.html#req-p3-1
+  PRYV PLATFORM: facilitated (mode: primitive)
+    Collection scope is bounded by the access's permissions, an app can only write to the
+    streams + levels it was granted (e.g. create-only on a specific subtree), so collection
+    cannot silently exceed the agreed purpose. Defining the purpose and the minimal stream
+    set is your data-model design; the boundary is enforced.
+  HDS: facilitated (effort saved: medium) (mode: primitive)
+    Collection scope is bounded technically by the access token's permissions on the
+    HDS-operated platform: an application can only write to the streams and levels it was
+    granted, so collection cannot silently exceed the agreed purpose. HDS operates this
+    enforcement; defining the purpose and the minimal stream set is the service
+    organization's data-model design.
+    Detail: A create-only grant on a specific subtree means an app collects only into that
+    subtree at that level — over-collection is structurally prevented rather than policed
+    after the fact. HDS operates and documents this minimum-necessary posture. The
+    implementer designs which streams and grants correspond to which collection purpose.
+    Evidence: internal:hipaa/policies/minimum-necessary, internal:hipaa/policies/access-control
+  IMPLEMENTER [service-organization] coverage: documented
+    applies_when: [connects]
+    Define each collection purpose and the minimal stream set it needs, and grant only that
+    scope; document the mapping.
+  IMPLEMENTER [user-entity] coverage: out-of-scope
+    applies_when: [connects]; PLACES NO DUTY ON THIS PERSONA
+  IMPLEMENTER [subservice-organization] coverage: out-of-scope
+    applies_when: [connects]; PLACES NO DUTY ON THIS PERSONA
+
+## soc2 P3.2 — P3.2 — Explicit consent for sensitive personal information
+  Requirement: Explicit consent for the collection, use, retention, disclosure, and
+  disposal of sensitive personal information is obtained from data subjects or other
+  authorized persons, if required.
+  Anchor: https://compliance.datasafe.dev/soc2.html#req-p3-2
+  PRYV PLATFORM: facilitated (mode: primitive)
+    Sensitive data can be isolated in dedicated streams gated by a distinct access whose
+    clientData records the explicit-consent basis; consent/* events capture the state
+    transition with a timestamp. The "explicit" UX (a separate, affirmative consent step) is
+    yours to present; Pryv records it as a distinct, auditable grant rather than folding it
+    into general consent.
+  HDS: facilitated (effort saved: medium) (mode: primitive)
+    Sensitive data can be isolated in dedicated streams gated by a distinct access whose
+    metadata records the explicit-consent basis, with the consent state transition captured
+    as a timestamped, auditable event. HDS operates this isolation; presenting the separate,
+    affirmative consent step is the service organization's UX obligation.
+    Detail: The platform records explicit consent as a distinct, auditable grant rather than
+    folding it into general consent, so a sensitive-data grant is separable in evidence. HDS
+    operates and documents the access-control substrate. The "explicit" step — a separate
+    affirmative action — is the implementer's to present; the platform records it
+    discretely.
+    Evidence: internal:hipaa/policies/access-control, internal:soc2/policies/privacy-notice
+  IMPLEMENTER [service-organization] coverage: documented
+    applies_when: [connects, analytics, secondary-use]
+    Present a separate affirmative consent step for sensitive data and gate that data behind
+    a distinct access; document the explicit-consent flow.
+  IMPLEMENTER [user-entity] coverage: out-of-scope
+    applies_when: [connects, analytics, secondary-use]; PLACES NO DUTY ON THIS PERSONA
+  IMPLEMENTER [subservice-organization] coverage: out-of-scope
+    applies_when: [connects, analytics, secondary-use]; PLACES NO DUTY ON THIS PERSONA
+
+## soc2 P4.1 — P4.1 — Use limited to identified purposes
+  Requirement: The entity limits the use of personal information to the purposes
+  identified in its objectives related to privacy.
+  Anchor: https://compliance.datasafe.dev/soc2.html#req-p4-1
+  PRYV PLATFORM: facilitated (mode: primitive)
+    Purpose limitation is the permission model's core job: a credential issued for purpose A
+    (scoped to stream A) cannot read or write purpose-B data. The audit log evidences that
+    uses stayed within scope. Mapping purposes to streams + accesses is your design; the
+    enforcement is technical, not policy-on-paper.
+  HDS: implemented (effort saved: high)
+    Purpose limitation is the core job of the permission model HDS operates: a credential
+    issued for one purpose, scoped to one set of streams, cannot read or write data for
+    another purpose, and the audit log evidences that uses stayed within scope. Enforcement
+    is technical, on every API call, not policy-on-paper. Mapping purposes to streams and
+    accesses is the service organization's design.
+    Detail: A purpose-A credential is mechanically incapable of touching purpose-B data, and
+    every use is recorded against its acting access identity so adherence is auditable. HDS
+    operates and documents this minimum-necessary and access-control posture. The
+    implementer decides which purposes exist and how they map to scopes.
+    Evidence: internal:hipaa/policies/minimum-necessary, internal:hipaa/policies/access-control
+  IMPLEMENTER [service-organization] coverage: documented
+    applies_when: [connects, analytics]
+    Map each identified purpose to a distinct access scope and document the mapping; the
+    platform enforces the boundary.
+  IMPLEMENTER [user-entity] coverage: out-of-scope
+    applies_when: [connects, analytics]; PLACES NO DUTY ON THIS PERSONA
+  IMPLEMENTER [subservice-organization] coverage: out-of-scope
+    applies_when: [connects, analytics]; PLACES NO DUTY ON THIS PERSONA
+
+## soc2 P4.2 — P4.2 — Retention of personal information
+  Requirement: The entity retains personal information consistent with its objectives
+  related to privacy.
+  Anchor: https://compliance.datasafe.dev/soc2.html#req-p4-2
+  PRYV PLATFORM: facilitated (mode: storage)
+    Retention metadata (period, basis, scheduled disposal date) can ride on event / access
+    clientData so each record carries its own retention contract. Pryv ships no automatic
+    TTL / expiry primitive, enforcement of the retention schedule is an operator job today
+    (a scheduled sweep calling events/streams delete). The retention policy itself is yours;
+    treat the absence of auto-expiry as an operator responsibility when you attest P4.2.
+    Detail: This is **voluntarily missing + operator-owned** by design, the same
+    classification as GDPR Art.5(1)(e) storage limitation. Pryv stays
+    retention-policy-neutral: no TTL / auto-delete / scheduler primitive ships, so automatic
+    disposal is the operator's external scheduled job composing existing primitives
+    (`events.get toTime=<cutoff>` + two-stage `events.delete` + `streams.delete` +
+    `auth.delete`, with the audit log as the inactivity oracle). `clientData.retention` is
+    advisory metadata, not an enforcement hook; every retention deletion is itself
+    audit-logged. Full rationale + the recommended operator retention-job pattern in
+    `context/data-retention-operator-owned.md`.
+  HDS: facilitated (effort saved: low) (mode: storage)
+    Retention metadata (period, basis, scheduled disposal date) can ride on each record so
+    it carries its own retention contract, but the platform ships no automatic expiry
+    primitive — enforcing the schedule is an operator job today. HDS documents this gap
+    honestly: automated retention enforcement is not yet shipped, so the control is
+    facilitated and the absence of auto-expiry is called out.
+    Detail: Each record can record its retention terms, but a scheduled sweep that deletes
+    expired records must be operated rather than relied on as a platform feature. HDS treats
+    formal, automated data-retention as a known gap being matured and documents the
+    retention posture and its limit. The retention policy itself, and its enforcement, are
+    the implementer's responsibility when attesting this criterion.
+    Evidence: internal:soc2/procedures/data-retention-and-disposal
+    PLANNED (doc, impact low): The retention-and-disposal procedure (documented retention schedule over the per-record metadata) is drafted in the internal pipeline; its formalisation is the tracked remediation.
+  IMPLEMENTER [service-organization] coverage: documented
+    applies_when: [analytics]
+    Define your retention schedule, record retention terms on each record, and operate the
+    enforcement sweep yourself; document the absence of platform auto-expiry as your
+    responsibility.
+  IMPLEMENTER [user-entity] coverage: out-of-scope
+    applies_when: [analytics]; PLACES NO DUTY ON THIS PERSONA
+  IMPLEMENTER [subservice-organization] coverage: out-of-scope
+    applies_when: [analytics]; PLACES NO DUTY ON THIS PERSONA
+
+## soc2 P4.3 — P4.3 — Disposal of personal information
+  Requirement: The entity securely disposes of personal information to meet its objectives
+  related to privacy.
+  Anchor: https://compliance.datasafe.dev/soc2.html#req-p4-3
+  PRYV PLATFORM: configurable
+    Disposal uses the per-user erasure path: system.users.delete for whole-account,
+    event/stream deletion for per-record. Backup reach is engine-dependent (SQLite per-user
+    file unlink vs PostgreSQL row + pg_dump rotation), choose the engine that matches your
+    disposal commitment, same as GDPR Art.17.
+  HDS: facilitated (effort saved: medium) (mode: storage)
+    Disposal uses the platform's per-user erasure path (whole-account deletion, plus event-
+    and stream-level deletion) from the live store, which HDS operates. Backup reach is
+    storage-engine-dependent and scheduled disposal automation is not yet shipped, so HDS
+    facilitates this and documents the boundary rather than claiming full secure disposal.
+    Detail: Logical erasure from the live store is concrete; whether it reaches backups
+    depends on the configured engine, and a documented, verified disposal schedule is a
+    known gap. HDS documents the disposal path and its limits, and relies on the hosting
+    provider for physical media sanitisation. The implementer chooses the engine that
+    matches its disposal commitment.
+    Evidence: internal:soc2/procedures/data-retention-and-disposal, internal:hipaa/policies/minimum-necessary
+    PLANNED (doc, impact low): The retention-and-disposal procedure (documented schedule, verified backup pruning) is drafted in the internal pipeline; its formalisation is the tracked remediation for the disposal half of this row.
+  IMPLEMENTER [service-organization] coverage: documented
+    applies_when: always
+    Define your disposal procedure, choose a storage engine whose backup behaviour matches
+    it, and document how disposal reaches all copies.
+  IMPLEMENTER [user-entity] coverage: out-of-scope
+    applies_when: always; PLACES NO DUTY ON THIS PERSONA
+  IMPLEMENTER [subservice-organization] coverage: documented
+    applies_when: always
+    The hosting subservice carries physical media sanitisation; obtain and record its
+    attestation.
+
+## soc2 P5.1 — P5.1 — Data subject access to personal information
+  Requirement: The entity grants identified and authenticated data subjects the ability to
+  access their stored personal information for review and, on request, provides copies to
+  meet its objectives related to privacy.
+  Anchor: https://compliance.datasafe.dev/soc2.html#req-p5-1
+  PRYV PLATFORM: implemented
+    Subject access is subject-runnable: the data subject holds their own credentials, so
+    events.get / streams.get return their data directly, and the pryv-account-backup CLI
+    produces a complete portable export, account, profiles, app profiles, streams, accesses
+    (incl. revoked / expired + opt-in per-access version history), events (chunked +
+    incremental), audit log, HF series data points, webhooks, and attachments, with a
+    per-file sha256 integrity manifest, with no operator dependency for routine requests.
+    The browser-based webapp flavour covers the read-side text resources only; route
+    subjects who need attachments / HF series / webhooks to the CLI. See
+    context/account-backup-coverage.md.
+  HDS: implemented (effort saved: high)
+    Subject access is user-centric and subject-runnable on the HDS-operated platform: the
+    data subject holds their own credentials, so reads return their data directly, and an
+    account-backup export produces a complete, portable copy with a per-file integrity
+    manifest — with no operator dependency for routine requests. HDS operates this
+    substrate; the service organization owns the identity-verification step for any
+    operator-assisted request.
+    Detail: Because the subject is the holder of their own access, review and export are
+    self-service. The export covers account, streams, accesses (including revoked/expired
+    with version history), events, audit log, and attachments, with a sha256 manifest per
+    file. HDS operates the deployment and documents the access posture. Packaging a
+    non-routine request and verifying the requester's identity is the implementer's
+    workflow.
+    Evidence: internal:hipaa/policies/access-control
+  IMPLEMENTER [service-organization] coverage: documented
+    applies_when: always
+    Surface the self-service access and export paths to subjects, and document your
+    identity-verification step for any operator-assisted request.
+  IMPLEMENTER [user-entity] coverage: out-of-scope
+    applies_when: always; PLACES NO DUTY ON THIS PERSONA
+  IMPLEMENTER [subservice-organization] coverage: out-of-scope
+    applies_when: always; PLACES NO DUTY ON THIS PERSONA
+
+## soc2 P5.2 — P5.2 — Correction, amendment, or appending of personal information
+  Requirement: The entity corrects, amends, or appends personal information based on data
+  subject input and communicates such changes to third parties, as committed or required,
+  to meet its objectives related to privacy.
+  Anchor: https://compliance.datasafe.dev/soc2.html#req-p5-2
+  PRYV PLATFORM: implemented
+    Correction is events.update (which snapshots the prior value into version history,
+    preserving the amendment trail) and account.update for profile fields; the audit log
+    records who amended what, when. Propagation to third parties who hold a shared/CMC
+    access can use webhooks to signal the change. Judging the correctness of a correction
+    request is your process.
+  HDS: implemented (effort saved: medium)
+    Correction is a first-class operation on the HDS-operated platform: an update snapshots
+    the prior value into version history (preserving the amendment trail) and the audit log
+    records who amended what, when. Propagation to third parties holding a shared access can
+    be signalled via change notification. Judging whether a correction request is valid is
+    the service organization's process.
+    Detail: Amendments preserve, rather than overwrite, the record's history, so the
+    correction trail is intact and attributable. Third parties who hold a shared grant can
+    be notified of the change and fetch the corrected state. HDS operates and documents the
+    integrity and access substrate. Deciding the correctness of a request and committing to
+    third-party communication is the implementer's.
+    Evidence: internal:hipaa/policies/integrity, internal:hipaa/policies/access-control
+  IMPLEMENTER [service-organization] coverage: documented
+    applies_when: always
+    Define your process for assessing correction requests and your commitments to notify
+    third parties of amendments.
+  IMPLEMENTER [user-entity] coverage: out-of-scope
+    applies_when: always; PLACES NO DUTY ON THIS PERSONA
+  IMPLEMENTER [subservice-organization] coverage: out-of-scope
+    applies_when: always; PLACES NO DUTY ON THIS PERSONA
+
+## soc2 P6.1 — P6.1 — Disclosure to third parties for identified purposes with consent
+  Requirement: The entity discloses personal information to third parties for the purposes
+  identified in its objectives related to privacy and with the explicit consent of the
+  data subject, if required.
+  Anchor: https://compliance.datasafe.dev/soc2.html#req-p6-1
+  PRYV PLATFORM: facilitated (mode: primitive)
+    Third-party disclosure happens by issuing a scoped shared / CMC access, the disclosure
+    is exactly the permissions granted, nothing more, and the access's clientData records
+    the purpose + consent basis. There is no out-of-band data-dump path; disclosure is
+    always a tracked, revocable grant. Deciding the lawful purpose is yours.
+  HDS: facilitated (effort saved: medium) (mode: primitive)
+    Third-party disclosure on the HDS-operated platform happens by issuing a scoped,
+    revocable shared access — the disclosure is exactly the permissions granted, nothing
+    more, with the purpose and consent basis recorded in the access metadata. There is no
+    out-of-band data-dump path; every disclosure is a tracked, revocable grant. Deciding the
+    lawful purpose is the service organization's.
+    Detail: Disclosure being a grant rather than a copy means the recipient's reach is
+    bounded and reversible, and the grant itself carries the why. HDS operates and documents
+    this access-control posture. The implementer decides the lawful purpose and obtains any
+    required explicit consent before issuing the grant.
+    Evidence: internal:hipaa/policies/access-control, internal:hipaa/policies/minimum-necessary
+  IMPLEMENTER [service-organization] coverage: documented
+    applies_when: always
+    Decide the lawful purpose, obtain any required explicit consent, and issue a scoped
+    shared access for each disclosure; document the basis.
+  IMPLEMENTER [user-entity] coverage: out-of-scope
+    applies_when: always; PLACES NO DUTY ON THIS PERSONA
+  IMPLEMENTER [subservice-organization] coverage: out-of-scope
+    applies_when: always; PLACES NO DUTY ON THIS PERSONA
+
+## soc2 P6.2 — P6.2 — Record of authorized disclosures
+  Requirement: The entity creates and retains a complete, accurate, and timely record of
+  authorized disclosures of personal information to meet its objectives related to
+  privacy.
+  Anchor: https://compliance.datasafe.dev/soc2.html#req-p6-2
+  PRYV PLATFORM: implemented
+    Every disclosure is a read against a shared / CMC access, and the per-user audit log
+    records each access invocation with the accessId + accessSerial that made it, a
+    complete, attributable record of who accessed what, when. Since open-pryv.io `07b6d3b6`
+    the *authorization* of a disclosure is recorded too: OAuth2 `oauth.*` audit events
+    capture the consent grant, the code exchange and every token issuance / refresh /
+    revocation that underlie a delegated-app disclosure. The audit-event-stream can surface
+    the same record into the subject's own streams. This is the technical disclosure
+    register; how long you retain it is your policy.
+  HDS: implemented (effort saved: high)
+    Every disclosure is a read against a shared access, and the per-user audit log records
+    each invocation with the access identity that made it — a complete, attributable record
+    of who accessed what, when. HDS operates and retains this disclosure register; how long
+    it is retained is set per the service organization's policy.
+    Detail: The authorized-disclosure register is computable directly from the audit log
+    plus the list of granted accesses, with no separate logging to maintain. HDS operates
+    the substrate and documents the access and audit-controls posture. The implementer sets
+    the retention period for the register consistent with its privacy objectives.
+    Evidence: internal:hipaa/policies/access-control
+  IMPLEMENTER [service-organization] coverage: documented
+    applies_when: always
+    Set and document the retention period for the disclosure register and the cadence at
+    which you review it.
+  IMPLEMENTER [user-entity] coverage: out-of-scope
+    applies_when: always; PLACES NO DUTY ON THIS PERSONA
+  IMPLEMENTER [subservice-organization] coverage: out-of-scope
+    applies_when: always; PLACES NO DUTY ON THIS PERSONA
+
+## soc2 P6.3 — P6.3 — Record of detected unauthorized disclosures
+  Requirement: The entity creates and retains a complete, accurate, and timely record of
+  detected or reported unauthorized disclosures, including breaches, to meet its
+  objectives related to privacy.
+  Anchor: https://compliance.datasafe.dev/soc2.html#req-p6-3
+  PRYV PLATFORM: facilitated (mode: evidence)
+    The audit log captures access patterns (including failed / out-of-scope attempts), and
+    observability surfaces anomalies, so a detected unauthorized disclosure has a
+    contemporaneous evidentiary record. Detecting that a disclosure was unauthorized (vs
+    authorized) is your assessment; Pryv supplies the raw trail.
+  HDS: facilitated (effort saved: medium) (mode: evidence)
+    The audit log captures access patterns including failed and out-of-scope attempts, and
+    HDS's infrastructure monitoring surfaces anomalies, so a detected unauthorized
+    disclosure has a contemporaneous evidentiary record. Determining that a disclosure was
+    unauthorized, and maintaining the formal record, is the service organization's
+    assessment. Note that logs may contain PII, which HDS documents as a known handling
+    consideration.
+    Detail: HDS operates the audit and monitoring substrate that gives an unauthorized
+    disclosure a timestamped trail, and runs alerting end to end before any component is
+    treated as production. Classifying an event as unauthorized and keeping the breach
+    record is the implementer's process. HDS documents the detection posture and the gap
+    that log content is not yet PII-minimised.
+    Evidence: internal:hipaa/procedures/security-incident-response
+    PLANNED (feature, impact medium): PHI-safe log handling for operator telemetry is the tracked remediation: HDS-authored services are moving to an allow-list observability library feeding a self-hosted collector, replacing the deny-list scrubbing over a vendor agent; the live exception is recorded in the subprocessor register.
+  IMPLEMENTER [service-organization] coverage: documented
+    applies_when: always
+    Classify detected events as authorized or not, and create and retain the
+    unauthorized-disclosure record within your incident process.
+  IMPLEMENTER [user-entity] coverage: out-of-scope
+    applies_when: always; PLACES NO DUTY ON THIS PERSONA
+  IMPLEMENTER [subservice-organization] coverage: out-of-scope
+    applies_when: always; PLACES NO DUTY ON THIS PERSONA
+
+## soc2 P6.4 — P6.4 — Third-party commitments for privacy
+  Requirement: The entity obtains privacy commitments from vendors and other third parties
+  who have access to personal information to meet its objectives related to privacy.
+  Anchor: https://compliance.datasafe.dev/soc2.html#req-p6-4
+  PRYV PLATFORM: out-of-scope
+    Vendor / subprocessor privacy commitments are contractual artefacts (DPAs, BAAs). No
+    software role, though when the third party's technical access is a Pryv shared/CMC
+    access, the permission scope is a concrete, enforced bound on what they were given,
+    which your DPA can reference.
+  HDS: facilitated (effort saved: medium) (mode: evidence)
+    Vendor and subprocessor privacy commitments are contractual. HDS obtains such
+    commitments from its own subprocessors and tracks them in a register, and where a third
+    party's technical access is a shared access, its permission scope is a concrete,
+    enforced bound the implementer's agreement can reference. Executing the implementer's
+    own third-party agreements is its responsibility.
+    Detail: HDS maintains a current subprocessor register with privacy commitments flowed
+    down, available to the implementer for its own due diligence. The access scope of any
+    third party that holds a platform grant is a technical, auditable limit that complements
+    the contractual commitment. The implementer obtains and retains its own vendor
+    commitments.
+    Evidence: internal:hipaa/registers/subprocessor-register
+  IMPLEMENTER [service-organization] coverage: documented
+    applies_when: [third-parties]
+    Obtain and retain privacy commitments from your own vendors and third parties; reference
+    the enforced access scope where applicable.
+    Templates to sign: subprocessor
+  IMPLEMENTER [user-entity] coverage: out-of-scope
+    applies_when: [third-parties]; PLACES NO DUTY ON THIS PERSONA
+  IMPLEMENTER [subservice-organization] coverage: documented
+    applies_when: [third-parties]
+    Provide your privacy commitments to the service organization and flow them to any of
+    your own downstream parties.
+
+## soc2 P6.5 — P6.5 — Third-party unauthorized disclosure response
+  Requirement: The entity obtains commitments from vendors and third parties to notify it
+  of actual or suspected unauthorized disclosures, and responds to such notifications, to
+  meet its objectives related to privacy.
+  Anchor: https://compliance.datasafe.dev/soc2.html#req-p6-5
+  PRYV PLATFORM: out-of-scope
+    The third-party notification commitment is contractual and the response is your incident
+    process (see CC7.4). No software role at the vendor-commitment layer.
+  HDS: facilitated (effort saved: low) (mode: evidence)
+    The third-party notification commitment is contractual, and HDS commits to notifying its
+    implementers of incidents affecting their data, backed by its monitoring and
+    incident-response programme. Obtaining the same commitment from the implementer's own
+    third parties, and responding to notifications, is the service organization's process.
+    Detail: HDS flows a notification obligation to its own subprocessors and carries one to
+    its implementers; the detection and forensic evidence behind it comes from the audit and
+    monitoring substrate. The implementer obtains equivalent commitments from its vendors
+    and runs its own response when notified (see CC7.4-equivalent incident handling).
+    Evidence: internal:hipaa/procedures/security-incident-response, internal:hipaa/registers/subprocessor-register
+  IMPLEMENTER [service-organization] coverage: documented
+    applies_when: [third-parties]
+    Obtain notification commitments from your third parties and run your response process
+    when notified.
+    Templates to sign: subprocessor
+  IMPLEMENTER [user-entity] coverage: out-of-scope
+    applies_when: [third-parties]; PLACES NO DUTY ON THIS PERSONA
+  IMPLEMENTER [subservice-organization] coverage: documented
+    applies_when: [third-parties]
+    Commit to notify the service organization of suspected unauthorized disclosures and flow
+    the same down your chain.
+
+## soc2 P6.6 — P6.6 — Notice of breaches and incidents to affected parties
+  Requirement: The entity provides notification of breaches and incidents to affected data
+  subjects, regulators, and others to meet its objectives related to privacy.
+  Anchor: https://compliance.datasafe.dev/soc2.html#req-p6-6
+  PRYV PLATFORM: facilitated (mode: evidence)
+    Pryv contributes the scoping evidence a breach notice needs, the audit log ties a
+    compromised access to the user + data it touched. The shipped `bin/breach-scope.js`
+    (accessId → user reverse-index + audit `recordCount` + `scopedStreamIds` query scope)
+    automates "who was affected, how many records, which streams in scope" in one command.
+    Drafting and sending the notifications within the regulatory deadline is your process.
+    PLANNED (feature, impact low): Chained audit log raises forensic confidence in the breach-scope determination
+  HDS: facilitated (effort saved: medium) (mode: evidence)
+    The platform supplies the scoping evidence a breach notice needs — the audit log ties a
+    compromised access to the users and data it touched — and HDS operates the monitoring
+    and incident-response programme that detects and scopes the event. Drafting and sending
+    the notifications within the regulatory deadline is the service organization's process.
+    Detail: HDS operates the detection-and-scoping substrate (audit plus monitoring, with
+    alerting wired end to end) so a breach has a contemporaneous, attributable record of who
+    was affected. The reverse-index from a compromised access to affected subjects is now a
+    deployed platform primitive, not a manual step: `GET /system/accesses/:accessId`
+    resolves a compromised access to its owner in O(1) over a cluster-wide index, and
+    `bin/breach-scope.js` emits the affected-subjects/data report from the audit +
+    access-version data (deployed on all HDS cores 2026-07-29). The implementer drafts and
+    sends the breach notices and meets the regulatory clock; HDS's incident procedure
+    governs the report it produces.
+    Evidence: internal:hipaa/procedures/security-incident-response
+  IMPLEMENTER [service-organization] coverage: documented
+    applies_when: always
+    Own the breach-notification workflow — assess scope, draft and send notices to subjects
+    and regulators within the applicable deadlines.
+  IMPLEMENTER [user-entity] coverage: out-of-scope
+    applies_when: always; PLACES NO DUTY ON THIS PERSONA
+  IMPLEMENTER [subservice-organization] coverage: out-of-scope
+    applies_when: always; PLACES NO DUTY ON THIS PERSONA
+
+## soc2 P6.7 — P6.7 — Accounting of disclosures to data subjects
+  Requirement: The entity provides data subjects, on request, with an accounting of the
+  personal information held and the disclosures of their personal information, to meet its
+  objectives related to privacy.
+  Anchor: https://compliance.datasafe.dev/soc2.html#req-p6-7
+  PRYV PLATFORM: implemented
+    The accounting-of-disclosures answer is computable from the audit log (which accesses
+    read which data, when) plus the accesses list (who holds a grant). The
+    audit-event-stream can expose this to the subject directly. Packaging it into a
+    subject-facing report on request is your workflow; the underlying record is complete and
+    attributable.
+  HDS: implemented (effort saved: medium)
+    The accounting-of-disclosures answer is computable from the audit log (which accesses
+    read which data, when) plus the list of granted accesses (who holds a grant) on the
+    HDS-operated platform. HDS operates the substrate; packaging it into a subject-facing
+    report on request is the service organization's workflow.
+    Detail: Because every disclosure read and every grant is recorded, the underlying
+    accounting record is complete and attributable without separate bookkeeping. HDS
+    operates and documents the audit and access posture. The implementer formats the
+    accounting into a subject-facing response and verifies the requester's identity.
+    Evidence: internal:hipaa/policies/access-control
+  IMPLEMENTER [service-organization] coverage: documented
+    applies_when: always
+    Package the audit-derived accounting into a subject-facing report on request and verify
+    the requester's identity.
+  IMPLEMENTER [user-entity] coverage: out-of-scope
+    applies_when: always; PLACES NO DUTY ON THIS PERSONA
+  IMPLEMENTER [subservice-organization] coverage: out-of-scope
+    applies_when: always; PLACES NO DUTY ON THIS PERSONA
+
+## soc2 P7.1 — P7.1 — Data quality — accuracy, completeness, relevance
+  Requirement: The entity collects and maintains accurate, up-to-date, complete, and
+  relevant personal information to meet its objectives related to privacy.
+  Anchor: https://compliance.datasafe.dev/soc2.html#req-p7-1
+  PRYV PLATFORM: facilitated (mode: primitive)
+    Structural data quality is enforced at ingest by event-type schema validation (HTTP 400
+    on malformed input); subjects keep their data up-to-date via events.update /
+    account.update (with version history). "Relevant", collecting no more than the purpose
+    needs, is bounded by the permission scope you grant. Judging semantic accuracy of a
+    specific value is your application's responsibility.
+  HDS: facilitated (effort saved: medium) (mode: primitive)
+    Structural data quality is enforced at ingest by event-type schema validation (malformed
+    input rejected), subjects keep their data current via updates with version history, and
+    "relevant" is bounded by the access scope granted. HDS operates these primitives;
+    judging the semantic accuracy of a specific value is the service organization's
+    application responsibility.
+    Detail: Completeness and structural accuracy are enforced by validation; relevance is
+    enforced by minimum-necessary scoping; currency is supported by subject-driven updates
+    that preserve history. HDS operates and documents the data-quality posture. Semantic
+    correctness — is this the right value — stays with the implementer's application logic.
+    Evidence: internal:soc2/policies/data-quality, internal:hipaa/policies/minimum-necessary
+  IMPLEMENTER [service-organization] coverage: documented
+    applies_when: always
+    Own semantic-accuracy validation in your application, surface update paths to subjects,
+    and scope collection to what each purpose needs.
+  IMPLEMENTER [user-entity] coverage: out-of-scope
+    applies_when: always; PLACES NO DUTY ON THIS PERSONA
+  IMPLEMENTER [subservice-organization] coverage: out-of-scope
+    applies_when: always; PLACES NO DUTY ON THIS PERSONA
+
+## soc2 P8.1 — P8.1 — Privacy complaint management and compliance monitoring
+  Requirement: The entity implements a process for receiving, addressing, resolving, and
+  communicating the resolution of privacy inquiries, complaints, and disputes, and
+  periodically monitors compliance, taking timely corrective action on identified
+  deficiencies, to meet its objectives related to privacy.
+  Anchor: https://compliance.datasafe.dev/soc2.html#req-p8-1
+  PRYV PLATFORM: facilitated (mode: evidence)
+    The complaint-handling workflow is yours, but Pryv supplies the monitoring evidence
+    (audit + observability) and can host the complaint / resolution records themselves as
+    events on a dedicated stream with an attributable trail. This compliance matrix doubles
+    as the periodic control-inventory you monitor against.
+  HDS: facilitated (effort saved: low) (mode: evidence)
+    The complaint-handling workflow is the service organization's, but the HDS-operated
+    platform supplies the monitoring evidence (audit plus infrastructure monitoring) and can
+    host the complaint and resolution records themselves as events on a dedicated stream
+    with an attributable trail. This compliance matrix doubles as the periodic control
+    inventory the implementer monitors against.
+    Detail: HDS operates the audit and monitoring substrate that evidences ongoing
+    compliance, and the platform can store complaint/resolution records as first-class,
+    attributable data. HDS documents the monitoring posture. The receiving, addressing,
+    resolving and communicating process — and the periodic compliance review with corrective
+    action — is the implementer's.
+    Evidence: internal:soc2/policies/privacy-notice
+  IMPLEMENTER [service-organization] coverage: documented
+    applies_when: always
+    Run your complaint-handling and periodic-compliance-monitoring process, and take timely
+    corrective action; the platform can host the records.
+  IMPLEMENTER [user-entity] coverage: out-of-scope
+    applies_when: always; PLACES NO DUTY ON THIS PERSONA
+  IMPLEMENTER [subservice-organization] coverage: out-of-scope
+    applies_when: always; PLACES NO DUTY ON THIS PERSONA

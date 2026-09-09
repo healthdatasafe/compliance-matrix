@@ -1,0 +1,494 @@
+# HIPAA Breach Notification Rule (hipaa-breach) — full text
+
+Part of the HDS Compliance Matrix. Summary and matching rules: https://compliance.datasafe.dev/llms.txt
+All frameworks in one file: https://compliance.datasafe.dev/llms-full.txt
+
+NOT LEGAL ADVICE. This matrix covers the HDS vault product: HDS is the controller of the vault,
+is nobody's Art.28 processor, and holds no HIPAA role in it.
+
+HDS's own position on HIPAA-Breach:
+  - vault: HDS is not-applicable. Every vault. The individual holds the account and decides who may see the data, so HDS holds it for them and never on a covered entity's behalf, whoever put it there and wherever it physically sits. A business associate is defined by acting on a covered entity's behalf, so HDS is not one here and HIPAA does not reach it.
+  External assurance: self-assessed. No independent review. The incident and breach procedure has been rehearsed, not tested by a real reportable breach.
+  Evidence: 12 of 13 requirements answered from approved HDS documentation (12 cite internal evidence), as of 2026-09-08.
+  HIPAA does not reach HDS in the vault, but the question this rule turns on is one the
+  platform can answer: who was affected and what did they hold. The breach-scope primitive
+  is deployed to every core with the access index backfilled, so the blast radius of a
+  compromised token is enumerated rather than estimated, and twelve of the thirteen
+  requirements are answered from approved documentation. The notification procedure is
+  approved and rehearsed; no real reportable breach has exercised it.
+  NOTE: Consent is not delegation. When an individual grants a clinician or an application
+  access to their own vault, that access flows from their consent, not from anyone
+  instructing HDS, so it creates no business associate relationship: not with the
+  clinician, not with the application, and not with HDS. The data sitting on HDS
+  infrastructure does not change on whose behalf it is held. Where an organisation would
+  place protected health information with HDS on its OWN behalf, a BAA would be required;
+  that arrangement is documented separately and is outside this matrix. The requirements
+  below remain the map for an implementer that holds a HIPAA role of its own, and the FTC
+  Health Breach Notification Rule and state consumer-health-data law are what reach the
+  user-sovereign case instead.
+  Known gaps in HDS's own position:
+  - [medium] No row in this scope has completed review, and the notification procedure has never run against a real incident.
+
+## hipaa-breach 164.400 — Applicability
+  Requirement: Subpart D applies to covered entities, business associates, subcontractors
+  and affiliated entities with respect to unsecured protected health information.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-400
+  PRYV PLATFORM: facilitated (mode: infrastructure)
+    Subpart D applies only to "unsecured" PHI, PHI that has not been rendered unusable
+    through encryption or destruction per HHS guidance (NIST SP 800-111 / SP 800-88). Pryv's
+    posture (TLS in transit by default, operator-side encryption-at-rest, per-user backup
+    files transportable as encrypted bundles) lets you put PHI inside the safe-harbor where
+    you choose to, narrowing what §400 actually reaches in your deployment.
+  HDS: facilitated (effort saved: low) (mode: infrastructure)
+    Subpart D only reaches PHI that is "unsecured" — PHI not rendered unusable per HHS
+    guidance. HDS narrows that surface on both halves of the data path: TLS is enforced in
+    transit, and ePHI is encrypted at rest in both regions by hosting-layer volume
+    encryption (verified 2026-06-26). The unsecured-PHI boundary that remains is the in-use
+    one: a running system, account or token compromise reaches decrypted content.
+    Detail: As a business associate, HDS is squarely within Subpart D's reach. The practical
+    effect of this row is to set the boundary that the encryption and risk-assessment rows
+    below refine: what counts as unsecured PHI in an HDS deployment is governed by the
+    transit/at-rest/in-use posture described under 164.402(2) — media exposures of at-rest
+    content fall inside the safe harbor; live-system compromises do not.
+    Evidence: internal:hipaa/risk/at-rest-encryption, internal:hipaa/evidence/at-rest-encryption-verification
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: always; basis: integration; nature: orientation (not a duty)
+    Determine which of your data flows on HDS fall inside the unsecured-PHI scope and
+    document that determination in your breach-readiness records.
+  IMPLEMENTER [business-associate] coverage: documented
+    applies_when: always; basis: integration; nature: orientation (not a duty)
+    Confirm which protections apply to the data you hold and which obligations flow down to
+    your own subcontractors.
+    Templates to sign: baa
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-breach 164.402 — Definitions — breach and unsecured PHI
+  Requirement: Defines "breach" (an impermissible acquisition, access, use or disclosure
+  of PHI under Subpart E, assessed against four risk factors) and "unsecured PHI" (PHI not
+  rendered unusable per HHS guidance).
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-402
+  PRYV PLATFORM: facilitated (mode: evidence)
+    Two Pryv contributions to applying the §164.402 definitions: (1) the audit log is the
+    data source for the §402 risk-assessment factors, nature of PHI involved, unauthorized
+    person, whether PHI was actually acquired, mitigation extent; and (2) Pryv's access +
+    permission model makes "acquisition / access / use / disclosure not permitted under
+    Subpart E" a queryable property (was the access within its granted scope?) rather than
+    an after-the-fact narrative.
+    Detail: §402(2) safe-harbor, "unsecured" excludes PHI made unusable through encryption
+    guidance. Pryv default: TLS 1.3 in transit (always); operator-side at-rest encryption
+    (when configured). AES-256-GCM is the at-rest cipher for the Pryv-managed secrets
+    (platform DB), aligning with the NIST SP 800-111 AES guidance, though for ePHI content
+    at rest, the operator-side encryption (LUKS / PG TDE / dm-crypt) is what governs the
+    §402(2) status. §402(1) risk-assessment factors → Pryv data sources: - Nature + extent
+    of PHI involved → audit row → API method + key request fields → infer streams + event
+    types touched. - Unauthorized person → audit row → accessId → access holder. - Whether
+    PHI was actually acquired or merely accessed → audit row → method (read vs. download
+    attachments etc.). - Extent to which risk was mitigated → access version chain (was
+    access revoked? when?), audit on revocation timestamp.
+  HDS: facilitated (effort saved: medium) (mode: evidence)
+    HDS supplies the technical substrate that lets an implementer apply the §164.402
+    definitions to a concrete incident: the per-user audit log shows what was accessed, and
+    the access-scoping model shows what a given token could reach. Whether an access was
+    "permitted under Subpart E" becomes a property that can be checked against recorded
+    scope rather than narrated after the fact.
+    Detail: The two limbs of §164.402 are refined in the dedicated rows below: 164.402(1)
+    covers the four-factor risk assessment, for which the audit log and access-version chain
+    are the structured inputs, and 164.402(2) covers the unsecured-PHI safe harbor —
+    available for at-rest media exposures since the 2026-06-26 at-rest encryption rollout,
+    not for live-system compromises. The definitional analysis itself — deciding whether a
+    given event meets the breach definition — remains the implementer's, supported by HDS
+    evidence.
+    Evidence: internal:hipaa/procedures/breach-risk-assessment, internal:hipaa/risk/at-rest-encryption
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: always; basis: entity
+    Apply the breach and unsecured-PHI definitions to each incident and record the
+    determination, drawing on HDS-supplied audit evidence.
+  IMPLEMENTER [business-associate] coverage: documented
+    applies_when: always; basis: entity
+    Run the same definitional analysis for incidents in your custody and preserve the
+    supporting evidence.
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-breach 164.402(1) — Definition of "breach" — four-factor risk assessment
+  Requirement: An impermissible use or disclosure of PHI is presumed to be a breach unless
+  a low probability of compromise is shown via a four-factor risk assessment: (i) the
+  nature and extent of the PHI involved, (ii) the unauthorized person involved, (iii)
+  whether the PHI was actually acquired or viewed, and (iv) the extent to which the risk
+  has been mitigated.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-402-1
+  PRYV PLATFORM: facilitated (mode: evidence)
+    The four risk-assessment factors all draw on Pryv data: (i) nature + extent: audit-row
+    method + key request fields + derived event-type set from the touched streams. (ii)
+    unauthorized person: audit-row accessId → access holder with clientData.role +
+    clientData.purpose. (iii) actually acquired vs merely accessed: method-level distinction
+    in audit (events.get vs attachments.get, success vs unauthorized error). (iv) mitigation
+    extent: access-version chain showing revoke / scope-down timestamps relative to the
+    incident. The risk-assessment write-up is the operator's analytical artefact; Pryv
+    supplies the structured inputs.
+  HDS: facilitated (effort saved: high) (mode: evidence)
+    Each of the four risk-assessment factors maps onto data HDS already retains. The
+    per-user audit log and the access-version chain answer "what PHI, by which credential,
+    actually acquired or merely accessed, and was the access revoked or scoped down" — the
+    structured inputs to the assessment.
+    Detail: Factor mapping: (i) nature and extent of PHI — audit records identify the API
+    methods and the streams/event types touched; (ii) unauthorized person — each audit
+    record carries the access identity behind the call; (iii) acquired vs. merely viewed —
+    the method-level distinction (read vs. attachment download, success vs. denied) is
+    recorded; (iv) mitigation extent — the access-version history shows revocation and
+    scope-down timestamps relative to the incident. The analytical write-up that weighs
+    these factors and reaches the low-probability conclusion is the implementer's artefact;
+    HDS supplies and preserves the inputs.
+    Evidence: internal:hipaa/procedures/breach-risk-assessment
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: always; basis: entity
+    Perform and document the four-factor risk assessment for each impermissible use or
+    disclosure, using the HDS-supplied audit inputs.
+  IMPLEMENTER [business-associate] coverage: documented
+    applies_when: always; basis: entity
+    Conduct the same assessment for incidents you discover and share the result with the
+    covered entity.
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-breach 164.402(2) — Definition of "unsecured PHI" — encryption safe harbor
+  Requirement: "Unsecured PHI" is PHI not rendered unusable, unreadable or indecipherable
+  to unauthorized persons through a technology or methodology specified in HHS guidance
+  (NIST SP 800-111 for at-rest encryption, the FIPS-validated in-transit standards, and
+  NIST SP 800-88 for destruction).
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-402-2
+  PRYV PLATFORM: facilitated (mode: infrastructure)
+    The safe-harbor narrows what triggers Subpart D notification: PHI that's actually
+    secured per HHS guidance is outside §164.402's "unsecured PHI" definition and a leak of
+    it doesn't compel notification. Pryv's default posture (TLS 1.3 in transit via built-in
+    ACME, AES-256-GCM for platform secrets at rest) puts the in-transit half firmly inside
+    the safe-harbor; the at-rest half for ePHI content itself depends on the operator's
+    chosen at-rest encryption (operator-side LUKS / PG TDE / dm-crypt).
+    Detail: Practical guidance: pair `letsEncrypt.enabled: true` with operator- side
+    full-disk encryption on every node + encrypted backup archives to maximize §402(2)
+    safe-harbor reach. NIST SP 800-111-equivalent at-rest encryption applies whether the PHI
+    is in the primary engine, an attachment file, or a `bin/backup.js` output.
+    PLANNED (feature, impact low): End-to-end encryption broadens safe-harbor coverage to bulk event data
+  HDS: facilitated (effort saved: low) (mode: infrastructure)
+    The safe harbor exempts properly secured PHI from breach notification. HDS enforces TLS
+    in transit (the FIPS-validated in-transit standards), and ePHI is encrypted at rest in
+    every region by hosting-layer volume encryption meeting NIST SP 800-111 full-volume
+    encryption (verified 2026-06-26). The safe harbor is therefore available for lost,
+    stolen or decommissioned media — the volume keys are not stored with the media. It is
+    NOT available where a running system, account or access token is compromised, since the
+    volume is decrypted in use.
+    Detail: In-transit protection (TLS) aligns with the FIPS-validated standards referenced
+    by HHS guidance, so leaked data in flight is generally outside the unsecured-PHI
+    definition. At rest, hosting-layer full-volume encryption (Exoscale hypervisor-layer on
+    ch1; AWS EBS/KMS on us1) renders stored ePHI "secured" for media exposures. Keys are
+    provider-managed — the cited risk record analyses that accepted residual, and the
+    evidence record holds the vendor statements plus the Security Official's attestation. A
+    compromise of a live system, account or token reaches decrypted content and must still
+    be assessed under 164.402(1).
+    Evidence: internal:hipaa/risk/at-rest-encryption, internal:hipaa/evidence/at-rest-encryption-verification
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: always; basis: entity
+    Rely on the at-rest safe harbor for media exposures; assess running-system, account or
+    token compromises separately, where it does not apply.
+  IMPLEMENTER [business-associate] coverage: documented
+    applies_when: always; basis: entity
+    Reflect the media-vs-live-system safe-harbor boundary in your own risk posture and in
+    assurances you give upstream.
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-breach 164.404 — Notification to individuals
+  Requirement: Following discovery of a breach of unsecured PHI, the covered entity must
+  notify each affected individual without unreasonable delay and no later than 60 calendar
+  days after discovery.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-404
+  PRYV PLATFORM: facilitated (mode: evidence)
+    The notification process splits into **identification** (Pryv-shipped, audit-log-driven
+    per-subject roster, packaged into the one-command `bin/breach-scope.js` report) and
+    **delivery** (voluntarily missing + operator-owned, Pryv's transactional mail surface
+    isn't bulk-send; operators compose with their existing CRM / mail / SMS pipeline). The
+    per-recipient audit-trace bridge uses operator-authored
+    `compliance/breach-notification/sent-cmc` events on a compliance system stream,
+    satisfying the §164.414 burden- of-proof obligation. Full delivery-side treatment in
+    `context/breach-notification-delivery-operator-owned.md`.
+    Detail: Per-subject impact query: filter audit rows by (breachedAccessId, timeWindow) →
+    distinct user ids. That's your §164.404 notification list, with evidence. The shipped
+    `bin/breach-scope.js` (open-pryv.io `0b2874e0`) packages this into one command + adds
+    §164.404(c)(1) (`recordCount` per read audit row) + the `scopedStreamIds` resolved query
+    scope. Note: `scopedStreamIds` is an upper bound on exposure (the streams the query
+    could reach), not the streams of the events actually returned, and the report does not
+    derive PHI data categories from it; mapping streams to "types of PHI" stays editorial.
+    §404(c) content elements (description of breach, types of PHI, steps individual should
+    take, what entity is doing, contact info) are editorial; Pryv has no opinion on the
+    wording. Delivery, including rate-limiting + retries + send-receipt tracking, uses the
+    operator's existing notification stack
+    (`context/breach-notification-delivery-operator-owned.md`).
+  HDS: documented (effort saved: low)
+    Individual notification is owned by the covered entity, not by HDS. HDS supports it by
+    supplying audit evidence to identify the affected individuals, but composing and
+    delivering the notices is the covered entity's operational responsibility.
+    Detail: HDS is not a bulk-notification system. The contribution is identification:
+    filtering the audit log by the implicated credential and time window yields the distinct
+    set of affected subjects, with evidence. Producing the roster and the per-recipient
+    delivery sit with the covered entity, who carries this duty.
+    Evidence: internal:hipaa/procedures/breach-notification
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: always; basis: entity
+    Notify each affected individual within the 60-day window and retain proof of the
+    notifications.
+  IMPLEMENTER [business-associate] coverage: documented
+    applies_when: always; basis: entity
+    If your BAA delegates individual notification to you, perform it; otherwise provide the
+    covered entity the information it needs to notify.
+    Templates to sign: baa
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-breach 164.404(b) — Timeliness of notification
+  Requirement: The required individual notification must be provided without unreasonable
+  delay and in no case later than 60 calendar days after discovery of a breach.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-404-b
+  PRYV PLATFORM: facilitated (mode: evidence)
+    The 60-day clock is procedural, the covered entity owns the incident-response cadence.
+    The shipped `bin/breach-scope.js` compresses the "discovery" + "scoping" steps that
+    dominate the timeline: one command on the subject's home core answers "what was
+    accessed, by whom, when, how many records", so the clock is dominated by editorial work,
+    not data-gathering. The discipline of acting on that data within the 60-day window is
+    the operator's process.
+  HDS: facilitated (effort saved: low) (mode: evidence)
+    The 60-day clock is an operational cadence owned by the covered entity. HDS shortens the
+    data-gathering portion of that window: the audit log and access-version chain answer
+    "what was accessed, by whom, when" quickly, so the timeline is dominated by editorial
+    and decision work rather than investigation.
+    Detail: Discovery and scoping are typically the slowest steps before notices can be
+    drafted. By making the access history queryable, HDS compresses scoping so that meeting
+    the 60-day deadline becomes a matter of process discipline. Acting on the evidence
+    within the window — and recording when discovery occurred — remains the implementer's
+    responsibility.
+    Evidence: internal:hipaa/procedures/breach-notification
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: always; basis: entity
+    Track the discovery date and complete notification within 60 days, documenting the
+    timeline.
+  IMPLEMENTER [business-associate] coverage: documented
+    applies_when: always; basis: entity
+    Surface discovery to the covered entity promptly so its 60-day clock is not eroded by
+    your delay.
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-breach 164.404(c) — Content of notification
+  Requirement: The individual notification must describe what happened (including the
+  dates of breach and discovery), the types of PHI involved, steps individuals should
+  take, what the entity is doing in response, and contact procedures.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-404-c
+  PRYV PLATFORM: facilitated (mode: evidence)
+    Content of the notification is the covered entity's editorial artefact; Pryv has no
+    opinion on the wording. The shipped `bin/breach-scope.js` report machine-derives inputs
+    to two of the five §404(c) content elements: the what-happened description (time window,
+    methods invoked, record counts) and raw material for the PHI-involved description
+    (streams in the compromised access's query scope). The stream list is an upper bound on
+    exposure, mapping streams to "types of PHI" is editorial, and the remaining elements
+    (steps individuals should take, what the entity is doing, contact procedures) stay
+    operator-side.
+  HDS: facilitated (effort saved: low) (mode: evidence)
+    The wording of a notice is the covered entity's editorial artefact. HDS contributes to
+    one content element — the description of the PHI involved — which is derivable from the
+    audit-log scoping performed for the risk assessment. The remaining elements are
+    operational and authored by the covered entity.
+    Detail: The "types of PHI involved" element can be derived from the streams and event
+    types touched, as recorded in the audit data used under 164.402(1). The
+    dates-of-breach-and-discovery, the steps individuals should take, the entity's response,
+    and the contact procedures are not data HDS holds; they are composed by the covered
+    entity. HDS therefore facilitates the evidence-derivable element and documents the rest.
+    Evidence: internal:hipaa/procedures/breach-notification
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: always; basis: entity
+    Author each notice with all required content elements; use HDS audit output to populate
+    the PHI-involved description.
+  IMPLEMENTER [business-associate] coverage: documented
+    applies_when: always; basis: entity
+    Provide the covered entity the factual elements (PHI involved, dates) it needs to
+    compose the notice.
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-breach 164.404(d) — Methods of individual notification
+  Requirement: Notice must be by first-class mail (or email where the individual has
+  agreed), with telephone or other urgent contact where imminent misuse is possible, and
+  substitute notice (web posting or media) where contact information is insufficient or
+  out of date.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-404-d
+  PRYV PLATFORM: out-of-scope
+    Notification method choice is operational. Pryv has no software role in actually
+    delivering the notice (Pryv is not a mailer). When the entity uses Pryv events to record
+    the notice-delivery attempt (e.g., a `breach-notice/sent` event per affected
+    individual), the audit chain proves the delivery attempt.
+  HDS: out-of-scope (effort saved: low)
+    Choosing and executing the notification method is operational; HDS is not a mailer and
+    plays no role in delivering notices. Where the implementer records each delivery attempt
+    as an event, the HDS audit chain can evidence that the attempt occurred, but the
+    delivery itself is out of scope for HDS.
+    Detail: First-class mail, email, telephone, and substitute notice are all organizational
+    channels the covered entity operates with its own communications stack. HDS neither
+    selects nor sends. Its only adjacent contribution is preserving an audit record if the
+    implementer chooses to log delivery attempts as events.
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: always; basis: entity
+    Select compliant notification methods, deliver the notices, and retain delivery records
+    including any substitute-notice steps.
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-breach 164.406 — Notification to media
+  Requirement: A breach affecting more than 500 residents of a State or jurisdiction
+  requires notification to prominent media outlets serving that area.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-406
+  PRYV PLATFORM: out-of-scope
+    Media notification is an organizational / communications procedure. No software
+    contribution; the threshold determination (500 residents) is derivable from the §164.404
+    per-subject list, but the notification itself is operational.
+  HDS: documented (effort saved: low)
+    Media notification is an organizational and communications procedure owned by the
+    covered entity. HDS provides no software contribution; the 500-resident threshold can be
+    derived from the affected-subject list produced under 164.404, but the notification
+    itself is operational.
+    Detail: Determining whether the 500-resident threshold is met for a given State or
+    jurisdiction draws on the per-subject roster that HDS audit evidence helps assemble.
+    Identifying and notifying prominent media outlets is entirely the covered entity's
+    process.
+    Evidence: internal:hipaa/procedures/breach-notification
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: always; basis: entity
+    Where the threshold is met, notify prominent media in the affected jurisdiction and
+    retain the records.
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-breach 164.408 — Notification to the Secretary
+  Requirement: The covered entity must notify the Secretary of HHS following discovery of
+  a breach of unsecured PHI; timing and method depend on whether 500 or more individuals
+  are affected.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-408
+  PRYV PLATFORM: out-of-scope
+    HHS notification (via the OCR online portal) is procedural and organizational. Pryv's
+    audit + access-version data inform the content (subjects affected, dates, root cause)
+    but the submission itself is operator-side.
+  HDS: documented (effort saved: low)
+    Submission to the Secretary via the HHS portal is procedural and owned by the covered
+    entity. HDS audit and access-version data inform the content (subjects affected, dates,
+    contributing cause), but the submission itself is operational.
+    Detail: For breaches of 500 or more individuals the notice is contemporaneous with
+    individual notification; smaller breaches are logged and submitted annually. In both
+    cases the factual inputs can be drawn from HDS evidence, while the act of submitting and
+    tracking the report sits with the covered entity.
+    Evidence: internal:hipaa/procedures/breach-notification
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: always; basis: entity
+    File the required HHS notification on the applicable schedule and keep the submission
+    records.
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-breach 164.410 — Notification by a business associate
+  Requirement: A business associate must notify the covered entity of a breach of
+  unsecured PHI without unreasonable delay and no later than 60 days after discovery,
+  including the identities of affected individuals where known.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-410
+  PRYV PLATFORM: facilitated (mode: evidence)
+    When you (the implementer) act as a business associate to a covered entity and store
+    their PHI on your Pryv deployment, your BA-to-CE notification chain is operational. The
+    CMC plugin's cross-platform consent + revocation flow gives you the technical substrate
+    for inter-organization handshakes; audit data lets you meet the "without unreasonable
+    delay" element on the data-gathering side.
+  HDS: facilitated (effort saved: medium) (mode: operations)
+    This is HDS's core breach duty. As a business associate, HDS notifies the covered entity
+    without unreasonable delay (and within 60 days) on discovery of a breach, following a
+    documented procedure. The audit log lets HDS gather the required content — affected
+    subjects and timing — quickly.
+    Detail: HDS maintains an internal breach-notification procedure that defines discovery,
+    escalation, content assembly and the upstream notification to affected covered entities,
+    with the 60-day ceiling. The per-user audit log is the data source for the "identities
+    of affected individuals" element and for the timing evidence backing "without
+    unreasonable delay". When an implementer is itself a business associate to a covered
+    entity and stores PHI on HDS, the same procedure and evidence support its own upstream
+    notification chain.
+    Evidence: internal:hipaa/procedures/breach-notification
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: always; basis: integration
+    On receipt of an HDS breach notice, run your own §164.404/406/408 notification
+    obligations.
+  IMPLEMENTER [business-associate] coverage: documented
+    applies_when: always; basis: integration
+    Notify the covered entity (or upstream BA) you serve within the 60-day window, using the
+    BAA terms and your own breach procedure.
+    Templates to sign: baa
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-breach 164.412 — Law enforcement delay
+  Requirement: Notification may be delayed when a law-enforcement official states that it
+  would impede a criminal investigation or cause damage to national security, for the
+  period specified (with a 30-day cap for oral statements).
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-412
+  PRYV PLATFORM: out-of-scope
+    Procedural, depends on receipt of the law-enforcement statement (oral with 30-day cap,
+    or written with the official's time-limit). No software role beyond preserving the audit
+    log across the delay period (which happens by default).
+  HDS: documented (effort saved: low)
+    Invoking a law-enforcement delay is procedural and depends on receipt of an official
+    statement. HDS has no software role beyond preserving the audit log across the delay
+    period, which happens by default; the decision and its documentation are the
+    implementer's.
+    Detail: Whether the statement is oral (subject to a 30-day cap) or written (bounded by
+    the official's stated period), the implementer must record it and pause the affected
+    notifications accordingly. HDS retention keeps the underlying evidence intact for the
+    duration so notification can proceed once the delay lapses.
+    Evidence: internal:hipaa/procedures/breach-notification
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: always; basis: entity
+    Document any law-enforcement delay request and the resumption of notification once the
+    stated period ends.
+  IMPLEMENTER [business-associate] coverage: documented
+    applies_when: always; basis: entity
+    Honor and record any law-enforcement delay communicated to you and inform the covered
+    entity.
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-breach 164.414 — Administrative requirements and burden of proof
+  Requirement: The covered entity or business associate must maintain documentation
+  sufficient to demonstrate that all required notifications were made, or that an
+  impermissible use or disclosure did not constitute a reportable breach.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-414
+  PRYV PLATFORM: facilitated (mode: evidence)
+    "Burden of proof" is met with evidence; Pryv's audit + access-version chain is the
+    technical evidence layer ("we know exactly what was accessed by which credential at what
+    time"), and the shipped `bin/breach-scope.js` bundles the audit walk + integrity hashes
+    for the affected window into one artefact. The organizational documentation (incident
+    response records, notification records, decisions to not notify with rationale) sits on
+    top of that data.
+    PLANNED (feature, impact medium): Chained audit log IS the burden-of-proof artefact (row could shift F:Evidence|Med → F:Evidence|High)
+  HDS: facilitated (effort saved: medium) (mode: evidence)
+    The burden of proof is met with evidence. HDS's per-user audit log and access-version
+    chain are the technical evidence layer — a precise record of what was accessed, by which
+    credential, and when — that backs both "we notified" and "this was not a reportable
+    breach" determinations.
+    Detail: The audit and access history give an implementer the factual spine for the
+    §164.414 demonstration: it can show the scope of any incident and the basis for a
+    no-breach conclusion. The organizational records that sit on top of that data —
+    incident-response files, notification records, and the documented rationale for any
+    decision not to notify — are the implementer's to maintain. HDS also retains its own
+    breach-procedure execution records as evidence of its §164.410 performance.
+    Evidence: internal:hipaa/registers/breach-log, internal:hipaa/procedures/breach-notification
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: always; basis: entity
+    Maintain the documentation that demonstrates notification or a justified no-breach
+    determination, retaining it for the required period.
+  IMPLEMENTER [business-associate] coverage: documented
+    applies_when: always; basis: entity
+    Keep records demonstrating your own notifications and risk assessments to meet the
+    burden of proof.
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA

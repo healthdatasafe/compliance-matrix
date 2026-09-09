@@ -1,0 +1,1680 @@
+# HIPAA Security Rule (hipaa-security) — full text
+
+Part of the HDS Compliance Matrix. Summary and matching rules: https://compliance.datasafe.dev/llms.txt
+All frameworks in one file: https://compliance.datasafe.dev/llms-full.txt
+
+NOT LEGAL ADVICE. This matrix covers the HDS vault product: HDS is the controller of the vault,
+is nobody's Art.28 processor, and holds no HIPAA role in it.
+
+HDS's own position on HIPAA-Security:
+  - vault: HDS is not-applicable. Every vault. The individual holds the account and decides who may see the data, so HDS holds it for them and never on a covered entity's behalf, whoever put it there and wherever it physically sits. A business associate is defined by acting on a covered entity's behalf, so HDS is not one here and HIPAA does not reach it.
+  External assurance: self-assessed. No HIPAA audit, no independent Security Rule assessment and no third-party report covers HDS. The attestations on file belong to the hosting providers and cover their facilities, not HDS's practices.
+  Certificates HDS relies on but does NOT hold: AWS ISO/IEC 27001 (us-east-1 named in the certified locations), 27017, 27018 — obtained 2026-07-28
+  Evidence: 43 of 43 requirements answered from approved HDS documentation (43 cite internal evidence), as of 2026-09-08.
+  HIPAA does not reach HDS in the vault, so what follows is not a claim that HDS meets the
+  Security Rule: it is what the platform supplies to an implementer that does hold a role.
+  Every one of the forty-three requirements is answered from an approved HDS document, and
+  the safeguards behind those answers are live rather than paper: a risk analysis and
+  risk-management plan are approved, workforce training runs against a completion
+  register, backups are provisioned on both regional cores and a first restore rehearsal
+  was executed on 2026-07-29. Nine carry remediation HDS has committed to and not
+  delivered, and encryption at rest uses provider-managed keys.
+  NOTE: Consent is not delegation. When an individual grants a clinician or an application
+  access to their own vault, that access flows from their consent, not from anyone
+  instructing HDS, so it creates no business associate relationship: not with the
+  clinician, not with the application, and not with HDS. The data sitting on HDS
+  infrastructure does not change on whose behalf it is held. Where an organisation would
+  place protected health information with HDS on its OWN behalf, a BAA would be required;
+  that arrangement is documented separately and is outside this matrix. The requirements
+  below remain the map for an implementer that holds a HIPAA role of its own, and the FTC
+  Health Breach Notification Rule and state consumer-health-data law are what reach the
+  user-sovereign case instead.
+  Known gaps in HDS's own position:
+  - [high] Addressable encryption at rest rests on provider-managed keys. Neither customer-managed keys nor end-to-end encryption is available, so a compromise of the hosting layer is not cryptographically contained. (refs: 164.312(a)(2)(iv))
+  - [medium] Platform telemetry is mid-migration from a removed vendor agent to a self-hosted collector; the information-system activity review depends on that pipeline landing. (refs: 164.308(a)(1)(ii)(D))
+  - [high] Nothing is on file evidencing the Swiss hosting region's physical and environmental controls, which is where the primary store sits. The safeguards inherited there are asserted by the provider, not evidenced by a third-party audit. (refs: 164.310(d)(1))
+
+## hipaa-security 164.308(a)(1)(i) — Security management process — standard
+  Requirement: Implement policies and procedures to prevent, detect, contain, and correct
+  security violations.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-308-a-1-i
+  PRYV PLATFORM: facilitated (mode: evidence)
+    The Security Management Process is a programme you run as the covered entity / business
+    associate, risk analysis, risk-management decisions, sanctions, activity review. Pryv
+    supplies the technical raw material (audit log, system-level observability) that several
+    of those activities draw on, particularly the §164.308(a)(1)(ii)(D) Information System
+    Activity Review specification. The umbrella programme itself remains yours to define and
+    run.
+    Detail: The four implementation specifications under (a)(1)(ii), risk analysis (R), risk
+    management (R), sanction policy (R), and information system activity review (R), each
+    have their own row where the Pryv contribution is more direct. This row covers the
+    umbrella standard itself: a written, maintained programme.
+  HDS: documented (effort saved: medium)
+    As an operator HDS runs its own security-management programme over the open-pryv.io
+    platform, covering all four required specifications: risk analysis, risk management,
+    sanction policy and information-system activity review. The umbrella programme is
+    documented internally and made available on request; a partner running their own ePHI
+    workload still maintains their own.
+    Detail: HDS inherits the platform substrate (per-user audit log, system-level
+    observability) that several specifications draw on, and wraps it in a written,
+    maintained programme that is reviewed periodically. The programme rests on a risk
+    analysis that has been conducted, rated, reviewed and approved, with a treatment
+    register keyed to its findings, and on an approved sanction policy; the analysis and
+    register are held internally and released on request. Only the activity-review
+    specification carries its own row in this matrix, because it is the only one of the four
+    with a platform contribution to describe; the other three are wholly organizational and
+    are evidenced by the internal documents cited here. For a partner acting as Covered
+    Entity or upstream BA, this is a programme they must run themselves; HDS supplies the
+    technical raw material and its own programme as evidence of operator diligence.
+    Evidence: internal:hipaa/policies/security-management-process, internal:shared/registers/technology-stack, internal:shared/registers/data-residency-regions
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: always; basis: entity
+    Define, document and maintain your own security-management programme; you may reference
+    HDS's technical safeguards as inputs.
+  IMPLEMENTER [business-associate] coverage: documented
+    applies_when: always; basis: entity
+    Run your own security-management programme covering the ePHI you process, citing HDS
+    substrate where it carries part of the control.
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-security 164.308(a)(1)(ii)(A) — Risk analysis — required implementation specification
+  Requirement: Conduct an accurate and thorough assessment of the potential risks and
+  vulnerabilities to the confidentiality, integrity, and availability of electronic
+  protected health information held by the covered entity or business associate.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-308-a-1-ii-a
+  HDS: implemented (effort saved: low)
+    HDS has conducted its own risk analysis over the ePHI it holds as operator: an asset
+    inventory covering every class in scope, a register of rated risks, and a documented
+    method. It was reviewed and approved through the internal sign-off process. Each partner
+    conducts its own analysis over its own workload; a risk analysis is not a thing one
+    entity can perform on another's behalf.
+    Detail: This specification is wholly organizational: no platform feature discharges it.
+    What HDS contributes to a partner's own analysis is the control inventory in this matrix
+    and the technology-stack register, which shorten the asset-identification step
+    considerably; the assessment itself, its ratings and its conclusions remain the
+    partner's. HDS's own analysis, its ratings and the specific weaknesses it names are
+    confidential and released only on request under NDA, signed BAA or audit engagement, as
+    is normal for a document whose contents are an inventory of what could go wrong.
+    Evidence: internal:hipaa/risk/risk-analysis
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: always; basis: entity
+    Conduct and document your own risk analysis over the ePHI you hold; you may use this
+    matrix and the HDS technology-stack register as inputs to asset identification, not as a
+    substitute for the assessment.
+  IMPLEMENTER [business-associate] coverage: documented
+    applies_when: always; basis: entity
+    Conduct and document your own risk analysis over the ePHI you process. It is yours
+    alone: the HDS analysis covers HDS's operator surface, not your workload.
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-security 164.308(a)(1)(ii)(B) — Risk management — required implementation specification
+  Requirement: Implement security measures sufficient to reduce risks and vulnerabilities
+  to a reasonable and appropriate level to comply with §164.306(a).
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-308-a-1-ii-b
+  HDS: implemented (effort saved: low)
+    HDS maintains a risk-management plan whose treatment register is keyed to the identified
+    risks, recording for each an owner, a treatment decision and a residual rating. It was
+    reviewed and approved through the internal sign-off process. Treatment decisions are
+    HDS's own; a partner runs the same cycle over its own analysis.
+    Detail: Risk management is the disposition half of the risk-analysis cycle, and is as
+    organizational as the analysis itself. The measures HDS selects are largely the controls
+    documented across this matrix, which is why the matrix doubles as HDS's own control
+    inventory. The register is complete against the analysis rather than a standing wish
+    list: every identified risk carries a decision, including the decisions to accept. The
+    register's contents, like the analysis, are confidential and released on request.
+    Evidence: internal:hipaa/plans/risk-management
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: always; basis: entity
+    Select, implement and record treatments for the risks your own analysis identifies; the
+    controls in this matrix are candidate measures, not a treatment decision made for you.
+  IMPLEMENTER [business-associate] coverage: documented
+    applies_when: always; basis: entity
+    Select, implement and record treatments for the risks your own analysis identifies, with
+    residual risk accepted by someone who has the authority to accept it.
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-security 164.308(a)(1)(ii)(D) — Information system activity review — Required
+  Requirement: Implement procedures to regularly review records of information system
+  activity, such as audit logs, access reports, and security incident tracking reports.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-308-a-1-ii-d
+  PRYV PLATFORM: implemented
+    Every API call is captured by Pryv's per-user audit log; the `audit.get` method exposes
+    it for periodic review. Observability (opt-in telemetry emitter) gives system-level
+    activity reports for the infrastructure side. The "regular review" cadence is your
+    written procedure.
+    Detail: Audit records carry timestamp, user, access reference (accessId + accessSerial),
+    API method, key request fields, success / error. This is the raw material for both
+    routine review (who accessed what, when) and incident-driven investigation. The
+    audit-event-stream optional channel surfaces audit records into the subject's own
+    streams, useful when the subject participates in review.
+  HDS: implemented (effort saved: high)
+    On top of the platform's per-user audit log, HDS operates the review substrate:
+    system-level activity is collected and monitored across both US and Switzerland
+    data-residency options, with alerting on crash, error-rate and silence conditions. The
+    platform telemetry channel is mid-transition (see the planned chip): the in-process
+    vendor agent was removed 2026-07-28 in favour of an allow-list, aggregate-only emitter;
+    until the self-hosted collector and rebuilt alert chain are verified, platform-core
+    detection leans on synthetic and liveness checks. The written review cadence remains the
+    implementer's responsibility.
+    Detail: Per-API-call audit records (platform layer) plus infrastructure telemetry (HDS
+    layer) together give both subject-level and system-level activity review. HDS operates
+    the alerting chain end to end as a matter of policy before any component is treated as
+    in production, so silent failures are caught. The documented review procedure HDS runs
+    as operator is available on request.
+    Evidence: internal:hipaa/procedures/information-system-activity-review
+    PLANNED (feature, impact medium): Platform telemetry is moving from a vendor in-process agent (removed 2026-07-28) to a self-hosted OTLP collector fed by the platform's allow-list aggregate emitter; collector deployment, alert-chain rebuild and end-to-end delivery verification are the tracked remainder.
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: always; basis: entity
+    Define and document your review cadence and who performs it, and retain the review
+    records per your retention policy.
+  IMPLEMENTER [business-associate] coverage: documented
+    applies_when: always; basis: entity
+    Establish your own periodic review of activity records for the ePHI you process, drawing
+    on the audit and monitoring substrate HDS exposes.
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-security 164.308(a)(2) — Assigned security responsibility — standard
+  Requirement: Identify the security official who is responsible for developing and
+  implementing the policies and procedures required by this subpart.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-308-a-2
+  PRYV PLATFORM: out-of-scope
+    Security-official designation is HR / organizational. No software role. When the
+    assigned official needs operational data, the audit log + observability + this matrix
+    are the substrate they draw on.
+  HDS: implemented (effort saved: low)
+    HDS has designated its Security Official: appointed by the CEO on behalf of the HDS
+    Foundation, effective 2026-07-15, recorded in the designated- roles register and the
+    governing policy, both approved and disclosed on request. Each partner must designate
+    their own official for their own programme.
+    Detail: This is an organisational designation, not a software control. The designation
+    is made and recorded as an operator artefact; the assigned official draws on the audit
+    log, monitoring and this matrix as operational substrate. A distinct Privacy Official is
+    designated separately (see hipaa-privacy §164.530(a)). A partner running ePHI on HDS
+    names their own security official.
+    Evidence: internal:hipaa/policies/assigned-security-responsibility, internal:hipaa/registers/designated-roles
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: always; basis: entity
+    Designate and document your own security official.
+  IMPLEMENTER [business-associate] coverage: documented
+    applies_when: always; basis: entity
+    Designate and document your own security official.
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-security 164.308(a)(3)(ii)(C) — Termination procedures — Addressable
+  Requirement: Implement procedures for terminating access to ePHI when employment ends or
+  a workforce member's role changes.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-308-a-3-ii-c
+  PRYV PLATFORM: implemented
+    Workforce access to ePHI is mediated by Pryv accesses. Termination is a single API call
+    (`accesses.delete`) which immediately revokes the token. The audit log proves the
+    termination instant. For role-change scenarios, `accesses.update` narrows permissions
+    without full revocation, preserving the version history of the change.
+    Detail: The "Addressable" status means you must implement it, document why not, or
+    implement an equivalent. The Pryv primitives give you the "implement it" path directly:
+    - Full termination: `accesses.delete` revokes the token immediately and snapshots the
+    prior state into the access history. - Role change / narrowing: `accesses.update` with
+    reduced `permissions` keeps the same access identity but enforces the new scope from the
+    version bump onward. - Audit chain: every subsequent API call would fail authentication
+    (after delete) or fall outside the new scope (after update), producing a verifiable
+    termination boundary. For workforce-scale deployments (e.g., hospital with 100+ staff),
+    Pryv composes with two patterns covered in `context/workforce-access-patterns.md`: -
+    Group access + `callerId` (auth header `Authorization: <TOKEN> <CALLERID>`), termination
+    = removing the individual from the external IdP / IGA group, no Pryv- side action; audit
+    trail preserves the individual identity via the recorded caller id. - Seed access +
+    sub-access derivation, termination = `accesses.delete` on the individual's sub-access
+    while the seed + sibling sub-accesses remain untouched. Roles + groups are deliberately
+    outside Pryv; the external IdP is the source of truth.
+  HDS: implemented (effort saved: high)
+    Workforce access to ePHI is mediated by platform access tokens with granular per-stream
+    permissions. Termination is a single revocation that takes effect immediately, and the
+    audit log records the termination instant; role changes narrow permissions without
+    losing the version history of the change.
+    Detail: HDS operates the access-token model so that ending or changing a workforce
+    member's access is an immediate, audited operation rather than a manual clean-up across
+    systems. Full revocation removes the token; narrowing reduces permissions while
+    preserving the access identity and its history. HDS documents the termination procedure
+    it follows for its own workforce; partners apply the same primitives to their own staff.
+    Evidence: internal:hipaa/procedures/access-termination
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: always; basis: entity
+    Document your termination workflow and tie it to revocation of the access tokens your
+    workforce holds.
+  IMPLEMENTER [business-associate] coverage: documented
+    applies_when: always; basis: entity
+    Document your termination workflow for staff who handle the ePHI you process on HDS.
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-security 164.308(a)(4)(ii)(B) — Access authorization — Addressable
+  Requirement: Implement policies and procedures for granting access to ePHI through a
+  workstation, transaction, program, process, or other mechanism.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-308-a-4-ii-b
+  PRYV PLATFORM: implemented
+    Granting access to ePHI in Pryv means minting an access with explicit per-stream
+    permissions. The technical authorization decision is enforced at every API call.
+    Documentation of the authorization rationale lives in `access.clientData` next to the
+    grant itself, so the "why" travels with the "what".
+    Detail: Access grants are creation events on the `accesses` collection, with
+    `permissions[]` listing the streamId + level tuples the grantee may exercise.
+    `clientData` carries free-form metadata such as the workforce-role label, the granting
+    administrator, the business reason. Together these form a per-grant record satisfying
+    both the technical control and the documentation half of the standard.
+  HDS: implemented (effort saved: high)
+    Granting access to ePHI on HDS means minting an access token with explicit per-stream
+    permissions, enforced at every API call. The authorization rationale can travel
+    alongside the grant itself, so the "why" stays with the "what".
+    Detail: Access grants carry the streams and levels the grantee may exercise, plus
+    free-form metadata such as workforce role, granting administrator and business reason.
+    HDS operates this as the authoritative authorization mechanism for ePHI; there is no
+    trust-based bypass path. HDS documents its own authorization policy and partners apply
+    the same primitive.
+    Evidence: internal:hipaa/policies/access-authorization
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: always; basis: entity
+    Document who may authorise access and on what basis, and capture the rationale alongside
+    each grant.
+  IMPLEMENTER [business-associate] coverage: documented
+    applies_when: always; basis: entity
+    Document your authorization policy for access to the ePHI you process.
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-security 164.308(a)(4)(ii)(C) — Access establishment and modification — Addressable
+  Requirement: Implement policies and procedures to establish, document, review, and
+  modify a user's right of access, based on the entity's access authorization policies.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-308-a-4-ii-c
+  PRYV PLATFORM: implemented
+    The access lifecycle (create / read / update / delete) is first- class in Pryv.
+    `accesses.update` writes a tamper-evident snapshot of the prior version into history on
+    every modification, giving you the documented review trail this standard expects.
+    Detail: Modification semantics: - `accesses.create`: establishes a new grant (see
+    (a)(4)(ii)(B)). - `accesses.get ?includeHistory=true`: review the version chain. -
+    `accesses.update`: modify permissions / clientData; bumps `serial`, snapshots the old
+    head into history. - `accesses.delete`: termination (see (a)(3)(ii)(C)). Every step
+    appears in the audit log, with the timestamp and acting administrator's identity
+    preserved.
+  HDS: implemented (effort saved: high)
+    The access lifecycle (create, read, review, update, revoke) is first-class on the
+    platform HDS operates. Every modification snapshots the prior version into history and
+    is recorded in the audit log, giving the documented review trail this specification
+    expects.
+    Detail: HDS operates establishment, review and modification of access rights as audited
+    operations: grants can be enumerated with their full version chain, narrowed or revoked,
+    with each step timestamped and attributed to the acting administrator. HDS's own
+    periodic operator access review is defined on a stated cadence and has been executed, so
+    the cadence is exercised rather than merely written; the execution record is filed
+    internally and is in review, not yet signed off. Partners apply the same primitives to
+    their own populations. The review covers the operator accounts HDS administers, not the
+    accesses that individual account holders grant over their own data: those are the
+    account holder's to review and revoke, and HDS does not act on them.
+    Evidence: internal:hipaa/procedures/access-review
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: always; basis: entity
+    Document your establishment-and-modification workflow and your periodic access-review
+    cadence.
+  IMPLEMENTER [business-associate] coverage: documented
+    applies_when: always; basis: entity
+    Document how you establish, review and modify access to the ePHI you process on HDS.
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-security 164.308(a)(5)(ii)(A) — Security reminders — Addressable
+  Requirement: Implement periodic security updates and reminders for the workforce.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-308-a-5-ii-a
+  PRYV PLATFORM: out-of-scope
+    Reminder cadence + content are organizational. Pryv has no role at the awareness-content
+    layer.
+  HDS: facilitated (effort saved: low) (mode: awareness)
+    Security-reminder cadence and content are an organisational awareness control with no
+    software role. HDS runs reminders for its own workforce and documents the programme; the
+    artefact is available on request but training delivery itself is not yet formalised as a
+    verified programme.
+    Detail: HDS treats security reminders as part of its workforce-awareness programme, an
+    operator artefact rather than a platform feature. The written programme is cited as an
+    internal document. Formal, verified security-awareness training is a known gap being
+    matured; each partner runs its own reminder programme for its own workforce.
+    Evidence: internal:hipaa/policies/security-awareness-reminders
+    PLANNED (procedure, impact medium): The workforce-training procedure is approved and the completion register holds dated third-party certifications for every workforce member, with expiry reminders wired to the internal tasks board. What remains is the HDS-specific curriculum, the recorded acknowledgements, and letting the monthly cadence run a first full cycle: no per-occurrence execution record has been filed yet.
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: always; basis: entity
+    Run and document your own periodic security reminders for your workforce.
+  IMPLEMENTER [business-associate] coverage: documented
+    applies_when: always; basis: entity
+    Run and document your own security reminders for staff handling ePHI.
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-security 164.308(a)(5)(ii)(B) — Protection from malicious software — Addressable
+  Requirement: Implement procedures for guarding against, detecting, and reporting
+  malicious software.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-308-a-5-ii-b
+  PRYV PLATFORM: out-of-scope
+    Anti-malware is a host / endpoint / network-layer control, Pryv-the-software doesn't
+    include AV. Same out-of-scope reasoning as ISO 27001 A.8.7. The operator's hosting
+    environment carries this control.
+  HDS: facilitated (effort saved: low) (mode: infrastructure)
+    Anti-malware is a host, endpoint and network-layer control rather than a platform
+    feature. HDS operates malware protection and patching at the hosting layer for the
+    environments it runs, documented internally; the partner's own endpoints remain the
+    partner's responsibility.
+    Detail: HDS's hosting environment carries malware-protection controls as part of
+    operator-side infrastructure hardening, described privately and cited as an internal
+    document. The platform software itself includes no antivirus. Partners must protect
+    their own workstations and any infrastructure they operate outside HDS.
+    Evidence: internal:hipaa/policies/malware-protection
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: always; basis: entity
+    Operate and document anti-malware controls on your own endpoints and infrastructure.
+  IMPLEMENTER [business-associate] coverage: documented
+    applies_when: always; basis: entity
+    Operate and document anti-malware controls on infrastructure you run outside HDS.
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-security 164.308(a)(5)(ii)(C) — Log-in monitoring — Addressable
+  Requirement: Implement procedures for monitoring log-in attempts and reporting
+  discrepancies.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-308-a-5-ii-c
+  PRYV PLATFORM: facilitated (mode: evidence)
+    Login + authentication- failure events are captured in the audit log (per `auth.*` API
+    method calls). Observability data aggregates rate + anomaly signals. The
+    discrepancy-reporting cadence + threshold tuning are operator-side procedure.
+    Detail: **Pryv surfaces the events; operator chooses the lockout policy.** Pryv does not
+    in-process rate-limit login attempts or lock accounts after N failures by itself
+    (deliberate; multi-core deployments make in-process counters mis-fire + lockout
+    sensitivity is workload-specific). Operator pattern: `fail2ban` watching the audit log +
+    banning IPs that exceed N auth failures in T minutes; reverse-proxy `limit_req_zone` for
+    per-IP rate caps on `/auth/login`. Full operator-side rate-limiting framing +
+    reference-config backlog: `context/rate-limiting-and-dos-protection.md` + internal
+    backlog slug `RATE-LIMITING-RECIPES`.
+    PLANNED (enhancement, impact low): Reference reverse-proxy rate-limiting configurations add an enforcement companion to log-in monitoring on the authentication endpoints
+  HDS: facilitated (effort saved: medium) (mode: evidence)
+    Authentication and login-failure events are captured in the per-user audit log, and
+    HDS's operational monitoring aggregates rate and anomaly signals across every
+    data-residency option. Discrepancy-reporting thresholds and the response cadence are
+    operator-side procedure.
+    Detail: HDS surfaces login and authentication-failure events through the audit log and
+    layers monitoring on top to detect anomalous rates. The platform does not by itself lock
+    accounts after N failures; HDS operates additional rate-limiting and alerting at the
+    infrastructure boundary, documented privately. Partners tune their own discrepancy
+    thresholds.
+    Evidence: internal:hipaa/procedures/login-monitoring
+    PLANNED (platform, impact low): Upstream reference reverse-proxy rate-limiting configurations would add an enforcement companion to login monitoring on the authentication endpoints, once shipped and adopted in the HDS deployment.
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: always; basis: entity
+    Define and document your discrepancy thresholds and the response when a threshold is
+    crossed.
+  IMPLEMENTER [business-associate] coverage: documented
+    applies_when: always; basis: entity
+    Define and document login-monitoring thresholds for the ePHI workload you operate.
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-security 164.308(a)(5)(ii)(D) — Password management — Addressable
+  Requirement: Implement procedures for creating, changing, and safeguarding passwords.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-308-a-5-ii-d
+  PRYV PLATFORM: configurable
+    Pryv stores credentials on a privileged `system-stream`, separate from ordinary content.
+    Password rules (complexity, rotation) are operator-configured. Adding
+    `services.mfa.mode` raises the authentication strength beyond a password alone, see
+    §164.312(d).
+    Detail: Password is one possible factor; MFA via the `mfa.*` API methods (SMS-based by
+    default) is the second factor when enabled. Recovery flows live alongside
+    (`mfa.recover`) so an account is not lost when a device is. The implementer chooses
+    whether MFA is required universally or per-role.
+    PLANNED (enhancement, impact low): Reference TOTP / WebAuthn plugins reduce dependence on SMS-OTP for the second factor
+  HDS: implemented (effort saved: medium)
+    The platform stores credentials on a privileged, separately controlled namespace, and
+    HDS configures password rules and offers a second authentication factor on top. HDS
+    operates and documents the resulting password-management posture.
+    Detail: Credentials live apart from ordinary content data; password complexity and
+    rotation rules are operator-configured and multi-factor authentication strengthens the
+    login beyond a password alone (see the person-or-entity-authentication standard). HDS
+    documents the configuration it runs; partners may layer their own additional rules.
+    Evidence: internal:hipaa/procedures/password-management
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: always; basis: entity
+    Document your password policy and whether you require the second factor for your
+    workforce.
+  IMPLEMENTER [business-associate] coverage: documented
+    applies_when: always; basis: entity
+    Document password-management procedures for staff handling ePHI.
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-security 164.308(a)(6)(i) — Security incident procedures — standard
+  Requirement: Implement policies and procedures to address security incidents.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-308-a-6-i
+  PRYV PLATFORM: facilitated (mode: evidence)
+    Incident-response procedure is the operator's organizational programme. Pryv contributes
+    the detection + scoping data layer: audit log shows who accessed what; observability
+    gives system-level anomaly signals; access primitives provide the containment mechanism
+    (revoke or scope-down the implicated access). For substrate-vulnerability intake
+    specifically (operator learning that the Pryv version they run has a confirmed
+    vulnerability), the upstream's vulnerability disclosure program is the externally-facing
+    channel: `SECURITY.md` publishes a coordinated disclosure policy (private GitHub
+    Security Advisories flow + `security-dev@` mailbox + scope + SLA + safe harbor), and
+    private vulnerability reporting is enabled on the published repositories.
+  HDS: documented (effort saved: medium)
+    HDS runs an incident-response programme as operator: the audit log and operational
+    monitoring provide detection and scoping data, and access tokens provide the containment
+    mechanism (revoke or narrow the implicated access). The written incident procedure is
+    held internally and shared on request.
+    Detail: Detection draws on per-user audit records (who accessed what) and system-level
+    anomaly signals; containment uses immediate token revocation or scope reduction. HDS
+    documents its incident-handling and notification flow, which feeds the breach-reporting
+    obligations a partner carries under their BAA. Partners run their own incident programme
+    for their workload. For vulnerabilities in the platform substrate itself, the upstream
+    open-pryv.io project publishes a coordinated vulnerability disclosure program (private
+    GitHub Security Advisories plus a security mailbox, with GHSA/CVE issuance); a published
+    advisory affecting the deployed release enters HDS's incident procedure as a provider
+    notification.
+    Evidence: internal:hipaa/procedures/security-incident-response
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: always; basis: entity
+    Run and document your own incident-response procedures.
+  IMPLEMENTER [business-associate] coverage: documented
+    applies_when: always; basis: entity
+    Run and document your own incident procedures and report incidents to the covered entity
+    per your BAA.
+    Templates to sign: baa
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-security 164.308(a)(7)(ii)(A) — Data backup plan — Required
+  Requirement: Establish and implement procedures to create and maintain retrievable exact
+  copies of ePHI.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-308-a-7-ii-a
+  PRYV PLATFORM: implemented
+    `bin/backup.js` produces per-user backup files (events, streams, accesses, attachments).
+    `--restore` rebuilds a user from a backup file. The backup procedure ("when, where, how
+    often") is yours to schedule; the underlying primitive is shipped.
+    Detail: Per-user backup files are advantageous for HIPAA's "exact copies" language
+    because the backup unit matches the natural protected- health-information unit (the
+    subject). They also play well with the §164.310(d) media controls (you can encrypt +
+    transport a single subject's backup file). **Encryption-at-rest of the backup archive is
+    operator-side by design**; Pryv produces an unencrypted dump file; the operator pipes it
+    through their encryption-at-rest layer (LUKS on the backup volume, GPG / age before
+    offsite ship, S3 SSE-KMS / Azure SSE / customer-managed keys on bucket- level
+    encryption) at the storage boundary. Same pattern as the broader bulk-event-data at-rest
+    encryption posture (see `proposals/e2e-encryption.md`, operator-side infrastructure
+    layer is the deliberate choice; CMEK / BYOK / encrypted dumps live there). Implementer
+    documents the chosen encryption scheme in their backup-plan SOP for
+    §164.308(a)(7)(ii)(A) compliance.
+  HDS: facilitated (effort saved: high) (mode: storage)
+    The platform produces per-user backup files (events, streams, accesses, attachments)
+    with a matching restore path, so the backup unit matches the natural ePHI unit. HDS
+    operates a backup schedule on top; automated, regularly verified backups are still being
+    formalised, so this is facilitated rather than fully implemented.
+    Detail: HDS runs the backup primitive on a schedule and documents the plan (frequency,
+    location, encryption-at-rest applied at the storage boundary). The scheduled cycle
+    produces encrypted, off-host, in-region copies on every regional core, and an archive
+    has been retrieved and decrypted with the off-host key to demonstrate that the copies
+    are usable rather than merely produced. What is not yet demonstrated is restore at
+    production scale per region; that drill is the remaining gap. Partners operating their
+    own deployments define their own schedule.
+    Evidence: internal:hipaa/procedures/data-backup-plan
+    PLANNED (procedure, impact medium): Automated, restore-verified backups are the tracked remediation. Provisioned and verified 2026-07-29: in-region off-host object storage in each region (Swiss and US) with object versioning; HDS-held hybrid encryption of every archive (a per-run AES-256-GCM key wrapped to a per-region RSA-4096 public key, the private key held off-host); least-privilege per-host access; and defined targets (RPO 24h, RTO 72h, retention a flat 30 days, the grandfather-father-son promotion having been retired 2026-09-02). The scheduled cycle is running on all regional cores as of 2026-07-30, and retrievability was demonstrated by fetching an archive off-host and decrypting it with the off-host private key. Outstanding before this is fully implemented: the per-region production restore drill at non-trivial scale, and confirmation of the storage lifecycle backstop.
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: [stores-phi-copy]; basis: integration
+    Document your backup schedule, storage location and retention, and confirm
+    restorability.
+  IMPLEMENTER [business-associate] coverage: documented
+    applies_when: [stores-phi-copy]; basis: integration
+    Document the backup plan for the ePHI you process on HDS.
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-security 164.308(a)(7)(ii)(B) — Disaster recovery plan — Required
+  Requirement: Establish, and implement as needed, procedures to restore any loss of data.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-308-a-7-ii-b
+  PRYV PLATFORM: configurable
+    Two layers Pryv gives you: (1) cold restore from `bin/backup.js --restore`, the
+    canonical recovery path; (2) hot redundancy via a multi-core cluster (rqlite replication
+    + cluster-CA mTLS between cores), so a single-region failure doesn't lose live data. You
+    compose them per your RTO / RPO.
+    Detail: Cluster topology is documented in the dev-site customer-resources guides. The
+    bootstrap CLI (`bin/bootstrap.js new-core`) issues an encrypted bundle with the cluster
+    CA + rqlite TLS material; the joining core boots via `bin/master.js --bootstrap`.
+    Lets-Encrypt certificates replicate across the cluster via rqlite keys, so a surviving
+    core can serve TLS without re-issuing.
+  HDS: documented (effort saved: medium)
+    HDS combines cold restore from per-user backups with hot redundancy from a replicated
+    multi-core platform topology, composed to a recovery objective HDS documents internally.
+    The written disaster-recovery plan is available on request.
+    Detail: Recovery rests on two layers: restore from backup as the canonical path, and
+    live replication across cores so a single-region failure does not lose live data. HDS
+    documents the recovery objectives and runbook it operates; contingency-plan testing is
+    tracked separately (see the testing-and- revision specification, a known gap). Partners
+    running their own deployments document their own plan.
+    Evidence: internal:hipaa/procedures/disaster-recovery-plan
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: [stores-phi-copy]; basis: integration
+    Document your recovery objectives and the steps to restore data after a loss event.
+  IMPLEMENTER [business-associate] coverage: documented
+    applies_when: [stores-phi-copy]; basis: integration
+    Document the disaster-recovery procedures for your ePHI workload.
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-security 164.308(a)(7)(ii)(C) — Emergency mode operation plan — Required
+  Requirement: Establish, and implement as needed, procedures to enable continuation of
+  critical business processes for protection of ePHI while operating in emergency mode.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-308-a-7-ii-c
+  PRYV PLATFORM: facilitated (mode: infrastructure)
+    Pryv's HA primitives (multi-core cluster + Raft replication + cluster-CA mTLS) support
+    continued operation when a single facility fails. The "critical business processes"
+    definition + emergency-mode runbook are the operator's. See also Art.5+ of the Disaster
+    Recovery row.
+  HDS: documented (effort saved: medium)
+    The platform's high-availability primitives (replicated multi-core cluster with mutually
+    authenticated inter-core traffic) support continued operation when a single facility
+    fails. HDS documents which processes are critical and the emergency-mode runbook it
+    operates.
+    Detail: HDS treats emergency-mode operation as a documented runbook layered on the
+    platform's HA topology and backup-restore path. The definition of critical business
+    processes and the emergency procedures are operator artefacts, cited internally.
+    Partners define their own emergency-mode plan for their workload.
+    Evidence: internal:hipaa/procedures/emergency-mode-operation
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: [stores-phi-copy]; basis: integration
+    Define your critical processes and document the emergency-mode runbook.
+  IMPLEMENTER [business-associate] coverage: documented
+    applies_when: [stores-phi-copy]; basis: integration
+    Document emergency-mode procedures for the ePHI you process.
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-security 164.308(a)(7)(ii)(D) — Testing and revision procedures — Addressable
+  Requirement: Implement procedures for periodic testing and revision of contingency
+  plans.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-308-a-7-ii-d
+  PRYV PLATFORM: out-of-scope
+    Contingency-plan testing is an operational drill. Pryv has no software role at the
+    drill-execution layer. The drill's restoration-from-backup phase exercises Pryv
+    primitives but the testing programme itself is the operator's.
+  HDS: documented (effort saved: low)
+    Contingency-plan testing is an operational drill whose restore phase exercises the
+    platform's backup-restore path. HDS is formalising a regular test-and-revise cadence;
+    the procedure is documented internally and regular verified execution remains a known
+    gap.
+    Detail: The testing programme itself is an operator activity rather than a platform
+    feature, though restore drills run against the platform's backup primitive. HDS
+    documents the cadence and revision process, and testing has begun: a first restore
+    rehearsal was performed on 2026-07-29 and recorded. It covered a single account rather
+    than a full per-region restore, so this specification is partly evidenced rather than
+    satisfied, and HDS says so instead of reading a rehearsal as a drill. Partners run and
+    document their own contingency-plan tests.
+    Evidence: internal:hipaa/procedures/contingency-plan-testing
+    PLANNED (procedure, impact medium): The contingency-test procedure is approved and the first restore rehearsal was performed on 2026-07-29 and filed as an execution record. It covered a single account, not a full per-region restore, so the tracked remainder is recovery at production scale in each region.
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: [stores-phi-copy]; basis: integration
+    Schedule, run and document periodic tests of your contingency plans and revise them
+    based on results.
+  IMPLEMENTER [business-associate] coverage: documented
+    applies_when: [stores-phi-copy]; basis: integration
+    Test and revise your contingency plans periodically and keep the records.
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-security 164.308(a)(8) — Evaluation — standard
+  Requirement: Perform periodic technical and nontechnical evaluation, in response to
+  environmental or operational changes, to confirm that security policies and procedures
+  continue to meet the requirements of this subpart.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-308-a-8
+  PRYV PLATFORM: facilitated (mode: evidence)
+    Evaluation is the operator's cyclical assessment. Pryv-side inputs: audit log (control-
+    effectiveness sample), observability (operational stability data), this matrix (control
+    inventory to evaluate against), Pryv's test matrix (~2351 PG and SQLite, matched
+    baseline, passing on every commit, concrete §164.308(a)(8) effectiveness evidence),
+    Pryv's supply-chain pipeline (shipped in open-pryv.io `9e2ee7ff`: CI dependency-audit
+    gate, per-release CycloneDX SBOM, cosign-signed images; the SBOM + latest scan output
+    are citable periodic-evaluation artefacts), Pryv's vulnerability disclosure program +
+    GHSA advisory history (coordinated disclosure policy published in `SECURITY.md`; private
+    vulnerability reporting enabled on the published repositories). The assessment write-up
+    is operator-side.
+    PLANNED (feature, impact medium): Read-only effective-configuration endpoint supplies the technical baseline snapshot the periodic evaluation is measured against
+  HDS: documented (effort saved: low)
+    HDS performs a periodic evaluation of its security programme, drawing on the audit log,
+    operational monitoring, this matrix as a control inventory, and the platform's test
+    results as control-effectiveness evidence. The evaluation write-up is held internally
+    and shared on request.
+    Detail: Inputs to the evaluation include audit-log samples, operational-stability data,
+    this layered matrix as the inventory of controls to assess against, the platform's
+    automated test suite as ongoing effectiveness evidence, and the upstream project's
+    published security-advisory history (open-pryv.io's coordinated vulnerability disclosure
+    program with GHSA/CVE issuance), checked against the release HDS deploys. HDS documents
+    the cadence and findings; a partner runs its own periodic evaluation for its own
+    programme.
+    Evidence: internal:hipaa/procedures/periodic-evaluation
+    PLANNED (platform, impact low): A read-only effective-configuration endpoint queued upstream would supply the per-core technical baseline snapshot this evaluation is measured against, once shipped and deployed by HDS.
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: always; basis: entity
+    Perform and document your own periodic technical and nontechnical evaluation.
+  IMPLEMENTER [business-associate] coverage: documented
+    applies_when: always; basis: entity
+    Perform and document a periodic evaluation of the safeguards over the ePHI you process.
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-security 164.310 — Physical Safeguards — standard (framing)
+  Requirement: Implement policies and procedures to limit physical access to electronic
+  information systems and the facilities in which they are housed, while ensuring that
+  properly authorized access is allowed.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-310
+  PRYV PLATFORM: facilitated (mode: awareness)
+    Physical safeguards (facility access, workstation security, device and media controls)
+    are properties of the hosting environment, not of the Pryv software itself. Pryv
+    contributes two things: the data-residency primitive lets you bind a user's data to a
+    specific hosting (so you can certify the physical environment for that data explicitly),
+    and operator-supplied secrets are AES-256-GCM encrypted at rest so that a stolen disk
+    doesn't leak the keys themselves.
+    Detail: For each implementation specification under §164.310 ((a)(1) facility access
+    controls, (b) workstation use, (c) workstation security, (d) device and media controls),
+    the controls are physical and operational. Pryv's posture: the operator chooses +
+    documents the hosting environment; for multi-hosting deployments, `data-residency` lets
+    you certify the physical layer differently per region. Per- user backup files (see
+    §164.308(a)(7)(ii)(A)) are the unit of device-and-media-controls transfer when you need
+    to move a single subject's ePHI off-host.
+  HDS: facilitated (effort saved: medium) (mode: infrastructure)
+    Physical safeguards are properties of the hosting environment, not of the open-pryv.io
+    software. HDS carries this layer by selecting certified hosting providers
+    (EU/Switzerland and US data-residency options) and documenting the facility-control
+    attestations it relies on, so an implementer inherits a vetted physical posture rather
+    than sourcing it themselves.
+    Detail: For each specification under §164.310 (facility access controls, workstation
+    use, workstation security, device and media controls), the underlying controls are
+    physical and operational. HDS's position: HDS chooses and documents the hosting
+    environment per region, binds a deployment to that region's data residency, and holds
+    the provider attestations on file. The facility-control hardware itself remains the
+    certified provider's; HDS's contribution is selection, documentation and the residency
+    guarantee. Evidence grades differ by region: the US region (AWS, us-east-1) is evidenced
+    by independent third-party attestations obtained 2026-07-28 and on file (SOC 2 Type II
+    with a continued-operations letter, ISO/IEC 27001 with us-east-1 named in the certified
+    locations, 27017 and 27018). The Swiss region is contractually assured but not yet
+    evidenced: nothing is on file for it, and the provider's audit clause is the route to
+    closing that.
+    Evidence: internal:hipaa/policies/physical-safeguards, internal:hipaa/registers/hosting-provider-attestations
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: [connects, stores-phi-copy]; basis: integration
+    Rely on the HDS-selected hosting region for the server-side facility controls; you
+    remain responsible for the physical security of your own offices, endpoints and any
+    workforce devices that access ePHI.
+  IMPLEMENTER [business-associate] coverage: documented
+    applies_when: [connects, stores-phi-copy]; basis: integration
+    Inherit the HDS hosting-region facility posture and document it in your own
+    physical-safeguards programme; cover your own premises and devices.
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-security 164.310(a)(1) — Facility access controls — standard
+  Requirement: Implement policies and procedures to limit physical access to electronic
+  information systems and the facilities housing them, while ensuring properly authorized
+  access is allowed.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-310-a-1
+  PRYV PLATFORM: out-of-scope
+    Facility access is physical. See the §164.310 framing row.
+  HDS: facilitated (effort saved: medium) (mode: infrastructure)
+    Facility access control at the server tier is delivered by the certified hosting
+    provider for the chosen region. HDS selects providers whose data-centre access controls
+    (badged entry, escort policies, access logging) are independently attested, and
+    documents which attestation backs each region.
+    Detail: HDS does not operate its own data centres; it deploys open-pryv.io onto
+    certified infrastructure in the EU/Switzerland and US regions. The
+    facility-access-control specification is satisfied at the server tier by the provider's
+    attested controls, which HDS records in its hosting-provider register. Evidence grades
+    differ by region: the US region's facility controls rest on third-party attestations on
+    file since 2026-07-28; the Swiss region's rest on contract alone, with no attestation
+    yet obtained. The implementer's own facilities (offices where workforce members access
+    ePHI) remain their responsibility.
+    Evidence: internal:hipaa/registers/hosting-provider-attestations, internal:hipaa/policies/physical-safeguards
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: [connects, stores-phi-copy]; basis: integration
+    Inherit the server-tier facility controls from the HDS hosting region; implement and
+    document facility access controls for your own premises.
+  IMPLEMENTER [business-associate] coverage: documented
+    applies_when: [connects, stores-phi-copy]; basis: integration
+    Inherit the server-tier facility controls from the HDS hosting region, and implement and
+    document facility access controls for your own premises.
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-security 164.310(b) — Workstation use — standard
+  Requirement: Implement policies and procedures specifying the proper functions to be
+  performed, how they are to be performed, and the physical attributes of the surroundings
+  of any workstation or class of workstation that can access ePHI.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-310-b
+  PRYV PLATFORM: out-of-scope
+    Workstation use + physical attributes are facility / HR controls.
+  HDS: documented (effort saved: low)
+    Workstation use is a workforce and endpoint-management control that sits with the entity
+    operating the workstations, not with the HDS platform. HDS documents the assumption that
+    ePHI access happens only through authenticated, access-token-scoped sessions, which
+    bounds what any single workstation can do.
+    Detail: open-pryv.io enforces that every workstation reaching ePHI does so through an
+    authenticated session carrying a scoped access token, so a workstation can only exercise
+    the permissions its token grants. The physical-surroundings and proper-function
+    obligations of the workstation-use standard remain organizational. HDS records this
+    boundary so implementers can scope their own workstation-use policy to the residual
+    physical/operational concerns.
+    Evidence: internal:hipaa/policies/physical-safeguards
+    PLANNED (doc, impact low): A workstation and BYOD standard now states what any machine must be before it may hold credentials that reach ePHI, and is approved. Its evidence is the countersigned per-machine attestation record: two of the three machines in scope are attested and awaiting countersignature, and one is not yet assessed. Completing them is the tracked remediation.
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: always; basis: entity
+    Define and document workstation-use rules for the devices your workforce uses to access
+    ePHI through the HDS-hosted application.
+  IMPLEMENTER [business-associate] coverage: documented
+    applies_when: always; basis: entity
+    Define and document workstation-use rules for the devices your workforce uses to reach
+    ePHI.
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-security 164.310(c) — Workstation security — standard
+  Requirement: Implement physical safeguards for all workstations that access ePHI, to
+  restrict access to authorized users.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-310-c
+  PRYV PLATFORM: out-of-scope
+    Physical workstation security (screen locks, kensington locks, privacy filters) is
+    endpoint-management scope.
+  HDS: documented (effort saved: low)
+    Physical workstation security (screen locks, device controls, premises) is
+    endpoint-management scope owned by the entity operating the workstation. HDS documents
+    the compensating platform control: a lost or unattended workstation cannot exceed the
+    permissions of its access token, and the token can be revoked centrally.
+    Detail: The physical safeguards the standard calls for — restricting who can be at a
+    workstation that reaches ePHI — are facility and endpoint controls outside the HDS
+    platform. HDS's compensating contribution is that workforce access is mediated by
+    revocable, per-stream access tokens with session/token expiry, so the blast radius of a
+    compromised workstation is bounded and recoverable. HDS documents this so implementers
+    can right-size their physical workstation controls.
+    Evidence: internal:hipaa/policies/physical-safeguards
+    PLANNED (doc, impact low): A workstation and BYOD standard now states what any machine must be before it may hold credentials that reach ePHI, and is approved. Its evidence is the countersigned per-machine attestation record: two of the three machines in scope are attested and awaiting countersignature, and one is not yet assessed. Completing them is the tracked remediation.
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: always; basis: entity
+    Implement physical workstation safeguards (screen locks, restricted siting, device
+    management) for endpoints accessing ePHI; revoke HDS access tokens on device loss.
+  IMPLEMENTER [business-associate] coverage: documented
+    applies_when: always; basis: entity
+    Implement physical safeguards on your own endpoints (screen locks, restricted siting,
+    device management), and revoke HDS access tokens on device loss.
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-security 164.310(d)(1) — Device and media controls — standard
+  Requirement: Implement policies and procedures governing the receipt and removal of
+  hardware and electronic media containing ePHI into and out of a facility, and the
+  movement of these items within the facility.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-310-d-1
+  PRYV PLATFORM: facilitated (mode: infrastructure)
+    Pryv-side contribution at the media-controls layer: per-user backup files are the
+    natural unit when an individual subject's ePHI moves off the production system (export,
+    transfer, archive); operator-side at-rest encryption (LUKS / PG TDE) keeps the
+    ePHI-on-media encrypted in motion + at rest. The physical movement procedure is the
+    operator's.
+  HDS: facilitated (effort saved: medium) (mode: infrastructure)
+    Media disposal and re-use at the server tier are handled by the certified hosting
+    provider's media-sanitisation controls, which HDS selects and documents. For per-subject
+    ePHI movement, the platform's per-user export unit is the natural medium so a single
+    subject's data can be transferred or archived discretely.
+    Detail: The server-tier device-and-media-controls obligation (secure disposal, media
+    re-use, sanitisation) is satisfied by the hosting provider's attested controls, recorded
+    in the HDS hosting-provider register, where the US region is evidenced by attestations
+    on file and the Swiss region rests on contract alone. At the application tier,
+    open-pryv.io's per-user data model means an individual subject's ePHI can be exported
+    and moved as a discrete unit. Production volumes are encrypted at rest (hosting-layer
+    full-volume encryption, every region, since 2026-06-26), so decommissioned server media
+    are protected by construction; a per-subject export leaving the platform is a fresh
+    plaintext artefact, and encrypting it in transport/storage remains the mover's
+    responsibility — HDS documents this boundary explicitly.
+    Evidence: internal:hipaa/registers/hosting-provider-attestations, internal:hipaa/procedures/media-controls, internal:hipaa/evidence/at-rest-encryption-verification
+    PLANNED (doc, impact low): Swiss region only. The US region's media-sanitisation evidence is on file (AWS third-party attestations obtained 2026-07-28), so the collection remediation is discharged for that half. Nothing is on file for the Swiss region, whose provider is contractually obliged to supply a current ISO/IEC 27001 certificate and SOC 2 Type II summary on request; obtaining them is the remaining remediation.
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: [stores-phi-copy]; basis: integration
+    Inherit server-tier media sanitisation from the hosting provider; apply your own at-rest
+    encryption to any per-subject export you move off the platform, and document the
+    movement.
+  IMPLEMENTER [business-associate] coverage: documented
+    applies_when: [stores-phi-copy]; basis: integration
+    Inherit server-tier media sanitisation from the hosting provider, and apply your own
+    at-rest encryption to any export you move off the platform, documenting the movement.
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-security 164.312(a)(1) — Access control — standard
+  Requirement: Implement technical policies and procedures for electronic information
+  systems holding ePHI so that access is allowed only to persons or software programs
+  granted access rights under §164.308(a)(4).
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-312-a-1
+  PRYV PLATFORM: implemented
+    Per-stream permissions are enforced at every API call; an access can read or write only
+    the streams its `permissions[]` lists, at the level granted. There is no "bypass on
+    trust" path, the enforcement is the API surface, not a downstream policy layer. System
+    streams (account, password, MFA) sit on a separately controlled namespace.
+    Detail: The standard's four implementation specifications below each map to a distinct
+    Pryv concern. The standard itself is the umbrella: the technical control system that
+    prevents access by anyone / anything not granted it. **Cross-user isolation caveat:**
+    the "no bypass on trust path" property holds at the API surface. The strength of the
+    underlying isolation depends on the chosen storage engine, SQLite gives physical
+    per-user-file isolation; PG gives logical app-code-enforced isolation against shared
+    tables. See `context/per-engine-isolation.md` for the per-engine breakdown + operator
+    mitigation patterns (PG row-level security, per-schema, per-account-DB, per-tenant
+    deployments). **Scope-gated OAuth2 grants.** The delegated-app access path (OAuth2
+    authorization-code + PKCE, `open-pryv.io/components/oauth2/`, open-pryv.io 2.0.0-rc.8)
+    inherits the same permission enforcement: an authorization-code grant references exactly
+    one consent offer and mints an app access whose `permissions[]` are the user's granted
+    subset of that offer; it can touch nothing outside them. Presented redirect URIs are
+    validated by exact string match (loopback-port carve-out only; fragment-bearing URIs
+    rejected, `open-pryv.io/components/oauth2/src/clientRegistry.ts`), so an issued
+    authorization code cannot be diverted to an unregistered callback.
+  HDS: implemented (effort saved: high)
+    HDS deploys open-pryv.io with per-user data isolation and per-stream access tokens
+    enforced at every API call: a token can read or write only the streams its permissions
+    list, at the level granted, with no trust-based bypass path. Access control is therefore
+    a technical property of the API surface that HDS operates, not a downstream policy
+    layer.
+    Detail: Each subject's data is isolated per user, and access by any person or program is
+    mediated by an access token carrying explicit per-stream, per-level permissions.
+    Enforcement happens at the API boundary on every request, and privileged namespaces
+    (account, credentials) are separately controlled. HDS operates this stack and documents
+    its access-control policy; the implementer configures which grants their application
+    mints.
+    Evidence: internal:hipaa/policies/access-control
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: [connects]; basis: integration
+    Configure your application's use of HDS access tokens to grant least- privilege
+    per-stream access, and document your access-authorization rules.
+  IMPLEMENTER [business-associate] coverage: documented
+    applies_when: [connects]; basis: integration
+    Model your grants as least-privilege per-stream access tokens, and document your
+    access-authorization scheme.
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-security 164.312(a)(2)(i) — Unique user identification — Required
+  Requirement: Assign a unique name and/or number for identifying and tracking user
+  identity.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-312-a-2-i
+  PRYV PLATFORM: implemented
+    Every Pryv account has a unique username + cuid; every access derived from it carries a
+    unique access id (cuid) and version serial. Audit records cite the (accessId,
+    accessSerial) tuple, so each tracked action ties back to a unique identity.
+  HDS: implemented (effort saved: high)
+    Every account in the HDS-operated platform has a unique identifier, and every access
+    token derived from it carries a unique id and version. The per-user audit log cites that
+    access identity on every recorded action, so each tracked operation ties back to a
+    unique identity.
+    Detail: Unique identification is intrinsic to the platform: accounts and the access
+    tokens minted from them each carry unique identifiers, and the audit record for every
+    API call references the acting access identity. This gives the requirement's "identify
+    and track" obligation a technical anchor that HDS operates by default. The implementer
+    maps their workforce/role model onto these identities.
+    Evidence: internal:hipaa/policies/access-control
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: [connects]; basis: integration
+    Map each workforce member or program to a distinct identity/access token and document
+    the mapping; avoid shared credentials.
+  IMPLEMENTER [business-associate] coverage: documented
+    applies_when: [connects]; basis: integration
+    Map each workforce member or program to a distinct identity and access token, and
+    document the mapping. Avoid shared credentials.
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-security 164.312(a)(2)(ii) — Emergency access procedure — Required
+  Requirement: Establish (and implement as needed) procedures for obtaining necessary ePHI
+  during an emergency.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-312-a-2-ii
+  PRYV PLATFORM: configurable
+    The operator-held admin access key (`auth.adminAccessKey`) is the break-glass mechanism:
+    it grants administrative reads not requiring an ordinary user's consent. You document
+    the circumstances under which it may be exercised and the audit-trail review that must
+    follow.
+    Detail: The admin access key is operator-side and rotates only at operator-supplied
+    cadence, treat it as a privileged credential under custody controls equivalent to a root
+    password. Every API call made under the admin key is audited like any other, so
+    post-emergency review is concrete.
+  HDS: configurable (effort saved: medium)
+    The platform provides an operator-held administrative access mechanism that can serve as
+    a break-glass path to ePHI during an emergency, and every action taken under it is
+    captured by the per-user audit log. HDS documents the custody controls; the implementer
+    defines when the procedure may be invoked and the review that follows.
+    Detail: Emergency access is supported by an operator-held privileged access capability
+    treated as a custody-controlled credential. Because every call made under it is audited
+    like any other, post-emergency review is concrete and the break-glass event is
+    reconstructable. HDS configures and safeguards the mechanism; the implementer authors
+    the emergency-access procedure (triggers, authorisers, mandatory after-action review) on
+    top of it.
+    Evidence: internal:hipaa/procedures/emergency-access
+  IMPLEMENTER [covered-entity] coverage: configurable
+    applies_when: [connects, stores-phi-copy]; basis: integration
+    Define and document your emergency-access procedure — who may invoke break-glass access,
+    under what conditions, and the mandatory audit review afterward.
+  IMPLEMENTER [business-associate] coverage: configurable
+    applies_when: [connects, stores-phi-copy]; basis: integration
+    Define and document your emergency-access procedure over the platform mechanism: who may
+    invoke break-glass access, under what conditions, and the mandatory audit review
+    afterward.
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-security 164.312(a)(2)(iii) — Automatic logoff — Addressable
+  Requirement: Implement electronic procedures that terminate an electronic session after
+  a predetermined time of inactivity.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-312-a-2-iii
+  PRYV PLATFORM: configurable
+    Two configurables: personal-token session lifetime (`auth.sessionMaxAge`) and per-access
+    expiry (`access.expires`). The latter is per-grant (the access is automatically inert
+    after the timestamp passes), useful for clinical-workflow accesses whose validity is
+    bounded by the case.
+    Detail: Note that HIPAA's "automatic logoff" is workstation-centric in origin (workforce
+    members stepping away from a terminal). In a Pryv-mediated workflow, the analogous
+    control is the validity window of the access token. Combining `auth.sessionMaxAge` (for
+    interactive workforce sessions) with per-grant `access.expires` (for app-driven
+    background processes) covers both shapes.
+  HDS: configurable (effort saved: high)
+    The platform enforces automatic session and token expiry: interactive session lifetime
+    and per-grant access-token expiry can both be bounded, so a session or token becomes
+    inert automatically once its window passes. HDS operates the mechanism; the implementer
+    sets the timeouts appropriate to its workflow.
+    Detail: HIPAA's automatic-logoff specification is workstation-centric in origin; in an
+    HDS-mediated workflow the analogous control is the validity window of the session and
+    access token. The platform supports a bounded interactive session lifetime for workforce
+    sessions and a per-grant token expiry for app-driven processes, covering both shapes.
+    HDS documents the configured defaults; the implementer tunes them and documents the
+    rationale for the chosen inactivity window (the "Addressable" path).
+    Evidence: internal:hipaa/policies/access-control
+  IMPLEMENTER [covered-entity] coverage: configurable
+    applies_when: [connects]; basis: integration
+    Set session and access-token expiry windows appropriate to your workflow and document
+    the inactivity-timeout decision.
+  IMPLEMENTER [business-associate] coverage: configurable
+    applies_when: [connects]; basis: integration
+    Set session and access-token expiry windows appropriate to your workflow, and document
+    the inactivity-timeout decision.
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-security 164.312(a)(2)(iv) — Encryption and decryption — Addressable
+  Requirement: Implement a mechanism to encrypt and decrypt ePHI.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-312-a-2-iv
+  PRYV PLATFORM: configurable
+    The "mechanism to encrypt and decrypt ePHI" is delivered as switch-on Pryv software.
+    User PHI/PII at rest (events, attachments, series, audit, platform DB) is encrypted by
+    the `container-encrypted-volume` companion (`encryption-at-rest-user-data`), layered
+    onto the image, it mounts an encrypted volume on boot so the application stores
+    ciphertext at rest. The operator enables it (`CEV_ENABLED`) and chooses a key source.
+    Pryv additionally encrypts operator-supplied secrets at rest (AES-256-GCM, HKDF-derived)
+    and provides TLS-in-transit via the built-in ACME integration.
+    Detail: `container-encrypted-volume` (v0.1.0, shipped 2026-06-23) provisions and mounts
+    a LUKS-encrypted volume inside the container and points the data roots at it, verified
+    end-to-end (an event written through the API is unreadable in the stopped container
+    file). Pluggable backend (LUKS reference + gocryptfs) and key provider (`env` / `file` /
+    `exec` / `clevis` for TPM2·Tang·PKCS#11 / `aws-kms` envelope). With an identity-bound
+    provider no copyable key is held; key custody is intrinsic to the control, not a Pryv
+    gap. Rotation uses LUKS key-slots (no bulk re-encrypt). Volume encryption also grounds
+    the breach-notification safe harbor (NIST SP 800-111). Coverage is `configurable`,
+    Pryv's software performs the encryption once enabled, a step above the
+    operator-implements-it tier. Caveats: an external PostgreSQL data dir and remote object
+    storage (S3) are outside the mount (encrypt operator-side / via bucket SSE); LUKS needs
+    `--privileged`. See `proposals/container-encrypted-volume.md`. The platform-secret
+    at-rest encryption (Let's Encrypt account keys, observability tokens, cluster bootstrap
+    bundles) remains on by default (`encryption-at-rest-secrets`). Longer-term direction:
+    end-to-end encryption where the server never holds plaintext, research direction tracked
+    under internal backlog slug `E2E-ENCRYPTION` (proxy re-encryption); per-row impact in
+    `proposals/e2e-encryption.md`.
+    PLANNED (feature, impact medium): End-to-end (server-blind) encryption via proxy re-encryption brings CMEK / BYOK to the Pryv layer
+  HDS: implemented (effort saved: medium)
+    ePHI is encrypted at rest in both hosting regions, and TLS protects it in transit by
+    default. Each core's storage volume is encrypted at the hosting layer: Exoscale encrypts
+    compute root volumes by default (AES-256-XTS, ch1/Switzerland); AWS EBS volume
+    encryption is enabled on the US core (AES-256, us1). Verified 2026-06-26. Keys are
+    provider-managed (AWS / Exoscale, both BAA subprocessors) — this satisfies the
+    addressable mechanism and grounds the §164.402(2) breach safe-harbor for lost/stolen
+    media, but is not operator-held-key or end-to-end encryption (see
+    hipaa/risk/at-rest-encryption for the residual).
+    Detail: Both production cores store ePHI on encrypted volumes. ch1 (Exoscale, ch-dk-2)
+    runs on an Exoscale-encrypted root volume by default — "Compute root volumes … encrypted
+    at rest transparently at the hypervisor layer," AES-256 in XTS mode, Exoscale-managed
+    keys. us1 (AWS us-east-1) stores ePHI on an encrypted EBS volume (AES-256, aws/ebs KMS
+    key). Encryption/decryption is transparent to the guest; it protects
+    stolen/decommissioned disks, off-host snapshots and backups, and grounds the breach
+    safe-harbor (NIST SP 800-111 recognises full-volume encryption). TLS covers the
+    transmission half (§164.312(e)). Residual: keys are provider-managed, so a running host
+    or a compelled provider could read plaintext — operator-held-key encryption (the
+    container-encrypted-volume facility, CEV_ENABLED, shipped in the open-pryv.io rc.5
+    encrypted image and LUKS-verified on HDS hosts) or end-to-end encryption remain optional
+    strengthenings, not required for this addressable spec. Source for ch1's default-on
+    encryption: Exoscale's compliance statement (exoscale.com/compliance/encryption),
+    covering Compute root volumes, Block Storage and Object Storage alike (AES-256-XTS,
+    unique key per volume), so the claim does not depend on which storage type holds the
+    ePHI. Evidence grades differ by region: ch1 rests on this vendor default-on statement;
+    us1 on the Security Official's attestation, since AWS EBS encryption is opt-in per
+    volume and vendor documentation cannot establish it is in force.
+    Evidence: internal:hipaa/policies/encryption, internal:hipaa/risk/at-rest-encryption, internal:hipaa/evidence/at-rest-encryption-verification
+  IMPLEMENTER [covered-entity] coverage: configurable
+    applies_when: [stores-phi-copy]; basis: integration
+    HDS encrypts ePHI at rest with provider-managed keys. In your own risk analysis, decide
+    whether that key model is sufficient or whether you need operator-held-key or
+    application-side encryption of sensitive fields on top, and document the addressable
+    decision.
+  IMPLEMENTER [business-associate] coverage: configurable
+    applies_when: [stores-phi-copy]; basis: integration
+    HDS encrypts ePHI at rest with provider-managed keys. Decide in your own risk analysis
+    whether that key model is sufficient or whether you need application-side encryption on
+    top, and document the addressable decision.
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-security 164.312(b) — Audit controls — standard
+  Requirement: Implement hardware, software, and/or procedural mechanisms that record and
+  examine activity in information systems containing or using ePHI.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-312-b
+  PRYV PLATFORM: implemented
+    Pryv's per-user audit log records every API method invocation, timestamp, user, access
+    reference, method, success / error. The `audit.get` API method surfaces it for
+    examination. The optional audit-event-stream channel additionally emits audit records
+    into the subject's own streams, so the subject (and any access they authorise) can
+    examine the history.
+    Detail: Audit storage uses SQLite directly (not the engine-agnostic mall layer), to keep
+    the audit path independent of the data path. This decouples integrity of the log from
+    issues in the primary engine. Audit row content is data-minimal **by construction**:
+    action + source (transport + ip) + URL query + access ref + optional integrity hash of
+    the affected event. The request body is never stored. Consequence: an auditor reviewing
+    the §164.312(b) log sees *who did what when* without the log itself becoming a second
+    copy of PHI, favourable under §164.502(b) minimum- necessary review. See
+    `docs/pryv-primitives.md` audit entry. One scoping nuance: `events.get` content-query
+    conditions sent over HTTP GET are part of the URL query, so the **search values** your
+    apps submit (which may reference PHI, e.g. a diagnosis code) are recorded as-is,
+    deliberately, since the search criteria are the auditable action. Tier the audit log's
+    protection accordingly. See `context/content-query-audit-semantics.md`. Since
+    open-pryv.io `07b6d3b6`, the OAuth2 authorization server records its own activity in the
+    same audit pipeline (`oauth.*` events): consent lifecycle (shown / granted / refused),
+    authorization-code exchange including replay attempts, and token lifecycle (issued per
+    grant type / refreshed / revoked / reuse-detected). User-resolved events land in the
+    subject's per-user trail (`[OE07]` proves rows in `:_audit:`); the pre-identification
+    ones (consent shown / refused, code replay) go to syslog. A detected refresh-token
+    replay additionally revokes the whole token chain and records both the detection and the
+    resulting revocation (open-pryv.io `829f7238`), so the §164.312(b) trail covers
+    delegated-app authorization activity, not just data access.
+    PLANNED (feature, impact low): Chained / signed audit log strengthens tamper-resistance evidence
+  HDS: implemented (effort saved: high)
+    The HDS-operated platform records every API call in a per-user audit log — timestamp,
+    acting access identity, method, and success/error — and exposes it for examination. The
+    audit record is data-minimal by construction (request bodies are not stored), so
+    reviewing activity does not create a second copy of ePHI.
+    Detail: Audit controls are a native, always-on property of the platform: each API
+    invocation against a subject's data produces an audit record scoped to that subject. The
+    log captures who did what, when, and via which access, and is retrievable for routine
+    review and incident investigation. HDS operates and retains this substrate; the
+    implementer defines the written review cadence (see §164.308(a)(1)(ii)(D)) and who
+    performs it.
+    Evidence: internal:hipaa/policies/audit-controls
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: [connects, stores-phi-copy]; basis: integration
+    Define and document your audit-review cadence and who performs it; retain the review
+    records per your retention policy.
+  IMPLEMENTER [business-associate] coverage: documented
+    applies_when: [connects, stores-phi-copy]; basis: integration
+    Define and document your audit-review cadence over the platform-provided log, and who
+    performs it. Retain the review records.
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-security 164.312(c)(1) — Integrity — standard
+  Requirement: Implement policies and procedures to protect ePHI from improper alteration
+  or destruction.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-312-c-1
+  PRYV PLATFORM: facilitated (mode: primitive)
+    Integrity is multi- layered: write authorization gated by `permissions`, event
+    versioning preserves the prior value on every update, audit pins the (who, when, via
+    which access) attribution, and `bin/backup.js` provides the recovery path if a
+    destruction event needs to be reversed. The standard's overall programmatic obligation
+    is yours; the technical substrate is Pryv's.
+    PLANNED (feature, impact medium): Chained / signed audit log enforces log integrity at the primitive layer
+  HDS: facilitated (effort saved: medium) (mode: primitive)
+    Integrity is layered in the HDS-operated platform: writes are gated by per-stream
+    permissions, updates preserve the prior value through versioning, the audit log pins
+    who-changed-what-when, and operational backups provide a recovery path if a destruction
+    event must be reversed. The overall integrity programme remains the implementer's; the
+    technical substrate is HDS-operated.
+    Detail: Improper alteration is constrained because only tokens with write permission on
+    a stream can modify it, and modifications are versioned so the prior state is retained.
+    Improper destruction is mitigated by per-user export/backup as a recovery path. The
+    audit log ties every change to an authenticated access identity. HDS operates these
+    primitives and documents its integrity policy; the implementer owns the surrounding
+    procedural obligation.
+    Evidence: internal:hipaa/policies/integrity
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: [stores-phi-copy]; basis: entity
+    Author your integrity policy — change-control, who may alter records, and how
+    destruction is prevented and recovered — over the platform substrate.
+  IMPLEMENTER [business-associate] coverage: documented
+    applies_when: [stores-phi-copy]; basis: entity
+    Author your integrity policy over the platform substrate: change control, who may alter
+    records, and how destruction is prevented and recovered.
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-security 164.312(c)(2) — Mechanism to authenticate ePHI — Addressable
+  Requirement: Implement electronic mechanisms to corroborate that ePHI has not been
+  altered or destroyed in an unauthorized manner.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-312-c-2
+  PRYV PLATFORM: facilitated (mode: evidence)
+    Event versioning preserves the prior content on every update, so "is this the original?"
+    is a tractable question, compare against the history. The audit row references the
+    access that performed the update, anchoring the change to an authenticated actor. Tamper
+    detection beyond this (e.g., end-to-end content hashing under a customer-held key) is on
+    the implementer or an extension.
+    Detail: Audit-log tamper resistance itself is **voluntarily missing today**: rows are
+    append-only by convention in the audit-write code path, but there is no software-side
+    hash chain or signature. Integrity rests on the operator's filesystem posture (immutable
+    mounts, append-only flags, file-integrity monitoring, out-of-band SIEM forwarding).
+    Future direction: chained / signed audit log (per-row prev_hash + periodic
+    operator-signed checkpoints). Tracked under internal backlog slug `AUDIT-LOG-CHAINING`
+    and `proposals/audit-log-chaining.md`. When shipped, this row moves from `F: Evidence |
+    Low` to `F: Evidence | Med`.
+    PLANNED (feature, impact medium): Chained / signed audit log authenticates audit data (row moves F:Evidence|Low → F:Evidence|Med)
+  HDS: facilitated (effort saved: low) (mode: evidence)
+    Event versioning retains prior content on every update, so "is this the original?" is
+    answerable by comparison against the history, and the audit record anchors each change
+    to an authenticated access identity. Tamper detection beyond this — e.g. cryptographic
+    content hashing under an implementer-held key — remains on the implementer or an
+    extension.
+    Detail: The platform corroborates that ePHI has not been altered improperly through two
+    evidence sources HDS operates: the version history of each record, and the audit
+    attribution of every change to an authenticated actor. This satisfies the addressable
+    specification's evidentiary intent for most deployments. HDS documents the boundary;
+    where an implementer's risk analysis demands stronger tamper-proofing, they layer in
+    content-integrity verification themselves.
+    Evidence: internal:hipaa/policies/integrity
+  IMPLEMENTER [covered-entity] coverage: configurable
+    applies_when: [stores-phi-copy]; basis: integration
+    Decide, per your risk analysis, whether the platform's versioning + audit evidence
+    suffices or whether to add content-integrity verification, and document the addressable
+    decision.
+  IMPLEMENTER [business-associate] coverage: configurable
+    applies_when: [stores-phi-copy]; basis: integration
+    Decide, per your risk analysis, whether the platform's versioning and audit evidence
+    suffices or whether to add content-integrity verification, and document the addressable
+    decision.
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-security 164.312(d) — Person or entity authentication — standard
+  Requirement: Implement procedures to verify that a person or entity seeking access to
+  ePHI is the one claimed.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-312-d
+  PRYV PLATFORM: implemented
+    Authentication is mediated by the access-token primitive: the bearer of a valid token
+    has been authenticated. Strength of that authentication is layered, username + password
+    by default; MFA via `mfa.*` API methods when `services.mfa.mode` is set. Recovery paths
+    preserve account ownership when a second-factor device is lost.
+    Detail: **MFA is pluggable.** The `Service` base class
+    (`components/business/src/mfa/Service.ts`) defines `challenge()` + `verify()` methods;
+    two subclasses ship (`ChallengeVerifyService`, `SingleService`) targeting HTTP-callable
+    external providers (SMS by config default). An operator can plug in any provider
+    matching the challenge/verify shape via `services.mfa` config (Twilio Authy, Auth0 MFA,
+    Duo Web push, …) without writing code, or extend `Service` to implement any in-process
+    method. NIST AAL framing: the achievable AAL depends on which provider is configured.
+    SMS-only is AAL1 under NIST SP 800-63B Rev 3. TOTP + push or WebAuthn-based providers
+    reach AAL2. Reference plugins for in-process TOTP + WebAuthn are tracked under internal
+    backlog slug `MFA-MODERN-METHODS` (matrix-side mirror at
+    `proposals/mfa-modern-methods.md`); the broader OAuth2 auth-stack modernisation arc
+    subsumes this work. MFA is opt-in per operator; once enabled, it can be required at
+    login, at sensitive operations, or both. The MA test series exercises activate / confirm
+    / challenge / verify / deactivate / recover paths. **A second authentication path,
+    OAuth2.** Beyond the token + MFA stack above, Pryv can authenticate delegated apps
+    through a standards-based OAuth2 authorization-code + PKCE flow
+    (`open-pryv.io/components/oauth2/`, shipped in open-pryv.io 2.0.0-rc.8). PKCE is
+    mandatory (S256 only, `code_challenge_methods_supported: ['S256']` in
+    `open-pryv.io/components/oauth2/src/wellKnown.ts`); access tokens are short-lived
+    (`oauth.accessTokenTTL`, default 1 h) and refresh tokens rotate single-use with a
+    sliding TTL bounded by an absolute cap (`oauth.refreshTokenTTL` /
+    `oauth.refreshTokenAbsoluteTTL`). When `oauth.requireAppAccountMfa` is set (default
+    true), an app account must enrol MFA before it can drive the OAuth2 write surface, so
+    the second-factor requirement extends to the delegated-app path. **Sender-constrained
+    tokens (DPoP).** A delegated app may opt into RFC 9449 DPoP: it proves possession of a
+    client-held key on each request, and the token is bound to that key's thumbprint (issued
+    `token_type: DPoP`). A token stolen in transit or from storage is then useless without
+    the private key, it materially strengthens "the entity seeking access is the one
+    claimed" for bearer tokens. Opt-in and additive (Bearer clients are unchanged). The
+    proof's freshness window is `oauth.dpop.clockSkewSeconds` (default 120 s); DEPLOYMENT
+    NOTE: DPoP binds to the client-facing request URI, so a deployment accepting it must sit
+    behind a proxy that overwrites the X-Forwarded-Host / -Proto headers. Server-side landed
+    in open-pryv.io `9a874599`; the client side ships in the `pryv` JS library 3.10.0
+    (`SignedConnection`, `OAuth2Client` with `dpop: true`). **Operator key revocation.**
+    When a bound key is compromised, you revoke it platform-wide by its RFC 7638 thumbprint
+    (`bin/oauth-client.js revoke-key <jkt> --yes`): every token bound to the key, including
+    refresh rotations attempted after the revoke, is rejected on all cores within
+    `oauth.dpop.keyRevokeCheckSeconds` (default 30 s), and the token endpoint refuses to
+    mint for it. An advisory per-client key inventory (`list-keys`) shows what a revocation
+    will hit before you run it (open-pryv.io `4c0a5ade`).
+    PLANNED (enhancement, impact medium): Reference MFA plugins (TOTP / WebAuthn) + primitive-catalogue doc surface the pluggability
+  HDS: implemented (effort saved: high)
+    Authentication in the HDS-operated platform is mediated by the access-token primitive:
+    the bearer of a valid token has been authenticated. Authentication strength is layered —
+    credentials by default, with multi-factor authentication available — and recovery paths
+    preserve account ownership when a factor is lost.
+    Detail: Every request reaching ePHI must present a valid access token, so the platform
+    verifies the requester before any access is granted. HDS operates this stack and can
+    require multi-factor authentication where the implementer's risk profile calls for it;
+    the achievable assurance level depends on which factor method is configured. HDS
+    documents the authentication policy in effect; the implementer decides whether to
+    require MFA universally or per-role.
+    Evidence: internal:hipaa/policies/authentication
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: [connects]; basis: integration
+    Decide and document your authentication strength (e.g. whether MFA is required, and for
+    which roles or operations).
+  IMPLEMENTER [business-associate] coverage: documented
+    applies_when: [connects]; basis: integration
+    Decide and document your authentication strength over the platform, including whether
+    MFA is required and for which roles or operations.
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-security 164.312(e)(1) — Transmission security — standard
+  Requirement: Implement technical security measures to guard against unauthorized access
+  to ePHI being transmitted over an electronic communications network.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-312-e-1
+  PRYV PLATFORM: implemented
+    All Pryv API traffic terminates on TLS 1.3 by default, with certificates issued +
+    auto-renewed via the built-in ACME integration. Inter-core traffic in a multi-core
+    cluster runs over mTLS using a cluster-private CA. There is no plaintext path shipped.
+    Detail: LE certificate replication uses rqlite keyspace `tls-cert/<host>` +
+    `tls-acme-account`; rotation triggers `https.Server.setSecureContext` via cluster IPC
+    for live key swap without downtime. The cluster CA lives outside the LE chain,
+    operator-rooted, used only between cores. **Webhook delivery is signal-only.** Outbound
+    webhook POSTs from Pryv carry a notification that something changed, not the changed
+    data itself. Receivers fetch the current state via authenticated GET back to Pryv (same
+    access-token-protected paths as any other read). No PHI / PII / tokens transit the
+    webhook surface; the transmission-security attack surface narrows accordingly. See
+    `context/webhooks-signal-only.md` for the full design rationale + operational caveats
+    (TLS-on- delivery, retry semantics, poison-pill protection). **Credential hand-off
+    between parties.** TLS protects the pipe; the shared-secrets primitive
+    (`open-pryv.io/components/shared-secrets/`) protects the credential travelling over it.
+    Handing an access credential to a counterparty (e.g. inviting a care-team member) used
+    to mean a URL-embedded token that lingers in browser history, referrer headers, and
+    intermediary access logs after the TLS session ends. Instead, the counterparty receives
+    a one-time random key: redeemable exactly once, mandatory expiry, hash-only server-side
+    storage (the SHA-256 of the key's random half), optional passphrase / HMAC gate on
+    redemption. An intercepted or logged link therefore never carries a live, replayable
+    credential to ePHI. Expiry is enforced when someone reaches for the secret rather than
+    by a background sweeper, so plan your own deletion pass if ePHI retention rules require
+    expired payloads to be gone by a fixed deadline.
+  HDS: implemented (effort saved: high)
+    All API traffic to the HDS-operated platform is carried over TLS by default; there is no
+    plaintext path served. Transmission security is therefore a technical property of every
+    connection rather than an optional add-on, in both the US and Switzerland regions.
+    Detail: ePHI in transit between clients and the platform is protected by TLS, which
+    provides confidentiality and integrity over the connection. HDS operates the certificate
+    lifecycle and serves only encrypted endpoints. The implementer's obligation is to ensure
+    that its own onward transmission paths (any proxy or integration hop it controls)
+    preserve the same protection.
+    Evidence: internal:hipaa/policies/transmission-security
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: [connects, stores-phi-copy, third-parties]; basis: integration
+    Ensure your client and any onward integration hops you control transmit ePHI only over
+    TLS; document the transmission-security boundary.
+  IMPLEMENTER [business-associate] coverage: documented
+    applies_when: [connects, stores-phi-copy, third-parties]; basis: integration
+    Ensure any transmission path you operate carries ePHI only over TLS, and document the
+    transmission-security boundary.
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-security 164.312(e)(2)(i) — Integrity controls — Addressable
+  Requirement: Implement security measures to ensure that electronically transmitted ePHI
+  is not improperly modified without detection until disposed of.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-312-e-2-i
+  PRYV PLATFORM: implemented
+    TLS 1.3 provides cryptographic integrity (AEAD) on every byte in transit. End-to-end
+    transmission integrity is therefore a property of the connection, modification in
+    transit is cryptographically detectable. Endpoint-to-endpoint integrity across multiple
+    hops (e.g., proxy chains) requires the implementer's chain to preserve this property.
+  HDS: implemented (effort saved: high)
+    TLS provides cryptographic integrity on every byte in transit, so modification of ePHI
+    on the connection to the HDS-operated platform is cryptographically detectable.
+    End-to-end integrity across any additional hops depends on the implementer's chain
+    preserving the same property.
+    Detail: The transmission-integrity specification is met on the platform connection by
+    the authenticated-encryption guarantees of TLS: in-transit tampering breaks the
+    connection's integrity check. HDS operates this for all served endpoints. Where an
+    implementer routes ePHI through intermediate hops it controls, it must ensure those hops
+    do not terminate and re-emit traffic in a way that loses the integrity guarantee.
+    Evidence: internal:hipaa/policies/transmission-security
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: [connects, stores-phi-copy, third-parties]; basis: integration
+    Preserve transmission integrity across any hops you operate, and document the
+    addressable decision.
+  IMPLEMENTER [business-associate] coverage: documented
+    applies_when: [connects, stores-phi-copy, third-parties]; basis: integration
+    Preserve transmission integrity across any hops you operate, and document the
+    addressable decision.
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-security 164.312(e)(2)(ii) — Encryption — Addressable (transmission)
+  Requirement: Implement a mechanism to encrypt ePHI whenever deemed appropriate.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-312-e-2-ii
+  PRYV PLATFORM: implemented
+    TLS 1.3 in transit is default-on via the built-in ACME integration; mTLS between cores
+    is the inter-node default once a cluster is bootstrapped. "Whenever deemed appropriate",
+    Pryv's default for ePHI transit is: always.
+    Detail: Operators running behind a TLS-terminating reverse proxy can opt
+    `letsEncrypt.enabled: false` and let the proxy hold the certs; the core then serves
+    plain HTTP only on its loopback. The TLS requirement holds at the transmission boundary,
+    wherever the operator chooses to place that boundary.
+  HDS: implemented (effort saved: high)
+    Encryption of ePHI in transit is default-on: the HDS-operated platform serves only
+    TLS-encrypted endpoints, so the "whenever deemed appropriate" judgement is resolved to
+    "always" for transmission. This row covers transmission only; at-rest encryption is
+    addressed under §164.312(a)(2)(iv).
+    Detail: For ePHI in transit, HDS's default is to encrypt every connection via TLS,
+    satisfying the addressable transmission-encryption specification without requiring an
+    implementer decision to enable it. HDS operates the certificate lifecycle. The
+    implementer documents that transmission encryption is in force and, separately, assesses
+    at-rest encryption under §164.312(a)(2)(iv), which is implemented in every region (no
+    platform gap).
+    Evidence: internal:hipaa/policies/transmission-security
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: [connects, stores-phi-copy, third-parties]; basis: integration
+    Document that transmission encryption is in force; separately address at-rest encryption
+    per §164.312(a)(2)(iv).
+  IMPLEMENTER [business-associate] coverage: documented
+    applies_when: [connects, stores-phi-copy, third-parties]; basis: integration
+    Record that transmission encryption is in force, and address at-rest encryption
+    separately under 164.312(a)(2)(iv).
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-security 164.314(a)(1) — Business associate contracts — Organizational requirement
+  Requirement: A covered entity is not in compliance unless it has obtained satisfactory
+  assurances, via a written contract, that the business associate will appropriately
+  safeguard the ePHI it creates, receives, maintains, or transmits on the covered entity's
+  behalf.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-314-a-1
+  PRYV PLATFORM: facilitated (mode: storage)
+    The BAA itself is a contract, the covered entity drafts it with legal counsel. What Pryv
+    contributes when you operate as a business associate: the audit log makes "implement
+    administrative, physical and technical safeguards" (§164.314(a)(2)(i)(A)) auditable per
+    the BAA's specified terms; the access primitive bounds which subjects + which streams
+    the BA may touch; CMC's cross-platform consent flow gives a structured channel for the
+    §164.314(a)(2)(i)(C) breach-notification pipe between BA and CE.
+  HDS: facilitated (effort saved: medium) (mode: evidence)
+    HDS provides a Business Associate Agreement template and the technical assurances
+    (audit, access control, monitoring, regional residency) that back it, and signs BAAs
+    with its own subcontractors. The contract itself is executed between the parties.
+    Detail: When a partner acting as a Covered Entity or upstream Business Associate
+    processes ePHI on HDS, HDS is their Business Associate. HDS offers the BAA template
+    (templates/baa), supplies the technical-safeguards evidence the contract relies on, and
+    flows obligations down to its own subcontractors via back-to-back agreements tracked in
+    the BAA register.
+    Evidence: internal:hipaa/registers/baa-register
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: [connects, stores-phi-copy, third-parties]; basis: integration
+    Execute a business associate agreement with every business associate you engage, before
+    any ePHI reaches them, and keep each on file. HDS is not one of them: an individual
+    granting you access to their own vault is consent, not delegation.
+    Templates to sign: baa
+  IMPLEMENTER [business-associate] coverage: documented
+    applies_when: [connects, stores-phi-copy, third-parties]; basis: integration
+    Execute back-to-back agreements with any downstream subcontractor you engage. No
+    agreement with HDS is needed for vault access: it flows from the individual's consent,
+    not from you instructing HDS.
+    Templates to sign: baa, subcontractor
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-security 164.314(a)(2)(i)(A) — Business associate contract — implement reasonable and appropriate safeguards
+  Requirement: The business associate contract must require the business associate to
+  implement administrative, physical, and technical safeguards that reasonably and
+  appropriately protect the confidentiality, integrity, and availability of the ePHI it
+  handles on the covered entity's behalf.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-314-a-2-i-a
+  PRYV PLATFORM: facilitated (mode: infrastructure)
+    The BAA's "reasonable and appropriate safeguards" obligation is satisfied by the
+    technical-safeguards programme already enumerated across §164.308 + §164.310 + §164.312.
+    The BA cites the relevant Pryv-implemented rows when populating their BAA exhibit.
+    Mapping this Article to the existing technical-safeguards rows is the `derives_from`
+    chain.
+  HDS: facilitated (effort saved: high) (mode: evidence)
+    The safeguards HDS commits to in its BAA are the same technical and administrative
+    controls enumerated across the §164.308, §164.310 and §164.312 rows of this matrix. The
+    BAA cites that programme so the implementer can populate its safeguards exhibit by
+    reference.
+    Detail: Rather than restating safeguards in prose, HDS's BAA points to the implemented
+    and configurable controls already documented in this matrix — access control, audit
+    logging, encryption, monitoring and regional residency. This gives the contractual
+    "reasonable and appropriate safeguards" clause a concrete, auditable backing.
+    Evidence: internal:hipaa/registers/baa-register
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: [connects, stores-phi-copy, third-parties]; basis: integration
+    Confirm that the BAA's safeguards clause reflects the controls you rely on, and retain
+    the safeguards exhibit with the executed contract.
+    Templates to sign: baa
+  IMPLEMENTER [business-associate] coverage: documented
+    applies_when: [connects, stores-phi-copy, third-parties]; basis: integration
+    Ensure the safeguards you commit to your covered entity are matched by the controls you
+    and your downstream processors actually operate.
+    Templates to sign: baa, subcontractor
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-security 164.314(a)(2)(i)(C) — Business associate contract — report security incidents
+  Requirement: The business associate contract must require the business associate to
+  report to the covered entity any security incident of which it becomes aware, including
+  breaches of unsecured ePHI.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-314-a-2-i-c
+  PRYV PLATFORM: facilitated (mode: evidence)
+    Detection of a security incident is the BA's operational concern (audit-log review +
+    observability). Reporting to the CE is the contractual flow. Pryv's CMC plugin provides
+    a structured cross-account messaging substrate when both sides run Pryv, otherwise the
+    report channel is email / API / portal at the BA's choice. The audit log supplies the
+    forensic evidence the report cites.
+  HDS: facilitated (effort saved: medium) (mode: evidence)
+    HDS's BAA commits HDS to notifying the implementer of security incidents affecting their
+    ePHI, and HDS's monitoring and incident-response programme supplies the detection and
+    forensic evidence behind that obligation.
+    Detail: Detection rests on the audit log (Pryv layer) plus HDS's infrastructure
+    monitoring with end-to-end alert wiring. When an incident is detected, the BAA's
+    notification clause defines the channel and timing for reporting to the implementer;
+    HDS's incident-response procedure governs how that report is produced and what evidence
+    it carries.
+    Evidence: internal:hipaa/registers/baa-register
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: [connects, stores-phi-copy, third-parties]; basis: integration
+    Ensure each agreement with your own business associates specifies the incident-report
+    channel and timing, and integrate what you receive into your own breach-assessment
+    procedure.
+    Templates to sign: baa
+  IMPLEMENTER [business-associate] coverage: documented
+    applies_when: [connects, stores-phi-copy, third-parties]; basis: integration
+    Flow the incident-report obligation through to your covered entity and down to your
+    subcontractors.
+    Templates to sign: baa, subcontractor
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-security 164.314(a)(2)(ii)(B) — Business associate contract — extend safeguards to subcontractors
+  Requirement: Where applicable, the business associate must ensure that any
+  subcontractors that create, receive, maintain, or transmit ePHI on its behalf agree, via
+  a written contract, to comply with the applicable Security Rule requirements.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-314-a-2-ii-b
+  PRYV PLATFORM: out-of-scope
+    Subcontracting chains are contractual; no software role. The only built-in subprocessor
+    Pryv-the-software carries is the observability-provider adapter (default disabled); when
+    enabled, the BA's subcontractor list adds the observability provider as a sub-processor
+    under both HIPAA-Security §164.314(a)(2)(ii)(B) and GDPR Art.28(4).
+  HDS: facilitated (effort saved: medium) (mode: evidence)
+    Acting as a Business Associate, HDS executes back-to-back agreements with each
+    subcontractor that may touch ePHI and tracks them in its BAA register. HDS also provides
+    the implementer a subcontractor agreement template to flow the same obligations down
+    their own chain.
+    Detail: HDS maintains a current list of its ePHI-relevant subprocessors and holds a
+    written contract with each that flows down the applicable Security Rule obligations. The
+    subprocessor list is made available to implementers so they can satisfy their own
+    §164.314(a)(2)(ii)(B) due diligence.
+    Evidence: internal:hipaa/registers/baa-register
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: [third-parties]; basis: integration
+    Review HDS's subprocessor list as part of your vendor due diligence.
+    Templates to sign: baa
+  IMPLEMENTER [business-associate] coverage: documented
+    applies_when: [third-parties]; basis: integration
+    Execute written agreements with each of your own downstream subcontractors that handle
+    ePHI, flowing the Security Rule obligations through.
+    Templates to sign: subcontractor, subprocessor
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-security 164.316(a) — Policies and procedures — standard
+  Requirement: Implement reasonable and appropriate policies and procedures to comply with
+  the standards, implementation specifications, and other requirements of the Security
+  Rule.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-316-a
+  PRYV PLATFORM: out-of-scope
+    The policies-and-procedures programme is an organizational artefact owned by the covered
+    entity / business associate's security officer. Pryv has no software role in drafting
+    them. Pryv-side documentation (this matrix, CHANGELOGs, the QMS workstream) feeds the
+    operator's policy work but doesn't substitute for it.
+  HDS: documented (effort saved: medium)
+    HDS maintains its own written information-security policy set covering the Security Rule
+    safeguards for the systems it operates. This governs HDS's role as operator and Business
+    Associate; the implementer keeps its own policy programme for the parts it controls.
+    Detail: HDS's security policies and procedures are owned by its security function and
+    reviewed on a defined cadence. They are referenced throughout this matrix as the
+    administrative backing for the technical controls. The implementer cannot inherit these
+    policies for its own organisation, but can cite HDS's programme where HDS operates the
+    underlying system.
+    Evidence: internal:hipaa/policies/information-security-policy
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: always; basis: entity
+    Maintain your own reasonable and appropriate policies and procedures for the parts of
+    the system and workflow you control.
+  IMPLEMENTER [business-associate] coverage: documented
+    applies_when: always; basis: entity
+    Maintain your own Security Rule policy set covering your handling of ePHI.
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-security 164.316(b)(1) — Documentation — Required
+  Requirement: Maintain the policies and procedures implemented to comply with the
+  Security Rule in written or electronic form, and maintain a written or electronic record
+  of any action, activity, or assessment the subpart requires to be documented.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-316-b-1
+  PRYV PLATFORM: facilitated (mode: storage)
+    Where the required record is operational (activity logs, assessment outputs), Pryv
+    events on a designated `compliance/*` stream carry the documentation alongside the audit
+    log's automatic operational record. Event versioning preserves the change history of
+    policies-as-data; backup-restore preserves them across the §164.316(b)(2) retention
+    window.
+  HDS: documented (effort saved: medium)
+    HDS keeps its security policies, procedures, registers and assessment outputs in durable
+    written form under a documentation-management policy. Required activity records are
+    retained alongside the audit trail of the systems HDS operates.
+    Detail: HDS's documentation-and-retention policy defines what is documented, where it is
+    held, and how versions are preserved. Operational records (activity reviews,
+    assessments, incident reports) are retained as written artefacts; the per-user audit log
+    (Pryv layer) supplies the automatic operational record. The implementer keeps the
+    equivalent documentation for its own programme.
+    Evidence: internal:hipaa/policies/documentation-and-retention
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: always; basis: entity
+    Keep your own policies, procedures and required activity records in written or
+    electronic form.
+  IMPLEMENTER [business-associate] coverage: documented
+    applies_when: always; basis: entity
+    Maintain written documentation of your Security Rule compliance and the activities the
+    subpart requires you to record.
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-security 164.316(b)(2)(i) — Documentation — time limit — Required
+  Requirement: Retain the documentation required by §164.316(b)(1) for six years from the
+  date of its creation or the date when it last was in effect, whichever is later.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-316-b-2-i
+  PRYV PLATFORM: facilitated (mode: storage)
+    Six-year is a **minimum** retention period, not a maximum (the statute says "retain …
+    for 6 years"; covered entities may retain indefinitely). Pryv's audit log persists by
+    default; retention beyond the minimum + any operational pruning are operator-driven
+    choices (operator schedules archival to cold storage per their policy). `bin/backup.js`
+    produces the artefact the §164.316 retention rule attaches to.
+    Detail: **Minimum 6-year retention is the regulatory floor; there is no max.** Pryv
+    never *requires* destruction at the 6-year mark, operators commonly retain indefinitely
+    under GDPR Art.17(3)(b) "compliance with a legal obligation" lawful basis (the §164.316
+    retention itself, or sectoral regs) or Art.17(3)(e) "legal claims". The pressure to
+    prune is operational (storage cost / DB performance over 10B-row scales), not
+    regulatory. **Tiering pattern for long-running deployments**: the audit log is exposed
+    via the `@pryv/datastore` abstraction (`auditDataStore` registered as `_audit` in the
+    Mall; `components/audit/src/datastore/auditDataStore.ts`). An operator wanting to tier
+    hot recent rows + cold archived rows writes a custom `auditStorage` engine plugin (per
+    `storages/engines/*/manifest.json`) that routes writes to a hot tier + reads to a union
+    view across hot + cold. End users see one continuous log via `audit.getLogs`; the
+    storage backing it is the operator's choice. Full pattern detail in
+    `context/audit-archival-via-custom-datastore.md`. **Cascade with the Q8 erasure
+    setting** (shipped 2026-05-27, open-pryv.io master `405b3a1`): the `audit.onUserDelete:
+    keep` operator setting is the HIPAA-friendly path when a covered entity deletes a
+    subject's account while needing to retain the audit. The retention obligation runs under
+    a lawful basis separate from the deletion itself (HIPAA Privacy Rule §164.530(j) anchors
+    documentation-retention independently of subject account state). Audit erasure on
+    `auth.delete` now converges across engines (SQLite + PostgreSQL, open-pryv.io `891090d`
+    + `853e1cb`): with `audit.onUserDelete: erase` (default), both engines reach zero audit
+    rows for the deleted subject. With `keep`, the PG path retains rows as designed; the
+    SQLite path still has the parent `deleteAuditData` filesystem-wipe step running
+    afterwards (known caveat, operators wanting `keep` on SQLite need either a PG audit
+    migration or a follow-up teaching `deleteAuditData` to skip when `mode === 'keep'`).
+  HDS: documented (effort saved: medium)
+    HDS retains its security documentation and required records for at least six years under
+    its documentation-and-retention policy, treating six years as a regulatory floor rather
+    than a destruction deadline.
+    Detail: The six-year minimum applies to HDS's own policies, procedures and assessment
+    records for the systems it operates. Retention beyond the minimum, and any pruning,
+    follow HDS's documented retention schedule. For subject-level data and audit records,
+    retention is configured per the implementer's lawful basis and contractual instructions;
+    the implementer retains its own documentation independently.
+    Evidence: internal:hipaa/policies/documentation-and-retention
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: [stores-phi-copy]; basis: integration
+    Retain your own Security Rule documentation for at least six years from creation or
+    last-effective date.
+  IMPLEMENTER [business-associate] coverage: documented
+    applies_when: [stores-phi-copy]; basis: integration
+    Apply the six-year minimum retention to your own policies, procedures and required
+    records.
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## hipaa-security 164.316(b)(2)(iii) — Documentation — updates — Required
+  Requirement: Review documentation periodically, and update it as needed in response to
+  environmental or operational changes affecting the security of the ePHI.
+  Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-316-b-2-iii
+  PRYV PLATFORM: facilitated (mode: evidence)
+    Periodic review cadence is the operator's procedure. Pryv's contribution: when policies-
+    as-data are stored as events on a `compliance/policies/*` stream, the event-version
+    chain shows when each policy was last reviewed and what changed; audit log shows
+    who-reviewed- what.
+  HDS: documented (effort saved: medium)
+    HDS reviews its security documentation on a defined periodic cadence and updates it in
+    response to changes in its environment or operations. Review dates and changes are
+    tracked so the documentation's currency is demonstrable.
+    Detail: HDS's documentation-and-retention policy sets the review cadence and the
+    triggers (infrastructure change, new threat, incident, regulatory change) that prompt an
+    out-of-cycle update. Each policy and register carries its review history. The
+    implementer runs its own review cycle for the documentation it owns.
+    Evidence: internal:hipaa/policies/documentation-and-retention
+  IMPLEMENTER [covered-entity] coverage: documented
+    applies_when: always; basis: entity
+    Review and update your own documentation periodically and in response to operational or
+    environmental changes.
+  IMPLEMENTER [business-associate] coverage: documented
+    applies_when: always; basis: entity
+    Keep your Security Rule documentation current through periodic and event-driven reviews.
+  IMPLEMENTER [individual] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA

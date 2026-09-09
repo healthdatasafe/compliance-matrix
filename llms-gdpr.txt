@@ -1,0 +1,2022 @@
+# General Data Protection Regulation (gdpr) — full text
+
+Part of the HDS Compliance Matrix. Summary and matching rules: https://compliance.datasafe.dev/llms.txt
+All frameworks in one file: https://compliance.datasafe.dev/llms-full.txt
+
+NOT LEGAL ADVICE. This matrix covers the HDS vault product: HDS is the controller of the vault,
+is nobody's Art.28 processor, and holds no HIPAA role in it.
+
+HDS's own position on GDPR:
+  - vault: HDS is controller. The individual's vault. HDS determines the purposes and means of operating it, so HDS is the Art.4(7) controller. Data enters only with the individual's explicit consent, and the individual decides who may access it afterwards.
+  External assurance: self-assessed. No supervisory-authority certification under Art.42, no independent audit and no readiness review has been performed against this scope. Every claim below is HDS's own assessment of HDS, reviewed internally only.
+  Certificates HDS relies on but does NOT hold: AWS ISO/IEC 27001, 27017 and 27018 (us region hosting layer, obtained 2026-07-28)
+  Evidence: 3 of 47 requirements answered from approved HDS documentation (41 cite internal evidence), as of 2026-09-08.
+  HDS operates a GDPR programme rather than holding a GDPR credential. A Data Protection
+  Officer was designated on 2026-07-17, a processor-side record of processing activities
+  under Art.30 is maintained with eight live activities, and the platform supplies the
+  technical measures the articles require. This is the least settled of the four
+  frameworks on paper: three requirements rest on fully approved documentation and
+  thirty-eight more are evidenced by documents still in review. The two material open
+  items are the transfer stack for the US hosting layer, where the AWS DPA, the EU and
+  Swiss standard contractual clauses and the transfer impact assessment are not yet
+  executed, and HDS's own DPIA process, which is drafted but not yet operating.
+  NOTE: HDS is not an Art.28 processor for this product, and the matrix does not offer
+  that arrangement. Art.28(3) requires processing on the controller's documented
+  instructions, assistance with data subject rights, and deletion or return of the data at
+  the controller's choice. HDS acts on the individual's permissions, the individual
+  exercises their rights directly from their own dashboard, and HDS cannot delete an
+  individual's vault at a third party's direction. An organisation that receives data an
+  individual chose to share with it is an independent controller of what it holds, not a
+  controller instructing HDS. Any future engagement in which HDS genuinely does process on
+  instructions falls outside this matrix and carries its own documentation.
+  Known gaps in HDS's own position:
+  - [high] Nothing is on file evidencing the Swiss hosting region's physical and environmental controls. The safeguards HDS inherits there are asserted by the provider rather than evidenced by a third-party audit, and the provider's public encryption statement is a product claim, not an attestation.
+  - [high] Art.46 transfer stack for the US hosting layer is not executed: the AWS GDPR DPA, EU and Swiss SCCs and the transfer impact assessment are all outstanding. (refs: Art.46)
+  - [medium] The Art.30 register carries no retention period on the recruitment, CRM and contact-mailbox rows, and its Art.30(2) half stays empty until the first partner DPA is signed. (refs: Art.30)
+  - [medium] Art.32 encryption rests on provider-managed keys. End-to-end or operator-held-key encryption, where the server never holds plaintext, is queued upstream and not shipped. (refs: Art.32)
+  - [medium] The audit.onUserDelete pseudonymise mode is refused at boot upstream, so the Art.17 erasure story is complete only in its erase and keep modes. (refs: Art.17)
+  - [low] HDS's own DPIA process is drafted internally but is not yet a running procedure with a first executed assessment. (refs: Art.35)
+
+## gdpr Art.1 — Subject matter and objectives
+  Requirement: Rules on the protection of natural persons regarding the processing of
+  their personal data, alongside rules ensuring its free movement.
+  Anchor: https://compliance.datasafe.dev/gdpr.html#req-art-1
+  PRYV PLATFORM: facilitated (mode: awareness)
+    GDPR's purpose is to protect natural persons in how their personal data is processed,
+    while keeping that data freely movable. Pryv is designed for exactly that: your subjects
+    own their data, and technical controls enforce the consent they granted, and the API is
+    open so data can move without lock-in. The per-article rows below describe how each
+    obligation maps to the primitives Pryv gives you.
+    Detail: Protection of natural persons (re: processing of their personal data): -
+    Subject-centric storage, each of your users has dedicated storage; you host but don't
+    commingle subjects. - Technical access control, permissions per stream are enforced at
+    the API surface; processing only happens within the scope the subject granted. -
+    Versioned consent record, access + clientData + consent events form a tamper-evident
+    chain of what was authorised, when, with which contract text. - Accountability by
+    construction, audit rows reference the specific access version used at processing time.
+    Free movement of personal data: - Open HTTP API, events / streams / accesses consumable
+    without vendor SDKs. - Canonical event-type schemas, structured JSON with stable
+    class/format semantics; portable across deployments. - Cross-platform sharing,
+    independent Pryv operators can exchange data + consent without shared trust, shared user
+    namespace, or federation auth. - No vendor lock-in; you can move data + consent
+    contracts between operators using the same primitives an end-user would use to read
+    them. A Pryv deployment cannot, on its own, make you GDPR-compliant, but it gives you
+    the technical substrate on which the per-article obligations below can be discharged.
+  HDS: documented (effort saved: low)
+    As an operator running the open-pryv.io platform, HDS supplies the technical substrate
+    on which the per-article obligations below are discharged: per-subject storage
+    isolation, stream-scoped permissions, and an audit chain. HDS-as-platform cannot by
+    itself make a controller compliant; the article-level rows describe the division of
+    effort.
+    Detail: HDS hosts each data subject in dedicated, non-commingled storage and enforces
+    consent technically at the API surface. The controller building on HDS carries the
+    substantive accountability for lawful, fair and transparent processing. The
+    free-movement objective is served by the open API and canonical event-type schemas that
+    avoid vendor lock-in.
+    Evidence: internal:gdpr/policies/lawful-basis-and-consent
+  IMPLEMENTER [controller] coverage: documented
+    applies_when: [processes-personal-data]
+    Run your own data-protection programme over the HDS substrate; the per-article rows show
+    what HDS carries and what stays with you.
+  IMPLEMENTER [data-subject] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## gdpr Art.2 — Material scope
+  Requirement: Applies to processing of personal data by automated means, and to
+  non-automated processing of data forming part of a filing system.
+  Anchor: https://compliance.datasafe.dev/gdpr.html#req-art-2
+  PRYV PLATFORM: facilitated (mode: awareness)
+    Your Pryv deployment is fully inside Article 2's material scope. Every event you store
+    and every API call your apps make is automated processing covered by GDPR. Pryv does not
+    exempt you from any per-article obligation; it gives you the technical primitives that
+    make those obligations addressable (see Art.5+). Branch 2 (non- automated processing
+    inside a "filing system", structured paper records) doesn't surface at the Pryv layer;
+    your own paper records, if any, are outside the software boundary.
+    Detail: GDPR Art.4(6) defines "filing system" as any structured set of personal data
+    accessible by specific criteria, alphabetised customer cards, dated patient folders,
+    indexed application forms. Random unstructured paper or spoken-only data is not in
+    scope. Pryv is fully digital, so branch 1 always applies; branch 2 is moot. If you also
+    keep paper records as part of the same business process, those fall under branch 2 but
+    as a separate process you manage outside Pryv.
+  HDS: documented (effort saved: low)
+    Every event stored on HDS and every API call against it is automated processing within
+    Article 2. HDS does not exempt any deployment from the per-article obligations;
+    non-automated paper records, if any, sit outside the software boundary and remain the
+    controller's concern.
+    Detail: Because HDS is fully digital, the automated-processing branch always applies.
+    Whether a controller also keeps structured paper records (the filing-system branch) is a
+    separate process the controller manages outside the platform.
+    Evidence: internal:gdpr/policies/lawful-basis-and-consent
+  IMPLEMENTER [controller] coverage: documented
+    applies_when: always; nature: orientation (not a duty)
+    Confirm your processing is in scope (it generally is) and manage any out-of-band paper
+    records separately.
+  IMPLEMENTER [data-subject] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## gdpr Art.3 — Territorial scope
+  Requirement: Applies to processing in the context of an EU establishment, or to
+  processing relating to data subjects in the Union.
+  Anchor: https://compliance.datasafe.dev/gdpr.html#req-art-3
+  PRYV PLATFORM: facilitated (mode: infrastructure)
+    Whether GDPR applies to your Pryv deployment depends on where you're established and
+    where your data subjects are, not on the software. Pryv is self-hosted, so you control
+    data residency directly: the multi- hosting feature lets you choose which jurisdiction
+    each core runs in, and either let end-users pick their hosting at registration or
+    auto-route them by your policy. If any of your subjects are in the EU/EEA, GDPR applies
+    to your deployment in full.
+    Detail: Pryv supports a single logical platform spanning multiple hostings (different
+    countries / cloud regions / on-premise). Two routing policies you can apply: -
+    **End-user choice**: your registration UI presents the available hostings (via
+    `auth.hostings`); user picks. Useful for consumer apps where subjects assert their own
+    residency preference. - **Operator / regulatory routing**: your app auto-routes based on
+    the subject's jurisdiction or contract terms (e.g., EU subjects → EU hosting; French
+    health data → HDS-certified French hosting). The chosen hosting binds the user's data to
+    that core permanently. `system.users.get` exposes the per-user hosting so you can
+    surface it in the app ("your data is stored in <region>"). Note: even with EU-only
+    hosting, if you have a non-EU establishment offering services to EU subjects, Art.3(2)
+    still pulls you into GDPR.
+  HDS: facilitated (effort saved: medium) (mode: infrastructure)
+    HDS offers data residency in Switzerland (Exoscale) and the US (AWS), so a controller
+    can pin each subject's data to a chosen jurisdiction. The Swiss option keeps
+    EU/EEA-subject data under an adequacy regime; the US option is an international transfer
+    (see Art.44-49). Whether GDPR applies is a function of establishment and subject
+    location, not of the platform.
+    Detail: HDS routes each subject to the CH or US region according to the controller's
+    policy and exposes the chosen region per user, so the controller can attest "your data
+    is stored in <region>". Even with CH-only residency, a non-EU establishment offering
+    services to EU subjects is still pulled into GDPR under Art.3(2) — a determination the
+    controller makes.
+    Evidence: internal:gdpr/policies/international-transfers, internal:hipaa/registers/hosting-provider-attestations
+  IMPLEMENTER [controller] coverage: documented
+    applies_when: always; nature: orientation (not a duty)
+    Work out whether the GDPR reaches your own processing, if you carry out any. Note that
+    the region a vault lives in is chosen by the individual at registration, not by you.
+  IMPLEMENTER [data-subject] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## gdpr Art.4 — Definitions
+  Requirement: Defines key terms: personal data, processing, controller, processor,
+  consent, profiling, pseudonymisation and others.
+  Anchor: https://compliance.datasafe.dev/gdpr.html#req-art-4
+  PRYV PLATFORM: facilitated (mode: awareness)
+    Article 4 defines GDPR vocabulary. Pryv's primitives map cleanly to most of these terms,
+    easier for you to point auditors at concrete artefacts rather than abstract concepts.
+    Detail: Approximate mapping of key GDPR terms to Pryv primitives: | GDPR term | Pryv
+    primitive | |---|---| | personal data | `event` content + attachments on a user's
+    account | | data subject | the user (account owner) | | controller | typically you, the
+    implementer | | processor | the Pryv operator (when distinct from you) | | recipient | a
+    counterparty holding an `access` to the data | | third party | another deployment / app
+    accessing via shared/app `access` | | consent | app/shared `access` with `permissions` +
+    `clientData` carrying the contract (see Art.7) | | processing | any API call on
+    `events.*` / `streams.*` / `accesses.*` (audit-recorded) | | filing system | N/A, Pryv
+    is fully automated | | personal data breach | event/audit anomaly + post-mortem (see
+    Art.33) | | pseudonymisation | `accesses.create {randomAlias:true}` (platform-unique
+    routable alias hides the username per access) + system-streams + custom event-type
+    design | | profiling | application-side concern (out for Pryv) | | restriction of
+    processing | scope-down via `accesses.update` (see Art.18) | The controller/processor
+    distinction is contractual; you assign the roles. Pryv lets you record the assignment
+    explicitly in `access.clientData` if you want it traceable.
+  HDS: documented (effort saved: medium)
+    HDS maps GDPR vocabulary onto concrete platform artefacts: personal data is event
+    content, the data subject is the account owner, consent is the granted access plus
+    clientData, processing is any audited API call, and pseudonymisation maps to the
+    platform's alias primitive — `accesses.create {randomAlias:true}` mints a
+    platform-unique routable `r-XXXXXXXX` alias that hides the username per access —
+    deployed on the HDS cores since 2026-07-28. In the usual SaaS arrangement HDS is the
+    processor and the customer is the controller; the role assignment is contractual.
+    Detail: The controller/processor split is set in the data-processing agreement, not by
+    the software. HDS as processor acts on documented controller instructions. The mapping
+    of terms to primitives lets a controller point an auditor at artefacts rather than
+    abstractions.
+    Evidence: internal:gdpr/policies/lawful-basis-and-consent
+  IMPLEMENTER [controller] coverage: documented
+    applies_when: [processes-personal-data]
+    Work out your own role for each processing activity you carry out. For a vault, HDS is
+    the controller and you are an independent controller of whatever an individual chooses
+    to share with you.
+  IMPLEMENTER [processor] coverage: documented
+    applies_when: always
+    Where you process on behalf of another controller, document your processor role and the
+    instructions you act on.
+    Templates to sign: dpa
+
+## gdpr Art.5 — Principles relating to processing of personal data
+  Requirement: Lawfulness, fairness, transparency; purpose limitation; data minimisation;
+  accuracy; storage limitation; integrity and confidentiality; accountability.
+  Anchor: https://compliance.datasafe.dev/gdpr.html#req-art-5
+  PRYV PLATFORM: implemented
+    Several Art.5 principles are technically enforced for you by Pryv rather than left to
+    policy: purpose limitation (per-stream permissions), accountability (audit chain to the
+    consent state), accuracy (event versioning). Lawfulness, fairness and transparency stay
+    on your shoulders; Pryv stores the notice/consent text you present but doesn't generate
+    it for you.
+    Detail: Per-principle breakdown, what Pryv does for you, what you do: - Lawfulness,
+    fairness, transparency (§1(a)), DOCUMENTED. You write the notice and present it; Pryv
+    carries the text in `access.clientData` or a `consent/request-cmc` event so the same
+    text is recoverable later. - Purpose limitation (§1(b)), IMPLEMENTED. `permissions` per
+    stream technically restrict reads/writes to the granted scope; an app cannot access
+    streams outside its granted permissions. - Data minimisation (§1(c)), FACILITATED.
+    Permissions + stream design let apps see only what's in their scope; the rest is
+    invisible to them. - Accuracy (§1(d)), FACILITATED + IMPLEMENTER-OWNED. Pryv enforces
+    **structural** accuracy at ingest: every `events.create` and `events.update` validates
+    against the declared event-type's JSON Schema (ajv-draft-04 via
+    `components/utils/src/jsonValidator.ts`), rejecting out-of-shape or out-of-range
+    payloads with HTTP 400. Numerical bounds (`minimum`/`maximum`), string patterns, and
+    length limits are expressible per type, the HDS data-model exemplar declares 28
+    `minimum`/23 `maximum` constraints across health-data types. The built-in catalogue uses
+    bounds sparingly (operator opts into strictness by extending via `service.eventTypes`
+    URL, Q14 pattern). **Semantic** accuracy, "is this medication right for THIS patient?",
+    is out of scope by design; the implementer's app layer carries the clinical / domain
+    context Pryv intentionally doesn't see. `events.update` rectifies events (Art.16); event
+    versioning + `GET /events/:id?includeHistory=true` preserves the prior value for
+    traceability. Full split in `context/data-accuracy-structural-vs-semantic.md`. - Storage
+    limitation (§1(e)), VOLUNTARILY MISSING + OPERATOR-OWNED at the retention-enforcement
+    layer + CONFIGURABLE at the erasure-mechanics layer. Pryv exposes no TTL / auto-delete /
+    scheduler primitive, automatic retention is the operator's external job, composing
+    `events.get toTime=<cutoff>` + `events.delete` (two-stage) + `streams.delete` +
+    `auth.delete` + the audit log as inactivity oracle. Every retention deletion is captured
+    by the audit log automatically (Q9 audit-by-construction). Engine-dependent backup-tail
+    considerations apply (see Art.17). Full pattern + cron-job recipe + audit-trace
+    treatment + "why not built-in" rationale in `context/data-retention-operator-owned.md`.
+    - Integrity & confidentiality (§1(f)), covered separately at Art.32. - Accountability
+    (§2), IMPLEMENTED. Every API call audited with the access reference + version; access
+    carries the consent state at that version → end-to-end accountability chain you can
+    point auditors at.
+  HDS: facilitated (effort saved: medium) (mode: primitive)
+    Several Art.5 principles are carried technically by the HDS platform: purpose limitation
+    via per-stream permissions, accountability via the audit chain tied to the consent
+    state, structural accuracy via schema-validated writes. Lawfulness, fairness and
+    transparency remain the controller's. Storage limitation (automated retention) is a
+    known gap — HDS exposes no TTL/scheduler primitive.
+    Detail: Purpose limitation and accountability are enforced at the API surface and
+    recorded in the audit log. Accuracy is enforced structurally at ingest (JSON-Schema
+    validation) and traceably on rectification (event versioning); semantic accuracy stays
+    with the controller's app. Data minimisation is facilitated by stream design plus
+    default-deny permissions. Storage limitation has no built-in enforcement: automated
+    retention is operator/controller-owned and must be composed externally.
+    Evidence: internal:gdpr/policies/data-retention, internal:hipaa/policies/minimum-necessary, internal:hipaa/policies/integrity
+  IMPLEMENTER [controller] coverage: documented
+    applies_when: [stores-phi-copy, analytics, secondary-use]
+    Establish lawful basis, notices and a retention schedule; HDS does not set these for
+    you. Automated retention deletion is your job to build.
+  IMPLEMENTER [data-subject] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## gdpr Art.6 — Lawfulness of processing
+  Requirement: Processing is lawful only if at least one of six bases applies; further
+  processing for a new purpose needs a compatibility test or a fresh basis.
+  Anchor: https://compliance.datasafe.dev/gdpr.html#req-art-6
+  PRYV PLATFORM: facilitated (mode: storage)
+    You decide which Art.6 basis you're relying on for each processing activity. Pryv
+    doesn't impose or check the basis. You can record your chosen basis in
+    `access.clientData.lawful_basis` so it travels alongside the technical authorization and
+    lives in the audit trail, handy when an auditor asks "under what basis was this access
+    made?". For Art.6(4) further processing (purpose pivot), Pryv exposes four composable
+    patterns + a clear decision rule for when the purpose pivot demands fresh consent vs. an
+    in-place update, see detail.
+    Detail: Recording the basis on the access gives you a durable, versioned artefact tying
+    the basis to the specific processing scope it justifies. Determination of which basis
+    applies remains your responsibility, Pryv neither enforces nor refuses on the basis
+    claim. **§4, further processing (purpose pivot).** Four composable patterns; choose per
+    the compatibility-vs-fresh-consent decision rule below. **Pattern A, Mint a new access
+    for the new purpose.** The cleanest fit when the new purpose is **outside** the original
+    OR is not covered by a fresh override-by-law basis (Art.6(4)(a) compatibility test
+    fails). The subject sees a fresh auth flow; `app-web-auth3` presents the new notice +
+    new purpose explicitly; the new access carries `clientData.purpose: <new>` +
+    `clientData.lawful_basis: <fresh>`. Old access keeps operating for its original purpose
+    (or is revoked separately if withdrawn). This pattern is the **mandatory** path when the
+    compatibility test fails, fresh consent is required. **Pattern B, Update existing
+    access** (`accesses.update`). Suitable when the purpose change is narrow / compatible
+    (e.g., scope-down or compatible expansion). The pre-mutation `permissions` +
+    `clientData` snapshot into a history row automatically (see
+    `context/access-versioning.md`), preserving the purpose-history chain end-to-end. The
+    bumped `accessSerial` threads through the audit log so post-pivot rows correctly
+    attribute to the new purpose state. **Pattern C, Separate compatibility-assessment
+    event.** When the operator wants the Art.6(4) 5-factor analysis itself recorded as a
+    first-class artefact, write a `compliance/compatibility-assessments/<id>` event on a
+    dedicated stream (operator-authored format via Q14 custom catalogue) capturing the
+    §6(4)(a)-(e) reasoning + the affected data scope + the decision outcome. The relevant
+    access(es) then reference it via `clientData.compatibility_assessment_event_id`. This
+    pattern composes with A or B (the assessment artefact justifies the pattern choice).
+    **Pattern D, Sub-access derivation from an `app` access** (`createdBy` mechanism, see
+    `context/workforce-access-patterns.md` Pattern 2). When the operator's app holds an
+    `app`-type access with broad scope; it can mint per-purpose **sub-accesses**, each
+    carrying its own narrower `permissions[]` + `clientData.purpose`: and the audit log
+    records each sub-access's id independently, **feeding purpose-driven access matching
+    into the audit trail at query time** (`audit.get` → group by `accessId` → distinct
+    purposes touched). Especially clean when the same app legitimately operates under
+    multiple compatible-purpose facets, each facet gets its own sub-access, so per-purpose
+    disclosure accounting (Art.30 / §164.528) reconstructs from the audit log without
+    operator-side bookkeeping. **Decision rule** (operator-side): 1. New purpose is
+    **inside** the original purpose's scope (a compatible refinement / narrowing) →
+    **Pattern B** update existing access. No fresh consent. Update notice if material. 2.
+    New purpose is **alongside** the original (compatible expansion, same app, multiple
+    facets) → **Pattern D** sub-access mint, OR **Pattern A** new access. No fresh consent
+    required if compatibility test passes; transparency-notice update may be required under
+    Art.13(3). 3. New purpose is **outside** the original AND not covered by a fresh
+    override-by-law basis (Art.6(1)(c)/(d)/(e)) → **Pattern A** mint new access + force
+    fresh consent. The subject's positive opt-in is mandatory under Art.6(4) when
+    compatibility fails. App-web-auth3's grant flow IS the re-prompt mechanism. 4. In
+    **any** case where the 5-factor compatibility analysis was non-trivial → **Pattern C**
+    separate compatibility- assessment event for audit-defensibility. **Re-prompt surface
+    (§4 fallback):** Pryv has no built-in "notice changed → automatically re-prompt subject"
+    workflow. The operator's app layer triggers re-auth by minting a new access (Pattern A),
+    `app-web-auth3` presents the updated notice; the subject's positive consent IS the
+    fresh-basis capture. For revocation of the old access alongside the new mint,
+    `accesses.delete` is the standard path (Q19 / Q28 mechanism family). **clientData
+    convention extension** for §4 purpose pivots: `compatibility_assessment_event_id` +
+    `purpose_change_basis` (`compatible_purpose` / `new_consent` / `new_legal_obligation` /
+    `new_legitimate_interest`) + `previous_purpose` (the pivot record). See
+    `context/client-data-conventions.md`.
+  HDS: facilitated (effort saved: low) (mode: storage)
+    HDS does not impose or check the lawful basis. It provides the means to record the
+    chosen basis on the access clientData so it travels with the technical grant and into
+    the audit trail. Determining which Art.6 basis applies, and assessing any purpose pivot
+    under Art.6(4), is the controller's responsibility.
+    Detail: Recording the basis on the access yields a durable, versioned artefact tying the
+    basis to the scope it justifies. A purpose pivot can be handled by minting a new access
+    (fresh consent) or scoping an existing one, with the version chain preserving the
+    history; the compatibility judgement is the controller's.
+    Evidence: internal:gdpr/policies/lawful-basis-and-consent
+  IMPLEMENTER [controller] coverage: documented
+    applies_when: [connects, analytics, secondary-use]
+    Determine and document the lawful basis for each processing activity and record it on
+    the relevant accesses.
+  IMPLEMENTER [data-subject] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## gdpr Art.7 — Conditions for consent
+  Requirement: Where processing relies on consent, the controller must demonstrate it; the
+  request must be intelligible and the consent withdrawable.
+  Anchor: https://compliance.datasafe.dev/gdpr.html#req-art-7
+  PRYV PLATFORM: implemented
+    The access Pryv mints when your user grants permission IS your durable consent record,
+    versioned permissions + clientData together prove what was authorised, with what text,
+    at what time. Withdrawal is a single API call. For cross-account sharing, the
+    `consent/*` events carry the negotiation state transitions. Both records are immutable
+    per their primitive's semantics.
+    Detail: Demonstrability (§1), `accesses.get ?includeHistory=true` returns the full
+    version chain; each version preserves the `permissions` granted and the `clientData`
+    (which can carry the consent contract text) at that point in time. For cross-account
+    flows, the original `consent/request-cmc` event on the requester's account holds the
+    localised consent text presented. Withdrawal (§3), `accesses.delete` (full revoke) or
+    `accesses.update` with narrower `permissions` (scope-down). Both bump the access serial
+    + snapshot the pre-mutation state. Cross-account: `consent/revoke-cmc` triggers
+    symmetric teardown on both sides via the CMC plugin. Intelligible form (§2): you write
+    the UX (app-web-auth3 template is a starting point). Pryv enforces the technical
+    contract; your UI presents it. Granular consent (§4), different processing purposes can
+    be expressed as separate accesses with different permissions, each independently
+    withdrawable. Second consent path, OAuth2 authorization (§1, §4), where your user
+    authorises a delegated app through Pryv's OAuth2 authorization-code flow
+    (`open-pryv.io/components/oauth2/`, open-pryv.io 2.0.0-rc.8), the granular consent
+    screen presents the referenced offer's per-permission set and lets the user untick
+    individual permissions to downgrade the grant before accepting; the accepted subset
+    (`grantedPermissions`, validated ⊆ the signed offer) is what Pryv mints the app access
+    from (`open-pryv.io/components/oauth2/src/routes/accept.ts`). The durable consent record
+    is the same primitive as everywhere else, a cross-account CMC data-grant access,
+    versioned and revocable; revoking it tears down the app's refresh chain. Demonstrability
+    rests on that data-grant + the signed offer material (the access + its version history),
+    not on a separate event log.
+  HDS: facilitated (effort saved: high) (mode: primitive)
+    HDS exposes the @pryv/cmc consent flow and access-grant primitive: the access minted on
+    grant is a versioned, immutable consent record binding the granted scope to the consent
+    text, and withdrawal is a single API call. The intelligibility of the notice and the
+    consent UX is the controller's editorial responsibility.
+    Detail: Demonstrability rests on the access version chain (permissions plus clientData
+    preserved per version) and, for cross-account flows, the consent/* event sequence
+    carried by the CMC plugin. Withdrawal is a full revoke or a permission scope-down, both
+    versioned and auditable. Granular consent is expressed as separate per-purpose accesses.
+    Evidence: internal:gdpr/policies/lawful-basis-and-consent
+  IMPLEMENTER [controller] coverage: documented
+    applies_when: [processes-personal-data]
+    Write the consent UX and notice text; HDS preserves and versions the record but does not
+    author the request.
+  IMPLEMENTER [data-subject] coverage: facilitated
+    applies_when: NOT YET CLASSIFIED (always shown)
+    Grant and withdraw consent through the access primitive at any time.
+
+## gdpr Art.9 — Processing of special categories of personal data
+  Requirement: Processing of special-category data (incl. health, genetic and biometric
+  data) is prohibited unless one of the Art.9(2) conditions applies.
+  Anchor: https://compliance.datasafe.dev/gdpr.html#req-art-9
+  PRYV PLATFORM: facilitated (mode: primitive)
+    Pryv is content-agnostic at the platform layer, no `sensitivity:` flag on event-type
+    schemas, no server-side hook that refuses writes to "health" streams without a recorded
+    Art.9(2) basis. **Classification is voluntarily missing at the platform.** But for
+    **vertically-integrated operators** (you run the core AND ship the clients AND design
+    the stream tree AND curate the event-type catalogue, typical for health deployments),
+    Pryv exposes enough composable primitives that you build a strong Art.9 enforcement
+    layer without platform-imposed assumptions. The Art.9(2) condition relied on lives in
+    `access.clientData.special_category_basis` next to the technical grant. Full
+    operator-toolkit treatment + two-deployment-topologies framing in
+    `context/special-categories-operator-facilitated.md`.
+    Detail: Recommended stream-layout pattern for special-category-heavy deployments: -
+    Reserve top-level subtrees per Art.9(1) category (`health/`, `biometrics/`, `genetics/`,
+    `political-opinions/`, etc.). - Mint apps' / counterparties' accesses with explicit
+    `permissions[]` listing the subtree they may touch; default-deny everything else. -
+    Record the Art.9(2) lit-letter in `access.clientData.special_category_basis` ("(a)
+    explicit consent", "(h) preventive / occupational medicine", etc.). - Audit log
+    automatically captures every read / write under the access. **Operator-toolkit
+    composition** (vertically-integrated deployments, operator controls both ends): 1.
+    **Stream-tree design**: operator's client code routes sensitive writes exclusively to
+    reserved subtrees; Pryv enforces the per-stream permission boundary (`AccessLogic`). 2.
+    **clientData.special_category_basis**: Art.9(2) lit-letter recorded on every access
+    touching a sensitive subtree; access-versioning preserves the basis over edits. 3.
+    **Custom event-type catalogue annotations**: operator extends `service.eventTypes` URL
+    with `x-art9-category` / `x-swiss-nlpd-sensitive` / etc. fields the client code reads to
+    gate writes; Pryv passes the annotations through unchanged (Q14 / Q21 pattern). 4.
+    **Custom dataStore (`@pryv/datastore`)**: sensitive subtree owned by a dedicated store
+    with stricter at-rest encryption + access controls (Q16 pattern;
+    `context/audit-archival-via-custom-datastore.md`). 5. **Per-engine isolation**:
+    sensitive tier on a separate PostgreSQL instance / WAL / replicas (storage-engine
+    plugins). 6. **`customExtensions.customAuthStepFn`**: operator-side gate that demands
+    the Art.9(2) basis claim at access-grant time before minting the access. 7. **Audit
+    log**: automatic capture of every read/write under any access; audit-minimality (Q9: no
+    request body) is a feature for sensitive data, not a limitation. 8. **Backup tiering
+    (Q15)**: operator wraps sensitive-tier dumps with stricter encryption + retention than
+    ordinary tiers; `bin/backup.js` is the integration point. The toolkit's reach varies by
+    deployment topology, full strength for vertically-integrated operators, partial for open
+    Pryv platforms hosting third-party apps the operator doesn't author. The two-topology
+    framing is canonical in `context/special-categories-operator-facilitated.md`. Caveat:
+    Pryv's permission model is per-stream, not per-field within an event. If an event mixes
+    ordinary and special-category fields, you must split it or design your event types so
+    the special-category subset is its own event-type.
+  HDS: facilitated (effort saved: medium) (mode: primitive)
+    Health is HDS's primary use-case. The platform is content-agnostic — no server-side
+    sensitivity flag — but as a vertically-integrated operator HDS designs the stream tree
+    and event-type catalogue so special-category data lands in reserved subtrees with
+    tightly scoped, default-deny accesses. The Art.9(2) condition relied on is recorded on
+    the access clientData. The substantive condition determination stays with the
+    controller.
+    Detail: Recommended layout reserves top-level subtrees per Art.9(1) category, mints
+    accesses listing only the subtrees they may touch, and records the Art.9(2) lit-letter
+    on the access. Per-stream (not per-field) permission granularity means events mixing
+    ordinary and special-category fields must be split into distinct event-types.
+    Evidence: internal:gdpr/policies/lawful-basis-and-consent, internal:hipaa/policies/access-control
+  IMPLEMENTER [controller] coverage: documented
+    applies_when: [connects, stores-phi-copy, analytics, secondary-use]
+    Determine the Art.9(2) condition for each special-category processing activity, design
+    your streams accordingly, and record the basis.
+  IMPLEMENTER [data-subject] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## gdpr Art.8 — Conditions applicable to child's consent in relation to information society services
+  Requirement: Where consent grounds a service offered directly to a child, processing is
+  lawful only at/above the applicable age; below it, a parental holder must consent.
+  Anchor: https://compliance.datasafe.dev/gdpr.html#req-art-8
+  PRYV PLATFORM: facilitated (mode: storage)
+    Pryv neither knows nor validates a subject's age, age + parental-authority verification
+    happens at your app's registration / consent UX. The platform is age-blind by design
+    (verified: default `custom.systemStreams.account` ships only `email`; no `birthDate` /
+    `dateOfBirth` / `minor` field in the catalogue). Once verified, the artefacts you keep
+    travel alongside the access via the `clientData` convention family (see
+    `context/client-data-conventions.md`).
+    Detail: Convention (operator-side editorial discipline; no Pryv enforcement): -
+    `account.clientData.age_verification_method`, free-text or structured record of HOW age
+    was verified (self-declaration / ID upload / parental-attestation /
+    government-eID-flow). Travels with the account; reachable via the system-stream account
+    event. - `clientData.parental_holder_consent_event_id` (singular, single-holder case) or
+    `clientData. parental_holder_consent_event_ids` (array, dual / multi-holder case,
+    divorced parents, jurisdictions requiring both biological parents, foster care, etc.),
+    pointer(s) to the actual `consent/parental-*` event(s) recording the parental consent
+    text + the holder's identity / verification trail. **The `consent/parental-cmc` event
+    format does NOT ship in the built-in `data-types` catalogue.** Operators needing this
+    format author it themselves and publish via `service.eventTypes` URL (the Q14
+    custom-catalogue extension pattern). HDS-style data-model repos that target paediatric /
+    adolescent use-cases are the natural home for this format. Backlog candidate: if a
+    critical mass of health deployments converges on a common shape, upstream it into
+    `data-types` proper. **Re-verification on age-of-majority transitions**, voluntarily
+    missing at platform layer. Pryv has no cron / scheduler primitive. Operator runs an
+    external job that watches `birthDate` (extended-account-field) + access `created`
+    timestamp + chosen jurisdiction's age of majority (typically 16 EU / 13 US under COPPA /
+    etc.) and triggers a re-consent prompt at the crossing date. **Multi-holder consent**:
+    supported by the array form above; the operator's app code at access-mint time enforces
+    "both parents must accept" (or whichever jurisdiction-specific rule applies) before
+    calling `accesses.create`. Each parental-holder consent event independently satisfies
+    the access-history record; revocation of any one of them is the operator's signal to
+    revoke or scope-down the access (per Q19 + Q28 mechanisms).
+  HDS: facilitated (effort saved: low) (mode: storage)
+    HDS neither knows nor validates a subject's age; the default account schema is
+    age-blind. Age and parental-authority verification happen in the controller's
+    registration/consent UX, and the resulting artefacts can travel alongside the access via
+    clientData conventions.
+    Detail: Conventions let the controller record how age was verified and pointers to
+    parental-consent events (single- or multi-holder). The parental-consent event format is
+    not shipped by default; controllers targeting paediatric use-cases author it themselves.
+    Re-verification at age-of-majority transitions is an external job the controller runs.
+    Evidence: internal:gdpr/policies/lawful-basis-and-consent
+  IMPLEMENTER [controller] coverage: documented
+    applies_when: [processes-personal-data]
+    Verify age and parental authority in your UX and record the artefacts; HDS stores them
+    but performs no age checks.
+  IMPLEMENTER [data-subject] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## gdpr Art.10 — Processing of personal data relating to criminal convictions and offences
+  Requirement: Processing of criminal-conviction/offence data is allowed only under
+  official authority or where authorised by law with appropriate safeguards.
+  Anchor: https://compliance.datasafe.dev/gdpr.html#req-art-10
+  PRYV PLATFORM: facilitated (mode: primitive)
+    Same pattern as Art. 9 special-category data: dedicate a `criminal-records/*` stream
+    subtree, scope every access tightly, record the Art. 10 legal- basis-by-law citation in
+    `access.clientData.art10_basis`. Pryv has no role in deciding whether a given processing
+    instance falls under "official authority", that's your legal judgement.
+  HDS: facilitated (effort saved: medium) (mode: primitive)
+    Same pattern as Art.9: a dedicated subtree, tightly scoped accesses, and the Art.10
+    legal-basis citation recorded on the access clientData. HDS has no role in deciding
+    whether a given processing instance falls under official authority — that is the
+    controller's legal judgement.
+    Detail: Where such data is processed, the controller designs an isolated stream subtree
+    and records the by-law basis on each access; the audit log then captures every read and
+    write under that access.
+    Evidence: internal:hipaa/policies/access-control
+  IMPLEMENTER [controller] coverage: documented
+    applies_when: [processes-personal-data]
+    Confirm your legal authority to process such data and record the basis; isolate the data
+    in a dedicated, tightly scoped subtree.
+  IMPLEMENTER [data-subject] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## gdpr Art.12 — Transparent information, communication and modalities
+  Requirement: The controller must provide concise, transparent, intelligible information
+  and respond to data-subject requests within one month.
+  Anchor: https://compliance.datasafe.dev/gdpr.html#req-art-12
+  PRYV PLATFORM: facilitated (mode: storage)
+    Pryv preserves whatever notice / consent text you presented to the subject, immutably,
+    versioned, retrievable later. The response operations (Art.15-22) execute in sub-second;
+    the 1-month rule is your process target, not a software limit.
+    Detail: Information artefacts (notice, consent text, lawful-basis explanation) can live
+    in `access.clientData` and/or in `consent/request-cmc` events. Both are immutable /
+    versioned, so the subject sees the same text that was originally presented, addressing
+    the "concise, transparent, intelligible" requirement at the artefact level. Whether the
+    artefact itself is concise + intelligible is your editorial responsibility.
+  HDS: facilitated (effort saved: medium) (mode: storage)
+    HDS preserves the notice and consent text presented to the subject — immutably,
+    versioned, retrievable later — and the rights operations (Art.15-22) execute in
+    sub-second, so the one-month deadline is a process target rather than a software limit.
+    Conciseness and intelligibility of the text are the controller's editorial
+    responsibility.
+    Detail: Information artefacts live in access clientData and/or consent events; both are
+    versioned, so the subject can be shown the same text originally presented. The DSAR
+    turnaround procedure HDS runs as operator is available on request.
+    Evidence: internal:gdpr/procedures/data-subject-rights
+  IMPLEMENTER [controller] coverage: documented
+    applies_when: [processes-personal-data]
+    Write concise, intelligible notices and run a request-handling process that meets the
+    one-month deadline.
+  IMPLEMENTER [data-subject] coverage: facilitated
+    applies_when: NOT YET CLASSIFIED (always shown)
+    Receive the preserved notice/consent text and exercise your rights through the platform.
+
+## gdpr Art.13 — Information to be provided where data are collected from the data subject
+  Requirement: Controller identity, purposes, legal basis, recipients, retention and
+  rights must be provided at the time of collection.
+  Anchor: https://compliance.datasafe.dev/gdpr.html#req-art-13
+  PRYV PLATFORM: facilitated (mode: storage)
+    The information items split across two operator-controlled surfaces: -
+    **Deployment-wide** (controller identity, DPO contact, Terms of Service): the
+    `serviceInfo` fields `home`, `support`, `terms`, propagated to every client app via `GET
+    /service/info`; `app-web-auth3` renders them in its consent UI by default. Full
+    convention treatment in `context/service-info-conventions.md`. - **Per-access**
+    (purposes, lawful basis, recipients, retention, the specific rights notice):
+    `access.clientData` per the convention family in `context/client-data-conventions.md`,
+    `lawful_basis`, `purpose`, `transfer_basis`, `retention`, `consent`, `consent_event_id`,
+    etc. (or a `consent/request-cmc` event when using CMC). Pryv preserves them immutably
+    with version chain (`?includeHistory=true`); your app surfaces them at the right moment.
+  HDS: facilitated (effort saved: medium) (mode: storage)
+    HDS provides two surfaces to carry the disclosures: deployment-wide service info
+    (controller identity, DPO contact, terms) returned to every client app, and per-access
+    clientData (purposes, basis, recipients, retention, rights notice). HDS preserves them
+    immutably; the controller authors the content and surfaces it at collection time.
+    Detail: The service-info fields propagate to consent UIs automatically; the per-access
+    convention fields carry the activity-specific disclosures with a version chain. Whether
+    the wording satisfies Art.13 is the controller's responsibility.
+    Evidence: internal:gdpr/policies/lawful-basis-and-consent
+  IMPLEMENTER [controller] coverage: documented
+    applies_when: [connects, own-records, third-parties, analytics, secondary-use]
+    Author and present the Art.13 disclosures at collection time; record them on the
+    service-info and access surfaces.
+  IMPLEMENTER [data-subject] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## gdpr Art.14 — Information to be provided where data have not been obtained from the data subject
+  Requirement: The same disclosures as Art.13 must be provided within a reasonable period
+  when data are obtained indirectly.
+  Anchor: https://compliance.datasafe.dev/gdpr.html#req-art-14
+  PRYV PLATFORM: facilitated (mode: storage)
+    When you ingest data into Pryv from third parties (not directly from the subject), you
+    still owe the same disclosures as Art.13. Pryv lets you record the disclosure artefact
+    alongside the data, same as direct collection (`access.clientData` or a `consent/*`
+    event), and the audit log proves when disclosure happened, useful when the 1-month /
+    first-contact deadlines come into question.
+    Detail: Where the data came from (the source) is an Art.14(2)(f) disclosure item, record
+    it in `event.clientData.source` or in a dedicated provenance stream. Together with the
+    access carrying the disclosure-notice text, you have the full Art.14 artefact set
+    retrievable per subject.
+  HDS: facilitated (effort saved: medium) (mode: storage)
+    When the controller ingests data from third parties, HDS lets the disclosure artefact
+    (incl. the source under Art.14(2)(f)) be recorded alongside the data, the same way as
+    for direct collection, and the audit log proves when disclosure happened against the
+    one-month/first-contact deadlines.
+    Detail: Provenance can be recorded on the event clientData or a dedicated stream;
+    combined with the disclosure-notice text on the access, the controller has the full
+    Art.14 artefact set retrievable per subject.
+    Evidence: internal:gdpr/policies/lawful-basis-and-consent
+  IMPLEMENTER [controller] coverage: documented
+    applies_when: [connects]
+    Record the data source and present the Art.14 disclosures within the required period.
+  IMPLEMENTER [data-subject] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## gdpr Art.15 — Right of access by the data subject
+  Requirement: Right to obtain confirmation, access and a copy of personal data plus
+  supplementary information.
+  Anchor: https://compliance.datasafe.dev/gdpr.html#req-art-15
+  PRYV PLATFORM: implemented
+    Your subject, holding a personal token, reads everything via the standard Pryv API,
+    events, streams, accesses (with full history), audit records. The supplementary
+    information (purposes, recipients) is in `access.clientData` when you recorded it there.
+    For ready-made bundling, the `pryv-account-backup` npm tool walks the subject's API
+    endpoints and produces a downloadable folder, operator-independent (the subject runs it
+    with their own credentials).
+    Detail: Subject-side reads via standard endpoints (all reachable on v2): - `events.get`:
+    all events - `streams.get`: all streams - `accesses.get ?includeHistory=true`: accesses
+    + version chain - `events.get ?streams=[':_audit:*']`: audit log (the dedicated
+    `/audit/logs` route was removed 2026-06-15; audit is a regular datastore mounted on the
+    `:_audit:*` streams) - `webhooks.get`: webhook subscriptions - `GET
+    /events/<id>/series`: HF data points per series-event Attachments downloadable via the
+    events API. `pryv-account-backup` v0.6.0 (shipped 2026-06-15; preceded by v0.4.0
+    2026-05-27 + v0.5.0 2026-06-13) covers, via its CLI flavour, every read-side resource:
+    account, profiles, app profiles, streams, accesses (current + revoked/expired + opt-in
+    per-access version history), events (monthly-chunked initial + incremental via
+    `modifiedSince`), audit-as-events, HF series data points, webhooks, attachments, plus a
+    per-file sha256 integrity manifest. The Art.15(1)(c) disclosure-history elements are in
+    the raw export by default. The DSAR-completeness work is fully shipped,
+    `proposals/account-backup-dsar-completeness.md` is `Status: SHIPPED`, all chips
+    discharged. (The browser-webapp flavour omits attachments / HF series / webhooks /
+    manifest, route subjects needing those to the CLI.)
+  HDS: implemented (effort saved: high)
+    HDS is user-centric by construction: a subject holding their personal token reads
+    everything via the standard API — events, streams, accesses with history, and the audit
+    log. HDS publishes the app-portability self-service web app (subject signs in, downloads
+    a portable ZIP set) as the canonical access path, built on the pryv-account-backup
+    library.
+    Detail: All read-side resources are reachable: events, streams, accesses with version
+    chain, audit-as-events, webhooks, HF series and attachments. The supplementary
+    information is in the access clientData when the controller recorded it there. The
+    subject can either drive the API directly or use app-portability (operator-hosted at
+    portability.hds.ngo / demo-portability.datasafe.dev); the ZIPs include an HDS provenance
+    manifest (data-model version, deploy URL, completion timestamp) and a portable
+    sync-state for incremental re-runs.
+    Evidence: doc:https://demo-portability.datasafe.dev, doc:https://portability.hds.ngo, doc:https://github.com/healthdatasafe/app-portability, internal:gdpr/procedures/data-subject-rights
+  IMPLEMENTER [controller] coverage: documented
+    applies_when: [connects]
+    Run the request-intake process and, if desired, a subject portal; the read mechanics are
+    provided.
+  IMPLEMENTER [data-subject] coverage: facilitated
+    applies_when: NOT YET CLASSIFIED (always shown)
+    Read or export your full data set directly via the API or the backup tool.
+
+## gdpr Art.16 — Right to rectification
+  Requirement: Right to have inaccurate personal data rectified without undue delay.
+  Anchor: https://compliance.datasafe.dev/gdpr.html#req-art-16
+  PRYV PLATFORM: implemented
+    `events.update` rectifies an event; event versioning preserves the prior (inaccurate)
+    value for traceability, addressing the Art.5(1)(d) accuracy principle without losing the
+    audit trail.
+    Detail: Rectification mechanics: - **API**: `events.update` (PUT /events/:id) writes the
+    new value AND emits a new event version. The route validates the updated payload through
+    the same ajv-draft-04 pipeline as `events.create` (`components/api-server/src/methods/
+    events.ts:564` middleware chain), so a "rectification" that itself fails schema
+    validation is rejected, you can't replace one inaccurate value with another that
+    violates the type's structural constraints. - **History retrieval**: `GET
+    /events/:id?includeHistory=true` returns the full version chain. The history is queried
+    via `mall.events.getHistory(userId, eventId)` (same file line 185) and exposed at the
+    implementer's API surface when requested. - **Audit trail**: every `events.update` call
+    is in the audited methods set (`components/audit/src/ApiMethods.ts`). The audit log
+    records method + access ref + timestamp; per the audit-minimality posture (Q9), the
+    request body is NOT captured, the history chain on the event itself is the durable
+    record of the prior value, not the audit log. - **Detection of inaccuracy**: out of
+    scope at the platform layer. Pryv enforces structural validity at ingest (ajv schema
+    validation); semantic inaccuracy detection is the implementer's app responsibility. See
+    `context/data-accuracy-structural-vs-semantic.md`.
+  HDS: implemented (effort saved: high)
+    HDS rectifies an event with a single update call that preserves the prior value as a new
+    version, so accuracy is corrected without losing the audit trail. The updated payload is
+    schema-validated, so a rectification cannot introduce a structurally invalid value.
+    Subjects can inspect their full record (including version history) via the
+    app-portability self-service tool to identify what needs rectifying before raising a
+    request.
+    Detail: The version chain is retrievable on request, and every update is in the audited
+    method set. Detection of inaccuracy is semantic and stays with the controller's app; HDS
+    guarantees structural validity at ingest. The app-portability ZIPs include events,
+    streams and (opt-in) per-access version history, so a subject can audit their own data
+    end-to-end before filing a rectification claim.
+    Evidence: doc:https://demo-portability.datasafe.dev, doc:https://portability.hds.ngo, internal:hipaa/policies/integrity, internal:gdpr/procedures/data-subject-rights
+  IMPLEMENTER [controller] coverage: documented
+    applies_when: [processes-personal-data]
+    Detect inaccuracy and trigger the rectification; the update and versioning mechanics are
+    provided.
+  IMPLEMENTER [data-subject] coverage: facilitated
+    applies_when: NOT YET CLASSIFIED (always shown)
+    Request rectification, which is applied while preserving the prior value for
+    traceability.
+
+## gdpr Art.17 — Right to erasure ("right to be forgotten")
+  Requirement: Right to obtain erasure without undue delay where one of the enumerated
+  conditions applies.
+  Anchor: https://compliance.datasafe.dev/gdpr.html#req-art-17
+  PRYV PLATFORM: configurable
+    Per-user erasure is a single API call (`system.users.delete`). Whether erasure extends
+    to your backups depends on the storage engine you chose, SQLite per-user folders are
+    deletable from filesystem backups; PostgreSQL requires a backup-rotation policy to
+    complete erasure.
+    Detail: Per-engine behaviour for the live data: - SQLite, each user is a separate file
+    under the user-data directory. File deletion removes the user from filesystem backups
+    (depending on your backup tool's per-file semantics). - PostgreSQL, row-level erasure
+    only. Backups are DB-engine-level snapshots; per-user erasure within a backup file
+    requires either backup rotation (oldest pruned per policy) or a backup-rewriting
+    procedure you build yourself. Event attachments follow your `storages.file.engine`
+    choice (filesystem / s3 / postgresql, the latter two since open-pryv.io 2.0.0-rc.2).
+    Account deletion routes attachment removal through the fileStorage interface, so live
+    copies are erased on all three engines. Backup residue differs per engine: filesystem
+    attachment directories follow your file-backup tool's semantics; S3 buckets may retain
+    deleted-object versions (disable versioning or add a lifecycle rule if erasure must
+    extend there); PostgreSQL-stored attachments live in the same `pg_dump` artefacts as
+    user rows, so the backup-rotation policy above covers them with no extra step. Erasure
+    here is **caller-triggered**, the subject (or operator on their behalf) issues the
+    DELETE call. The **scheduled / automatic** erasure obligation under Art.5(1)(e) "storage
+    limitation" is operator-owned by design, see Art.5 detail +
+    `context/data-retention-operator-owned.md` for the retention- job pattern that composes
+    `events.delete` + `auth.delete` + the audit log. `bin/backup.js` supports per-user
+    backup files alongside DB-engine backups; using per-user backups improves erasure
+    semantics regardless of engine. Audit-log erasure converges across engines (since
+    2026-05-27, open-pryv.io master `891090d` + `853e1cb`). `auth.delete` now includes an
+    explicit `deleteAuditDataStorage` middleware that calls
+    `auditStorage.deleteUser(userId)` regardless of the configured audit engine. SQLite +
+    PostgreSQL audit deployments converge on the same end-state: zero audit rows for the
+    deleted subject. The `[USAD]` test suite asserts engine-agnostically via
+    `auditStorage.forUser(userId).countEvents() === 0`. Operator setting
+    `audit.onUserDelete` (shipped in `405b3a1`) gates the behaviour: - `erase` (default),
+    runs the audit erasure (GDPR Art.17 / CCPA §1798.105 / PIPEDA Principle 4.5 default). -
+    `keep`: skips the wipe with an info-log. For HIPAA §164.316(b)(2)(i) (6-year audit
+    retention), MDR Art.10(8) (10-year device-history retention), or any regime keeping the
+    audit under a separate lawful basis (GDPR Art.17(3)(b)). The operator documents the
+    retention in their DPIA. - `pseudonymise`: REFUSED AT BOOT by `config/plugins/config-
+    validation.js`. The `auth.randomAlias` primitive it builds on has now shipped
+    (`accesses.create {randomAlias:true}`); the audit-row PII null-out mode itself
+    (composing the alias into audit records while preserving forensic value) is still the
+    outstanding piece before this mode can be enabled. SQLite-audit + `keep` mode known
+    caveat: the parent `deleteAuditData` filesystem-wipe step still runs after
+    `deleteAuditDataStorage` returns from `keep`, so the per-user `.sqlite` audit file is
+    removed regardless. PG-audit deployments get `keep` semantics as designed (rows
+    survive). Operators wanting `keep` on SQLite need a PG audit migration or a follow- up
+    teaching `deleteAuditData` to skip when `mode === 'keep'`.
+  HDS: configurable (effort saved: medium)
+    Per-user erasure is a single API call that deletes the subject's live data, attachments
+    and audit rows. How far erasure extends into backups depends on the storage engine and
+    backup-rotation policy; HDS operates a documented backup and rotation regime as
+    operator. Scheduled/automatic erasure under storage limitation is a known gap (no
+    retention automation). Subjects are advised to use the app-portability self-service tool
+    to keep a portable copy of their data **before** requesting erasure — the public
+    deletion page on healthdatasafe.org cross-links accordingly.
+    Detail: Account deletion removes live events, attachments and audit rows
+    engine-agnostically. Backup residue differs by engine and is bounded by the rotation
+    policy. Erasure here is caller-triggered; automated retention deletion must be composed
+    externally by the controller. The operator backup/erasure procedure is available on
+    request. The platform's `audit.onUserDelete: pseudonymise` mode (null out audit-row PII
+    via the now-shipped `randomAlias` primitive while preserving forensic value) remains
+    unavailable — refused at boot upstream until the audit-row null-out lands — so
+    erasure-vs-audit-retention on HDS resolves through `erase` (default) or `keep`, not
+    pseudonymisation. The operator-facing healthdatasafe.org `/users/data-deletion` page
+    surfaces the portability tool as the first step ("Before You Delete — Download a Copy")
+    so the subject's right to a copy under Art.20 is exercised ahead of an irreversible
+    erasure.
+    Evidence: doc:https://www.healthdatasafe.org/users/data-deletion, doc:https://demo-portability.datasafe.dev, doc:https://portability.hds.ngo, internal:gdpr/procedures/data-subject-rights, internal:gdpr/policies/data-retention, internal:hipaa/procedures/data-backup-plan
+    PLANNED (platform, impact medium): The audit.onUserDelete setting ships and is deployed, with erase and keep both usable; its third mode, pseudonymise (audit-row PII null-out), is enumerated but refused at boot because the audit-row null-out itself is not implemented. This row's erasure-vs-audit-retention position stays partial until that lands upstream and HDS deploys it.
+  IMPLEMENTER [controller] coverage: documented
+    applies_when: [stores-phi-copy, own-records]
+    Decide when an erasure obligation is triggered and invoke deletion; define your own
+    retention schedule, since automation is not provided.
+  IMPLEMENTER [data-subject] coverage: facilitated
+    applies_when: NOT YET CLASSIFIED (always shown)
+    Request erasure of your account, applied across live data and audit rows.
+
+## gdpr Art.18 — Right to restriction of processing
+  Requirement: Right to obtain restriction — data stored but not processed — in defined
+  circumstances.
+  Anchor: https://compliance.datasafe.dev/gdpr.html#req-art-18
+  PRYV PLATFORM: configurable
+    Restriction is achieved by mutating the access, scope-down via `accesses.update`
+    (narrower permissions) or full revoke via `accesses.delete`. Versioning preserves the
+    pre-restriction state so the change is auditable. No dedicated "restriction flag", the
+    access mutation IS the restriction primitive.
+    Detail: Article 18 envisions restriction as a temporary state where data is stored but
+    not processed. With Pryv: - Data continues to live in events / streams (unchanged). -
+    Processing (= API access through an access token) is restricted by lowering the relevant
+    access's `permissions` to `none` on affected streams or by deleting the access. - The
+    access-version chain proves when the restriction took effect and what state was in force
+    before. You may also surface a restriction flag in
+    `access.clientData.restriction_reason` for record-keeping (Art.30 register entry).
+  HDS: configurable (effort saved: medium)
+    Restriction is achieved by mutating the access: scope its permissions down or revoke it.
+    Data continues to live in events and streams while the access change stops processing,
+    and the version chain proves when the restriction took effect. There is no separate
+    restriction flag — the access mutation is the restriction primitive.
+    Detail: The controller lowers the relevant access's permissions to none on the affected
+    streams (or deletes the access) and may record the restriction reason on the access
+    clientData for the Art.30 register.
+    Evidence: internal:hipaa/policies/access-control, internal:gdpr/procedures/data-subject-rights
+  IMPLEMENTER [controller] coverage: documented
+    applies_when: [processes-personal-data]
+    Apply restriction by scoping or revoking the relevant accesses and record the reason.
+  IMPLEMENTER [data-subject] coverage: facilitated
+    applies_when: NOT YET CLASSIFIED (always shown)
+    Request restriction, applied as an access scope-down that halts processing while
+    preserving the data.
+
+## gdpr Art.20 — Right to data portability
+  Requirement: Right to receive personal data in a structured, commonly used,
+  machine-readable format and to transmit it to another controller.
+  Anchor: https://compliance.datasafe.dev/gdpr.html#req-art-20
+  PRYV PLATFORM: implemented
+    `events.get` + `streams.get` return canonical JSON validated against the data-types
+    schemas, structured, commonly used, machine-readable. Attachments downloadable. No
+    proprietary lock-in: another Pryv operator can import the data into a new account via
+    standard write APIs.
+    Detail: Export shape is the same JSON the data subject (or their delegated app) would
+    see at any time via the API. You can wrap this in a "download my data" UI; the
+    underlying primitive needs no special export endpoint. Direct controller-to-controller
+    transmission (§2) is supported via the CMC capability flow: a single-event-scoped
+    capability access mints a URL the receiving controller can read once. **Portability of
+    custom event types**: deployments using a custom event-type catalogue (via
+    `service.eventTypes`, see `context/custom-event-type-catalogues.md`) export the same
+    canonical JSON shape for custom types as for upstream `pryv/data-types` types, they're
+    first-class in the validation + serialisation pipeline. Receiving Pryv.io deployments
+    that ship the same catalogue (or a superset) can import the events without loss. A
+    receiving deployment without the custom catalogue would reject unknown types at
+    write-time validation, the implementer ensures schema alignment between transmitting +
+    receiving operators when relying on §2 controller-to-controller transmission. **Calendar
+    interoperability (adapter):** beyond raw JSON, Pryv data can be exposed in a ubiquitous
+    interchange standard. The calendar adapter serves selected events as an iCalendar (RFC
+    5545) subscription feed any calendar client can read, and ingests an external iCalendar
+    feed back into Pryv as `calendar/ical-event` events (well-known fields in structured
+    `content`, the verbatim VEVENT in `clientData._raw`). Adapters are discoverable via the
+    `/service/info` `adapters` field. This widens portability from machine-readable JSON to
+    a standard the subject's existing tools already consume, lowering the implementer's
+    integration burden.
+  HDS: implemented (effort saved: high)
+    Reads return canonical JSON validated against the data-type schemas — structured,
+    commonly used and machine-readable — with attachments downloadable and no proprietary
+    lock-in. The app-portability web app packages a full account into a series of ZIP files
+    (events, streams, accesses, attachments, audit, HFS, webhooks) that the subject
+    downloads in one self-service flow. Another HDS/Pryv operator can re-import via standard
+    write APIs; controller-to-controller transmission is also available via the CMC
+    capability flow.
+    Detail: The export shape is the same JSON the subject sees via the API. The ZIP layout
+    matches the upstream pryv-account-backup CLI restore format, so a subject can later
+    re-hydrate to a self-hosted or partner-hosted node. HDS adds an `hds-manifest.json` in
+    the final ZIP (data-model version pin, app-portability version, deploy URL, completion
+    timestamp, total bytes) for audit-trail purposes. For custom event-type catalogues,
+    schema alignment between transmitting and receiving operators is the controller's
+    responsibility when relying on direct transmission.
+    Evidence: doc:https://demo-portability.datasafe.dev, doc:https://portability.hds.ngo, doc:https://github.com/healthdatasafe/app-portability, internal:gdpr/procedures/data-subject-rights
+  IMPLEMENTER [controller] coverage: documented
+    applies_when: [processes-personal-data]
+    Optionally wrap the export in a download UI; ensure schema alignment for any direct
+    controller-to-controller transmission.
+  IMPLEMENTER [data-subject] coverage: facilitated
+    applies_when: NOT YET CLASSIFIED (always shown)
+    Export your data in portable JSON and have it transmitted to another controller.
+
+## gdpr Art.21 — Right to object
+  Requirement: Right to object to processing based on legitimate or public interest;
+  absolute right to object to direct marketing.
+  Anchor: https://compliance.datasafe.dev/gdpr.html#req-art-21
+  PRYV PLATFORM: facilitated (mode: primitive)
+    Pryv doesn't do profiling or marketing itself, but if your app does either using
+    Pryv-stored data, your subjects have the right to object. **The mechanism is the same as
+    Art.7(3) withdrawal (Q19)**, `DELETE /accesses/:id` or `accesses.update` to narrow
+    permissions; Pryv's primitives are basis-agnostic. The legal distinction between Art.21
+    objection (legitimate-interests / public-interest basis) and Art.7(3) withdrawal
+    (consent basis) is semantic, not technical. Record the objection on the access's
+    `clientData` per the consolidated convention catalogue at
+    `context/client-data-conventions.md`.
+    Detail: For direct marketing (absolute right per §2), the typical pattern is: - Subject
+    submits objection (via your app's UI). - You record the objection event (e.g., a custom
+    `consent/object-marketing` event or a flag in `account.clientData.marketing_objection`).
+    - You revoke or narrow the access used by the marketing process → versioned, auditable.
+    - Subsequent marketing-process runs see the access is gone / narrowed → no processing
+    happens. For Art.21(1) objections (legitimate interests / public interest), same
+    pattern; you also need a "compelling legitimate grounds" review process before deciding
+    to override the objection. Record the operator-side review outcome on the access's
+    `clientData.objection_outcome` (one of `"honoured"`, `"overridden_compelling_grounds"`,
+    `"out_of_scope"`) plus a free-text `clientData.objection_rationale` pointing at the
+    legal-basis document, both versioned + audit-traceable via access-versioning
+    (`context/access-versioning.md`). For Art.21(5) transparency ("right to object presented
+    clearly and separately from any other information at the time of the first
+    communication"), same convention family as Art.7 consent text: persist the notice on
+    `clientData.objection_notice` so the version chain proves what the subject was told when
+    the access was minted. See `context/client-data-conventions.md` for the full catalogue.
+  HDS: facilitated (effort saved: medium) (mode: primitive)
+    HDS performs no profiling or marketing itself. Where a controller's app does, the
+    objection mechanism is the same access revoke/scope-down as consent withdrawal, and the
+    objection (and any compelling-grounds outcome) can be recorded on the access clientData.
+    The legal distinction between objection and withdrawal is semantic, not technical.
+    Detail: For direct marketing the controller records the objection and narrows or revokes
+    the marketing access so subsequent runs find no scope. For legitimate-interest
+    objections the controller also runs a compelling-grounds review and records the outcome
+    on the access; all of it is versioned and auditable.
+    Evidence: internal:hipaa/policies/access-control, internal:gdpr/procedures/data-subject-rights
+  IMPLEMENTER [controller] coverage: documented
+    applies_when: [connects, analytics, secondary-use]
+    Run the compelling-grounds assessment where applicable and apply the objection by
+    revoking or narrowing the relevant access.
+  IMPLEMENTER [data-subject] coverage: facilitated
+    applies_when: NOT YET CLASSIFIED (always shown)
+    Object to processing; the objection is applied through the access primitive and
+    recorded.
+
+## gdpr Art.19 — Notification obligation regarding rectification / erasure / restriction
+  Requirement: The controller must communicate any rectification, erasure or restriction
+  to each recipient, unless impossible or disproportionate.
+  Anchor: https://compliance.datasafe.dev/gdpr.html#req-art-19
+  PRYV PLATFORM: facilitated (mode: evidence)
+    The recipients are derivable from Pryv data, the accesses the controller has minted to
+    third parties. When you exercise an Art. 16-18 action that affects events held by those
+    recipients, iterate the active accesses and notify each holder out-of-band. For
+    CMC-paired counterparties, the `consent/revoke-cmc` or a custom
+    `notification/rectification` event provides a structured notification channel.
+  HDS: facilitated (effort saved: low) (mode: evidence)
+    The recipients are derivable from HDS data — the accesses the controller minted to third
+    parties. When an Art.16-18 action affects data held by those recipients, the controller
+    iterates the active accesses and notifies each holder; CMC-paired counterparties have a
+    structured notification channel.
+    Detail: The set of recipients to notify is reconstructable from the active accesses; the
+    out-of-band notification to each, and the impossibility/disproportionality judgement,
+    are the controller's.
+    Evidence: internal:gdpr/procedures/data-subject-rights
+  IMPLEMENTER [controller] coverage: documented
+    applies_when: [connects, third-parties]
+    Identify the recipients from the active accesses and notify each of the rectification,
+    erasure or restriction.
+  IMPLEMENTER [data-subject] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## gdpr Art.22 — Automated individual decision-making, including profiling
+  Requirement: Right not to be subject to a decision based solely on automated processing
+  producing legal or similarly significant effects, subject to exceptions.
+  Anchor: https://compliance.datasafe.dev/gdpr.html#req-art-22
+  PRYV PLATFORM: facilitated (mode: evidence)
+    Pryv doesn't run automated decisions, that's your application logic. What Pryv
+    contributes when Art.22 applies: (1) the audit log proves which inputs were read for the
+    decision; (2) the decision output can be written as a Pryv event with the input
+    reference + the decision logic version captured in `clientData`, making "human
+    intervention" requests tractable (the subject can locate the specific decision record);
+    (3) the consent basis for §2(c) lives on the access's clientData like every other
+    consent record.
+    Detail: Recommended pattern when you run Art.22 processing: - Mint a dedicated access
+    for the automated-decision app with `clientData.processing_purpose =
+    "automated_decision_making"` + `clientData.art22_basis = "(a) contract" | "(b) law" |
+    "(c) consent"`. - Write the decision output as an event on a designated `decisions/*`
+    stream with `clientData.input_audit_ref` pointing back to the audit-row range that fed
+    it + `decision_logic_version`. - When a subject requests human intervention, your portal
+    looks up that event and presents the trail to the human reviewer.
+  HDS: facilitated (effort saved: low) (mode: evidence)
+    HDS runs no automated decisions — that is the controller's application logic. Where
+    Art.22 applies, the audit log proves which inputs were read, the decision output can be
+    stored as an event referencing those inputs and the logic version, and the §2(c) consent
+    basis lives on the access clientData like any other consent record.
+    Detail: The controller mints a dedicated access for the decision app, writes the
+    decision output with an input-audit reference and logic version, and uses that trail to
+    satisfy human-intervention requests. HDS supplies the evidentiary substrate, not the
+    decision.
+    Evidence: internal:gdpr/procedures/data-subject-rights
+  IMPLEMENTER [controller] coverage: documented
+    applies_when: [analytics]
+    Implement the safeguards (basis, human intervention) and record the decision trail; the
+    evidentiary primitives are provided.
+  IMPLEMENTER [data-subject] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## gdpr Art.24 — Responsibility of the controller
+  Requirement: The controller must implement and be able to demonstrate appropriate
+  technical and organisational measures, proportionate to the risk.
+  Anchor: https://compliance.datasafe.dev/gdpr.html#req-art-24
+  PRYV PLATFORM: facilitated (mode: evidence)
+    Art. 24 is the umbrella controller-accountability obligation that ties every other
+    Chapter-IV row together. Pryv contributes the technical- measures substrate (this matrix
+    enumerates it explicitly) + the technical-measures demonstrability (audit log + access
+    version chain are the evidence layer). The organisational- measures programme is yours.
+  HDS: facilitated (effort saved: low) (mode: evidence)
+    Art.24 is the umbrella accountability obligation. HDS contributes the technical-measures
+    substrate enumerated across this matrix and the means to demonstrate it (audit log plus
+    access version chain). The organisational-measures programme is the controller's.
+    Detail: HDS as processor supplies access control, transport encryption, monitoring and
+    the evidence layer, and offers a DPA documenting its own measures. The controller
+    assembles these into its own accountability programme and carries the demonstrability
+    burden at the organisational level.
+    Evidence: internal:hipaa/policies/access-control, internal:gdpr/registers/records-of-processing
+  IMPLEMENTER [controller] coverage: documented
+    applies_when: [processes-personal-data]
+    Build and maintain your accountability programme, citing HDS technical measures and your
+    own organisational controls.
+  IMPLEMENTER [processor] coverage: documented
+    applies_when: always
+    Where you act as a processor, evidence your own measures and operate on documented
+    controller instructions.
+    Templates to sign: dpa
+
+## gdpr Art.26 — Joint controllers
+  Requirement: Where two or more controllers jointly determine purposes and means, they
+  must allocate their responsibilities in a transparent arrangement.
+  Anchor: https://compliance.datasafe.dev/gdpr.html#req-art-26
+  PRYV PLATFORM: facilitated (mode: awareness)
+    **CMC is NOT a joint-controller pattern by default.** Pryv's CMC primitive requires
+    **subject validation**, User A's `consent/accept-cmc` event is what authorises any
+    cross-account data flow to User B's operator. Each operator remains the **sole
+    controller** for their respective user's data; the lawful basis for B's processing of
+    A's data is A's CMC consent record (Art.6(1)(a)), not a controller-to-controller
+    agreement. This is controller-to-controller transmission *via subject consent*
+    (Art.20(2) lineage), not Art.26 joint controllership. Real Art.26 fires only if
+    Operator-X + Operator-Y separately decide to jointly process a category of subjects'
+    data, outside the CMC primitive.
+    Detail: **Art.26 test**: "two or more controllers JOINTLY determine purposes and means".
+    In a CMC share: - The **purpose** is declared in A's `consent/request-cmc` event (or
+    accepted from B's request), A determines whether to consent. - The **means** are A's
+    access permissions + B's access scope, both anchored to A's accept event. - Neither
+    operator decides on behalf of both; subject A is the determiner. So a CMC share does NOT
+    trigger Art.26. It's covered by: - **Art.6(1)(a)** (consent), A's consent is the lawful
+    basis for B's operator to process A's data. - **Art.20(2)** (data portability, transmit
+    to another controller), the act of CMC delivery is "transmission to another controller"
+    with subject's consent. - **Art.13/14** (transparency), each operator carries their own
+    transparency obligation to their respective user; A's operator informs A about who
+    receives the data; B's operator informs B about what data they received + the lawful
+    basis (A's consent). **Where Art.26 actually applies**: when two operators run a joint
+    research programme, joint health platform, or shared-purpose service where both decide
+    on processing independently of subjects' individual choices. In that case, the
+    arrangement IS the operator-side contract; Pryv's contribution is
+    `clientData.joint_controller_arrangement` on the relevant accesses (point to the written
+    agreement) + the "essence" of the arrangement in `clientData.privacy_notice` for
+    Art.26(2). This is operator-edited metadata, no Pryv primitive enforces it. Full
+    CMC-vs-Art.26 reasoning in `context/cmc-consent-primitives.md`.
+  HDS: facilitated (effort saved: low) (mode: awareness)
+    HDS's cross-account sharing (CMC) is not joint controllership: it requires the subject's
+    validation, so each operator stays the sole controller for their user and the lawful
+    basis is the subject's consent, not a controller-to-controller agreement. Real Art.26
+    fires only when two controllers separately decide to jointly process data — outside the
+    CMC primitive.
+    Detail: Where genuine joint controllership exists, the arrangement is the controllers'
+    own contract; HDS can carry a pointer to it and the essence of the arrangement on the
+    relevant access clientData, but no platform primitive enforces the allocation.
+    Evidence: internal:gdpr/registers/records-of-processing
+  IMPLEMENTER [controller] coverage: documented
+    applies_when: [third-parties]
+    If you are a joint controller, conclude the Art.26 arrangement and make its essence
+    available to subjects.
+  IMPLEMENTER [data-subject] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## gdpr Art.27 — Representative of controllers / processors not established in the Union
+  Requirement: A controller or processor not established in the Union must, where Art.3(2)
+  applies, designate an EU representative in writing, subject to exemptions.
+  Anchor: https://compliance.datasafe.dev/gdpr.html#req-art-27
+  PRYV PLATFORM: out-of-scope
+    Representative designation is a contractual + regulatory registration step. No software
+    role.
+  HDS: out-of-scope
+    Designating an EU representative is a contractual and regulatory registration step with
+    no software role. Where HDS itself processes for EU subjects from a non-EU
+    establishment, HDS makes its own designation; the controller makes its own.
+  IMPLEMENTER [controller] coverage: documented
+    applies_when: [processes-personal-data]
+    If Art.3(2) applies to you and no exemption holds, designate an EU representative in
+    writing.
+  IMPLEMENTER [data-subject] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## gdpr Art.29 — Processing under the authority of the controller or processor
+  Requirement: A processor and anyone acting under its or the controller's authority must
+  process personal data only on the controller's instructions.
+  Anchor: https://compliance.datasafe.dev/gdpr.html#req-art-29
+  PRYV PLATFORM: facilitated (mode: primitive)
+    "Only on instructions" is enforced operationally through the access primitive, workforce
+    / contractor / app accesses are scoped to specific streams + levels per the controller's
+    instructions, and the audit log proves what was actually done. Violations show as
+    out-of-scope access attempts or unauthorized method calls in the audit data.
+  HDS: facilitated (effort saved: high) (mode: primitive)
+    "Only on instructions" is enforced operationally through the access primitive:
+    workforce, contractor and app accesses are scoped to specific streams and levels per the
+    controller's instructions, and the audit log proves what was actually done. HDS as
+    processor binds its own staff to the same instruction-only discipline.
+    Detail: Out-of-scope access attempts and unauthorised method calls surface in the audit
+    data, making instruction violations detectable. The substantive instructions themselves
+    come from the controller's DPA.
+    Evidence: internal:hipaa/policies/access-control, internal:gdpr/registers/records-of-processing
+  IMPLEMENTER [controller] coverage: documented
+    applies_when: [stores-phi-copy, third-parties]
+    Express your processing instructions as scoped accesses and review the audit log for
+    deviations.
+  IMPLEMENTER [processor] coverage: documented
+    applies_when: [stores-phi-copy, third-parties]
+    Process only on documented controller instructions and keep your staff within their
+    scoped accesses.
+    Templates to sign: dpa
+
+## gdpr Art.25 — Data protection by design and by default
+  Requirement: The controller must integrate data-protection principles into the design
+  and ensure privacy-protective default settings.
+  Anchor: https://compliance.datasafe.dev/gdpr.html#req-art-25
+  PRYV PLATFORM: facilitated (mode: infrastructure)
+    Pryv's whole architecture leans privacy-by-design, per-user storage isolation,
+    stream-scoped permissions, separate personal/app/ shared access types, privileged data
+    on system streams. Your defaults (token scopes, audit-on, retention) are the part still
+    in your hands.
+    Detail: Pryv's architecture is privacy-by-design **by founding pattern**, not
+    retrofitted. Canonical treatment + the 12-default catalogue:
+    `context/privacy-by-design-and- default.md` (matrix-internal); customer-facing surface
+    [`pryv.github.io/guides/privacy-by-design.html`](https://pryv.github.io/guides/privacy-by-design.html).
+    **Architectural commitment (§1)**: the topology: Data Governance + Access Control +
+    Audit-per-Subject as separate layers that every process traverses; not direct
+    personal-data access with after-the-fact audit (the PbD anti-pattern). Process registry
+    is self-documented via `GET /accesses` + audit log (= the Art.30 records-of- processing
+    register, derivable on demand). **Data-model commitment**: streams + events segregated
+    by data-subject AND context. Granular consent (each access targets a specific stream
+    subtree, not a wall of tables); adapt data collection per subject without schema
+    migration. Substrate for Art.5(1)(c) minimisation + Art.7 granular consent + Art.17
+    erasure + Art.20 portability. **By-default catalogue (§2)**: 12 platform defaults that
+    satisfy "by default, only data necessary for each specific purpose are processed": 1.
+    **Default-deny on permissions** (empty `permissions: []`). 2. **Audit-on by default**
+    (invariant, no opt-out). 3. **TLS enforced** (optional Let's Encrypt integration). 4.
+    **Hosting region pinned per user** (Q12 architectural residency). 5. **Stream-permission
+    granularity** (Q22, no "public" tier exists). 6. **Data-minimal audit** (Q9, never
+    captures request body). 7. **Schema validation at ingest** (Q21, ajv-draft-04 rejects
+    out-of-shape payloads by default). 8. **Zero mandatory subprocessors** (Q23, every
+    integration opt-in). 9. **Audit-minimal logger** (Q23, `inspectAndHide` credential
+    redaction invariant, `[BIH1-6]` tests). 10. **CMC requires explicit subject consent**
+    (`consent/accept-cmc` blocking). 11. **PlatformDB encrypted secrets** (LE +
+    observability patterns). 12. **Withdrawal API exists by default** (Q19, `DELETE
+    /accesses/:id` always available). **Still in your hands (Art.25 §2, operator's
+    by-default settings)**: - Are app tokens minted with the smallest possible scope? - Is
+    your subject's notice-of-collection on by default? - Is data retention set to the
+    shortest necessary period? - Is your auth UI surface using the opt-in pattern
+    (privacy-by-default UX from the dev-site reference) rather than the standard "by
+    continuing you agree" anti-pattern? Privacy-enhancing technologies (PETs) catalogued in
+    the dev-site guide: pseudonymisation (partial, `ALIASES` backlog upgrades), proxy
+    re-encryption (`E2E-ENCRYPTION` backlog + the github.com/perki/test-proxy-re-encrypt
+    PoC), homomorphic encryption + differential privacy + MPC (out-of-scope at platform
+    layer; implementer's enrichment path).
+  HDS: facilitated (effort saved: high) (mode: infrastructure)
+    The HDS architecture is privacy-by-design by founding pattern: per-user storage
+    isolation, default-deny stream-scoped permissions, separate personal/app/shared access
+    types, privileged data on system streams, and audit-on by default. The controller's own
+    defaults — token scopes, retention period, opt-in UX — remain in its hands.
+    Detail: Default-deny permissions, audit-by-construction, enforced transport encryption
+    and per-user residency pinning ship as platform defaults. The controller still decides
+    whether app tokens are minted with minimal scope, whether notices default on, and how
+    short the retention period is.
+    Evidence: internal:hipaa/policies/access-control, internal:gdpr/policies/data-retention
+  IMPLEMENTER [controller] coverage: documented
+    applies_when: [processes-personal-data]
+    Configure your defaults — minimal token scopes, opt-in notices, short retention — on top
+    of the platform's privacy-protective baseline.
+  IMPLEMENTER [data-subject] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## gdpr Art.28 — Processor
+  Requirement: Processing on behalf of a controller must be governed by a contract setting
+  out subject matter, duration, nature, purpose, data types and the parties' obligations.
+  Anchor: https://compliance.datasafe.dev/gdpr.html#req-art-28
+  PRYV PLATFORM: facilitated (mode: storage)
+    When the Pryv operator and the controller are distinct legal entities (typical SaaS
+    arrangement), the operator is the Art.28 processor. Pryv-the- software provides the
+    technical substrate the §1 "sufficient guarantees" evaluation rests on (this matrix
+    enumerates it); the data-processing-agreement (DPA) under §3 is the operator's contract.
+    Audit log + access primitives carry "documented controller instructions" (§3(a)) and the
+    records that demonstrate compliance (§3(h)).
+    Detail: **Zero mandatory subprocessors.** Pryv-the-software ships with no required
+    third-party-service relationships. The default deployment (operator's chosen cloud
+    provider only, opaque to Pryv) has no sub-processors from the platform's perspective.
+    Every external integration is opt-in through config. **Opt-in integration inventory (§2
+    + §4 sub-processor list when activated)**, see
+    `context/subprocessor-posture-and-data-flow.md` for code anchors + per-integration
+    data-flow analysis: | Config gate | Subprocessor | What flows out | |---|---|---| |
+    `letsEncrypt.enabled: true` | LE (or any `letsEncrypt.directoryUrl` ACME CA) | hostnames
+    only for ACME challenges; **no user data** | | `services.email.smtp.*` | operator's SMTP
+    relay | email + name + one-time tokens (templated bodies), PII. **Pryv recommends
+    per-core SMTP configuration**, the `services.email.smtp.*` config block is per-core, so
+    an EU core routes mail through an EU SMTP relay independently of a US core's relay. Use
+    this when residency is a hard requirement (e.g., EU subjects' password-reset emails
+    never touching a US-jurisdiction relay) | | `services.mfa.mode: enabled` +
+    `sms.endpoints[*]` | operator's SMS provider | phone number + MFA code, PII | |
+    `observability.enabled: true` + an OTLP endpoint | Whichever backend that endpoint
+    belongs to, any OTLP-ingesting service, or none at all if it points at a collector the
+    operator hosts | per-method metrics + sanitized error stack traces, built from a fixed
+    allow-list before egress (see Layer 3 below) | | `service.eventTypes: https://...` |
+    upstream catalogue host | **no personal data flows out**, fetch-only of JSON Schema
+    fragments | **Let's Encrypt posture (operator clarification)**: ships as a
+    **dev-platform facilitator**: the easy on-ramp for `*.pryv.me`- style dev clusters.
+    **Production deployments should treat CA choice as an operator decision.** Keep LE if
+    its compliance posture matches yours, swap to a commercial CA / internal CA / air-gapped
+    issuance pipeline if not. The ACME orchestrator reads `letsEncrypt.directoryUrl`, so any
+    ACME-compatible CA drops in without code changes. **Data-flow guarantees that limit
+    subprocessor exposure**, three real layers, each tested: 1. **Audit-by-construction
+    (Q9)**: audit captures method + access ref + URL query (incl. content-query search
+    values on the GET path, see `context/content-query-audit-semantics.md`) + integrity
+    hash; **never the request body**; `auth=` query-string params stripped.
+    `components/audit/src/Audit.ts:151-166`. 2. **Logger sanitization**: every
+    `logger.{info,warn,error, debug}` call passes args through `inspectAndHide`
+    (`components/boiler/src/logging.ts:253-298`): object keys
+    `password`/`passwordHash`/`newPassword` → `'(hidden password)'`; string regex
+    `auth=c[a-z0-9-]*` → `'auth= (hidden)'`; serialised JSON password fields →
+    `'$1=(hidden)'`. Tested by `[BIH1]`-`[BIH6]` in
+    `components/api-server/test/boiler-inspectAndHide.test.js` + `system-seq.test.js:533`.
+    Honest scope: redacts credentials, not PII broadly, emails / usernames / event payloads
+    only leak if a caller explicitly logs them. 3. **Observability allow-list** (when
+    observability is opted into), telemetry is constructed by the platform from a
+    compile-time allow-list at `components/business/src/observability/schema.ts` and shipped
+    over OTLP/HTTP. No vendor or OpenTelemetry SDK runs in the process and nothing is
+    auto-instrumented, so the emitted surface is fixed in source rather than filtered out of
+    an agent's collection. Emitted: per-API-method call counts, duration histograms and
+    error counts, labelled only with a method id from the platform's own API registry, a
+    status class and an error code from the published error id list; service name and
+    version, core FQDN and worker index; and, for server-side faults, the error class plus a
+    stack trace with frames rewritten repository-relative. Request URLs, query and route
+    parameters, bodies, headers, usernames, record identifiers, log records and error
+    **message** text have no key in the schema and therefore no code path to the backend;
+    datapoints outside the vocabulary are dropped and counted. Error reports are aggregated
+    by fault and stamped at the reporting interval rather than the instant of failure, and
+    the instance id is the machine hostname and never derived from the service URL, so the
+    two correlation handles that would otherwise re-identify activity are removed. The
+    destination is a URL plus an auth header, so an operator pointing it at a collector they
+    host themselves has no third-party processor here at all. Claim to rely on: **anonymous
+    by construction, with a residual correlation risk at very low traffic volumes** (where
+    one error in an interval may be the only active user's). Where that residual applies,
+    treat the telemetry as personal data and keep Art.28 in scope for an external
+    destination. ⚑ **Correction of record:** before 2026-07-27 this layer was an in-process
+    vendor agent whose scrubbing config lived in a file the agent does not discover, so it
+    was inert and enabled deployments ran on vendor defaults (request URLs, `Host`, route
+    parameters carrying the username, forwarded log records). That was fixed on 2026-07-27
+    and the agent was then removed entirely, because a control that works by enumerating
+    what must not escape a collector that sees everything is only as strong as that
+    collector's defaults. Full account: `context/subprocessor-posture-and-data-flow.md`.
+    **§3(g) deletion / return of personal data at the end of provision**, `bin/backup.js` +
+    `system.users.delete` cover both directions. **§3(h) auditability**: the operator
+    demonstrates compliance partly via Pryv's audit log + this compliance matrix
+    (evidence-backed assertion structure). **Future: machine-readable subprocessor
+    inventory**: the planned `GET /system/admin/config/effective` admin route
+    (`CONFIG-EFFECTIVE-EXPOSURE` per `UPDATE-TRIGGERS.md`) will expose the merged effective
+    config per core as a single JSON artefact the operator's DPA register + Art.30
+    records-of-processing pipeline can consume directly. Until then, the operator reads
+    `override-config.yml` + per-host overlays + identifies non-default integrations by hand.
+  HDS: facilitated (effort saved: medium) (mode: storage)
+    In the usual arrangement HDS is the Art.28 processor and offers a data-processing
+    agreement covering the §3 terms and a documented subprocessor posture. HDS ships zero
+    mandatory subprocessors; every external integration (SMTP, SMS, observability) is opt-in
+    and inventoried with its data-flow. The substantive §1 "sufficient guarantees"
+    evaluation is the controller's.
+    Detail: HDS maintains a subprocessor register and hosting-provider attestations and
+    routes deletion/return of data at end of provision via account deletion and backup
+    tooling. The audit log and access primitives carry the documented controller
+    instructions and the demonstrability evidence. A DPA template is offered.
+    Evidence: internal:hipaa/registers/subprocessor-register, internal:hipaa/registers/hosting-provider-attestations, internal:gdpr/registers/records-of-processing
+  IMPLEMENTER [controller] coverage: documented
+    applies_when: [stores-phi-copy, third-parties]
+    Evaluate the processor's guarantees and conclude an Art.28 DPA before processing begins.
+    Templates to sign: dpa
+  IMPLEMENTER [processor] coverage: documented
+    applies_when: [stores-phi-copy, third-parties]
+    Sign the DPA, maintain your subprocessor inventory and bind any subprocessor on
+    equivalent terms.
+    Templates to sign: dpa, subprocessor
+
+## gdpr Art.30 — Records of processing activities
+  Requirement: Each controller and processor must maintain a record of its processing
+  activities (purposes, categories, recipients, transfers, retention, security).
+  Anchor: https://compliance.datasafe.dev/gdpr.html#req-art-30
+  PRYV PLATFORM: implemented
+    The combination of access + clientData + audit + (cross-account) CMC + data-residency IS
+    your Article 30 register: who, what, why, when, recipients, transfers, retention, all
+    derivable per-subject and per-time-window from primitives Pryv records continuously.
+    Detail: Register field → Pryv data source: | Article 30 field | Pryv source | |---|---|
+    | Controller / processor identity | your operator metadata + audit user identity | |
+    Purpose | `access.clientData.purpose` (by convention) | | Categories of data subjects |
+    derived from user-account metadata | | Categories of personal data | event
+    `class/format` from data-types | | Categories of recipients | counterparty `access` (CMC
+    pair) | | Transfers to third countries | CMC counterparty `apiEndpoint` host + chosen
+    hosting | | Retention | `access.clientData.retention` + `access.expires` | | Security
+    measures | covered in Art.32 | Audit row → access ref (with serial) → consent state at
+    that moment. Recoverable per data-subject + per-time-window + per-purpose.
+    PLANNED (feature, impact low): Chained / signed audit log makes the Article 30 register tamper-evident
+    PLANNED (feature, impact medium): Read-only effective-configuration endpoint turns the §1(g) description of technical security measures into emitable evidence
+  HDS: facilitated (effort saved: medium) (mode: evidence)
+    The combination of access, clientData, audit, CMC and data-residency lets much of the
+    Art.30 register be derived per subject and per time window — who, what, why, when,
+    recipients, transfers, retention. A platform-generated, complete register is a known
+    gap; each operator keeps its own. HDS maintains its own processor-side record.
+    Detail: Register fields map onto platform sources: purpose to access clientData, data
+    categories to event class/format, recipients to counterparty accesses, transfers to
+    counterparty host plus chosen hosting, retention to clientData and access expiry. The
+    controller assembles and maintains the formal register; HDS provides the derivable
+    inputs and keeps its own.
+    Evidence: internal:gdpr/registers/records-of-processing
+    PLANNED (doc, impact medium): HDS's processor-side register is populated with its live processing activities. What remains is narrower: retention periods are not set for the recruitment, CRM and contact-mailbox rows, and the Art.30(2) half stays empty until the first partner DPA is executed, which the register states rather than filling with a fictional row.
+  IMPLEMENTER [controller] coverage: documented
+    applies_when: [stores-phi-copy]
+    Maintain your Art.30 register, drawing the technical fields from the platform's
+    derivable inputs.
+  IMPLEMENTER [processor] coverage: documented
+    applies_when: [stores-phi-copy]
+    Keep your own processor-side record of the processing you perform for each controller.
+    Templates to sign: dpa
+
+## gdpr Art.32 — Security of processing
+  Requirement: The controller and processor must implement appropriate technical and
+  organisational security measures: pseudonymisation, encryption, ongoing CIA, restoration
+  and regular testing.
+  Anchor: https://compliance.datasafe.dev/gdpr.html#req-art-32
+  PRYV PLATFORM: facilitated (mode: infrastructure)
+    Multi-aspect article, Pryv implements several aspects for you (access control,
+    encryption-in-transit, restoration) and provides configurable controls for others
+    (encryption-at-rest, pseudonymisation, data residency). Organizational measures (regular
+    testing, incident response procedures) stay in your court.
+    Detail: Per-aspect: - Encryption in transit: IMPLEMENTED, TLS 1.3 via built-in Let's
+    Encrypt integration; mTLS between cores in a cluster. - Encryption at rest:
+    CONFIGURABLE, the `container-encrypted-volume` companion (opt-in `CEV_ENABLED`)
+    provisions an encrypted volume covering the full user-data surface (events, attachments,
+    series, audit, and PlatformDB) with a pluggable LUKS/gocryptfs backend and
+    env/file/exec/clevis/aws-kms key provider; operator secrets in PlatformDB are
+    additionally AES-256-GCM encrypted at the application layer. CEV protects data on the
+    storage medium (stolen / decommissioned disks, off-host backups, snapshots); it does not
+    defend a running container, and a core running rqlite outside a CEV container, or an
+    external PostgreSQL, falls back to operator-side full-disk encryption. Event attachments
+    inherit the at-rest controls of your `storages.file.engine` choice: filesystem
+    encryption, S3 server-side encryption (SSE), or, with attachments stored in PostgreSQL,
+    the same DB-level encryption that covers user rows. - Pseudonymisation: FACILITATED,
+    system streams + custom event-type design; pseudonyms live in `clientData` or dedicated
+    streams. - Access control: IMPLEMENTED, `permissions` enforce stream- level scope at
+    every API call (technical control, not policy). - Authentication strength: IMPLEMENTED,
+    `mfa.*` API methods, opt-in per `services.mfa.mode`. - Delegated-app authorization:
+    IMPLEMENTED, the OAuth2 authorization-code + PKCE flow
+    (`open-pryv.io/components/oauth2/`, open-pryv.io 2.0.0-rc.8) hardens third-party access
+    with mandatory PKCE (S256 only), exact-match redirect-URI validation (single
+    loopback-port carve-out; fragment URIs rejected), curated-only client registration, and
+    short-TTL access tokens paired with single-use rotating refresh tokens. - Credential
+    hand-off: IMPLEMENTED, the shared-secrets endpoints
+    (`open-pryv.io/components/shared-secrets/`) hand a credential to a third party by a
+    one-time random key instead of a URL-embedded token, which would persist in browser
+    history, referrer headers, and server access logs. The key is redeemable exactly once,
+    expires on a mandatory TTL, and Pryv stores only the SHA-256 of its random half, so a
+    database dump cannot reconstruct a live credential. The payload is scrubbed (including
+    from event history) when the secret leaves the pending state: on redemption, on a
+    signature mismatch, and on the first retrieval attempt after the TTL has passed. Expiry
+    is enforced when someone reaches for the secret rather than by a background sweeper, so
+    an expired secret nobody touches again keeps its stored payload until something reaches
+    it or you delete it; schedule that deletion yourself if your retention policy needs a
+    deadline. An optional signature (passphrase or client-computed HMAC whose verifier
+    secret never reaches the server) adds a second factor to the redemption. - Data
+    residency: CONFIGURABLE, multi-hosting puts data where your subjects (or your policy)
+    require, bounding exposure surface. - Ability to ensure ongoing availability +
+    resilience (§1(b)): FACILITATED, a multi-core rqlite cluster in which joining cores
+    register as non-voters by default, so adding or losing a core can never cost the cluster
+    its quorum or take an existing core's control plane offline. Leader-failover HA is an
+    explicit operator topology choice (run ≥3 voters; two voters are rejected as a fragile
+    2-of-2 quorum); health-checks + audit log round out the ongoing-CIA evidence. -
+    Restoration (§1(c)): IMPLEMENTED, `bin/backup.js --restore` per-user; single-node
+    `peers.json` recovery restores cluster availability after a quorum loss. - Regular
+    testing (§1(d)): FILLED BY EXISTING PRIMITIVES. **Existing evidence (citable today)**: -
+    **Multi-engine CI test matrix**: ~2351 tests on PostgreSQL and SQLite (matched
+    baseline), ~175 test files across `components/*/test/`; runs on every commit + every PR.
+    - **Lint + typecheck gates** (`just lint` + `just typecheck`), neostandard with `{ semi:
+    true }`, `noUnused*` strict. - **Deploy-validation matrix** (an internal
+    release-validation artefact), 8-row scenario matrix exercised on every release. -
+    **Conformance suite** (`lib-js` 168/169 baseline against deployed core), runnable
+    per-deployment for operator-side verification (sample-app proposal queued to package
+    this as a customer- facing "verify your deployment" runbook). - **Supply-chain
+    pipeline** (shipped, open-pryv.io merge `9e2ee7ff`): a CI gate fails the build on high
+    or critical advisories in the runtime npm tree (accepted advisories live in a documented
+    allowlist, not silenced), a CycloneDX SBOM is emitted and Grype-scanned on every CI run,
+    the base image is digest-pinned with the rqlite download checksum-verified, and release
+    images carry a keyless cosign signature plus a SLSA build-provenance attestation. The
+    pinned base image still shows OS-level CVEs in scans (a slimmer-base migration is a
+    tracked follow-up); the claim is detection, gating and attestation, not a CVE-free
+    image. - **Vulnerability disclosure program**: a coordinated disclosure policy ships in
+    `SECURITY.md`: private reporting via GitHub Security Advisories + a `security-dev@`
+    mailbox, a published scope, response-time SLA, safe-harbor language, a 90-day
+    coordinated-disclosure timeline, and GHSA/CVE issuance for confirmed reports. Private
+    vulnerability reporting is enabled on the published repositories, so operators can cite
+    Pryv's VDP + GHSA advisory history as part of their Art.32(1)(d) evidence file.
+    PLANNED (feature, impact low): End-to-end encryption shifts encryption from Configurable infrastructure to a Pryv-managed primitive
+    PLANNED (feature, impact low): Read-only effective-configuration endpoint strengthens the evidence narrative around operator-visible safeguards
+  HDS: facilitated (effort saved: high) (mode: infrastructure)
+    HDS implements transport encryption (TLS), encryption at rest, technical access control
+    and per-user restore, and operates monitoring and alerting as operator. Encryption at
+    rest is now in place in every region via hosting-layer volume encryption (Exoscale
+    default on ch1; AWS EBS on us1, AES-256) — provider-managed keys, verified 2026-06-26.
+    Pseudonymisation is strengthened on two fronts: cross-region PlatformDB identifiers are
+    HMAC-pseudonymised (platform.piiMode=hashed, cutover 2026-06-24), and the platform's
+    access-level alias primitive (`accesses.create {randomAlias:true}` — a random routable
+    alias in place of the username) is deployed on all HDS cores since 2026-07-28. Data
+    residency is facilitated/configurable. Organisational testing and incident procedures
+    remain the controller's.
+    Detail: Access control is enforced at every API call; transport is TLS; per-user restore
+    is available. Event content is encrypted at rest on each core's volume (Exoscale
+    hypervisor-layer encryption on ch1; AWS EBS on us1) — an Art.32(1)(a) measure; keys are
+    provider-managed, so operator-held-key (container-encrypted-volume, CEV_ENABLED) or
+    end-to-end encryption remain stronger options for the "operator cannot read at rest"
+    property. Cross-region PlatformDB PII is HMAC-pseudonymised (platform.piiMode=hashed).
+    HDS as operator runs CI test matrices and a monitored, alert-wired production
+    environment; the controller runs its own organisational testing regime.
+    Evidence: internal:hipaa/policies/encryption, internal:hipaa/policies/transmission-security, internal:hipaa/policies/access-control, internal:hipaa/risk/at-rest-encryption, internal:hipaa/evidence/at-rest-encryption-verification
+    PLANNED (platform, impact medium): End-to-end / operator-held-key encryption is queued upstream as the strengthening for the provider-managed-key at-rest residual; claimable on this row only after pryv ships it AND HDS deploys and enables it on all cores.
+  IMPLEMENTER [controller] coverage: documented
+    applies_when: [connects, stores-phi-copy]
+    Assess the residual at-rest-encryption risk, run regular security testing and document
+    your incident procedures.
+  IMPLEMENTER [processor] coverage: documented
+    applies_when: [connects, stores-phi-copy]
+    Evidence your own security measures and the at-rest controls applied at the
+    infrastructure layer.
+    Templates to sign: dpa
+
+## gdpr Art.33 — Notification of personal data breach to the supervisory authority
+  Requirement: The controller must notify the supervisory authority within 72 hours of
+  becoming aware of a breach, unless it is unlikely to pose a risk.
+  Anchor: https://compliance.datasafe.dev/gdpr.html#req-art-33
+  PRYV PLATFORM: facilitated (mode: evidence)
+    Pryv ships a breach-scoping toolchain: `bin/breach-scope.js` turns a compromised
+    accessId + time window into an Art.33 §1(b)-(d) input artefact (subject, methods
+    invoked, streams in scope, record counts, integrity hashes) in one command on the
+    subject's home core. Encryption-at-rest may scope the "unsecured personal data"
+    definition relevant to the notification decision. The risk assessment and the 72-hour
+    process itself are yours to run.
+    Detail: Breach scoping is single-command (shipped in open-pryv.io `0b2874e0`): - `GET
+    /system/accesses/:accessId` admin lookup (PlatformDB reverse-index) resolves a
+    compromised accessId to its user + home core in O(1), revoked accesses included.
+    Existing deployments index pre-existing accesses once per core with
+    `bin/backfill-access-index.js`. - Read audit rows carry `content.recordCount` and
+    `content.scopedStreamIds` (plus `scopedStreamCount` and `recordCountIncomplete`).
+    `scopedStreamIds` is the query's resolved SCOPE: an upper bound on what the access could
+    have exposed, not the streams of the events actually returned. State that nuance in the
+    notification. - `bin/breach-scope.js --access <id> --since <iso8601> [--until
+    <iso8601>]` walks the audit window on the subject's home core and renders the scoping
+    report (JSON or Markdown): methods histogram, streams in scope, read/mutated/destroyed
+    record counts, time window, integrity hashes. - access version chain → consent state at
+    the moment of access (was processing within authorised scope?). - encryption-at-rest →
+    if the leaked artefact is encrypted operator backup, the data may qualify as "secured"
+    and notification may not be required per Art.33 §1. Honest bounds: the report classifies
+    by stream + method and quantifies by record count; it does not derive event-type data
+    categories (event bodies never enter the audit log); HF/series reads and
+    audit-filter-excluded methods are not visible; the reverse-index is advisory (home-core
+    storage is authoritative). Detection-of-breach itself depends on monitoring + log review
+    you run around the audit data.
+  HDS: facilitated (effort saved: medium) (mode: evidence)
+    The audit log helps scope a breach — which data, which subjects, by which access — and
+    HDS as operator runs the monitoring and incident-response procedure that feeds the
+    72-hour decision. Since 2026-07-29 that scoping is a deployed platform primitive:
+    `bin/breach-scope.js` emits an Art.33(1)(b-d) report for a compromised access from the
+    audit + access-version data, backed by a cluster-wide access reverse-index (`GET
+    /system/accesses/:accessId`) and scoped-exposure audit fields (`recordCount`,
+    `scopedStreamIds` — the resolved scope, an upper bound on exposure). The notification
+    itself, and the risk-likelihood judgement, are the controller's. At-rest volume
+    encryption (in place since 2026-06-26) narrows the exposure of a leaked at-rest artefact
+    and feeds the risk-likelihood assessment.
+    Detail: `bin/breach-scope.js` resolves a compromised accessId to its owner and window,
+    then reports the accesses that touched the data and the streams in scope — the §33(1)(b)
+    categories/subjects and (b-d) inputs — from the audit log and access-version chain.
+    `scopedStreamIds` records the query's resolved scope (upper bound on what the access
+    could reach), not the events actually returned, so it never understates exposure;
+    `recordCount` counts delivered records. Deployed on all HDS cores 2026-07-29
+    (open-pryv.io master `d3c9c605`; the access index backfilled per core). HDS runs
+    detection and the operator-side incident procedure; the controller owns the
+    supervisory-authority notification.
+    Evidence: internal:gdpr/procedures/breach-notification-72h, internal:hipaa/procedures/security-incident-response
+  IMPLEMENTER [controller] coverage: documented
+    applies_when: [stores-phi-copy]
+    Run the 72-hour notification process and make the risk determination; the scoping
+    substrate is provided.
+  IMPLEMENTER [processor] coverage: documented
+    applies_when: [stores-phi-copy]
+    Notify the controller without undue delay on becoming aware of a breach.
+    Templates to sign: dpa
+
+## gdpr Art.34 — Communication of a personal data breach to the data subject
+  Requirement: Where a breach is likely to result in high risk, the controller must
+  communicate it to affected data subjects without undue delay.
+  Anchor: https://compliance.datasafe.dev/gdpr.html#req-art-34
+  PRYV PLATFORM: facilitated (mode: evidence)
+    Two-surface split. **Identification** is filled by the audit log + the shipped
+    `bin/breach-scope.js` scoping tool (per-subject roster derivable from the breached
+    access's read/write history); **delivery** is voluntarily missing + operator-owned
+    (Pryv's mail surface is transactional per-recipient, not bulk-send; operators compose
+    with their existing CRM / SMS / push pipeline). The audit-trace bridge that lands
+    per-recipient send-receipts inside Pryv's event chain (satisfying §164.414-equivalent
+    burden-of-proof) uses an operator- authored `compliance/breach-notification/sent-cmc`
+    event pattern. Full treatment in
+    `context/breach-notification-delivery-operator-owned.md`. Encryption-at-rest may scope
+    the high-risk determination (Art.34 §3(a) exemption).
+    Detail: **Identification surface**: derive the affected-subject list from `audit.get`
+    filtered by (`breachedAccessId`, time window). The shipped `bin/breach-scope.js`
+    (open-pryv.io `0b2874e0`) packages this into one command + adds the §164.404(c) content
+    elements (`recordCount` + the `scopedStreamIds` resolved query scope, an upper bound on
+    exposure rather than the streams actually returned) via audit-row extensions.
+    Identification is single-command + audit-defensible. **Delivery surface**:
+    operator-owned by design. Pryv's transactional mail (`mail.send` / `email-templates`) is
+    designed for welcome / password-reset / MFA-code emails, not bulk breach broadcasts.
+    Operators compose: - Identification → the `bin/breach-scope.js` report (JSON output). -
+    Operator's CRM / mail provider (SendGrid / Mailgun / AWS SES / Mandrill) renders Art.34
+    §2 content elements per recipient + sends with retries + rate-limiting. - Send-receipts
+    captured back into Pryv as `compliance/breach-notification/sent-cmc` events
+    (recipient.userId + email_hash + channel + provider.message_id + notice_version + time)
+    on a dedicated compliance system stream, these become the §164.414-equivalent
+    burden-of-proof artefact. - Operator's incident-response record on
+    `compliance/incidents/<id>/*` cross-references the affected.json input + the
+    per-recipient send-receipt event tree. **Why voluntarily missing**: most
+    regulated-market operators already run a CRM / mail / SMS pipeline with established
+    rate-limiting + retry + send-receipt tracking + legal-comms escalation; a Pryv-shipped
+    breach-comm would be redundant. Operators without one need legal/ comms expertise to use
+    Art.34 §2 content + timing well anyway, beyond what a platform-side template can pre-
+    fab. The Art.34 §3 exemptions (encryption-renders- unintelligible /
+    subsequent-measures-eliminate-high-risk / disproportionate-effort) are legal judgements
+    operator- counsel makes. **Multi-jurisdiction nuance**: subjects in different
+    jurisdictions face different timing regimes (GDPR "undue delay" / HIPAA ≤60d / PIPEDA
+    "as soon as feasible" / California ≤45d / Swiss nLPD Art.24 conditional). Operator's
+    runbook derives per-subject timing from `clientData.jurisdiction` on the account.
+  HDS: facilitated (effort saved: low) (mode: evidence)
+    Identification of affected subjects is derivable from the audit log filtered by the
+    breached access and window. Delivery of the communication is the controller's job,
+    composed with its own messaging pipeline; HDS's transactional mail is per-recipient, not
+    a bulk channel. At-rest volume encryption (in place since 2026-06-26) can scope the
+    Art.34(3)(a) exemption for media exposures; a live-system compromise is assessed on its
+    facts.
+    Detail: The affected-subject roster comes from audit queries; the controller's CRM or
+    mail provider renders and sends the Art.34 content per recipient, and send-receipts can
+    be captured back as compliance events. The Art.34(3) exemptions are legal judgements the
+    controller's counsel makes.
+    Evidence: internal:gdpr/procedures/breach-notification-72h, internal:hipaa/procedures/security-incident-response
+  IMPLEMENTER [controller] coverage: documented
+    applies_when: [stores-phi-copy, own-records]
+    Derive the affected-subject roster, render and deliver the communication, and assess the
+    high-risk and exemption questions.
+  IMPLEMENTER [data-subject] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## gdpr Art.35 — Data protection impact assessment
+  Requirement: Where processing is likely to result in a high risk, the controller must
+  carry out a data-protection impact assessment before processing.
+  Anchor: https://compliance.datasafe.dev/gdpr.html#req-art-35
+  PRYV PLATFORM: facilitated (mode: evidence)
+    The DPIA is a written assessment artefact; Pryv has no role in producing it. What Pryv
+    supplies as inputs: data-residency primitive lets you state where each subject's data
+    lives; audit + access-version primitives describe the processing-flow technical layer
+    concretely; system-streams isolation gives a defensible "scope of sensitive data"
+    boundary; this matrix itself enumerates the technical-organisational-measures (Art.35
+    §7(d)) for the deployment.
+    Detail: §7 prescribed content → Pryv-side artefacts feeding each item: - (a) systematic
+    description of processing → audit-log method/path coverage + access purposes from
+    clientData. - (b) necessity / proportionality assessment → the minimum-necessary stream
+    + permission design (cross-link to Art.5 §1(c)). - (c) risk assessment → operator-side
+    artefact; this matrix contributes the technical-control inventory. - (d) measures
+    envisaged to address the risks → see the Art.32 row of this matrix + cross-scope ISO
+    27001 A.8 control rows.
+    PLANNED (feature, impact medium): Read-only effective-configuration endpoint feeds the DPIA safeguards inventory from live per-core data instead of a hand-written list
+  HDS: facilitated (effort saved: low) (mode: evidence)
+    The DPIA is a written assessment the controller produces; HDS supplies inputs —
+    data-residency facts, audit/access descriptions of the processing flow, system-stream
+    isolation as the sensitive-data boundary, and this matrix as the technical-measures
+    inventory. A formal DPIA process is a known gap that the controller must run itself.
+    Detail: The prescribed Art.35(7) content maps onto platform inputs: a systematic
+    description from audit and access purposes, a necessity assessment from the
+    minimum-necessary stream design, and the measures inventory from the Art.32 row. The
+    risk assessment and the DPIA document itself are the controller's.
+    Evidence: internal:gdpr/procedures/dpia
+    PLANNED (procedure, impact low): HDS's own DPIA process is being stood up: the DPIA procedure (baseline) and its record template are drafted in the internal pipeline; the first executed assessment is the tracked remainder.
+  IMPLEMENTER [controller] coverage: documented
+    applies_when: [analytics, secondary-use]
+    Run the DPIA where required, using the platform's technical inputs and this matrix's
+    measures inventory.
+  IMPLEMENTER [data-subject] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## gdpr Art.36 — Prior consultation
+  Requirement: The controller must consult the supervisory authority before processing
+  where a DPIA shows a high residual risk absent mitigation.
+  Anchor: https://compliance.datasafe.dev/gdpr.html#req-art-36
+  PRYV PLATFORM: out-of-scope
+    Prior consultation is the controller's procedural interaction with a supervisory
+    authority. No software role; the DPIA artefact under Art. 35 carries the technical
+    evidence the authority may request; Pryv contributes inputs there but not to the
+    consultation itself.
+  HDS: out-of-scope
+    Prior consultation is the controller's procedural interaction with a supervisory
+    authority and has no software role. HDS contributes the technical evidence the authority
+    may request via the DPIA inputs noted at Art.35, but not the consultation itself.
+  IMPLEMENTER [controller] coverage: documented
+    applies_when: [analytics, secondary-use]
+    Consult the supervisory authority where your DPIA indicates an unmitigated high risk.
+  IMPLEMENTER [data-subject] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## gdpr Art.37 — Designation of the data protection officer
+  Requirement: The controller and processor must designate a DPO in the cases listed,
+  including large-scale processing of special-category data.
+  Anchor: https://compliance.datasafe.dev/gdpr.html#req-art-37
+  PRYV PLATFORM: out-of-scope
+    DPO designation is an HR / organizational decision. No software role. Where the
+    deployment processes Art. 9 special-category or Art. 10 criminal data on a large scale
+    (likely for healthcare Pryv deployments), the Art. 37(1)(c) trigger applies and a DPO
+    designation is required.
+  HDS: implemented (effort saved: low)
+    HDS has made its processor-side designation: a Data Protection Officer was appointed
+    effective 2026-07-17, recorded in the designated-roles register (disclosed on request;
+    the source register is still moving through internal approval). Healthcare deployments
+    processing special-category data at scale will commonly trigger the Art.37(1)(c)
+    requirement; the controller still makes its own designation.
+    Detail: The designation is an organisational artefact, not a software control.
+    Publishing a public DPO contact point through the service-info convention is the Art.38
+    follow-up, tracked on that row.
+    Evidence: internal:hipaa/registers/designated-roles
+  IMPLEMENTER [controller] coverage: documented
+    applies_when: [processes-personal-data]
+    Determine whether a DPO is required for your processing and designate one where it is.
+  IMPLEMENTER [processor] coverage: documented
+    applies_when: always
+    Designate your own DPO where the Art.37 triggers apply to your processing.
+    Templates to sign: dpa
+
+## gdpr Art.38 — Position of the data protection officer
+  Requirement: The DPO must be involved properly and timely, resourced, independent, and
+  reachable by data subjects.
+  Anchor: https://compliance.datasafe.dev/gdpr.html#req-art-38
+  PRYV PLATFORM: facilitated (mode: storage)
+    DPO independence + reporting structure (§1-§3) is an organizational arrangement; no
+    software role. **§4 DPO contact-point for data subjects IS facilitated** by the existing
+    `serviceInfo.support` URL (returned by `GET /service/info` on every core). Operators
+    publish DPO contact details on the page that `support` points at, the same surface that
+    `app-web-auth3` already renders in its consent UI. Zero extra platform code required.
+    Full convention treatment in `context/service-info-conventions.md`.
+  HDS: facilitated (effort saved: low) (mode: storage)
+    DPO independence and reporting structure are organisational arrangements with no
+    software role. The Art.38(4) data-subject contact point is facilitated by the
+    service-info support URL returned by every core, which consent UIs already render — the
+    controller publishes DPO contact details there at no extra platform cost.
+    Detail: HDS surfaces the support/contact URL platform-wide; the controller populates it
+    with DPO contact details. The DPO's resourcing, independence and direct-reporting
+    position remain organisational arrangements the controller establishes.
+    Evidence: internal:gdpr/procedures/dpia
+  IMPLEMENTER [controller] coverage: documented
+    applies_when: [processes-personal-data]
+    Establish the DPO's independence and reporting line and publish the DPO contact point.
+  IMPLEMENTER [data-subject] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## gdpr Art.39 — Tasks of the data protection officer
+  Requirement: The DPO must, at minimum, inform and advise, monitor compliance, advise on
+  the DPIA, and cooperate with and be the contact point for the supervisory authority.
+  Anchor: https://compliance.datasafe.dev/gdpr.html#req-art-39
+  PRYV PLATFORM: facilitated (mode: evidence)
+    DPO duties are organizational. Pryv contributes the data sources the DPO uses for
+    "monitoring compliance", the audit log, observability metrics, this matrix's evidence
+    trail. The DPO contact-point obligation per Art.38(4) is covered separately via the
+    `serviceInfo.support` URL convention (see `context/service-info-conventions.md`). Pryv
+    equips the DPO; it doesn't replace them.
+    Detail: Practical DPO-monitoring patterns: - **Audit-log access** for the DPO is
+    currently bound to per-user-scoped permissions; no built-in "cross-account audit reader"
+    personal-token tier exists. Operators granting DPOs platform-wide audit visibility
+    typically use `auth.adminAccessKey` style admin auth, OR run a side-process that exports
+    audit events into the DPO's observability / SIEM stack (Q23 observability-provider
+    primitive, pluggable façade). - **Compliance matrix as evidence trail**: this
+    compliance-matrix repository itself is the structured artefact the DPO references for
+    "what does the platform contribute to each regulatory control?", see how scopes /
+    requirements / pryv_primitives / planned chips / context notes interlink for the
+    auditable claim graph. - **DPIA / breach-scope tooling** the DPO consumes when active:
+    `bin/breach-scope.js` for the breach scoping artefact (shipped), and the future
+    `CONFIG-EFFECTIVE-EXPOSURE` effective-config endpoint for DPIA Section (d).
+  HDS: facilitated (effort saved: low) (mode: evidence)
+    DPO duties are organisational. HDS contributes the data sources the DPO uses to monitor
+    compliance — the audit log, monitoring telemetry, and this matrix's evidence trail — but
+    does not replace the DPO. The contact point is covered via the service-info convention.
+    Detail: Audit-log access for a platform-wide compliance view is operator-mediated (no
+    built-in cross-account audit-reader tier); this matrix itself serves as the structured
+    artefact the DPO references for the platform's contribution to each control.
+    Evidence: internal:gdpr/registers/records-of-processing
+  IMPLEMENTER [controller] coverage: documented
+    applies_when: [processes-personal-data]
+    Resource your DPO to perform these tasks using the platform's audit and monitoring data
+    and this matrix.
+  IMPLEMENTER [data-subject] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## gdpr Art.40 — Codes of conduct
+  Requirement: Authorities and bodies are to encourage codes of conduct that help apply
+  the Regulation properly.
+  Anchor: https://compliance.datasafe.dev/gdpr.html#req-art-40
+  PRYV PLATFORM: facilitated (mode: awareness)
+    Codes of conduct are sector- level instruments (drafted by associations of controllers /
+    processors, approved by competent supervisory authority). No software role at the
+    code-drafting layer. When a code applies to your sector, adherence is recorded as one of
+    the Art. 24 / Art. 32 "appropriate measures"; the audit log + this matrix demonstrate
+    the technical-control side of code adherence.
+  HDS: facilitated (effort saved: low) (mode: awareness)
+    Codes of conduct are sector-level instruments with no software role at the drafting
+    layer. Where a code applies to a controller's sector, adherence counts among the
+    Art.24/Art.32 appropriate measures, and the audit log plus this matrix evidence the
+    technical side of adherence.
+    Detail: HDS does not draft or adopt codes on a controller's behalf; it supplies the
+    technical-control evidence a controller can cite when demonstrating adherence to a code
+    it has signed up to.
+    Evidence: internal:gdpr/registers/records-of-processing
+  IMPLEMENTER [controller] coverage: documented
+    applies_when: [processes-personal-data]
+    Adhere to any applicable sector code and cite the platform's technical controls as part
+    of that adherence.
+  IMPLEMENTER [data-subject] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## gdpr Art.42 — Certification
+  Requirement: Authorities and bodies are to encourage data-protection certification
+  mechanisms, seals and marks.
+  Anchor: https://compliance.datasafe.dev/gdpr.html#req-art-42
+  PRYV PLATFORM: facilitated (mode: awareness)
+    Certification (e.g., EuroPrivacy seal, GDPR-certified processor schemes) is sector- and
+    jurisdiction-specific. Pryv operators pursuing certification consume this matrix as the
+    technical-control inventory. ISO 27701 + (where applicable) HDS are adjacent
+    certifications already represented in this matrix.
+  HDS: facilitated (effort saved: low) (mode: awareness)
+    Certification is sector- and jurisdiction-specific. A controller pursuing a GDPR
+    certification scheme consumes this matrix as the technical-control inventory; adjacent
+    certifications (e.g. ISO 27701, and HDS hosting certification) reinforce the evidence
+    base.
+    Detail: HDS does not itself confer a GDPR certification; it provides the structured
+    technical-control evidence a controller's certification body will examine.
+    Evidence: internal:gdpr/registers/records-of-processing
+  IMPLEMENTER [controller] coverage: documented
+    applies_when: [processes-personal-data]
+    Pursue any applicable certification using this matrix as your technical-control
+    inventory.
+  IMPLEMENTER [data-subject] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## gdpr Art.82 — Right to compensation and liability
+  Requirement: Anyone suffering material or non-material damage from an infringement is
+  entitled to compensation from the controller or processor.
+  Anchor: https://compliance.datasafe.dev/gdpr.html#req-art-82
+  PRYV PLATFORM: facilitated (mode: evidence)
+    Liability + compensation are legal proceedings. Pryv contributes defense evidence: the
+    audit log + access-version chain support the controller / processor in demonstrating
+    compliance with the relevant obligations (or, where compliance failed, in scoping the
+    actual damage). The legal outcome is fact-specific.
+  HDS: facilitated (effort saved: low) (mode: evidence)
+    Liability and compensation are legal proceedings. HDS contributes defence evidence — the
+    audit log and access version chain support demonstrating compliance or, where it failed,
+    scoping the actual damage. The legal outcome is fact-specific.
+    Detail: The audit trail and version chain are the durable evidence a controller or
+    processor relies on in a liability dispute; HDS makes no determination of fault or
+    damage.
+    Evidence: internal:gdpr/registers/records-of-processing
+  IMPLEMENTER [controller] coverage: documented
+    applies_when: [processes-personal-data]
+    Rely on the audit and version evidence in any liability dispute; the legal posture is
+    yours.
+  IMPLEMENTER [processor] coverage: documented
+    applies_when: always
+    Maintain your own records to evidence compliance with your processor obligations.
+    Templates to sign: dpa
+
+## gdpr Art.83 — General conditions for imposing administrative fines
+  Requirement: Supervisory authorities must ensure fines are effective, proportionate and
+  dissuasive, up to the prescribed ceilings.
+  Anchor: https://compliance.datasafe.dev/gdpr.html#req-art-83
+  PRYV PLATFORM: out-of-scope
+    Fines are regulator-side. Pryv has no role in fine calculation or imposition. Pryv-side
+    data + this matrix help the controller argue for mitigation under Art. 83(2) factors
+    (degree of cooperation, technical + organisational measures implemented, etc.).
+  HDS: out-of-scope
+    Fines are regulator-side; HDS has no role in their calculation or imposition. The
+    platform's data and this matrix help a controller argue for mitigation under the
+    Art.83(2) factors, such as the technical/organisational measures implemented and the
+    degree of cooperation.
+  IMPLEMENTER [controller] coverage: documented
+    applies_when: [processes-personal-data]
+    Use the platform's evidence to argue mitigation under the Art.83(2) factors should a
+    fine be considered.
+  IMPLEMENTER [data-subject] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## gdpr Art.44 — General principle for transfers
+  Requirement: Any transfer to a third country or international organisation may take
+  place only if the Chapter V conditions are met.
+  Anchor: https://compliance.datasafe.dev/gdpr.html#req-art-44
+  PRYV PLATFORM: facilitated (mode: infrastructure)
+    The Art.44 framework is operational, every Art.45-49 path is conditional. Pryv's
+    data-residency primitive is the technical enforcement layer: when you bind a subject's
+    data to a hosting inside the EU/EEA, no Chapter-V analysis is needed (no transfer
+    happens). When transfer is intentional, the CMC capability flow records the recipient
+    hosting + the legal basis on the originating access's clientData, making Chapter V
+    compliance auditable per transfer rather than per system.
+    Detail: The residency guarantee is **two-tiered**: **Tier 2, Content + audit layer
+    (residency-pinned).** Cores share no event / stream / audit / attachment / access-
+    metadata data with each other. A subject assigned to an EU core has ALL their Tier-2
+    data exclusively on that EU core's storage. "Transfer" would require a deliberate
+    operator backup-restore between cores (not a runtime primitive). See
+    `context/core-affinity-architecture.md`. **Tier 1, Identification + routing layer
+    (cluster- replicated).** PlatformDB rows (`user-core/<username>`,
+    `user-unique-fields/email`, `dns/<subdomain>`, `access-state/`, `cluster_kv/*`, see
+    `context/cross-border-platformdb-implications.md` for the verified keyspace inventory)
+    replicate cluster-wide via rqlite Raft. In a multi-region cluster, this **is** a
+    continuous cross-border transfer of personal data, an Art.46 mechanism (SCCs / BCRs /
+    etc.) is legally required even though Tier-2 stays put. Mitigation options (filed as
+    backlog or shipped): at-rest encryption of PlatformDB (`PLATFORMDB-AT-REST-ENCRYPTION`),
+    HMAC-pseudonymisation of PII at the PlatformDB layer (`PLATFORMDB-PII-HASHING`, shipped,
+    opt-in via `platform.piiMode: hashed`), tokenisation with per-region mapping table
+    (option C, brainstorm-tier, not yet backlogged). **CMC counterparty nuance**: when an EU
+    subject's stream is shared with a US-based counterparty via CMC, the US client connects
+    directly to the EU core's `apiEndpoint`. The EU Tier-2 data does not replicate to the US
+    core, it's fetched on-demand. From the EU subject's Art.44 perspective this fetch IS a
+    transfer (data crosses borders to reach the reader), so the operator records the
+    recipient + lawful basis on the access's `clientData.transfer_basis` per
+    `context/transfer-basis-convention.md`. The data-at-rest residency is preserved (no
+    Tier-2 copy in the US); only the access path + Tier-1 routing-state crosses.
+  HDS: facilitated (effort saved: medium) (mode: infrastructure)
+    HDS's data-residency option is the technical enforcement layer: binding a subject to the
+    Switzerland region keeps EU/EEA data under an adequacy regime, so no Chapter-V analysis
+    is needed. The US region is an international transfer requiring an Art.45/46 mechanism
+    (SCCs). Where transfer is intentional, the recipient and legal basis are recorded on the
+    access clientData, making compliance auditable per transfer.
+    Detail: Content and audit data stay pinned to the subject's region; a deliberate
+    cross-region move (e.g. choosing the US region, or a US counterparty fetching from a CH
+    core) is the transfer event. The controller records the recipient and transfer basis on
+    the access; the legal mechanism itself is a controller/legal artefact.
+    Evidence: internal:gdpr/policies/international-transfers, internal:hipaa/registers/hosting-provider-attestations
+  IMPLEMENTER [controller] coverage: documented
+    applies_when: [transfer-eu-us, transfer-eu-ch, third-parties]
+    Choose residency to avoid or to deliberately ground transfers, and record the basis for
+    each intentional transfer.
+  IMPLEMENTER [data-subject] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## gdpr Art.45 — Transfers on the basis of an adequacy decision
+  Requirement: A transfer may take place where the Commission has decided the third
+  country ensures an adequate level of protection.
+  Anchor: https://compliance.datasafe.dev/gdpr.html#req-art-45
+  PRYV PLATFORM: configurable
+    Configure your `auth.hostings` to declare only hostings that match adequate-protection
+    regimes; route subjects to them as per your transfer policy. The per-user `hosting`
+    exposed via `system.users.get` proves residency for auditor questions. Maintenance of
+    which countries currently hold adequacy (EU-US DPF, Switzerland, UK, etc.) is
+    operator-side regulatory tracking.
+  HDS: configurable (effort saved: high)
+    HDS's Switzerland region rests on the EU adequacy decision for Switzerland, so routing
+    EU/EEA subjects there grounds the transfer (or avoids one entirely). The per-user
+    residency is exposed for auditor questions. Tracking which countries currently hold
+    adequacy is the controller's regulatory responsibility.
+    Detail: The controller selects the CH region for subjects whose transfer it wants to
+    ground on adequacy; the chosen hosting per user proves residency. The US region is not
+    an adequacy-based transfer for general EU data and needs Art.46 safeguards instead.
+    Evidence: internal:gdpr/policies/international-transfers, internal:hipaa/registers/hosting-provider-attestations
+  IMPLEMENTER [controller] coverage: documented
+    applies_when: [transfer-eu-us, transfer-eu-ch]
+    Route subjects to an adequacy-covered region and track the current adequacy landscape.
+  IMPLEMENTER [data-subject] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## gdpr Art.46 — Transfers subject to appropriate safeguards
+  Requirement: Absent an adequacy decision, a transfer requires appropriate safeguards
+  such as SCCs, BCRs or approved codes.
+  Anchor: https://compliance.datasafe.dev/gdpr.html#req-art-46
+  PRYV PLATFORM: facilitated (mode: storage)
+    Pryv-side artefact: record the §2 mechanism on the transferring access's
+    `clientData.transfer_basis` (structured object per
+    `context/transfer-basis-convention.md`, same pattern as `clientData.lawful_basis` from
+    Art.6 + `clientData. special_category_basis` from Art.9). The Art.30(1)(e) transfers
+    register is then derivable in a single `jq` query against `GET /accesses`. The SCCs /
+    BCRs / approved-code documents themselves remain operator/legal artefacts; Pryv persists
+    the references + the metadata travels with the access version chain.
+    Detail: Three cross-border surfaces in a typical Pryv deployment: 1. **Access-bound
+    transfers** (CMC counterparty fetches, third-party-app reads across jurisdictions).
+    Convention: `access.clientData.transfer_basis` per
+    `context/transfer-basis-convention.md`. Existing primitives carry persistence +
+    versioning + audit trail for free (zero Pryv code change). 2. **Multi-region cluster
+    replication** (Tier 1 of the two-tier residency model, PlatformDB rows for usernames,
+    emails, DNS subdomains, user-core mappings). See
+    `context/cross-border-platformdb-implications.md` for the verified keyspace inventory +
+    the A/B/C mitigation options (at-rest encryption / PII hashing / tokenisation). The
+    strongest compliance posture combines an Art.46 mechanism (SCCs, BCRs, etc.) WITH
+    at-rest encryption (`PLATFORMDB-AT-REST-ENCRYPTION` backlog) AND PII pseudonymisation at
+    the PlatformDB layer (`PLATFORMDB-PII-HASHING`, shipped, opt-in via `platform.piiMode:
+    hashed`). 3. **Subprocessor outbound** (SMTP / SMS / observability vendors). See
+    `context/subprocessor-posture-and-data- flow.md`. **Pryv recommends configuring per-core
+    SMTP endpoints** so the relay can match the core's region / country when residency is a
+    hard requirement, the `services.email.smtp.*` config is per-core, so an EU core routes
+    mail through an EU SMTP relay independently of a US core's relay. Same pattern applies
+    to SMS endpoints. For the §2 mechanism field convention: `mechanism: "art.46.2.c"` for
+    SCCs, `"art.46.2.a"` for legally-binding-instrument-between-public-authorities,
+    `"art.46.2.f"` for approved certification, etc. Or `"art.45"` with an
+    `adequacy_decision` field if relying on an adequacy decision. Full field reference in
+    the convention note.
+  HDS: facilitated (effort saved: low) (mode: storage)
+    Choosing the US region (AWS) is a transfer that needs an Art.46 safeguard — typically
+    standard contractual clauses. HDS records the chosen mechanism on the transferring
+    access clientData so the Art.30 transfers register is derivable, and offers a DPA into
+    which the SCCs are incorporated. HDS's own upstream instrument for the US hosting layer
+    is still being executed: the AWS HIPAA BAA is in force, and the GDPR DPA plus EU/Swiss
+    SCCs with the transfer impact assessment are the tracked remainder (see the planned
+    chip) — until signed and recorded, US-region transfers rest on the HIPAA instrument
+    alone. The SCC/BCR documents themselves are controller/legal artefacts.
+    Detail: The transfer surfaces — access-bound counterparty fetches, the US-region
+    residency choice, and subprocessor outbound flows — each carry the mechanism reference
+    on the relevant artefact. HDS persists the references with versioning and audit; the
+    controller concludes the safeguard instrument.
+    Evidence: internal:gdpr/policies/international-transfers, internal:hipaa/registers/subprocessor-register, internal:hipaa/risk/cross-core-residency-data-flow
+    PLANNED (doc, impact high): Execution of the AWS GDPR DPA plus EU/Swiss SCCs with the transfer impact assessment for the US hosting layer is the tracked remediation (the HIPAA BAA is already in force; the crossing is pseudonymised since 2026-06-24, which strengthens the TIA).
+  IMPLEMENTER [controller] coverage: documented
+    applies_when: [transfer-eu-us, transfer-eu-ch, third-parties]
+    Conclude SCCs or another Art.46 safeguard for US-region or other third-country transfers
+    and record the mechanism.
+    Templates to sign: dpa
+  IMPLEMENTER [processor] coverage: documented
+    applies_when: [transfer-eu-us, transfer-eu-ch, third-parties]
+    Sign the SCC-bearing DPA and flow equivalent clauses down to any subprocessor.
+    Templates to sign: dpa, subprocessor
+
+## gdpr Art.47 — Binding corporate rules
+  Requirement: A supervisory authority may approve binding corporate rules meeting the
+  prescribed content and safeguard requirements.
+  Anchor: https://compliance.datasafe.dev/gdpr.html#req-art-47
+  PRYV PLATFORM: out-of-scope
+    BCRs are organizational rules approved by a supervisory authority after a formal
+    process. No software contribution, when BCRs are the chosen Art.46 safeguard, the
+    operator records the BCR reference on the transferring access's clientData (per Art.46
+    pattern); the BCR document itself is the operator's legal artefact.
+  HDS: out-of-scope
+    BCRs are organisational rules approved through a formal supervisory process, with no
+    software contribution. Where BCRs are the chosen Art.46 safeguard, the controller
+    records the BCR reference on the transferring access; the BCR document is the
+    controller's legal artefact.
+  IMPLEMENTER [controller] coverage: documented
+    applies_when: [transfer-eu-us, transfer-eu-ch, third-parties]
+    If relying on BCRs, obtain approval and record the reference on the transferring
+    accesses.
+  IMPLEMENTER [data-subject] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## gdpr Art.48 — Transfers or disclosures not authorised by Union law
+  Requirement: A third-country court or administrative order to transfer or disclose data
+  is recognised or enforceable only on the basis of an international agreement.
+  Anchor: https://compliance.datasafe.dev/gdpr.html#req-art-48
+  PRYV PLATFORM: out-of-scope
+    Resistance to extraterritorial subpoenas is a legal posture, not a software control.
+    Pryv's audit log will record any forced disclosure executed under the access primitive
+    (which is the only way data leaves the system), making the disclosure documentable after
+    the fact. The decision of whether to comply / contest is legal counsel's, not Pryv's.
+  HDS: out-of-scope
+    Resisting extraterritorial orders is a legal posture, not a software control. Because
+    the access primitive is the only path data leaves the system, the audit log documents
+    any forced disclosure after the fact; the decision to comply or contest is the
+    controller's counsel's.
+  IMPLEMENTER [controller] coverage: documented
+    applies_when: [transfer-eu-us, transfer-eu-ch]
+    Decide, with counsel, how to respond to any third-country order; the audit log documents
+    any disclosure made.
+  IMPLEMENTER [data-subject] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## gdpr Art.49 — Derogations for specific situations
+  Requirement: Absent adequacy or safeguards, a transfer may rest on one of the enumerated
+  derogations, such as explicit consent or contract performance.
+  Anchor: https://compliance.datasafe.dev/gdpr.html#req-art-49
+  PRYV PLATFORM: facilitated (mode: storage)
+    Each Art.49 derogation requires per-instance recording. Pryv pattern: mint a purpose-
+    specific access per derogation invocation with `clientData.transfer_derogation =
+    "art_49_1_a_consent"` etc.; execute the transfer; revoke. The audit trail then anchors
+    the derogation rationale to the specific data movement.
+  HDS: facilitated (effort saved: low) (mode: storage)
+    Each derogation requires per-instance recording. The HDS pattern mints a
+    purpose-specific access tagged with the derogation relied on, executes the transfer, and
+    revokes; the audit trail then anchors the rationale to the specific data movement.
+    Whether a derogation actually applies is the controller's legal judgement.
+    Detail: The derogation tag on the access plus the audit record give a defensible,
+    per-transfer artefact. HDS does not assess the derogation's availability.
+    Evidence: internal:gdpr/policies/international-transfers
+  IMPLEMENTER [controller] coverage: documented
+    applies_when: [transfer-eu-us, transfer-eu-ch]
+    Establish that a derogation applies, record it per transfer, and limit the transfer to
+    that purpose.
+  IMPLEMENTER [data-subject] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
+
+## gdpr Art.50 — International cooperation for the protection of personal data
+  Requirement: The Commission and authorities are to develop international cooperation
+  mechanisms for effective enforcement.
+  Anchor: https://compliance.datasafe.dev/gdpr.html#req-art-50
+  PRYV PLATFORM: out-of-scope
+    International-cooperation development is a regulator-level activity. No software
+    contribution; no implementer obligation arises from this Article alone.
+  HDS: out-of-scope
+    Developing international-cooperation mechanisms is a regulator-level activity with no
+    software contribution and no implementer obligation arising from this Article alone.
+  IMPLEMENTER [controller] coverage: out-of-scope
+    applies_when: always; nature: orientation (not a duty); PLACES NO DUTY ON THIS PERSONA
+  IMPLEMENTER [data-subject] coverage: out-of-scope
+    applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
