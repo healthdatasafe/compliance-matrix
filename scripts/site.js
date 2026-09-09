@@ -22,6 +22,27 @@ fs.mkdirSync(OUT, { recursive: true });
 
 const DOMAIN = 'compliance.datasafe.dev';
 
+// One linear reading order. The framework pages are detail views reached from
+// these, so they keep their own back links rather than joining the sequence.
+const PAGES = [
+  { file: 'index.html', key: 'home', label: 'HDS and compliance' },
+  { file: 'standing.html', key: 'standing', label: 'Where HDS stands' },
+  { file: 'implementer.html', key: 'implementer', label: 'What do I have to do?' },
+  { file: 'templates.html', key: 'templates', label: 'Agreement templates' },
+];
+
+const pager = (activeKey) => {
+  const i = PAGES.findIndex((p) => p.key === activeKey);
+  if (i < 0) return '';
+  const prev = PAGES[i - 1];
+  const next = PAGES[i + 1];
+  if (!prev && !next) return '';
+  return `<nav class="pager">
+    ${prev ? `<a class="pg prev" href="${esc(prev.file)}"><span>Previous</span><b>${esc(prev.label)}</b></a>` : '<span class="pgspacer"></span>'}
+    ${next ? `<a class="pg next" href="${esc(next.file)}"><span>Next</span><b>${esc(next.label)}</b></a>` : '<span class="pgspacer"></span>'}
+  </nav>`;
+};
+
 // ---- load data ----
 const pryvByScope = new Map();
 for (const f of await vendorScopeFiles()) {
@@ -142,13 +163,14 @@ const layout = (title, body, { active } = {}) => `<!doctype html>
 <header class="top">
   <a class="brand" href="index.html">HDS <b>compliance-matrix</b></a>
   <nav>
-    <a href="index.html"${active === 'home' ? ' class="on"' : ''}>HDS standing</a>
+    <a href="index.html"${active === 'home' ? ' class="on"' : ''}>HDS and compliance</a>
+    <a href="standing.html"${active === 'standing' ? ' class="on"' : ''}>HDS standing</a>
     <a href="implementer.html"${active === 'implementer' ? ' class="on"' : ''}>For implementers</a>
     <a href="templates.html"${active === 'templates' ? ' class="on"' : ''}>Templates</a>
     <a href="https://github.com/healthdatasafe/compliance-matrix">Source</a>
   </nav>
 </header>
-<main>${body}</main>
+<main>${pager(active)}${body}${pager(active)}</main>
 <footer>
   <p><strong>Not legal advice.</strong> Engineering &amp; operational guidance; confirm your
   obligations with qualified counsel.</p>
@@ -261,7 +283,7 @@ const postureCards = groups.map((g) => {
   </article>`;
 }).join('');
 
-fs.writeFileSync(path.join(OUT, 'index.html'), layout('HDS standing', `
+fs.writeFileSync(path.join(OUT, 'standing.html'), layout('HDS standing', `
 <section class="hero">
   <h1>Where Health Data Safe stands</h1>
   <p class="lede">HDS runs a documented compliance programme across four frameworks. This page is
@@ -284,6 +306,58 @@ fs.writeFileSync(path.join(OUT, 'index.html'), layout('HDS standing', `
   foundation and states this plainly so you can weigh it yourself.</p>
   <p class="muted">Not legal advice; confirm your obligations with qualified counsel.</p>
 </section>
+`, { active: 'standing' }));
+
+// ---- page 1: HDS and compliance ----
+// The orientation page. It carries the methodology that used to sit on top of
+// the implementer page, and the framework cards that used to sit at its foot,
+// where they had no legend and contradicted the colours above them.
+const COVERAGE_LEGEND = `
+<p class="covkey">${COVERAGES.map((c) => `<span class="ck"><span class="b ${c}">${c}</span></span>`).join('')}</p>
+<p class="muted covnote">Each bar shows what the <b>HDS layer</b> does across that framework's
+requirements: <b>implemented</b> and <b>configurable</b> are delivered by the platform or its
+configuration, <b>facilitated</b> means HDS supplies part of the answer, <b>documented</b> means
+HDS records the position without implementing it, and <b>out-of-scope</b> means the requirement
+has no software role for anyone.</p>`;
+
+const frameworkCards = groups.map((g) => {
+  const reqs = allReqs(g);
+  return `<a class="scopecard" href="${esc(g.page)}">
+    <h3>${esc(g.short)}</h3>
+    <p class="meta">${esc(g.jurisdiction || '')} ${regions(regionsOf(g))} · ${reqs.length} requirements</p>
+    ${covBar(reqs)}
+  </a>`;
+}).join('');
+
+const totalReqsAll = groups.reduce((n, g) => n + allReqs(g).length, 0);
+
+fs.writeFileSync(path.join(OUT, 'index.html'), layout('HDS and compliance', `
+<section class="hero">
+  <h1>HDS and compliance</h1>
+  <p class="lede">Health Data Safe runs a personal health data vault. Individuals hold their own
+  accounts, data enters only with their explicit consent, and they decide who may see it. This
+  site records how that stands up against ${groups.length} regulatory frameworks:
+  ${totalReqsAll} requirements, read across three layers.</p>
+</section>
+
+<section class="method lead">
+  <h2>How this works</h2>
+  <div class="threelayer">
+    <div class="ll pryv"><b>Pryv platform</b><span>what the open-pryv.io software does (inherited)</span></div>
+    <div class="arrow">&rarr;</div>
+    <div class="ll hds"><b>HDS</b><span>what HDS-as-operator and the app stack add</span></div>
+    <div class="arrow">&rarr;</div>
+    <div class="ll impl"><b>You</b><span>what is left on your plate, and the agreements to sign</span></div>
+  </div>
+  <p>Every requirement is answered at each layer, and the document behind an answer is named by
+  code on the requirement row. Two questions follow from that, and they are different questions
+  that this site keeps apart: <a href="standing.html">how HDS itself stands</a> against each
+  framework, and <a href="implementer.html">what you have to do</a> if you build on it.</p>
+</section>
+
+<h2 class="allh">The frameworks</h2>
+<section class="scopes">${frameworkCards}</section>
+${COVERAGE_LEGEND}
 `, { active: 'home' }));
 
 // ---- implementer view: what HDS carries for you ----
@@ -485,7 +559,7 @@ short: s.short || s.id,
           '<span class="pers none">no role for you</span></h3>' +
           '<p class="nothingdue"><b>You hold no role under this framework.</b> You neither are a covered ' +
           'entity nor build for one that handles data on its behalf, so its duties do not attach to you. ' +
-          'The vault itself is covered: see <a href="index.html">where HDS stands</a>, and the ' +
+          'The vault itself is covered: see <a href="standing.html">where HDS stands</a>, and the ' +
           '<a href="' + meta.page + '">requirement rows</a> for what HDS carries.</p></article>';
       }
       var rows = P.obligations.filter(function (o) { return o.scope === sid && o.persona === persona; });
@@ -559,7 +633,7 @@ short: s.short || s.id,
         (unprofiled ? ' · <span class="npf">' + unprofiled + ' not yet classified, shown in full</span>' : '') +
         (nonDuty ? ' · ' + nonDuty + ' place no duty on you' : '') +
         (meta.posture && meta.posture.backing ? ' · HDS: ' + meta.posture.backing.rows_approved + ' of ' +
-          meta.posture.backing.rows_total + ' backed by approved documentation, <a href="index.html">see standing</a>' : '') + '</p>' +
+          meta.posture.backing.rows_total + ' backed by approved documentation, <a href="standing.html">see standing</a>' : '') + '</p>' +
         (orient.length ? '<details class="scopetest"><summary>Does this framework reach you at all?</summary><ul>' +
           orient.map(function (o) {
             return '<li><a class="ref" href="' + o.page + '#' + o.anchor + '"><code>' + esc(o.ref) + '</code> ' + esc(o.title) + '</a>' +
@@ -711,23 +785,10 @@ fs.writeFileSync(path.join(OUT, 'implementer.html'), layout('For implementers', 
   <h1>What do I have to do?</h1>
   <p class="lede">Answer two questions. This tells you which rules reach you, what the vault
   already covers, and what is left for you. ${groups.length} frameworks, ${totalReqs} requirements.
-  For HDS's own position, see <a href="index.html">where HDS stands</a>.</p>
+  For HDS's own position, see <a href="standing.html">where HDS stands</a>.</p>
 </section>
 ${profilePanel}
 ${profileJS}
-<section class="method">
-  <h2>How this works</h2>
-  <div class="threelayer">
-    <div class="ll pryv"><b>Pryv platform</b><span>what the open-pryv.io software does (inherited)</span></div>
-    <div class="arrow">&rarr;</div>
-    <div class="ll hds"><b>HDS</b><span>what HDS-as-operator and the app stack add</span></div>
-    <div class="arrow">&rarr;</div>
-    <div class="ll impl"><b>You</b><span>what is left on your plate, and the agreements to sign</span></div>
-  </div>
-  <p>Every requirement is read across those three layers. Browse them in full:
-    ${groups.map((g) => `<a href="${esc(g.page)}">${esc(g.short)}</a>`).join(' &middot; ')} &middot;
-    <a href="templates.html">agreement templates</a>.</p>
-</section>
 `, { active: 'implementer' }));
 
 // ---- per-scope pages (with client-side filter) ----
@@ -800,7 +861,7 @@ for (const g of groups) {
     : '';
 
   fs.writeFileSync(path.join(OUT, g.page), layout(g.short, `
-    <a class="back" href="index.html">← HDS standing</a> ·
+    <a class="back" href="standing.html">← HDS standing</a> ·
     <a class="back" href="implementer.html">implementer view</a>
     <h1>${esc(g.title)} ${g.isFamily ? '' : `<span class="short">${esc(g.short)}</span>`}</h1>
     <p class="meta">${esc(g.jurisdiction || '')} ${regions(regionsOf(g))}
@@ -1007,6 +1068,19 @@ a.pl{cursor:pointer}
 .bkbar{display:flex;height:7px;border-radius:999px;overflow:hidden;background:#e5e7eb}
 .bkbar .seg.ok{background:#15803d}.bkbar .seg.mid{background:#a7c4a0}
 .pfoot{margin-top:auto;padding-top:.7rem;border-top:1px solid var(--line)}
+.pager{display:flex;gap:.6rem;justify-content:space-between;align-items:stretch;margin:1rem 0}
+.pager .pg{flex:1 1 0;min-width:0;display:flex;flex-direction:column;gap:.1rem;background:#fff;border:1px solid var(--line);border-radius:.5rem;padding:.5rem .8rem;text-decoration:none;color:inherit}
+.pager .pg:hover{border-color:#1d4ed8}
+.pager .pg span{font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.pager .pg b{font-size:.86rem;color:#1d4ed8}
+.pager .pg.next{text-align:right}
+.pager .pg.prev b::before{content:'← '}
+.pager .pg.next b::after{content:' →'}
+.pager .pgspacer{flex:1 1 0}
+main>.pager:last-child{margin-top:2rem}
+.covkey{display:flex;gap:.5rem;flex-wrap:wrap;margin:.9rem 0 .3rem}
+.covnote{font-size:.8rem;max-width:56rem;margin:.2rem 0 0}
+.method.lead{border-top:0;padding-top:0;margin-top:1.2rem}
 .method{max-width:56rem;margin:2.5rem 0 0;padding-top:1.2rem;border-top:1px solid var(--line)}
 .method .threelayer{margin:.6rem 0}
 .method h2{font-size:.95rem}.method p{font-size:.85rem;color:#4b5563;max-width:52rem}
