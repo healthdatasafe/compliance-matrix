@@ -184,14 +184,17 @@ requirements:
         - hipaa/policies/information-security-policy
   implementer:
     - persona: service-organization
+      applies_when: always
       coverage: documented
       overview: |
         Establish and document your own code of conduct and ethical-values
         baseline; this is a management and culture obligation HDS cannot carry for
         you.
     - persona: user-entity
+      applies_when: always
       coverage: out-of-scope
     - persona: subservice-organization
+      applies_when: always
       coverage: documented
       overview: |
         Maintain your own integrity and ethics programme for the workforce that
@@ -226,13 +229,16 @@ requirements:
         - soc2/policies/governance-and-oversight
   implementer:
     - persona: service-organization
+      applies_when: always
       coverage: documented
       overview: |
         Document your own board's independence and its oversight of internal
         control; a governance obligation outside the platform.
     - persona: user-entity
+      applies_when: always
       coverage: out-of-scope
     - persona: subservice-organization
+      applies_when: always
       coverage: documented
       overview: |
         Document the equivalent oversight arrangements for your own organization.
@@ -269,13 +275,16 @@ requirements:
         - soc2/policies/governance-and-oversight
   implementer:
     - persona: service-organization
+      applies_when: always
       coverage: documented
       overview: |
         Define and document your own reporting lines and authority assignments;
         map the resulting authorities onto least-privilege access grants.
     - persona: user-entity
+      applies_when: always
       coverage: out-of-scope
     - persona: subservice-organization
+      applies_when: always
       coverage: documented
       overview: |
         Document your own management structure and authorities for the service you
@@ -319,13 +328,16 @@ requirements:
         internal_doc: hipaa/procedures/workforce-training
   implementer:
     - persona: service-organization
+      applies_when: always
       coverage: documented
       overview: |
         Run and document your own hiring, training and competence programme; HDS
         cannot carry this for you.
     - persona: user-entity
+      applies_when: always
       coverage: out-of-scope
     - persona: subservice-organization
+      applies_when: always
       coverage: documented
       overview: |
         Maintain a competence programme for your own downstream workforce.
@@ -363,13 +375,16 @@ requirements:
         - soc2/policies/accountability-and-sanctions
   implementer:
     - persona: service-organization
+      applies_when: always
       coverage: documented
       overview: |
         Define the internal-control responsibilities and the consequence process;
         use the per-user audit log as the accountability evidence trail.
     - persona: user-entity
+      applies_when: always
       coverage: out-of-scope
     - persona: subservice-organization
+      applies_when: always
       coverage: documented
       overview: |
         Hold your own workforce accountable using the audit substrate and your own
@@ -406,13 +421,16 @@ requirements:
         - soc2/procedures/control-monitoring
   implementer:
     - persona: service-organization
+      applies_when: always
       coverage: documented
       overview: |
         Define what control-relevant information you collect and how you act on it,
         drawing on the audit log and monitoring substrate HDS exposes.
     - persona: user-entity
+      applies_when: always
       coverage: out-of-scope
     - persona: subservice-organization
+      applies_when: always
       coverage: documented
       overview: |
         Operate your own monitoring and information-quality process over the
@@ -445,13 +463,16 @@ requirements:
         - hipaa/policies/information-security-policy
   implementer:
     - persona: service-organization
+      applies_when: always
       coverage: documented
       overview: |
         Communicate internal-control objectives and responsibilities to your own
         workforce; a management obligation outside the platform.
     - persona: user-entity
+      applies_when: always
       coverage: out-of-scope
     - persona: subservice-organization
+      applies_when: always
       coverage: documented
       overview: |
         Communicate the equivalent objectives and responsibilities to your own
@@ -489,13 +510,16 @@ requirements:
         - hipaa/registers/subprocessor-register
   implementer:
     - persona: service-organization
+      applies_when: always
       coverage: documented
       overview: |
         Author your own external communications about internal control to
         customers, subprocessors, regulators and auditors.
     - persona: user-entity
+      applies_when: always
       coverage: out-of-scope
     - persona: subservice-organization
+      applies_when: always
       coverage: documented
       overview: |
         Communicate control matters to the parties you serve and to your own
@@ -528,13 +552,16 @@ requirements:
         - soc2/policies/system-description
   implementer:
     - persona: service-organization
+      applies_when: always
       coverage: documented
       overview: |
         Specify and document your own service objectives with enough clarity to
         drive your risk assessment.
     - persona: user-entity
+      applies_when: always
       coverage: out-of-scope
     - persona: subservice-organization
+      applies_when: always
       coverage: documented
       overview: |
         Specify your own objectives for the service you operate downstream.
@@ -579,13 +606,16 @@ requirements:
         internal_doc: hipaa/risk/risk-analysis
   implementer:
     - persona: service-organization
+      applies_when: always
       coverage: documented
       overview: |
         Conduct and document your own risk assessment; use this matrix to map
         identified risks onto the platform controls that mitigate them.
     - persona: user-entity
+      applies_when: always
       coverage: out-of-scope
     - persona: subservice-organization
+      applies_when: always
       coverage: documented
       overview: |
         Conduct your own risk assessment for the service you operate downstream.
@@ -621,13 +651,16 @@ requirements:
         - soc2/procedures/risk-assessment
   implementer:
     - persona: service-organization
+      applies_when: always
       coverage: documented
       overview: |
         Analyze fraud risk as part of your risk assessment; use the audit log and
         monitoring as the detection substrate for the scenarios you identify.
     - persona: user-entity
+      applies_when: always
       coverage: out-of-scope
     - persona: subservice-organization
+      applies_when: always
       coverage: documented
       overview: |
         Consider fraud risk for the service you operate downstream.
@@ -663,13 +696,16 @@ requirements:
         - soc2/policies/change-management
   implementer:
     - persona: service-organization
+      applies_when: always
       coverage: documented
       overview: |
         Identify and assess changes affecting your control system; use platform
         release notes and the audit log as inputs.
     - persona: user-entity
+      applies_when: always
       coverage: out-of-scope
     - persona: subservice-organization
+      applies_when: always
       coverage: documented
       overview: |
         Assess control-affecting changes in the service you operate downstream.
@@ -706,13 +742,16 @@ requirements:
         - soc2/procedures/control-monitoring
   implementer:
     - persona: service-organization
+      applies_when: always
       coverage: documented
       overview: |
         Define and run your own ongoing and separate evaluations of internal
         control, sampling the audit and monitoring substrate HDS exposes.
     - persona: user-entity
+      applies_when: always
       coverage: out-of-scope
     - persona: subservice-organization
+      applies_when: always
       coverage: documented
       overview: |
         Evaluate the controls of the service you operate downstream.
@@ -747,13 +786,16 @@ requirements:
         - soc2/procedures/control-monitoring
   implementer:
     - persona: service-organization
+      applies_when: always
       coverage: documented
       overview: |
         Define how you evaluate, track and communicate control deficiencies and
         their corrective actions.
     - persona: user-entity
+      applies_when: always
       coverage: out-of-scope
     - persona: subservice-organization
+      applies_when: always
       coverage: documented
       overview: |
         Operate your own deficiency-tracking and communication process downstream.
@@ -790,14 +832,17 @@ requirements:
         - soc2/procedures/control-monitoring
   implementer:
     - persona: service-organization
+      applies_when: always
       coverage: documented
       overview: |
         Select the control activities appropriate to your risks; deploy the
         platform primitives (scoped access, isolation, secret encryption) that
         implement them.
     - persona: user-entity
+      applies_when: always
       coverage: out-of-scope
     - persona: subservice-organization
+      applies_when: always
       coverage: documented
       overview: |
         Select and operate control activities for the service you run downstream.
@@ -840,14 +885,17 @@ requirements:
         - hipaa/policies/transmission-security
   implementer:
     - persona: service-organization
+      applies_when: always
       coverage: documented
       overview: |
         Select, configure and operate the platform general IT controls; document
         the configuration and weigh the provider-managed-key at-rest residual in
         your risk analysis.
     - persona: user-entity
+      applies_when: always
       coverage: out-of-scope
     - persona: subservice-organization
+      applies_when: always
       coverage: documented
       overview: |
         Operate equivalent general IT controls for the service you run downstream.
@@ -882,13 +930,16 @@ requirements:
         - soc2/procedures/control-monitoring
   implementer:
     - persona: service-organization
+      applies_when: always
       coverage: documented
       overview: |
         Author and maintain your own policies and operating procedures that deploy
         your selected control activities.
     - persona: user-entity
+      applies_when: always
       coverage: out-of-scope
     - persona: subservice-organization
+      applies_when: always
       coverage: documented
       overview: |
         Maintain your own policies and procedures for the service you run
@@ -1079,14 +1130,17 @@ requirements:
         - hipaa/registers/hosting-provider-attestations
   implementer:
     - persona: service-organization
+      applies_when: always
       coverage: documented
       overview: |
         Inherit the server-tier facility controls from the HDS hosting region and
         reference the attestation; control and document physical access to your own
         premises.
     - persona: user-entity
+      applies_when: always
       coverage: out-of-scope
     - persona: subservice-organization
+      applies_when: always
       coverage: documented
       overview: |
         Document the physical controls for any facilities you operate downstream.
@@ -1177,13 +1231,16 @@ requirements:
         - hipaa/policies/access-control
   implementer:
     - persona: service-organization
+      applies_when: always
       coverage: documented
       overview: |
         Inherit the TLS and token boundary; configure and document any additional
         edge controls (WAF, rate limits) your risk analysis calls for.
     - persona: user-entity
+      applies_when: always
       coverage: out-of-scope
     - persona: subservice-organization
+      applies_when: always
       coverage: documented
       overview: |
         Operate equivalent boundary protection for the service you run downstream.
@@ -1286,13 +1343,16 @@ requirements:
         - hipaa/policies/malware-protection
   implementer:
     - persona: service-organization
+      applies_when: always
       coverage: documented
       overview: |
         Operate and document anti-malware and application-allowlisting on your own
         endpoints and any infrastructure you run outside HDS.
     - persona: user-entity
+      applies_when: always
       coverage: out-of-scope
     - persona: subservice-organization
+      applies_when: always
       coverage: documented
       overview: |
         Operate equivalent malware controls for the infrastructure you run
@@ -1330,13 +1390,16 @@ requirements:
         - soc2/procedures/control-monitoring
   implementer:
     - persona: service-organization
+      applies_when: always
       coverage: documented
       overview: |
         Define your own vulnerability-scanning and configuration-drift detection
         cadence over the platform and your own infrastructure.
     - persona: user-entity
+      applies_when: always
       coverage: out-of-scope
     - persona: subservice-organization
+      applies_when: always
       coverage: documented
       overview: |
         Operate equivalent vulnerability detection for the service you run
@@ -1375,13 +1438,16 @@ requirements:
         - hipaa/procedures/login-monitoring
   implementer:
     - persona: service-organization
+      applies_when: always
       coverage: documented
       overview: |
         Define your anomaly thresholds and the analysis that classifies an anomaly
         as a security event, drawing on the monitoring and audit substrate.
     - persona: user-entity
+      applies_when: always
       coverage: out-of-scope
     - persona: subservice-organization
+      applies_when: always
       coverage: documented
       overview: |
         Operate equivalent anomaly monitoring for the service you run downstream.
@@ -1415,13 +1481,16 @@ requirements:
         - hipaa/procedures/security-incident-response
   implementer:
     - persona: service-organization
+      applies_when: always
       coverage: documented
       overview: |
         Define how you classify a security event as an incident and what response
         it triggers.
     - persona: user-entity
+      applies_when: always
       coverage: out-of-scope
     - persona: subservice-organization
+      applies_when: always
       coverage: documented
       overview: |
         Operate your own event-evaluation step for the service you run downstream.
@@ -1462,14 +1531,17 @@ requirements:
         - hipaa/procedures/security-incident-response
   implementer:
     - persona: service-organization
+      applies_when: always
       coverage: documented
       overview: |
         Define and rehearse your own incident-response programme — roles,
         escalation, containment, communication, lessons learned — over the platform
         detection and containment primitives.
     - persona: user-entity
+      applies_when: always
       coverage: out-of-scope
     - persona: subservice-organization
+      applies_when: always
       coverage: documented
       overview: |
         Run your own incident-response programme and notify your upstream service
@@ -1510,13 +1582,16 @@ requirements:
         - hipaa/procedures/security-incident-response
   implementer:
     - persona: service-organization
+      applies_when: always
       coverage: documented
       overview: |
         Set your recovery-objective targets and drill cadence, and document the
         recovery runbook over the platform backup and replication primitives.
     - persona: user-entity
+      applies_when: always
       coverage: out-of-scope
     - persona: subservice-organization
+      applies_when: always
       coverage: documented
       overview: |
         Operate your own recovery activities for the service you run downstream.
@@ -1561,13 +1636,16 @@ requirements:
         internal_doc: soc2/policies/change-management
   implementer:
     - persona: service-organization
+      applies_when: always
       coverage: documented
       overview: |
         Author and document your own change-management workflow — authorization,
         testing, approval, rollback — using the platform change-evidence artefacts.
     - persona: user-entity
+      applies_when: always
       coverage: out-of-scope
     - persona: subservice-organization
+      applies_when: always
       coverage: documented
       overview: |
         Operate your own change-management programme for the service you run
@@ -1608,13 +1686,16 @@ requirements:
         - hipaa/procedures/data-backup-plan
   implementer:
     - persona: service-organization
+      applies_when: always
       coverage: documented
       overview: |
         Set your business-continuity objectives and choose your non-technical
         mitigations over the platform HA and backup substrate HDS operates.
     - persona: user-entity
+      applies_when: always
       coverage: out-of-scope
     - persona: subservice-organization
+      applies_when: always
       coverage: documented
       overview: |
         Operate equivalent disruption mitigation for the service you run
@@ -1987,13 +2068,16 @@ requirements:
         - soc2/policies/data-quality
   implementer:
     - persona: service-organization
+      applies_when: always
       coverage: documented
       overview: |
         Define and communicate your processing objectives and service
         specifications; declare the event types your application processes.
     - persona: user-entity
+      applies_when: always
       coverage: out-of-scope
     - persona: subservice-organization
+      applies_when: always
       coverage: out-of-scope
 
 - ref: PI1.2
@@ -2030,13 +2114,16 @@ requirements:
         - soc2/policies/data-quality
   implementer:
     - persona: service-organization
+      applies_when: always
       coverage: documented
       overview: |
         Define your event types and any tighter structural constraints, and own
         the semantic-validation logic your application applies on top.
     - persona: user-entity
+      applies_when: always
       coverage: out-of-scope
     - persona: subservice-organization
+      applies_when: always
       coverage: out-of-scope
 
 - ref: PI1.3
@@ -2073,13 +2160,16 @@ requirements:
         - hipaa/policies/integrity
   implementer:
     - persona: service-organization
+      applies_when: always
       coverage: documented
       overview: |
         Implement and document completeness-and-accuracy controls over your own
         processing logic; rely on the platform substrate for traceability.
     - persona: user-entity
+      applies_when: always
       coverage: out-of-scope
     - persona: subservice-organization
+      applies_when: always
       coverage: out-of-scope
 
 - ref: PI1.4
@@ -2116,13 +2206,16 @@ requirements:
         - soc2/policies/data-quality
   implementer:
     - persona: service-organization
+      applies_when: always
       coverage: documented
       overview: |
         Define your output specifications and delivery SLAs and verify outputs
         meet them; the platform supplies the canonical-state delivery substrate.
     - persona: user-entity
+      applies_when: always
       coverage: out-of-scope
     - persona: subservice-organization
+      applies_when: always
       coverage: out-of-scope
 
 - ref: PI1.5
@@ -2168,13 +2261,16 @@ requirements:
         upstream_proposal: vendor/pryv/proposals/audit-log-chaining.md
   implementer:
     - persona: service-organization
+      applies_when: always
       coverage: documented
       overview: |
         Document your storage-integrity controls and retention, and assess the
         verified-backup gap in your own risk analysis.
     - persona: user-entity
+      applies_when: always
       coverage: out-of-scope
     - persona: subservice-organization
+      applies_when: always
       coverage: out-of-scope
 
 # ───────────────────────────────────────────────────────────────
@@ -2212,13 +2308,16 @@ requirements:
         - soc2/policies/privacy-notice
   implementer:
     - persona: service-organization
+      applies_when: always
       coverage: documented
       overview: |
         Author your privacy notice, present it in the consent flow, and keep it
         current; record the version each subject was shown.
     - persona: user-entity
+      applies_when: always
       coverage: out-of-scope
     - persona: subservice-organization
+      applies_when: always
       coverage: out-of-scope
 
 - ref: P2.1
@@ -2257,13 +2356,16 @@ requirements:
         - soc2/policies/privacy-notice
   implementer:
     - persona: service-organization
+      applies_when: always
       coverage: documented
       overview: |
         Design the choices you present and the consent text, and map each choice
         to the access scope it grants; the platform records and enforces it.
     - persona: user-entity
+      applies_when: always
       coverage: out-of-scope
     - persona: subservice-organization
+      applies_when: always
       coverage: out-of-scope
 
 - ref: P3.1
@@ -2500,13 +2602,16 @@ requirements:
         internal_doc: soc2/procedures/data-retention-and-disposal
   implementer:
     - persona: service-organization
+      applies_when: always
       coverage: documented
       overview: |
         Define your disposal procedure, choose a storage engine whose backup
         behaviour matches it, and document how disposal reaches all copies.
     - persona: user-entity
+      applies_when: always
       coverage: out-of-scope
     - persona: subservice-organization
+      applies_when: always
       coverage: documented
       overview: |
         The hosting subservice carries physical media sanitisation; obtain and
@@ -2547,14 +2652,17 @@ requirements:
         - hipaa/policies/access-control
   implementer:
     - persona: service-organization
+      applies_when: always
       coverage: documented
       overview: |
         Surface the self-service access and export paths to subjects, and
         document your identity-verification step for any operator-assisted
         request.
     - persona: user-entity
+      applies_when: always
       coverage: out-of-scope
     - persona: subservice-organization
+      applies_when: always
       coverage: out-of-scope
 
 - ref: P5.2
@@ -2592,13 +2700,16 @@ requirements:
         - hipaa/policies/access-control
   implementer:
     - persona: service-organization
+      applies_when: always
       coverage: documented
       overview: |
         Define your process for assessing correction requests and your
         commitments to notify third parties of amendments.
     - persona: user-entity
+      applies_when: always
       coverage: out-of-scope
     - persona: subservice-organization
+      applies_when: always
       coverage: out-of-scope
 
 - ref: P6.1
@@ -2636,13 +2747,16 @@ requirements:
         - hipaa/policies/minimum-necessary
   implementer:
     - persona: service-organization
+      applies_when: always
       coverage: documented
       overview: |
         Decide the lawful purpose, obtain any required explicit consent, and
         issue a scoped shared access for each disclosure; document the basis.
     - persona: user-entity
+      applies_when: always
       coverage: out-of-scope
     - persona: subservice-organization
+      applies_when: always
       coverage: out-of-scope
 
 - ref: P6.2
@@ -2677,13 +2791,16 @@ requirements:
         - hipaa/policies/access-control
   implementer:
     - persona: service-organization
+      applies_when: always
       coverage: documented
       overview: |
         Set and document the retention period for the disclosure register and
         the cadence at which you review it.
     - persona: user-entity
+      applies_when: always
       coverage: out-of-scope
     - persona: subservice-organization
+      applies_when: always
       coverage: out-of-scope
 
 - ref: P6.3
@@ -2731,13 +2848,16 @@ requirements:
         tracking_url: https://github.com/pryv/open-pryv.io/issues/60
   implementer:
     - persona: service-organization
+      applies_when: always
       coverage: documented
       overview: |
         Classify detected events as authorized or not, and create and retain the
         unauthorized-disclosure record within your incident process.
     - persona: user-entity
+      applies_when: always
       coverage: out-of-scope
     - persona: subservice-organization
+      applies_when: always
       coverage: out-of-scope
 
 - ref: P6.4
@@ -2868,13 +2988,16 @@ requirements:
         - hipaa/procedures/security-incident-response
   implementer:
     - persona: service-organization
+      applies_when: always
       coverage: documented
       overview: |
         Own the breach-notification workflow — assess scope, draft and send
         notices to subjects and regulators within the applicable deadlines.
     - persona: user-entity
+      applies_when: always
       coverage: out-of-scope
     - persona: subservice-organization
+      applies_when: always
       coverage: out-of-scope
 
 - ref: P6.7
@@ -2909,13 +3032,16 @@ requirements:
         - hipaa/policies/access-control
   implementer:
     - persona: service-organization
+      applies_when: always
       coverage: documented
       overview: |
         Package the audit-derived accounting into a subject-facing report on
         request and verify the requester's identity.
     - persona: user-entity
+      applies_when: always
       coverage: out-of-scope
     - persona: subservice-organization
+      applies_when: always
       coverage: out-of-scope
 
 - ref: P7.1
@@ -2951,13 +3077,16 @@ requirements:
         - hipaa/policies/minimum-necessary
   implementer:
     - persona: service-organization
+      applies_when: always
       coverage: documented
       overview: |
         Own semantic-accuracy validation in your application, surface update
         paths to subjects, and scope collection to what each purpose needs.
     - persona: user-entity
+      applies_when: always
       coverage: out-of-scope
     - persona: subservice-organization
+      applies_when: always
       coverage: out-of-scope
 
 - ref: P8.1
@@ -2992,11 +3121,14 @@ requirements:
         - soc2/policies/privacy-notice
   implementer:
     - persona: service-organization
+      applies_when: always
       coverage: documented
       overview: |
         Run your complaint-handling and periodic-compliance-monitoring process,
         and take timely corrective action; the platform can host the records.
     - persona: user-entity
+      applies_when: always
       coverage: out-of-scope
     - persona: subservice-organization
+      applies_when: always
       coverage: out-of-scope

@@ -187,6 +187,7 @@ requirements:
           - gdpr/policies/lawful-basis-and-consent
     implementer:
       - persona: controller
+        applies_when: [processes-personal-data]
         coverage: documented
         overview: |
           Run your own data-protection programme over the HDS substrate; the
@@ -220,6 +221,8 @@ requirements:
           - gdpr/policies/lawful-basis-and-consent
     implementer:
       - persona: controller
+        applies_when: always
+        nature: orientation
         coverage: documented
         overview: |
           Confirm your processing is in scope (it generally is) and manage any
@@ -258,10 +261,13 @@ requirements:
           - hipaa/registers/hosting-provider-attestations
     implementer:
       - persona: controller
+        applies_when: always
+        nature: orientation
         coverage: documented
         overview: |
-          Determine whether GDPR applies to your processing and select the CH or
-          US residency option accordingly.
+          Work out whether the GDPR reaches your own processing, if you carry out
+          any. Note that the region a vault lives in is chosen by the individual
+          at registration, not by you.
       - persona: data-subject
         coverage: out-of-scope
 
@@ -296,11 +302,14 @@ requirements:
           - gdpr/policies/lawful-basis-and-consent
     implementer:
       - persona: controller
+        applies_when: [processes-personal-data]
         coverage: documented
         overview: |
-          Assign the controller/processor roles in your DPA and apply the GDPR
-          definitions to your own processing description.
+          Work out your own role for each processing activity you carry out. For a vault,
+          HDS is the controller and you are an independent controller of whatever an
+          individual chooses to share with you.
       - persona: processor
+        applies_when: always
         coverage: documented
         overview: |
           Where you process on behalf of another controller, document your
@@ -418,6 +427,7 @@ requirements:
           - gdpr/policies/lawful-basis-and-consent
     implementer:
       - persona: controller
+        applies_when: [processes-personal-data]
         coverage: documented
         overview: |
           Write the consent UX and notice text; HDS preserves and versions the
@@ -459,7 +469,7 @@ requirements:
           - hipaa/policies/access-control
     implementer:
       - persona: controller
-        applies_when: [ai-individual, research-secondary-use]
+        applies_when: [reads-data, stores-phi-copy, ai-individual, research-secondary-use]
         coverage: documented
         overview: |
           Determine the Art.9(2) condition for each special-category processing
@@ -530,6 +540,7 @@ requirements:
           - hipaa/policies/access-control
     implementer:
       - persona: controller
+        applies_when: [processes-personal-data]
         coverage: documented
         overview: |
           Confirm your legal authority to process such data and record the basis;
@@ -567,6 +578,7 @@ requirements:
           - gdpr/procedures/data-subject-rights
     implementer:
       - persona: controller
+        applies_when: [processes-personal-data]
         coverage: documented
         overview: |
           Write concise, intelligible notices and run a request-handling process
@@ -727,6 +739,7 @@ requirements:
           - gdpr/procedures/data-subject-rights
     implementer:
       - persona: controller
+        applies_when: [processes-personal-data]
         coverage: documented
         overview: |
           Detect inaccuracy and trigger the rectification; the update and
@@ -832,6 +845,7 @@ requirements:
           - gdpr/procedures/data-subject-rights
     implementer:
       - persona: controller
+        applies_when: [processes-personal-data]
         coverage: documented
         overview: |
           Apply restriction by scoping or revoking the relevant accesses and
@@ -881,6 +895,7 @@ requirements:
           - gdpr/procedures/data-subject-rights
     implementer:
       - persona: controller
+        applies_when: [processes-personal-data]
         coverage: documented
         overview: |
           Optionally wrap the export in a download UI; ensure schema alignment
@@ -1034,11 +1049,13 @@ requirements:
           - gdpr/registers/records-of-processing
     implementer:
       - persona: controller
+        applies_when: [processes-personal-data]
         coverage: documented
         overview: |
           Build and maintain your accountability programme, citing HDS technical
           measures and your own organisational controls.
       - persona: processor
+        applies_when: always
         coverage: documented
         overview: |
           Where you act as a processor, evidence your own measures and operate on
@@ -1074,6 +1091,7 @@ requirements:
           - gdpr/registers/records-of-processing
     implementer:
       - persona: controller
+        applies_when: [third-parties]
         coverage: documented
         overview: |
           If you are a joint controller, conclude the Art.26 arrangement and make
@@ -1098,6 +1116,7 @@ requirements:
       regions: [ch, us]
     implementer:
       - persona: controller
+        applies_when: [processes-personal-data]
         coverage: documented
         overview: |
           If Art.3(2) applies to you and no exemption holds, designate an EU
@@ -1175,6 +1194,7 @@ requirements:
           - gdpr/policies/data-retention
     implementer:
       - persona: controller
+        applies_when: [processes-personal-data]
         coverage: documented
         overview: |
           Configure your defaults — minimal token scopes, opt-in notices, short
@@ -1337,13 +1357,13 @@ requirements:
           upstream_proposal: vendor/pryv/proposals/e2e-encryption.md
     implementer:
       - persona: controller
-        applies_when: [stores-phi-copy, hds-as-idp]
+        applies_when: [reads-data, stores-phi-copy, hds-as-idp]
         coverage: documented
         overview: |
           Assess the residual at-rest-encryption risk, run regular security
           testing and document your incident procedures.
       - persona: processor
-        applies_when: [stores-phi-copy, hds-as-idp]
+        applies_when: [reads-data, stores-phi-copy, hds-as-idp]
         coverage: documented
         overview: |
           Evidence your own security measures and the at-rest controls applied at
@@ -1506,6 +1526,7 @@ requirements:
       regions: [ch, us]
     implementer:
       - persona: controller
+        applies_when: [ai-individual, automated-decisions, research-secondary-use]
         coverage: documented
         overview: |
           Consult the supervisory authority where your DPIA indicates an
@@ -1540,11 +1561,13 @@ requirements:
           - hipaa/registers/designated-roles
     implementer:
       - persona: controller
+        applies_when: [processes-personal-data]
         coverage: documented
         overview: |
           Determine whether a DPO is required for your processing and designate
           one where it is.
       - persona: processor
+        applies_when: always
         coverage: documented
         overview: |
           Designate your own DPO where the Art.37 triggers apply to your
@@ -1579,6 +1602,7 @@ requirements:
           - gdpr/procedures/dpia
     implementer:
       - persona: controller
+        applies_when: [processes-personal-data]
         coverage: documented
         overview: |
           Establish the DPO's independence and reporting line and publish the
@@ -1614,6 +1638,7 @@ requirements:
           - gdpr/registers/records-of-processing
     implementer:
       - persona: controller
+        applies_when: [processes-personal-data]
         coverage: documented
         overview: |
           Resource your DPO to perform these tasks using the platform's audit and
@@ -1647,6 +1672,7 @@ requirements:
           - gdpr/registers/records-of-processing
     implementer:
       - persona: controller
+        applies_when: [processes-personal-data]
         coverage: documented
         overview: |
           Adhere to any applicable sector code and cite the platform's technical
@@ -1680,6 +1706,7 @@ requirements:
           - gdpr/registers/records-of-processing
     implementer:
       - persona: controller
+        applies_when: [processes-personal-data]
         coverage: documented
         overview: |
           Pursue any applicable certification using this matrix as your
@@ -1713,11 +1740,13 @@ requirements:
           - gdpr/registers/records-of-processing
     implementer:
       - persona: controller
+        applies_when: [processes-personal-data]
         coverage: documented
         overview: |
           Rely on the audit and version evidence in any liability dispute; the
           legal posture is yours.
       - persona: processor
+        applies_when: always
         coverage: documented
         overview: |
           Maintain your own records to evidence compliance with your processor
@@ -1742,6 +1771,7 @@ requirements:
       regions: [ch, us]
     implementer:
       - persona: controller
+        applies_when: [processes-personal-data]
         coverage: documented
         overview: |
           Use the platform's evidence to argue mitigation under the Art.83(2)
@@ -1782,7 +1812,7 @@ requirements:
           - hipaa/registers/hosting-provider-attestations
     implementer:
       - persona: controller
-        applies_when: [transfer-out-of-region, third-parties]
+        applies_when: [transfer-eu-us, transfer-eu-ch, third-parties]
         coverage: documented
         overview: |
           Choose residency to avoid or to deliberately ground transfers, and
@@ -1818,7 +1848,7 @@ requirements:
           - hipaa/registers/hosting-provider-attestations
     implementer:
       - persona: controller
-        applies_when: [transfer-out-of-region]
+        applies_when: [transfer-eu-us, transfer-eu-ch]
         coverage: documented
         overview: |
           Route subjects to an adequacy-covered region and track the current
@@ -1871,14 +1901,14 @@ requirements:
           internal_doc: gdpr/policies/international-transfers
     implementer:
       - persona: controller
-        applies_when: [transfer-out-of-region, third-parties]
+        applies_when: [transfer-eu-us, transfer-eu-ch, third-parties]
         coverage: documented
         overview: |
           Conclude SCCs or another Art.46 safeguard for US-region or other
           third-country transfers and record the mechanism.
         templates: [dpa]
       - persona: processor
-        applies_when: [transfer-out-of-region, third-parties]
+        applies_when: [transfer-eu-us, transfer-eu-ch, third-parties]
         coverage: documented
         overview: |
           Sign the SCC-bearing DPA and flow equivalent clauses down to any
@@ -1902,6 +1932,7 @@ requirements:
       regions: [ch, us]
     implementer:
       - persona: controller
+        applies_when: [transfer-eu-us, transfer-eu-ch, third-parties]
         coverage: documented
         overview: |
           If relying on BCRs, obtain approval and record the reference on the
@@ -1927,6 +1958,7 @@ requirements:
       regions: [ch, us]
     implementer:
       - persona: controller
+        applies_when: [transfer-eu-us, transfer-eu-ch]
         coverage: documented
         overview: |
           Decide, with counsel, how to respond to any third-country order; the
@@ -1960,7 +1992,7 @@ requirements:
           - gdpr/policies/international-transfers
     implementer:
       - persona: controller
-        applies_when: [transfer-out-of-region]
+        applies_when: [transfer-eu-us, transfer-eu-ch]
         coverage: documented
         overview: |
           Establish that a derogation applies, record it per transfer, and limit
@@ -1984,6 +2016,8 @@ requirements:
       regions: [ch, us]
     implementer:
       - persona: controller
+        applies_when: always
+        nature: orientation
         coverage: out-of-scope
       - persona: data-subject
         coverage: out-of-scope

@@ -251,11 +251,13 @@ requirements:
         - shared/registers/data-residency-regions
   implementer:
     - persona: covered-entity
+      applies_when: always
       coverage: documented
       overview: |
         Define, document and maintain your own security-management programme;
         you may reference HDS's technical safeguards as inputs.
     - persona: business-associate
+      applies_when: always
       coverage: documented
       overview: |
         Run your own security-management programme covering the ePHI you
@@ -296,12 +298,14 @@ requirements:
         - hipaa/risk/risk-analysis
   implementer:
     - persona: covered-entity
+      applies_when: always
       coverage: documented
       overview: |
         Conduct and document your own risk analysis over the ePHI you hold; you
         may use this matrix and the HDS technology-stack register as inputs to
         asset identification, not as a substitute for the assessment.
     - persona: business-associate
+      applies_when: always
       coverage: documented
       overview: |
         Same obligation over the ePHI you process, and it is yours alone: HDS's
@@ -338,12 +342,14 @@ requirements:
         - hipaa/plans/risk-management
   implementer:
     - persona: covered-entity
+      applies_when: always
       coverage: documented
       overview: |
         Select, implement and record treatments for the risks your own analysis
         identifies; the controls in this matrix are candidate measures, not a
         treatment decision made for you.
     - persona: business-associate
+      applies_when: always
       coverage: documented
       overview: |
         Same cycle over your own analysis, with residual risk recorded and
@@ -396,11 +402,13 @@ requirements:
         tracking_url: https://github.com/pryv/open-pryv.io/issues/60
   implementer:
     - persona: covered-entity
+      applies_when: always
       coverage: documented
       overview: |
         Define and document your review cadence and who performs it, and retain
         the review records per your retention policy.
     - persona: business-associate
+      applies_when: always
       coverage: documented
       overview: |
         Establish your own periodic review of activity records for the ePHI you
@@ -438,10 +446,12 @@ requirements:
         - hipaa/registers/designated-roles
   implementer:
     - persona: covered-entity
+      applies_when: always
       coverage: documented
       overview: |
         Designate and document your own security official.
     - persona: business-associate
+      applies_when: always
       coverage: documented
       overview: |
         Designate and document your own security official.
@@ -477,11 +487,13 @@ requirements:
         - hipaa/procedures/access-termination
   implementer:
     - persona: covered-entity
+      applies_when: always
       coverage: documented
       overview: |
         Document your termination workflow and tie it to revocation of the
         access tokens your workforce holds.
     - persona: business-associate
+      applies_when: always
       coverage: documented
       overview: |
         Document your termination workflow for staff who handle the ePHI you
@@ -516,11 +528,13 @@ requirements:
         - hipaa/policies/access-authorization
   implementer:
     - persona: covered-entity
+      applies_when: always
       coverage: documented
       overview: |
         Document who may authorise access and on what basis, and capture the
         rationale alongside each grant.
     - persona: business-associate
+      applies_when: always
       coverage: documented
       overview: |
         Document your authorization policy for access to the ePHI you process.
@@ -561,11 +575,13 @@ requirements:
         - hipaa/procedures/access-review
   implementer:
     - persona: covered-entity
+      applies_when: always
       coverage: documented
       overview: |
         Document your establishment-and-modification workflow and your periodic
         access-review cadence.
     - persona: business-associate
+      applies_when: always
       coverage: documented
       overview: |
         Document how you establish, review and modify access to the ePHI you
@@ -611,11 +627,13 @@ requirements:
         internal_doc: hipaa/procedures/workforce-training
   implementer:
     - persona: covered-entity
+      applies_when: always
       coverage: documented
       overview: |
         Run and document your own periodic security reminders for your
         workforce.
     - persona: business-associate
+      applies_when: always
       coverage: documented
       overview: |
         Run and document your own security reminders for staff handling ePHI.
@@ -650,11 +668,13 @@ requirements:
         - hipaa/policies/malware-protection
   implementer:
     - persona: covered-entity
+      applies_when: always
       coverage: documented
       overview: |
         Operate and document anti-malware controls on your own endpoints and
         infrastructure.
     - persona: business-associate
+      applies_when: always
       coverage: documented
       overview: |
         Operate and document anti-malware controls on infrastructure you run
@@ -699,11 +719,13 @@ requirements:
         upstream_proposal: vendor/pryv/proposals/rate-limiting-recipes.md
   implementer:
     - persona: covered-entity
+      applies_when: always
       coverage: documented
       overview: |
         Define and document your discrepancy thresholds and the response when a
         threshold is crossed.
     - persona: business-associate
+      applies_when: always
       coverage: documented
       overview: |
         Define and document login-monitoring thresholds for the ePHI workload
@@ -782,10 +804,12 @@ requirements:
         - hipaa/procedures/security-incident-response
   implementer:
     - persona: covered-entity
+      applies_when: always
       coverage: documented
       overview: |
         Run and document your own incident-response procedures.
     - persona: business-associate
+      applies_when: always
       coverage: documented
       overview: |
         Run and document your own incident procedures and report incidents to
@@ -1029,11 +1053,13 @@ requirements:
         upstream_proposal: vendor/pryv/proposals/config-effective-exposure.md
   implementer:
     - persona: covered-entity
+      applies_when: always
       coverage: documented
       overview: |
         Perform and document your own periodic technical and nontechnical
         evaluation.
     - persona: business-associate
+      applies_when: always
       coverage: documented
       overview: |
         Perform and document a periodic evaluation of the safeguards over the
@@ -1083,12 +1109,14 @@ requirements:
         - hipaa/registers/hosting-provider-attestations
   implementer:
     - persona: covered-entity
+      applies_when: always
       coverage: documented
       overview: |
         Rely on the HDS-selected hosting region for the server-side facility
         controls; you remain responsible for the physical security of your own
         offices, endpoints and any workforce devices that access ePHI.
     - persona: business-associate
+      applies_when: always
       coverage: documented
       overview: |
         Inherit the HDS hosting-region facility posture and document it in your own
@@ -1130,11 +1158,13 @@ requirements:
         - hipaa/policies/physical-safeguards
   implementer:
     - persona: covered-entity
+      applies_when: always
       coverage: documented
       overview: |
         Inherit the server-tier facility controls from the HDS hosting region;
         implement and document facility access controls for your own premises.
     - persona: business-associate
+      applies_when: always
       coverage: documented
       overview: |
         Same as covered entity — server tier inherited, your own facilities are
@@ -1181,11 +1211,13 @@ requirements:
         internal_doc: hipaa/standards/byod-workstation
   implementer:
     - persona: covered-entity
+      applies_when: always
       coverage: documented
       overview: |
         Define and document workstation-use rules for the devices your workforce
         uses to access ePHI through the HDS-hosted application.
     - persona: business-associate
+      applies_when: always
       coverage: documented
       overview: |
         Same — your workforce workstation-use policy is yours to author.
@@ -1232,12 +1264,14 @@ requirements:
         internal_doc: hipaa/standards/byod-workstation
   implementer:
     - persona: covered-entity
+      applies_when: always
       coverage: documented
       overview: |
         Implement physical workstation safeguards (screen locks, restricted siting,
         device management) for endpoints accessing ePHI; revoke HDS access tokens on
         device loss.
     - persona: business-associate
+      applies_when: always
       coverage: documented
       overview: |
         Same physical-workstation obligations apply to your own endpoints.
@@ -1351,11 +1385,13 @@ requirements:
         - hipaa/policies/access-control
   implementer:
     - persona: covered-entity
+      applies_when: always
       coverage: documented
       overview: |
         Configure your application's use of HDS access tokens to grant least-
         privilege per-stream access, and document your access-authorization rules.
     - persona: business-associate
+      applies_when: always
       coverage: documented
       overview: |
         Same — model your grants as least-privilege per-stream access tokens and
@@ -1439,12 +1475,14 @@ requirements:
         - hipaa/procedures/emergency-access
   implementer:
     - persona: covered-entity
+      applies_when: always
       coverage: configurable
       overview: |
         Define and document your emergency-access procedure — who may invoke
         break-glass access, under what conditions, and the mandatory audit review
         afterward.
     - persona: business-associate
+      applies_when: always
       coverage: configurable
       overview: |
         Same — author and document your own emergency-access procedure over the
@@ -1600,11 +1638,13 @@ requirements:
         - hipaa/policies/audit-controls
   implementer:
     - persona: covered-entity
+      applies_when: always
       coverage: documented
       overview: |
         Define and document your audit-review cadence and who performs it; retain
         the review records per your retention policy.
     - persona: business-associate
+      applies_when: always
       coverage: documented
       overview: |
         Same — own the written review procedure over the platform-provided log.
@@ -1779,11 +1819,13 @@ requirements:
         - hipaa/policies/transmission-security
   implementer:
     - persona: covered-entity
+      applies_when: always
       coverage: documented
       overview: |
         Ensure your client and any onward integration hops you control transmit
         ePHI only over TLS; document the transmission-security boundary.
     - persona: business-associate
+      applies_when: always
       coverage: documented
       overview: |
         Same — preserve TLS across any transmission path you operate.
@@ -1821,11 +1863,13 @@ requirements:
         - hipaa/policies/transmission-security
   implementer:
     - persona: covered-entity
+      applies_when: always
       coverage: documented
       overview: |
         Preserve transmission integrity across any hops you operate, and document
         the addressable decision.
     - persona: business-associate
+      applies_when: always
       coverage: documented
       overview: |
         Same — maintain integrity guarantees across your own transmission chain.
@@ -1862,11 +1906,13 @@ requirements:
         - hipaa/policies/transmission-security
   implementer:
     - persona: covered-entity
+      applies_when: always
       coverage: documented
       overview: |
         Document that transmission encryption is in force; separately address
         at-rest encryption per §164.312(a)(2)(iv).
     - persona: business-associate
+      applies_when: always
       coverage: documented
       overview: |
         Same — record the transmission-encryption posture and address at-rest
@@ -2081,11 +2127,13 @@ requirements:
         - hipaa/policies/information-security-policy
   implementer:
     - persona: covered-entity
+      applies_when: always
       coverage: documented
       overview: |
         Maintain your own reasonable and appropriate policies and procedures for
         the parts of the system and workflow you control.
     - persona: business-associate
+      applies_when: always
       coverage: documented
       overview: |
         Maintain your own Security Rule policy set covering your handling of
@@ -2123,11 +2171,13 @@ requirements:
         - hipaa/policies/documentation-and-retention
   implementer:
     - persona: covered-entity
+      applies_when: always
       coverage: documented
       overview: |
         Keep your own policies, procedures and required activity records in
         written or electronic form.
     - persona: business-associate
+      applies_when: always
       coverage: documented
       overview: |
         Maintain written documentation of your Security Rule compliance and the
@@ -2204,11 +2254,13 @@ requirements:
         - hipaa/policies/documentation-and-retention
   implementer:
     - persona: covered-entity
+      applies_when: always
       coverage: documented
       overview: |
         Review and update your own documentation periodically and in response to
         operational or environmental changes.
     - persona: business-associate
+      applies_when: always
       coverage: documented
       overview: |
         Keep your Security Rule documentation current through periodic and

@@ -127,11 +127,13 @@ requirements:
           - hipaa/policies/uses-and-disclosures
     implementer:
       - persona: covered-entity
+        applies_when: always
         coverage: documented
         overview: |
           Decide which uses and disclosures are permitted under the Privacy Rule
           and configure access scopes accordingly.
       - persona: business-associate
+        applies_when: always
         coverage: documented
         overview: |
           Use or disclose PHI only as your BAA and the covered entity's
@@ -255,6 +257,7 @@ requirements:
           - hipaa/policies/uses-and-disclosures
     implementer:
       - persona: covered-entity
+        applies_when: always
         coverage: documented
         overview: |
           Offer the opportunity to agree or object and record the individual's
@@ -406,6 +409,7 @@ requirements:
           - hipaa/policies/notice-of-privacy-practices
     implementer:
       - persona: covered-entity
+        applies_when: always
         coverage: documented
         overview: |
           Author and maintain your notice of privacy practices and present it to
@@ -441,6 +445,7 @@ requirements:
           - hipaa/procedures/restriction-requests
     implementer:
       - persona: covered-entity
+        applies_when: always
         coverage: documented
         overview: |
           Evaluate restriction and confidential-communication requests and apply
@@ -451,6 +456,7 @@ requirements:
           You request restrictions and alternative-communication preferences,
           which are recorded against your account.
       - persona: business-associate
+        applies_when: always
         coverage: out-of-scope
 
   - ref: "164.524"
@@ -486,11 +492,13 @@ requirements:
           You access and export your own PHI directly through the standard API or
           a subject portal built on it.
       - persona: covered-entity
+        applies_when: always
         coverage: documented
         overview: |
           Run the access-request process and meet the response timeline; provide
           any requested non-native export format.
       - persona: business-associate
+        applies_when: always
         coverage: documented
         overview: |
           Make PHI available to the covered entity to satisfy access requests.
@@ -523,6 +531,7 @@ requirements:
           - hipaa/procedures/amendment-requests
     implementer:
       - persona: covered-entity
+        applies_when: always
         coverage: documented
         overview: |
           Run the amendment request, decision and notice process and record
@@ -533,6 +542,7 @@ requirements:
           You request amendments; accepted changes and any disagreement statement
           are preserved with version history.
       - persona: business-associate
+        applies_when: always
         coverage: out-of-scope
 
   - ref: "164.528"
@@ -564,6 +574,7 @@ requirements:
           - hipaa/procedures/accounting-of-disclosures
     implementer:
       - persona: covered-entity
+        applies_when: always
         coverage: documented
         overview: |
           Compile and deliver the accounting, applying the §164.528 exceptions and
@@ -574,6 +585,7 @@ requirements:
           You request an accounting; the audit log provides the underlying
           disclosure record.
       - persona: business-associate
+        applies_when: always
         coverage: documented
         overview: |
           Provide the covered entity with the disclosure records you hold.
@@ -609,6 +621,7 @@ requirements:
           - hipaa/registers/designated-roles
     implementer:
       - persona: covered-entity
+        applies_when: always
         coverage: documented
         overview: |
           Designate and document your privacy official and complaint contact.
@@ -640,11 +653,13 @@ requirements:
           - hipaa/procedures/workforce-training
     implementer:
       - persona: covered-entity
+        applies_when: always
         coverage: documented
         overview: |
           Train your workforce on your privacy policies and retain the training
           records.
       - persona: business-associate
+        applies_when: always
         coverage: documented
         overview: |
           Train your own workforce on safeguarding PHI under your BAA.
@@ -680,6 +695,7 @@ requirements:
           - hipaa/policies/privacy-safeguards
     implementer:
       - persona: covered-entity
+        applies_when: always
         coverage: documented
         overview: |
           Maintain administrative safeguards and document how the technical and
@@ -714,11 +730,13 @@ requirements:
           - hipaa/procedures/incident-mitigation
     implementer:
       - persona: covered-entity
+        applies_when: always
         coverage: documented
         overview: |
           Investigate violations, decide and execute mitigation, and run any
           required notifications.
       - persona: business-associate
+        applies_when: always
         coverage: documented
         overview: |
           Report incidents to the covered entity and assist mitigation per your
@@ -844,6 +862,7 @@ requirements:
           - hipaa/procedures/complaint-handling
     implementer:
       - persona: covered-entity
+        applies_when: always
         coverage: documented
         overview: |
           Operate the complaint process and document complaints and their
@@ -876,11 +895,13 @@ requirements:
           - hipaa/policies/workforce-sanctions
     implementer:
       - persona: covered-entity
+        applies_when: always
         coverage: documented
         overview: |
           Maintain and apply your workforce sanction policy and document
           enforcement.
       - persona: business-associate
+        applies_when: always
         coverage: documented
         overview: |
           Maintain sanctions for your own workforce under your BAA.
@@ -907,6 +928,7 @@ requirements:
         conduct obligation of the covered entity.
     implementer:
       - persona: covered-entity
+        applies_when: always
         coverage: documented
         overview: |
           Maintain and enforce an anti-retaliation policy.
@@ -939,11 +961,13 @@ requirements:
           - hipaa/policies/privacy-policy-management
     implementer:
       - persona: covered-entity
+        applies_when: always
         coverage: documented
         overview: |
           Author, approve and periodically review your privacy policies and
           procedures.
       - persona: business-associate
+        applies_when: always
         coverage: documented
         overview: |
           Maintain policies and procedures for safeguarding PHI under your BAA.
@@ -979,6 +1003,7 @@ requirements:
           - hipaa/policies/uses-and-disclosures
     implementer:
       - persona: covered-entity
+        applies_when: always
         coverage: documented
         overview: |
           Determine directly-relevant scope, verify the relationship, and record
@@ -988,6 +1013,7 @@ requirements:
         overview: |
           You identify the persons involved in your care and may object.
       - persona: business-associate
+        applies_when: always
         coverage: out-of-scope
 
   - ref: "164.512(b)"
@@ -1017,6 +1043,7 @@ requirements:
           - hipaa/policies/uses-and-disclosures
     implementer:
       - persona: covered-entity
+        applies_when: always
         coverage: documented
         overview: |
           Confirm the public-health authority's legal basis and record the
@@ -1051,6 +1078,7 @@ requirements:
           - hipaa/procedures/law-enforcement-requests
     implementer:
       - persona: covered-entity
+        applies_when: always
         coverage: documented
         overview: |
           Evaluate law-enforcement requests against §512(f) conditions and record
@@ -1093,6 +1121,7 @@ requirements:
           - hipaa/procedures/individual-right-of-access
     implementer:
       - persona: covered-entity
+        applies_when: always
         coverage: documented
         overview: |
           Operate the request intake and meet the §524(b) response timeline.
@@ -1101,6 +1130,7 @@ requirements:
         overview: |
           You submit access requests, which are tracked to a due date.
       - persona: business-associate
+        applies_when: always
         coverage: out-of-scope
 
   - ref: 164.524(c)
@@ -1141,11 +1171,13 @@ requirements:
         overview: |
           You obtain your PHI in canonical JSON or a format your portal produces.
       - persona: covered-entity
+        applies_when: always
         coverage: documented
         overview: |
           Provide requested formats and summaries and agree applicable fees in
           advance.
       - persona: business-associate
+        applies_when: always
         coverage: out-of-scope
 
   - ref: 164.502(g)
@@ -1176,6 +1208,7 @@ requirements:
           - hipaa/policies/personal-representatives
     implementer:
       - persona: covered-entity
+        applies_when: always
         coverage: documented
         overview: |
           Verify representative status, grant appropriate access, and apply
@@ -1186,6 +1219,7 @@ requirements:
           A verified personal representative may act on your behalf with recorded
           basis.
       - persona: business-associate
+        applies_when: always
         coverage: out-of-scope
 
   - ref: "164.512(a)"
@@ -1214,11 +1248,13 @@ requirements:
           - hipaa/policies/uses-and-disclosures
     implementer:
       - persona: covered-entity
+        applies_when: always
         coverage: documented
         overview: |
           Confirm the legal requirement, limit the disclosure to it, and record
           the basis.
       - persona: business-associate
+        applies_when: always
         coverage: documented
         overview: |
           Disclose as required by law and notify the covered entity per your BAA.
@@ -1341,6 +1377,7 @@ requirements:
           - hipaa/procedures/accounting-of-disclosures
     implementer:
       - persona: covered-entity
+        applies_when: always
         coverage: documented
         overview: |
           Compile each accounting entry's required fields from the audit log and
@@ -1350,6 +1387,7 @@ requirements:
         overview: |
           You receive an accounting containing the §528(b) fields.
       - persona: business-associate
+        applies_when: always
         coverage: documented
         overview: |
           Provide the covered entity with the disclosure details you hold.
@@ -1419,6 +1457,7 @@ requirements:
         entity's contractual obligations.
     implementer:
       - persona: covered-entity
+        applies_when: always
         coverage: documented
         overview: |
           Obtain the plan-sponsor certification before disclosing PHI to the
@@ -1458,11 +1497,13 @@ requirements:
           - hipaa/policies/workforce-sanctions
     implementer:
       - persona: covered-entity
+        applies_when: always
         coverage: documented
         overview: |
           Recognize the §502(j) protection in your policies and non-retaliation
           handling.
       - persona: business-associate
+        applies_when: always
         coverage: documented
         overview: |
           Understand the §502(j) good-faith disclosure protection.
