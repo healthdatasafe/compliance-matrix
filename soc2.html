@@ -7,16 +7,39 @@
 <header class="top">
   <a class="brand" href="index.html">HDS <b>compliance-matrix</b></a>
   <nav>
-    <a href="index.html">Overview</a>
+    <a href="index.html">HDS standing</a>
+    <a href="implementer.html">For implementers</a>
     <a href="templates.html">Templates</a>
     <a href="https://github.com/healthdatasafe/compliance-matrix">Source</a>
   </nav>
 </header>
 <main>
-    <a class="back" href="index.html">← All scopes</a>
+    <a class="back" href="index.html">← HDS standing</a> ·
+    <a class="back" href="implementer.html">implementer view</a>
     <h1>SOC 2 — AICPA Trust Services Criteria (Security, Availability, Confidentiality, Processing Integrity, Privacy) <span class="short">SOC 2</span></h1>
-    <p class="meta">standard · United States (AICPA) · Trust Services Criteria (2017), with revised points of focus (2022) <span class="rg">US</span><span class="rg">CH</span>
-      · layered on Pryv <code>soc2</code></p>
+    <p class="meta">United States (AICPA) <span class="rg">US</span><span class="rg">CH</span>
+      · standard · Trust Services Criteria (2017), with revised points of focus (2022)
+      · <a href="https://www.aicpa-cima.com/resources/landing/trust-services-criteria">official text</a></p>
+    
+    <details class="standing-inline" open>
+      <summary>How HDS itself stands against SOC 2</summary>
+      
+    <div class="pstrip">
+      <div class="pshead">
+        <span class="as as-none">self-assessed, no external audit</span></div>
+      <div class="roles">
+  <div class="rolerow">
+    <span class="arr">vault</span>
+    <span class="rl rl-service-organization">Service organisation</span>
+    <p>HDS is the service organisation operating the vault; an organisation building on it is a user entity. The hosting providers are subservice organisations, carved in or out depending on the criterion.
+</p>
+  </div></div>
+      <p class="stmt">Forty-five of the sixty-one Trust Services Criteria are answered from approved HDS documentation, and the remaining sixteen are evidenced by documents still moving through review. This is a readiness map: it shows which criteria the existing control environment already meets, which is what a service organisation needs before engaging an auditor. It is not an audit and confers no opinion. Twelve criteria carry open remediation, including change management, vendor management and a tamper-evident audit log.
+</p>
+      
+    </div>
+    </details>
+    
     <div class="covbar"><span class="seg implemented" style="width:21.3%" title="implemented: 13"></span><span class="seg configurable" style="width:1.6%" title="configurable: 1"></span><span class="seg facilitated" style="width:60.7%" title="facilitated: 37"></span><span class="seg documented" style="width:16.4%" title="documented: 10"></span></div>
     
 <div class="filters">
@@ -25,7 +48,7 @@
     <label><input type="checkbox" value="implemented" checked> <span class="b implemented">implemented</span></label><label><input type="checkbox" value="configurable" checked> <span class="b configurable">configurable</span></label><label><input type="checkbox" value="facilitated" checked> <span class="b facilitated">facilitated</span></label><label><input type="checkbox" value="documented" checked> <span class="b documented">documented</span></label><label><input type="checkbox" value="out-of-scope" checked> <span class="b out-of-scope">out-of-scope</span></label>
   </span>
   <span class="fgroup" id="persona">
-    <label><input type="checkbox" value="partner" checked> partner</label><label><input type="checkbox" value="covered-entity" checked> covered-entity</label><label><input type="checkbox" value="business-associate" checked> business-associate</label><label><input type="checkbox" value="individual" checked> individual</label>
+    <label><input type="checkbox" value="service-organization" checked> service-organization</label><label><input type="checkbox" value="subservice-organization" checked> subservice-organization</label><label><input type="checkbox" value="user-entity" checked> user-entity</label>
   </span>
   <label class="fgroup"><input type="checkbox" id="fplan"> <span class="pl low">⏳ planned only</span></label>
   <span class="fcount" id="fcount"></span>

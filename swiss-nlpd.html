@@ -7,16 +7,41 @@
 <header class="top">
   <a class="brand" href="index.html">HDS <b>compliance-matrix</b></a>
   <nav>
-    <a href="index.html">Overview</a>
+    <a href="index.html">HDS standing</a>
+    <a href="implementer.html">For implementers</a>
     <a href="templates.html">Templates</a>
     <a href="https://github.com/healthdatasafe/compliance-matrix">Source</a>
   </nav>
 </header>
 <main>
-    <a class="back" href="index.html">← All scopes</a>
+    <a class="back" href="index.html">← HDS standing</a> ·
+    <a class="back" href="implementer.html">implementer view</a>
     <h1>Swiss Federal Act on Data Protection (revised FADP / nLPD) <span class="short">Swiss nLPD</span></h1>
-    <p class="meta">regulation · Switzerland (extraterritorial via Art. 3 for processing affecting CH) · SR 235.1 (revFADP / nLPD, in force 2023-09-01) <span class="rg">CH</span>
-      · layered on Pryv <code>swiss-nlpd</code></p>
+    <p class="meta">Switzerland (extraterritorial via Art. 3 for processing affecting CH) <span class="rg">CH</span>
+      · regulation · SR 235.1 (revFADP / nLPD, in force 2023-09-01)
+      · <a href="https://www.fedlex.admin.ch/eli/cc/2022/491/en">official text</a></p>
+    
+    <details class="standing-inline" open>
+      <summary>How HDS itself stands against Swiss nLPD</summary>
+      
+    <div class="pstrip">
+      <div class="pshead">
+        <span class="as as-self-assessed">self-assessed</span></div>
+      <div class="roles">
+  <div class="rolerow">
+    <span class="arr">vault</span>
+    <span class="rl rl-controller">Controller</span>
+    <p>The individual's vault. HDS determines the purposes and means of operating it, so HDS is the controller under the Act. Data enters only with the individual's explicit consent, and the individual decides who may access it afterwards.
+</p>
+  </div></div>
+      <p class="stmt">Swiss residency is the strongest part of this position: the ch region runs on Swiss infrastructure and the data does not leave it, which is what most of this Act's residency and transfer concern is about. Thirteen of the thirty requirements rest on approved documentation and eleven more are evidenced by documents in review, the same pipeline as the GDPR. Six articles are recorded as out of scope because they address federal bodies or obligations that attach only to the controller, marked on the rows themselves rather than omitted.
+</p>
+      <p class="notproc"><b>HDS is not your processor, by design.</b>
+        HDS is not an processor for this product, and the matrix does not offer that arrangement. Acting as a processor would require processing on a controller's instructions and returning or deleting the data at its choice. HDS acts on the individual's permissions, the individual exercises their rights directly from their own dashboard, and HDS cannot delete an individual's vault at a third party's direction. An organisation that receives data an individual chose to share with it is an independent controller of what it holds, not a controller instructing HDS. Any future engagement in which HDS genuinely does process on instructions falls outside this matrix and carries its own documentation.
+</p>
+    </div>
+    </details>
+    
     <div class="covbar"><span class="seg implemented" style="width:13.3%" title="implemented: 4"></span><span class="seg configurable" style="width:3.3%" title="configurable: 1"></span><span class="seg facilitated" style="width:63.3%" title="facilitated: 19"></span><span class="seg out-of-scope" style="width:20.0%" title="out-of-scope: 6"></span></div>
     
 <div class="filters">
@@ -25,7 +50,7 @@
     <label><input type="checkbox" value="implemented" checked> <span class="b implemented">implemented</span></label><label><input type="checkbox" value="configurable" checked> <span class="b configurable">configurable</span></label><label><input type="checkbox" value="facilitated" checked> <span class="b facilitated">facilitated</span></label><label><input type="checkbox" value="documented" checked> <span class="b documented">documented</span></label><label><input type="checkbox" value="out-of-scope" checked> <span class="b out-of-scope">out-of-scope</span></label>
   </span>
   <span class="fgroup" id="persona">
-    <label><input type="checkbox" value="partner" checked> partner</label><label><input type="checkbox" value="covered-entity" checked> covered-entity</label><label><input type="checkbox" value="business-associate" checked> business-associate</label><label><input type="checkbox" value="individual" checked> individual</label>
+    <label><input type="checkbox" value="controller" checked> controller</label><label><input type="checkbox" value="data-subject" checked> data-subject</label><label><input type="checkbox" value="processor" checked> processor</label>
   </span>
   <label class="fgroup"><input type="checkbox" id="fplan"> <span class="pl low">⏳ planned only</span></label>
   <span class="fcount" id="fcount"></span>
@@ -946,8 +971,9 @@ controller's.
       <div class="persona">
         <strong>controller</strong> <span class="b documented">documented</span>
         
-        <p>Determine territorial applicability and bind subjects to the CH region
-where appropriate.
+        <p>Work out whether the Act reaches your own processing, if you carry out
+any. You cannot bind an individual to a region: they choose it when
+they register their vault.
 </p>
       </div><div class="persona">
         <strong>data-subject</strong> <span class="b out-of-scope">out-of-scope</span>
@@ -1281,7 +1307,9 @@ instructions are the controller's.
       <div class="persona">
         <strong>controller</strong> <span class="b documented">documented</span>
         <a class="tpl" href="templates.html#tpl-dpa">📄 dpa</a>
-        <p>Execute a DPA, give documented instructions and approve sub-processors.
+        <p>If you engage processors of your own for the copy you hold, contract with them,
+give documented instructions and approve their sub-processors. This is not an
+agreement with HDS: HDS is the controller of the vault, not your processor.
 </p>
       </div><div class="persona">
         <strong>processor</strong> <span class="b documented">documented</span>
@@ -1576,7 +1604,8 @@ data-subject obligations.
       </div><div class="persona">
         <strong>controller</strong> <span class="b documented">documented</span>
         <a class="tpl" href="templates.html#tpl-dpa">📄 dpa</a>
-        <p>Ensure your DPA obliges processors to notify breaches and assist.
+        <p>Ensure the contracts with your own processors oblige them to notify breaches and
+assist you.
 </p>
       </div><div class="persona">
         <strong>data-subject</strong> <span class="b out-of-scope">out-of-scope</span>
