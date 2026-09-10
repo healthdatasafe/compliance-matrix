@@ -1090,22 +1090,27 @@ requirements:
       processing poses a low risk; content parallels GDPR Art. 30.
     pryv_ref: Art.12
     draft: false
+    reviewed_by: perki
+    reviewed_at: "2026-09-10"
     hds:
       coverage: facilitated
       effort_saved: high
       facilitation_mode: evidence
       regions: [ch]
       overview: |
-        HDS supplies the technical register substrate — access, client-data, audit
-        and data-residency records describe much of the processing. The register
-        as a maintained document is a known gap: HDS does not generate or keep the
-        controller's register, which the controller must author.
+        HDS supplies the technical register substrate: access, client-data,
+        audit and data-residency records describe much of the processing. HDS
+        also maintains its own register as controller, carrying eight live
+        processing activities. What it does not do is generate or keep an
+        implementer's register, which the implementer must author.
       detail: |
-        The nLPD's small-enterprise exception drops the obligation for low-risk
-        processing under the prescribed threshold; whether it applies is the
-        controller's legal judgement. The substrate is available regardless, but
-        the register document itself is the controller's and processor's to
-        maintain.
+        The nLPD's small-enterprise exception does not reach large-scale
+        processing of sensitive personal data, and hosting health records is
+        exactly that, so an implementer handling health data should not expect
+        the exemption to drop this obligation; whether it applies to its own
+        processing at all remains its legal judgement. The substrate is
+        available regardless, and the register document itself stays the
+        controller's to author and maintain.
       evidence:
         internal_docs:
           - gdpr/registers/records-of-processing

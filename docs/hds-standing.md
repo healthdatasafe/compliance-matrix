@@ -140,6 +140,27 @@ The schema carries `reviewed_by` and `reviewed_at` for recording who cleared a
 row and when. Use them: a `draft: false` with neither is an unattributed claim
 that a review happened.
 
+### The 2026-09-10 pass, and what its attribution means
+
+The 28 rows then at `draft: false` carried neither field, so they asserted a
+second reading with nothing saying who did it. They were re-reviewed on
+2026-09-10 and now carry `reviewed_by: perki`, `reviewed_at: 2026-09-10`.
+
+**The method, recorded once here rather than implied by the field.** Each row was
+cross-read against the approved internal documents it cites. Where the two
+diverged, the divergence was put to perki and the correction was his decision;
+where they agreed, the clearance was delegated. So `reviewed_by` names the person
+accountable for the outcome, not necessarily the reader of every line. Nine rows
+were corrected in that pass, three of them wrong in ways checkable without any
+internal document at all: a row that told the reader which sibling rows exist and
+was wrong about it, a standing statement crediting HDS with a populated Art.30(2)
+processor register that is empty by design, and a SOC 2 row saying no risk
+assessment had been conducted when an approved one exists.
+
+The lesson for the next pass is that the mechanical scans miss things. A
+heuristic looking for hedging language cleared a row because it contained the
+phrase "remains accountable". Read the row.
+
 ## Related
 
 - [`../schemas/hds-scope.schema.json`](../schemas/hds-scope.schema.json), where

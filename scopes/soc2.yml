@@ -298,6 +298,8 @@ requirements:
     individuals in alignment with its objectives.
   pryv_ref: CC1.4
   draft: false
+  reviewed_by: perki
+  reviewed_at: "2026-09-10"
   hds:
     coverage: documented
     effort_saved: low
@@ -578,16 +580,24 @@ requirements:
     entity and analyzes them as a basis for deciding how they should be managed.
   pryv_ref: CC3.2
   draft: false
+  reviewed_by: perki
+  reviewed_at: "2026-09-10"
   hds:
     coverage: documented
     effort_saved: medium
     overview: |
-      A formal risk assessment is each organization's own methodology and findings.
-      HDS is honest that its own formal risk assessment is not yet conducted — a
-      known gap being matured. What HDS contributes is the inventory of technical
-      controls (this matrix, especially the CC6 access and CC6.6/6.7 boundary and
-      cryptography rows), so when a confidentiality, integrity or availability risk
-      is identified, the control that addresses it is mechanical to locate.
+      A formal risk assessment is each organization's own methodology and
+      findings. HDS has an approved security risk analysis covering the
+      platform, all hosting regions and the access paths to them, with a
+      treatment register keyed to it. What has not been run is the SOC
+      2-specific half: CC3.2 reaches wider than ePHI security, to risks
+      against the other trust-services objectives, and HDS states that gap
+      plainly rather than presenting the security analysis as the whole. What
+      HDS contributes to an attesting organization is the inventory of
+      technical controls (this matrix, especially the CC6 access and CC6.6/6.7
+      boundary and cryptography rows), so when a confidentiality, integrity or
+      availability risk is identified, the control that addresses it is
+      mechanical to locate.
     detail: |
       HDS treats its own risk assessment as an operator obligation in progress and
       states the gap plainly rather than claiming a completed assessment. Its
@@ -632,6 +642,8 @@ requirements:
     achievement of its objectives.
   pryv_ref: CC3.3
   draft: false
+  reviewed_by: perki
+  reviewed_at: "2026-09-10"
   hds:
     coverage: facilitated
     effort_saved: low
@@ -644,11 +656,13 @@ requirements:
       thresholds trigger review) is each organization's assessment.
     detail: |
       HDS contributes the technical means to detect the fraud scenarios an
-      assessment identifies: attributable audit records and anomaly signals from
-      monitoring. The analytical step — deciding which fraud risks are in scope and
-      how to respond — is governance and depends on the formal risk assessment
-      (see CC3.2, a known gap on the HDS side). A partner runs its own fraud-risk
-      analysis over the same substrate.
+      assessment identifies: attributable audit records and anomaly signals
+      from monitoring. The analytical step, deciding which fraud risks are in
+      scope and how to respond, is governance. HDS's approved security risk
+      analysis does not assess the potential for fraud, which is a wider
+      question than ePHI security, so that consideration is the outstanding
+      half here (see CC3.2). A partner runs its own fraud-risk analysis over
+      the same substrate.
     regions: [us, ch]
     evidence:
       internal_docs:
@@ -1523,6 +1537,8 @@ requirements:
     to understand, contain, remediate, and communicate them.
   pryv_ref: CC7.4
   draft: false
+  reviewed_by: perki
+  reviewed_at: "2026-09-10"
   hds:
     coverage: facilitated
     effort_saved: medium
@@ -1576,6 +1592,8 @@ requirements:
     identified security incidents.
   pryv_ref: CC7.5
   draft: false
+  reviewed_by: perki
+  reviewed_at: "2026-09-10"
   hds:
     coverage: facilitated
     effort_saved: medium
@@ -1842,6 +1860,8 @@ requirements:
     recovery infrastructure to meet its objectives.
   pryv_ref: A1.2
   draft: false
+  reviewed_by: perki
+  reviewed_at: "2026-09-10"
   hds:
     coverage: facilitated
     effort_saved: high
@@ -1903,6 +1923,8 @@ requirements:
     meet its objectives.
   pryv_ref: A1.3
   draft: false
+  reviewed_by: perki
+  reviewed_at: "2026-09-10"
   hds:
     coverage: facilitated
     effort_saved: low

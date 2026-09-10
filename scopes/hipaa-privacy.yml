@@ -369,6 +369,8 @@ requirements:
       accomplish the intended purpose.
     pryv_ref: 164.514(d)
     draft: false
+    reviewed_by: perki
+    reviewed_at: "2026-09-10"
     hds:
       coverage: facilitated
       effort_saved: high
@@ -829,6 +831,8 @@ requirements:
       required by law.
     pryv_ref: 164.502(b)
     draft: false
+    reviewed_by: perki
+    reviewed_at: "2026-09-10"
     hds:
       coverage: facilitated
       effort_saved: high
@@ -1602,6 +1606,8 @@ requirements:
       conditions.
     pryv_ref: 164.502(j)
     draft: false
+    reviewed_by: perki
+    reviewed_at: "2026-09-10"
     hds:
       coverage: documented
       effort_saved: low

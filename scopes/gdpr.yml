@@ -47,17 +47,19 @@ hds_posture:
     inherited_provider_assurance:
       - AWS ISO/IEC 27001, 27017 and 27018 (us region hosting layer, obtained 2026-07-28)
   statement: >
-    HDS operates a GDPR programme rather than holding a GDPR credential. A Data
-    Protection Officer was designated on 2026-07-17, a processor-side record of
-    processing activities under Art.30 is maintained with eight live
-    activities, and the platform supplies the technical measures the articles
-    require. This is the least settled of the four frameworks on paper: three
-    requirements rest on fully approved documentation and thirty-eight more are
-    evidenced by documents still in review. The two material open items are the
-    transfer stack for the US hosting layer, where the AWS DPA, the EU and
-    Swiss standard contractual clauses and the transfer impact assessment are
-    not yet executed, and HDS's own DPIA process, which is drafted but not yet
-    operating.
+    HDS operates a GDPR programme rather than holding a GDPR credential. A
+    Data Protection Officer was designated on 2026-07-17, a controller-side
+    record of processing activities under Art.30(1) is maintained with eight
+    live activities, and the platform supplies the technical measures the
+    articles require. The Art.30(2) processor record is deliberately empty:
+    HDS processes on no controller's instructions, so there is nothing true to
+    record there. This is the least settled of the four frameworks on paper:
+    three requirements rest on fully approved documentation and thirty-eight
+    more are evidenced by documents still in review. The two material open
+    items are the transfer stack for the US hosting layer, where the AWS DPA,
+    the EU and Swiss standard contractual clauses and the transfer impact
+    assessment are not yet executed, and HDS's own DPIA process, which is
+    drafted but not yet operating.
   known_gaps:
     - summary: >
         Nothing is on file evidencing the Swiss hosting region's physical and
@@ -766,6 +768,8 @@ requirements:
       conditions applies.
     pryv_ref: Art.17
     draft: false
+    reviewed_by: perki
+    reviewed_at: "2026-09-10"
     hds:
       coverage: configurable
       effort_saved: medium
@@ -1278,16 +1282,21 @@ requirements:
       security).
     pryv_ref: Art.30
     draft: false
+    reviewed_by: perki
+    reviewed_at: "2026-09-10"
     hds:
       coverage: facilitated
       effort_saved: medium
       facilitation_mode: evidence
       overview: |
-        The combination of access, clientData, audit, CMC and data-residency lets
-        much of the Art.30 register be derived per subject and per time window —
-        who, what, why, when, recipients, transfers, retention. A
-        platform-generated, complete register is a known gap; each operator keeps
-        its own. HDS maintains its own processor-side record.
+        The combination of access, clientData, audit, CMC and data-residency
+        lets much of the Art.30 register be derived per subject and per time
+        window: who, what, why, when, recipients, transfers, retention. A
+        platform-generated, complete register is a known gap; each operator
+        keeps its own. HDS maintains its own Art.30(1) controller record,
+        populated with eight live processing activities. Its Art.30(2)
+        processor record is deliberately empty and stays that way while HDS
+        processes on no controller's instructions.
       detail: |
         Register fields map onto platform sources: purpose to access clientData,
         data categories to event class/format, recipients to counterparty
