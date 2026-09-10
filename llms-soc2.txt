@@ -10,7 +10,7 @@ HDS's own position on SOC 2:
   - vault: HDS is service-organization. HDS is the service organisation operating the vault; an organisation building on it is a user entity. The hosting providers are subservice organisations, carved in or out depending on the criterion.
   External assurance: none. HDS holds NO SOC 2 report. There is no Type I and no Type II, no audit period has been defined and no CPA firm has been engaged. Nothing on this site should be read as a SOC 2 opinion.
   Certificates HDS relies on but does NOT hold: AWS SOC 2 (hosting layer only, as a subservice organisation)
-  Evidence: 45 of 61 requirements answered from approved HDS documentation (61 cite internal evidence), as of 2026-09-08.
+  Evidence: 45 of 61 requirements answered from approved HDS documentation (61 cite internal evidence), as of 2026-09-10.
   Forty-five of the sixty-one Trust Services Criteria are answered from approved HDS
   documentation, and the remaining sixteen are evidenced by documents still moving through
   review. This is a readiness map: it shows which criteria the existing control
@@ -46,6 +46,7 @@ HDS's own position on SOC 2:
     controls — they author their own — but may cite the audit log as the substrate that
     holds individuals accountable to whatever ethical baseline they set.
     Evidence: internal:hipaa/policies/information-security-policy
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [service-organization] coverage: documented
     applies_when: always
     Establish and document your own code of conduct and ethical-values baseline; this is a
@@ -200,6 +201,7 @@ HDS's own position on SOC 2:
     the same substrate to feed its own control-monitoring process and defines its own
     thresholds and review cadence.
     Evidence: internal:hipaa/policies/audit-controls, internal:soc2/procedures/control-monitoring
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [service-organization] coverage: documented
     applies_when: always
     Define what control-relevant information you collect and how you act on it, drawing on
@@ -228,6 +230,7 @@ HDS's own position on SOC 2:
     platform contributes nothing at the content layer. Each attesting organization authors
     and operates its own internal communication of objectives and responsibilities.
     Evidence: internal:hipaa/policies/information-security-policy
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [service-organization] coverage: documented
     applies_when: always
     Communicate internal-control objectives and responsibilities to your own workforce; a
@@ -261,6 +264,7 @@ HDS's own position on SOC 2:
     register. A partner attesting under SOC 2 authors its own external-communication
     programme.
     Evidence: internal:hipaa/policies/information-security-policy, internal:hipaa/registers/subprocessor-register
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [service-organization] coverage: documented
     applies_when: always
     Author your own external communications about internal control to customers,
@@ -289,6 +293,7 @@ HDS's own position on SOC 2:
     assessment. A partner cannot inherit these — it specifies its own objectives — but can
     use this matrix to map identified risks onto the platform controls that address them.
     Evidence: internal:soc2/policies/system-description
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [service-organization] coverage: documented
     applies_when: always
     Specify and document your own service objectives with enough clarity to drive your risk
@@ -415,6 +420,7 @@ HDS's own position on SOC 2:
     and defines its own evaluation programme. This matrix doubles as the control inventory
     an evaluation assesses against.
     Evidence: internal:hipaa/procedures/periodic-evaluation, internal:soc2/procedures/control-monitoring
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [service-organization] coverage: documented
     applies_when: always
     Define and run your own ongoing and separate evaluations of internal control, sampling
@@ -445,6 +451,7 @@ HDS's own position on SOC 2:
     workflow over the same substrate. The platform can host the corrective-action records
     themselves as attributable events.
     Evidence: internal:hipaa/procedures/periodic-evaluation, internal:soc2/procedures/control-monitoring
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [service-organization] coverage: documented
     applies_when: always
     Define how you evaluate, track and communicate control deficiencies and their corrective
@@ -476,6 +483,7 @@ HDS's own position on SOC 2:
     these and documents its access-control configuration. A partner selects and operates the
     activities appropriate to its risk assessment over the same primitives.
     Evidence: internal:hipaa/policies/access-control, internal:soc2/procedures/control-monitoring
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [service-organization] coverage: documented
     applies_when: always
     Select the control activities appropriate to your risks; deploy the platform primitives
@@ -510,6 +518,7 @@ HDS's own position on SOC 2:
     2026-06-26; see CC6.7 for the provider-managed-key residual). A partner selects,
     configures and operates these controls; it does not build them.
     Evidence: internal:hipaa/policies/access-control, internal:hipaa/policies/audit-controls, internal:hipaa/policies/transmission-security
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [service-organization] coverage: documented
     applies_when: always
     Select, configure and operate the platform general IT controls; document the
@@ -540,6 +549,7 @@ HDS's own position on SOC 2:
     cannot inherit HDS's, though it can cite HDS's programme where HDS operates the
     underlying system.
     Evidence: internal:hipaa/policies/information-security-policy, internal:soc2/procedures/control-monitoring
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [service-organization] coverage: documented
     applies_when: always
     Author and maintain your own policies and operating procedures that deploy your selected
@@ -599,6 +609,7 @@ HDS's own position on SOC 2:
     documents its access-control and authentication policy. The implementer configures which
     grants its application mints.
     Evidence: internal:hipaa/policies/access-control, internal:hipaa/policies/authentication
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [service-organization] coverage: documented
     applies_when: [stores-phi-copy, connects]
     Configure least-privilege per-stream access grants for your application and document
@@ -643,6 +654,7 @@ HDS's own position on SOC 2:
     access-authorization and termination procedures it follows for its own workforce; the
     implementer applies the same primitives to its users.
     Evidence: internal:hipaa/policies/access-authorization, internal:hipaa/procedures/access-termination
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [service-organization] coverage: documented
     applies_when: [connects]
     Document who may register and authorize users and at what scope, and tie de-provisioning
@@ -698,6 +710,7 @@ HDS's own position on SOC 2:
     policy; HDS records and enforces the resulting access state and documents its own
     access-review cadence.
     Evidence: internal:hipaa/policies/access-control, internal:hipaa/procedures/access-review
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [service-organization] coverage: documented
     applies_when: [connects]
     Define your role model and least-privilege scopes, map them onto access grants, and run
@@ -729,6 +742,7 @@ HDS's own position on SOC 2:
     server-tier physical-access obligation is satisfied by inheritance; an organization's
     own facilities (offices where workforce access the service) remain its responsibility.
     Evidence: internal:hipaa/registers/hosting-provider-attestations
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [service-organization] coverage: documented
     applies_when: always
     Inherit the server-tier facility controls from the HDS hosting region and reference the
@@ -764,6 +778,7 @@ HDS's own position on SOC 2:
     media-sanitisation for physical disposal. An organization selects the engine matching
     its disposal commitment.
     Evidence: internal:hipaa/registers/hosting-provider-attestations
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [service-organization] coverage: configurable
     applies_when: [stores-phi-copy]
     Choose the storage engine that matches your destruction policy and document how
@@ -798,6 +813,7 @@ HDS's own position on SOC 2:
     each region. An organization inherits this boundary and configures any additional edge
     policy its risk analysis requires.
     Evidence: internal:hipaa/policies/transmission-security, internal:hipaa/policies/access-control
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [service-organization] coverage: documented
     applies_when: always
     Inherit the TLS and token boundary; configure and document any additional edge controls
@@ -835,6 +851,7 @@ HDS's own position on SOC 2:
     platform-managed content encryption (operator-held-key volumes or end-to-end) remains an
     optional strengthening an organization weighs in its risk analysis.
     Evidence: internal:hipaa/policies/transmission-security, internal:hipaa/policies/encryption, internal:hipaa/risk/at-rest-encryption, internal:hipaa/evidence/at-rest-encryption-verification
+    Evidence backing: every internal document cited above has completed approval.
     PLANNED (platform, impact medium): End-to-end / operator-held-key encryption is queued upstream as the strengthening for the provider-managed-key at-rest residual; claimable here only after pryv ships it AND HDS deploys and enables it on all cores.
   IMPLEMENTER [service-organization] coverage: configurable
     applies_when: [stores-phi-copy]
@@ -869,6 +886,7 @@ HDS's own position on SOC 2:
     and monitoring. An organization protects its own endpoints and any infrastructure it
     operates outside HDS, and operates application-allowlisting on its hosts.
     Evidence: internal:hipaa/policies/malware-protection
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [service-organization] coverage: documented
     applies_when: always
     Operate and document anti-malware and application-allowlisting on your own endpoints and
@@ -909,6 +927,7 @@ HDS's own position on SOC 2:
     defines its own vulnerability-scanning and configuration-drift detection cadence over
     the same substrate.
     Evidence: internal:hipaa/policies/audit-controls, internal:soc2/procedures/control-monitoring
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [service-organization] coverage: documented
     applies_when: always
     Define your own vulnerability-scanning and configuration-drift detection cadence over
@@ -941,6 +960,7 @@ HDS's own position on SOC 2:
     classifying an anomaly as a security event — is governance and is each organization's
     own, fed by the raw signal HDS exposes and operates.
     Evidence: internal:hipaa/policies/audit-controls, internal:hipaa/procedures/login-monitoring
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [service-organization] coverage: documented
     applies_when: always
     Define your anomaly thresholds and the analysis that classifies an anomaly as a security
@@ -970,6 +990,7 @@ HDS's own position on SOC 2:
     partner authors its own classification rule and response triggers over the same inputs.
     The substrate is operated; the judgement is governance.
     Evidence: internal:hipaa/procedures/security-incident-response
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [service-organization] coverage: documented
     applies_when: always
     Define how you classify a security event as an incident and what response it triggers.
@@ -1008,6 +1029,7 @@ HDS's own position on SOC 2:
     release enters HDS's procedure as a provider notification. A partner authors and
     rehearses its own incident-response programme over the same technical substrate.
     Evidence: internal:hipaa/procedures/security-incident-response
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [service-organization] coverage: documented
     applies_when: always
     Define and rehearse your own incident-response programme — roles, escalation,
@@ -1041,6 +1063,7 @@ HDS's own position on SOC 2:
     regularly tested recovery drilling is being matured (see CC4.1 evaluation). A partner
     sets its own recovery-objective targets and drill cadence over the same primitives.
     Evidence: internal:hipaa/procedures/disaster-recovery-plan, internal:hipaa/procedures/security-incident-response
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [service-organization] coverage: documented
     applies_when: always
     Set your recovery-objective targets and drill cadence, and document the recovery runbook
@@ -1111,6 +1134,7 @@ HDS's own position on SOC 2:
     to each attesting organization. HDS's own formal risk assessment that would prioritise
     these mitigations is a known gap (see CC3.2).
     Evidence: internal:hipaa/procedures/disaster-recovery-plan, internal:hipaa/procedures/data-backup-plan
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [service-organization] coverage: documented
     applies_when: always
     Set your business-continuity objectives and choose your non-technical mitigations over
@@ -1183,6 +1207,7 @@ HDS's own position on SOC 2:
     procedure HDS operates is held internally and shared on request; a user-entity running
     its own deployment performs its own capacity planning.
     Evidence: internal:soc2/procedures/capacity-management
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [service-organization] coverage: documented
     applies_when: [stores-phi-copy]
     Define and document your own capacity-planning thresholds and the provisioning workflow
@@ -1219,6 +1244,7 @@ HDS's own position on SOC 2:
     backup-and-recovery plan as it stands is cited as an internal document. A user-entity
     running its own deployment defines its own schedule.
     Evidence: internal:hipaa/procedures/data-backup-plan, internal:hipaa/procedures/disaster-recovery-plan
+    Evidence backing: every internal document cited above has completed approval.
     PLANNED (procedure, impact medium): The scheduled backup cycle is running on both regional cores as of 2026-07-30, producing encrypted off-host in-region copies, and an archive has been retrieved and decrypted with the off-host key to show the copies are usable. The tracked remainder is the per-region production restore drill at non-trivial scale and confirmation of the storage lifecycle backstop.
   IMPLEMENTER [service-organization] coverage: documented
     applies_when: [stores-phi-copy]
@@ -1251,6 +1277,7 @@ HDS's own position on SOC 2:
     stated plainly as a gap. A user-entity runs and evidences its own recovery tests for its
     workload.
     Evidence: internal:hipaa/procedures/contingency-plan-testing
+    Evidence backing: every internal document cited above has completed approval.
     PLANNED (procedure, impact medium): The contingency-test procedure is approved and a first restore rehearsal was performed on 2026-07-29 with a retained execution record. It covered a single account, not a full per-region restore, so recovery at production scale is the tracked remainder.
   IMPLEMENTER [service-organization] coverage: documented
     applies_when: [stores-phi-copy]
@@ -1289,6 +1316,7 @@ HDS's own position on SOC 2:
     policies behind it. The user-entity decides which streams carry which confidentiality
     tier and which grants its application mints.
     Evidence: internal:hipaa/policies/access-control, internal:hipaa/policies/minimum-necessary
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [service-organization] coverage: documented
     applies_when: [stores-phi-copy, analytics]
     Classify your confidential data, map it to a stream layout, and grant least-privilege
@@ -1354,6 +1382,7 @@ HDS's own position on SOC 2:
     specifications themselves remain the implementer's editorial work; HDS documents the
     data-quality posture it operates.
     Evidence: internal:soc2/policies/data-quality
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [service-organization] coverage: documented
     applies_when: always
     Define and communicate your processing objectives and service specifications; declare
@@ -1388,6 +1417,7 @@ HDS's own position on SOC 2:
     catalogue. Judging whether a structurally valid value is the right value stays with the
     implementer.
     Evidence: internal:hipaa/policies/integrity, internal:soc2/policies/data-quality
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [service-organization] coverage: documented
     applies_when: always
     Define your event types and any tighter structural constraints, and own the
@@ -1419,6 +1449,7 @@ HDS's own position on SOC 2:
     application-level processing the implementer builds on top — calculations,
     transformations, workflows — is its own completeness-and-accuracy responsibility.
     Evidence: internal:hipaa/policies/integrity
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [service-organization] coverage: documented
     applies_when: always
     Implement and document completeness-and-accuracy controls over your own processing
@@ -1451,6 +1482,7 @@ HDS's own position on SOC 2:
     delivery substrate. Defining output specifications and the timeliness commitments to
     downstream recipients, and verifying they are met, is the implementer's control.
     Evidence: internal:soc2/policies/data-quality
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [service-organization] coverage: documented
     applies_when: always
     Define your output specifications and delivery SLAs and verify outputs meet them; the
@@ -1483,6 +1515,7 @@ HDS's own position on SOC 2:
     documents the integrity posture; the implementer owns the surrounding storage-control
     procedure.
     Evidence: internal:hipaa/policies/integrity, internal:hipaa/procedures/data-backup-plan
+    Evidence backing: every internal document cited above has completed approval.
     PLANNED (platform, impact medium): A hash-chained (tamper-evident) audit log is queued upstream; the tamper-evidence half of this row becomes claimable after it ships and HDS deploys it.
   IMPLEMENTER [service-organization] coverage: documented
     applies_when: always
@@ -1577,6 +1610,7 @@ HDS's own position on SOC 2:
     after the fact. HDS operates and documents this minimum-necessary posture. The
     implementer designs which streams and grants correspond to which collection purpose.
     Evidence: internal:hipaa/policies/minimum-necessary, internal:hipaa/policies/access-control
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [service-organization] coverage: documented
     applies_when: [connects]
     Define each collection purpose and the minimal stream set it needs, and grant only that
@@ -1637,6 +1671,7 @@ HDS's own position on SOC 2:
     operates and documents this minimum-necessary and access-control posture. The
     implementer decides which purposes exist and how they map to scopes.
     Evidence: internal:hipaa/policies/minimum-necessary, internal:hipaa/policies/access-control
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [service-organization] coverage: documented
     applies_when: [connects, analytics]
     Map each identified purpose to a distinct access scope and document the mapping; the
@@ -1749,6 +1784,7 @@ HDS's own position on SOC 2:
     non-routine request and verifying the requester's identity is the implementer's
     workflow.
     Evidence: internal:hipaa/policies/access-control
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [service-organization] coverage: documented
     applies_when: always
     Surface the self-service access and export paths to subjects, and document your
@@ -1781,6 +1817,7 @@ HDS's own position on SOC 2:
     integrity and access substrate. Deciding the correctness of a request and committing to
     third-party communication is the implementer's.
     Evidence: internal:hipaa/policies/integrity, internal:hipaa/policies/access-control
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [service-organization] coverage: documented
     applies_when: always
     Define your process for assessing correction requests and your commitments to notify
@@ -1811,6 +1848,7 @@ HDS's own position on SOC 2:
     this access-control posture. The implementer decides the lawful purpose and obtains any
     required explicit consent before issuing the grant.
     Evidence: internal:hipaa/policies/access-control, internal:hipaa/policies/minimum-necessary
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [service-organization] coverage: documented
     applies_when: always
     Decide the lawful purpose, obtain any required explicit consent, and issue a scoped
@@ -1844,6 +1882,7 @@ HDS's own position on SOC 2:
     the substrate and documents the access and audit-controls posture. The implementer sets
     the retention period for the register consistent with its privacy objectives.
     Evidence: internal:hipaa/policies/access-control
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [service-organization] coverage: documented
     applies_when: always
     Set and document the retention period for the disclosure register and the cadence at
@@ -1876,6 +1915,7 @@ HDS's own position on SOC 2:
     record is the implementer's process. HDS documents the detection posture and the gap
     that log content is not yet PII-minimised.
     Evidence: internal:hipaa/procedures/security-incident-response
+    Evidence backing: every internal document cited above has completed approval.
     PLANNED (feature, impact medium): PHI-safe log handling for operator telemetry is the tracked remediation: HDS-authored services are moving to an allow-list observability library feeding a self-hosted collector, replacing the deny-list scrubbing over a vendor agent; the live exception is recorded in the subprocessor register.
   IMPLEMENTER [service-organization] coverage: documented
     applies_when: always
@@ -1907,6 +1947,7 @@ HDS's own position on SOC 2:
     the contractual commitment. The implementer obtains and retains its own vendor
     commitments.
     Evidence: internal:hipaa/registers/subprocessor-register
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [service-organization] coverage: documented
     applies_when: [third-parties]
     Obtain and retain privacy commitments from your own vendors and third parties; reference
@@ -1937,6 +1978,7 @@ HDS's own position on SOC 2:
     monitoring substrate. The implementer obtains equivalent commitments from its vendors
     and runs its own response when notified (see CC7.4-equivalent incident handling).
     Evidence: internal:hipaa/procedures/security-incident-response, internal:hipaa/registers/subprocessor-register
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [service-organization] coverage: documented
     applies_when: [third-parties]
     Obtain notification commitments from your third parties and run your response process
@@ -1975,6 +2017,7 @@ HDS's own position on SOC 2:
     sends the breach notices and meets the regulatory clock; HDS's incident procedure
     governs the report it produces.
     Evidence: internal:hipaa/procedures/security-incident-response
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [service-organization] coverage: documented
     applies_when: always
     Own the breach-notification workflow — assess scope, draft and send notices to subjects
@@ -2005,6 +2048,7 @@ HDS's own position on SOC 2:
     operates and documents the audit and access posture. The implementer formats the
     accounting into a subject-facing response and verifies the requester's identity.
     Evidence: internal:hipaa/policies/access-control
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [service-organization] coverage: documented
     applies_when: always
     Package the audit-derived accounting into a subject-facing report on request and verify
@@ -2035,6 +2079,7 @@ HDS's own position on SOC 2:
     that preserve history. HDS operates and documents the data-quality posture. Semantic
     correctness — is this the right value — stays with the implementer's application logic.
     Evidence: internal:soc2/policies/data-quality, internal:hipaa/policies/minimum-necessary
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [service-organization] coverage: documented
     applies_when: always
     Own semantic-accuracy validation in your application, surface update paths to subjects,

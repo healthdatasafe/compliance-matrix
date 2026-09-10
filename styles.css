@@ -55,6 +55,7 @@ a.pl{cursor:pointer}
 .rg{display:inline-block;background:var(--ink);color:#fff;font-size:.6rem;font-weight:700;padding:.05rem .35rem;border-radius:.25rem;margin-left:.2rem}
 .tpl{font-size:.78rem;margin-left:.4rem;text-decoration:none}
 .lock{font-weight:600;color:#374151}.onreq{font-size:.7rem;color:#a16207;background:#fef9c3;padding:.02rem .35rem;border-radius:999px}
+.apv{display:inline-block;margin-top:.35rem;font-size:.7rem;font-weight:600;color:#15803d;background:#dcfce7;padding:.1rem .45rem;border-radius:999px;cursor:help}
 .covers code{margin-right:.3rem}.muted{color:var(--muted)}
 /* ---- HDS standing page ---- */
 .honesty{background:#fff;border:1px solid var(--line);border-left:4px solid #b45309;border-radius:.6rem;padding:.9rem 1.1rem;margin:1.2rem 0;max-width:56rem}

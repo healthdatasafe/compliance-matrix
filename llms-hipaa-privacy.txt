@@ -9,7 +9,7 @@ is nobody's Art.28 processor, and holds no HIPAA role in it.
 HDS's own position on HIPAA-Privacy:
   - vault: HDS is not-applicable. Every vault. The individual holds the account and decides who may see the data, so HDS holds it for them and never on a covered entity's behalf, whoever put it there and wherever it physically sits. A business associate is defined by acting on a covered entity's behalf, so HDS is not one here and HIPAA does not reach it.
   External assurance: self-assessed. No independent Privacy Rule assessment covers HDS.
-  Evidence: 33 of 35 requirements answered from approved HDS documentation (33 cite internal evidence), as of 2026-09-08.
+  Evidence: 33 of 35 requirements answered from approved HDS documentation (33 cite internal evidence), as of 2026-09-10.
   HIPAA does not reach HDS in the vault. Thirty-three of the thirty-five requirements are
   answered from approved HDS documentation, which is what an implementer holding a
   covered-entity or business-associate role inherits when it builds here. Most of this
@@ -46,15 +46,18 @@ HDS's own position on HIPAA-Privacy:
     log makes every use / disclosure attributable to a specific access at a specific time,
     which is the substrate for §164.528 accounting.
   HDS: facilitated (effort saved: medium) (mode: primitive)
-    On top of Pryv's permission model, HDS operates the platform that enforces it: as a
-    business associate, HDS uses or discloses PHI only as its BAA and the covered entity's
-    instructions permit. The substantive determination of which uses are permitted remains
-    the covered entity's.
+    On top of Pryv's permission model, HDS operates the platform that enforces it. HDS is
+    not a business associate in the vault: it holds data for the individual, who decides who
+    may see it, so there is no covered entity whose instructions bound its uses. What bounds
+    them is the permission the individual granted. The substantive determination of which
+    uses are permitted remains the covered entity's wherever one is party to the
+    relationship.
     Detail: Every workforce, app, and counterparty action on PHI is mediated by an access
     whose permissions bound the streams and levels reachable. HDS configures no use or
     disclosure of customer PHI for its own purposes, and the audit log makes each use
     attributable to a specific access at a specific time.
     Evidence: internal:hipaa/policies/uses-and-disclosures
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: always; basis: entity
     Decide which uses and disclosures are permitted under the Privacy Rule and configure
@@ -89,6 +92,7 @@ HDS's own position on HIPAA-Privacy:
     verbal claim. HDS stores the purpose tag and preserves it across the access version
     chain.
     Evidence: internal:hipaa/policies/uses-and-disclosures
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: [analytics]; basis: entity
     Classify your workflows as TPO or not and provision purpose-tagged accesses accordingly.
@@ -128,6 +132,7 @@ HDS's own position on HIPAA-Privacy:
     right to revoke onto access deletion. HDS ships the primitives; presenting the §508(c)
     elements at the grant moment is the covered entity's UX responsibility.
     Evidence: internal:hipaa/policies/authorizations
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: [analytics, secondary-use]; basis: entity
     Ensure your consent surface presents all §508(c) authorization elements and retains the
@@ -159,6 +164,7 @@ HDS's own position on HIPAA-Privacy:
     circumstance-driven. HDS stores the offered choice and the recorded response so the
     §164.510 determination is reconstructable later.
     Evidence: internal:hipaa/policies/uses-and-disclosures
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: always; basis: entity
     Offer the opportunity to agree or object and record the individual's response.
@@ -188,6 +194,7 @@ HDS's own position on HIPAA-Privacy:
     revokes the access. The audit trail shows the full lifecycle attached to the legal-basis
     claim.
     Evidence: internal:hipaa/policies/uses-and-disclosures
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: [secondary-use]; basis: entity
     Determine whether each disclosure qualifies under §512 and record its category and
@@ -218,6 +225,7 @@ HDS's own position on HIPAA-Privacy:
     The de-identification logic is the covered entity's application code; HDS stores its
     output.
     Evidence: internal:hipaa/policies/de-identification
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: [analytics, secondary-use]; basis: entity
     Choose the de-identification method, perform the transformation, and retain the
@@ -251,6 +259,7 @@ HDS's own position on HIPAA-Privacy:
     no individually identifiable health information: the operator channel is a place
     minimum-necessary can quietly fail, so it is evidenced rather than assumed.
     Evidence: internal:hipaa/policies/minimum-necessary, internal:hipaa/evidence/monitoring-telemetry-no-phi
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: [connects]; basis: integration
     Design stream topology and permission scopes so each access is limited to the minimum
@@ -272,14 +281,21 @@ HDS's own position on HIPAA-Privacy:
     so the same words presented are recoverable per subject per time. The customer-facing
     `app-web-auth3` template is the surface where the notice typically appears.
   HDS: facilitated (effort saved: medium) (mode: storage)
-    HDS preserves the notice text shown to each individual, on the relevant access
-    client-data or as a dedicated event, so the exact words presented are recoverable per
-    individual and per time. The notice content is the covered entity's editorial
-    responsibility.
+    This section reaches covered entities, and HDS issues no notice of privacy practices
+    under it. What the platform supplies is preservation: the notice text shown to each
+    individual is stored on the relevant access client-data or as a dedicated event, so the
+    exact words presented are recoverable per individual and per time. The notice content
+    stays the covered entity's editorial responsibility.
     Detail: The customer-facing authentication surface is where the notice typically appears
-    at grant time. HDS stores the presented notice as a durable artefact bound to the
-    individual's session.
+    at grant time, and HDS stores the presented notice as a durable artefact bound to the
+    individual's session. A template and process for ingesting and displaying a covered
+    entity's own notice through HDS software are not yet formalised; HDS records that as
+    pending remediation, activated when a covered-entity engagement requires it. Separately,
+    HDS plans to publish a notice-style privacy statement of its own, as good practice and
+    because equivalent transparency is required under other regimes it operates within. That
+    is a voluntary undertaking, not a §164.520 duty.
     Evidence: internal:hipaa/policies/notice-of-privacy-practices
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: always; basis: entity
     Author and maintain your notice of privacy practices and present it to individuals as
@@ -303,15 +319,25 @@ HDS's own position on HIPAA-Privacy:
     the same, mint / narrow the access tied to the health-plan workflow, but you must apply
     it without operational discretion when this specific condition is met.
   HDS: configurable (effort saved: medium)
-    A granted restriction is configured as a scope-down or revocation of the relevant
-    access, and the access version chain proves what state was in force before and from when
-    the restriction applies. Confidential- communication preferences are stored as account
-    client-data or a dedicated event.
-    Detail: Post-HITECH §522(a)(1)(vi) makes restrictions on disclosure to a health plan for
-    out-of-pocket-paid services mandatory on request; the configuration pattern is
-    identical, but the covered entity must apply it without discretion when that condition
-    is met.
+    On this platform a restriction is usually the individual's own act: they narrow or
+    revoke the relevant access themselves, with immediate effect, and the access version
+    chain proves what state was in force before and from when. Where an individual asks HDS
+    to restrict their own data instead, HDS sends written instructions rather than reaching
+    into the account, because the individual remains the decision-maker.
+    Confidential-communication preferences are stored as account client-data or a dedicated
+    event.
+    Detail: HDS applies directly only those restrictions sitting in platform configuration
+    it controls, and routes to the responsible covered entity any request belonging to a
+    covered-entity relationship, since that decision is theirs. Stated response times are 30
+    days where HDS does not control the outcome and 60 days where it applies a restriction
+    it does, each with one 30-day extension. The how-to guide and a formal intake for
+    requests reaching HDS directly are not yet formalised, which HDS records as pending
+    remediation. Post-HITECH §522(a)(1)(vi) makes a restriction on disclosure to a health
+    plan for out-of-pocket-paid services mandatory on request; the configuration pattern is
+    identical, but a covered entity must apply it without discretion when that condition is
+    met.
     Evidence: internal:hipaa/procedures/restriction-requests
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: always; basis: integration
     Evaluate restriction and confidential-communication requests and apply the corresponding
@@ -347,6 +373,7 @@ HDS's own position on HIPAA-Privacy:
     not a software latency, and any non-native export format is produced by the
     implementer's portal.
     Evidence: internal:hipaa/procedures/individual-right-of-access
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [individual] coverage: facilitated
     applies_when: NOT YET CLASSIFIED (always shown)
     You access and export your own PHI directly through the standard API or a subject portal
@@ -381,6 +408,7 @@ HDS's own position on HIPAA-Privacy:
     linked back to the original, so the disagreement travels with the data on subsequent
     disclosures.
     Evidence: internal:hipaa/procedures/amendment-requests
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: always; basis: entity
     Run the amendment request, decision and notice process and record accepted amendments
@@ -424,6 +452,7 @@ HDS's own position on HIPAA-Privacy:
     request bodies, so the description is at the API-shape level — sufficient under §164.528
     and favourable for data minimisation.
     Evidence: internal:hipaa/procedures/accounting-of-disclosures
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: always; basis: integration
     Compile and deliver the accounting, applying the §164.528 exceptions and your retention
@@ -445,16 +474,18 @@ HDS's own position on HIPAA-Privacy:
     privacy official a concrete artifact to review when investigating complaints or auditing
     internal use.
   HDS: implemented (effort saved: low)
-    HDS has designated its own Privacy Official under its BA role: a distinct holder from
-    the Security Official, appointed by the CEO effective 2026-07-15 and recorded in the
-    designated-roles register (disclosed on request; the source documents are still moving
-    through internal approval). The audit log gives that official a concrete artefact to
-    review when investigating complaints or internal use. The covered entity's own
-    privacy-official designation remains its organizational decision.
-    Detail: HDS operates as a business associate and names its own responsible official and
-    contact; the covered entity's privacy-official designation is a programme element
+    HDS has designated its own Privacy Official: a distinct holder from the Security
+    Official, appointed by the CEO effective 2026-07-15 and recorded in the designated-roles
+    register (disclosed on request; the source documents are still moving through internal
+    approval). That designation is HDS's own governance choice, not a duty it carries under
+    this section, which reaches covered entities. The audit log gives that official a
+    concrete artefact to review when investigating complaints or internal use. The covered
+    entity's own privacy-official designation remains its organizational decision.
+    Detail: HDS names a responsible official and a contact point as a matter of its own
+    programme. The covered entity's privacy-official designation is a programme element
     outside HDS's scope.
     Evidence: internal:hipaa/policies/privacy-program-governance, internal:hipaa/registers/designated-roles
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: always; basis: entity
     Designate and document your privacy official and complaint contact.
@@ -472,12 +503,14 @@ HDS's own position on HIPAA-Privacy:
     record-keeping are yours.
   HDS: documented (effort saved: low)
     Workforce privacy training is the covered entity's programme. HDS trains its own
-    workforce on its privacy and security policies as a business associate and retains the
-    training records; the customer's programme is out of HDS's scope.
+    workforce on its privacy and security policies and retains the training records, as its
+    own governance rather than as a duty it carries under this section; the customer's
+    programme is out of HDS's scope.
     Detail: Audit and observability data can make training effectiveness measurable by
     revealing whether access patterns match policy after training, but the training content
     and record-keeping belong to the implementer.
     Evidence: internal:hipaa/procedures/workforce-training
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: always; basis: entity
     Train your workforce on your privacy policies and retain the training records.
@@ -507,6 +540,7 @@ HDS's own position on HIPAA-Privacy:
     §530(c) technical and physical answer; the administrative safeguards remain the covered
     entity's.
     Evidence: internal:hipaa/policies/privacy-safeguards
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: always; basis: entity
     Maintain administrative safeguards and document how the technical and physical
@@ -531,6 +565,7 @@ HDS's own position on HIPAA-Privacy:
     backup-restore capability across every region; the mitigation decision and any breach
     notification follow the covered entity's process.
     Evidence: internal:hipaa/procedures/incident-mitigation
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: always; basis: entity
     Investigate violations, decide and execute mitigation, and run any required
@@ -563,6 +598,7 @@ HDS's own position on HIPAA-Privacy:
     operational telemetry it collects as operator is evidenced as carrying no PHI and no
     individually identifiable health information.
     Evidence: internal:hipaa/policies/minimum-necessary, internal:hipaa/evidence/monitoring-telemetry-no-phi
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: [connects, analytics]; basis: integration
     Apply minimum-necessary scoping and document where exceptions are invoked.
@@ -595,6 +631,7 @@ HDS's own position on HIPAA-Privacy:
     reference so disclosures are attributable to the BAA, while the contract itself is
     signed between the parties.
     Evidence: internal:hipaa/registers/baa-register
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: [third-parties]; basis: entity
     Execute a BAA with each business associate before disclosing PHI and scope their access
@@ -625,6 +662,7 @@ HDS's own position on HIPAA-Privacy:
     requirement a byproduct of normal record-keeping. The intake workflow and response are
     the implementer's.
     Evidence: internal:hipaa/procedures/complaint-handling
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: always; basis: entity
     Operate the complaint process and document complaints and their dispositions.
@@ -641,11 +679,16 @@ HDS's own position on HIPAA-Privacy:
     X?") that HR processes evaluate.
   HDS: documented (effort saved: low)
     Sanctions are an HR and disciplinary process with no software role at the decision
-    layer. HDS maintains its own workforce sanction policy as a business associate; the
-    audit log supplies the underlying evidence that disciplinary processes evaluate.
-    Detail: HDS documents and applies sanctions for its own workforce, but the covered
-    entity's sanction programme is outside HDS's scope.
+    layer. HDS maintains a workforce sanction policy of its own, adopted by the CEO on
+    2026-07-15 with a graduated scale in force; the audit log supplies the underlying
+    evidence a disciplinary process would evaluate. A covered entity's own sanction
+    programme remains its own.
+    Detail: The policy's enforceability rests on the workforce having acknowledged the
+    policy set, which is tracked separately rather than asserted here: sanctioning someone
+    against a policy they never acknowledged is the weak point that tracking exists to
+    close. The covered entity's sanction programme is outside HDS's scope.
     Evidence: internal:hipaa/policies/workforce-sanctions
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: always; basis: entity
     Maintain and apply your workforce sanction policy and document enforcement.
@@ -691,6 +734,7 @@ HDS's own position on HIPAA-Privacy:
     and audit. The covered entity's policy programme is its own; HDS documents the policies
     governing its operations.
     Evidence: internal:hipaa/policies/privacy-policy-management
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: always; basis: entity
     Author, approve and periodically review your privacy policies and procedures.
@@ -721,6 +765,7 @@ HDS's own position on HIPAA-Privacy:
     individual's opportunity-to-object record. HDS stores and enforces the narrowed scope;
     the disclosure decision is the implementer's.
     Evidence: internal:hipaa/policies/uses-and-disclosures
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: always; basis: entity
     Determine directly-relevant scope, verify the relationship, and record the disclosure
@@ -749,6 +794,7 @@ HDS's own position on HIPAA-Privacy:
     statutory basis; the audit trail preserves the disclosure. HDS makes no public-health
     disclosure of customer PHI on its own initiative.
     Evidence: internal:hipaa/policies/uses-and-disclosures
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: always; basis: entity
     Confirm the public-health authority's legal basis and record the disclosure.
@@ -774,6 +820,7 @@ HDS's own position on HIPAA-Privacy:
     the disclosure but makes no law-enforcement disclosure of customer PHI on its own
     initiative outside legal process served on it.
     Evidence: internal:hipaa/procedures/law-enforcement-requests
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: always; basis: entity
     Evaluate law-enforcement requests against §512(f) conditions and record the basis.
@@ -803,6 +850,7 @@ HDS's own position on HIPAA-Privacy:
     timely-response procedure on the individual-direct path; the timeline obligation remains
     operative on the partner-mediated path (covered entity intake → HDS-as-BA fulfilment).
     Evidence: doc:https://demo-portability.datasafe.dev, doc:https://portability.hds.ngo, internal:hipaa/procedures/individual-right-of-access
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: always; basis: entity
     Operate the request intake and meet the §524(b) response timeline.
@@ -833,6 +881,7 @@ HDS's own position on HIPAA-Privacy:
     can keep or forward to another covered entity. Non-native formats and summaries are
     built by the implementer's portal from the same source events.
     Evidence: doc:https://demo-portability.datasafe.dev, doc:https://portability.hds.ngo, doc:https://github.com/healthdatasafe/app-portability, internal:hipaa/procedures/individual-right-of-access
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [individual] coverage: facilitated
     applies_when: NOT YET CLASSIFIED (always shown)
     You obtain your PHI in canonical JSON or a format your portal produces.
@@ -863,6 +912,7 @@ HDS's own position on HIPAA-Privacy:
     the representative relationship and legal basis; the determination of whether an
     exception applies is the implementer's.
     Evidence: internal:hipaa/policies/personal-representatives
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: always; basis: entity
     Verify representative status, grant appropriate access, and apply exceptions where
@@ -886,9 +936,10 @@ HDS's own position on HIPAA-Privacy:
     recorded so the audit chain ties the disclosure to its legal authority. The compliance
     burden of the cited law is the covered entity's.
     Detail: The access carries the statute reference; the audit trail preserves the
-    disclosure. HDS responds to legal process served on it as a business associate per its
-    BAA and applicable law.
+    disclosure. HDS responds to legal process served on it under applicable law, and under
+    the terms of a BAA wherever one is in force.
     Evidence: internal:hipaa/policies/uses-and-disclosures
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: always; basis: entity
     Confirm the legal requirement, limit the disclosure to it, and record the basis.
@@ -915,6 +966,7 @@ HDS's own position on HIPAA-Privacy:
     platform simply persists whatever events the implementer's de-identification process
     produces.
     Evidence: internal:hipaa/policies/de-identification
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: [analytics, secondary-use]; basis: entity
     Select and execute Expert Determination or Safe Harbor and retain the documentation.
@@ -952,6 +1004,7 @@ HDS's own position on HIPAA-Privacy:
     the mapping, and ensuring the code is random or derived from non-PHI is the
     implementer's.
     Evidence: internal:hipaa/policies/de-identification
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: [analytics, secondary-use]; basis: entity
     Generate codes that do not encode PHI and restrict their use to re-identification.
@@ -980,6 +1033,7 @@ HDS's own position on HIPAA-Privacy:
     sufficient source material for the covered entity to assemble the formal §528(b)
     accounting.
     Evidence: doc:https://demo-portability.datasafe.dev, doc:https://portability.hds.ngo, internal:hipaa/procedures/accounting-of-disclosures
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: always; basis: integration
     Compile each accounting entry's required fields from the audit log and your records.
@@ -1006,10 +1060,13 @@ HDS's own position on HIPAA-Privacy:
     business-associate access tagged with the contract reference and role, scoped to the
     covered subjects and streams, with full audit-log accountability. The contract content
     itself is contractual.
-    Detail: HDS signs BAAs as a business associate and flows obligations down to its own
-    subcontractors. The access tags and audit log support enforcement and evidence of the
-    §164.504(e) terms.
+    Detail: HDS is not a business associate in the vault, so no BAA governs that
+    arrangement. It does execute BAAs for the separate arrangement in which an organisation
+    places protected health information with it on its own behalf, and flows the obligations
+    down to its own subcontractors. The access tags and audit log support enforcement and
+    evidence of the §164.504(e) terms.
     Evidence: internal:hipaa/registers/baa-register
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: [third-parties]; basis: entity
     Execute a BAA meeting §164.504(e)(2) before any business associate handles PHI.
@@ -1062,6 +1119,7 @@ HDS's own position on HIPAA-Privacy:
     subsequent proceedings. The implementer still states the protection in their own
     policies; HDS's control binds HDS's own workforce.
     Evidence: internal:hipaa/policies/workforce-sanctions
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: always; basis: entity
     Recognize the §502(j) protection in your policies and non-retaliation handling.

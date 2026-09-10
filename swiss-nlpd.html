@@ -98,15 +98,17 @@ topology. HDS stores and enforces that layout; it does not assign the
 sensitivity classification.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/access-control</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
       <div class="persona">
         <strong>controller</strong> <span class="b documented">documented</span>
         
-        <p>Classify data categories — including the nLPD's broader sensitive
-categories — and design stream topology and permission scopes
-accordingly.
+        <p>Classify the data categories you handle, including the nLPD's
+broader sensitive categories, and request permission scopes no wider
+than those categories need. The vault's stream topology is not yours
+to design.
 </p>
       </div><div class="persona">
         <strong>processor</strong> <span class="b documented">documented</span>
@@ -159,7 +161,8 @@ criterion as a durable record. Storage limitation is operated through the
 same erasure mechanics described under Art. 32; automated retention
 enforcement is a known gap that the controller must cover by process.
 </p></details>
-      <ul class="ev"><li><span class="lock">🔒 hipaa/policies/minimum-necessary</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/policies/access-control</span> <span class="onreq">available on request</span></li></ul>
+      <ul class="ev"><li><span class="lock">🔒 hipaa/policies/minimum-necessary</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/policies/access-control</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 gdpr/policies/lawful-basis-and-consent</span> <span class="onreq">available on request</span></li></ul>
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -221,14 +224,16 @@ HDS supplies and operates the privacy-by-design substrate that those
 choices configure.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/access-control</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
       <div class="persona">
         <strong>controller</strong> <span class="b documented">documented</span>
         
-        <p>Configure privacy-protective defaults at deployment — minimal token
-scopes, retention policy and registration notice.
+        <p>Set privacy-protective defaults in what you deploy: the narrowest
+grant you request, your own retention policy, and your own
+collection notice. Vault registration and its notices belong to HDS.
 </p>
       </div><div class="persona">
         <strong>processor</strong> <span class="b documented">documented</span>
@@ -281,6 +286,7 @@ documented residual (operator-held-key or end-to-end encryption remain
 optional strengthenings).
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/transmission-security</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/policies/encryption</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/risk/at-rest-encryption</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/evidence/at-rest-encryption-verification</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -340,7 +346,8 @@ information duty; where data did not come from the subject, provenance
 metadata on the event client-data records the source. HDS stores these
 artefacts; presenting the notice is the controller's.
 </p></details>
-      <ul class="ev"><li><span class="lock">🔒 hipaa/policies/notice-of-privacy-practices</span> <span class="onreq">available on request</span></li></ul>
+      <ul class="ev"><li><span class="lock">🔒 hipaa/policies/notice-of-privacy-practices</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 gdpr/policies/lawful-basis-and-consent</span> <span class="onreq">available on request</span></li></ul>
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -390,6 +397,7 @@ dedicated event on a designated stream, time-anchored by the audit log.
 The decision logic and the duty to inform are the controller's.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/procedures/security-incident-response</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -443,7 +451,8 @@ boundary.
 HDS supplies concrete technical artefacts that populate the
 data-flow and residency sections of the DPIA.
 </p></details>
-      <ul class="ev"><li><span class="lock">🔒 gdpr/registers/records-of-processing</span> <span class="onreq">available on request</span></li></ul>
+      <ul class="ev"><li><span class="lock">🔒 gdpr/registers/records-of-processing</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 gdpr/procedures/dpia</span> <span class="onreq">available on request</span></li></ul>
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -515,6 +524,7 @@ decommissioned medium is protected; a live-system compromise reaches
 decrypted content and is assessed on its facts.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/procedures/security-incident-response</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 gdpr/procedures/breach-notification-72h</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/risk/at-rest-encryption</span> <span class="onreq">available on request</span></li></ul>
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -579,6 +589,7 @@ provenance recorded on event client-data when data did not come from the
 subject directly. The response timeline is the controller's process target.
 </p></details>
       <ul class="ev"><li>doc: https://demo-portability.datasafe.dev</li><li>doc: https://portability.hds.ngo</li><li>doc: https://github.com/healthdatasafe/app-portability</li><li><span class="lock">🔒 gdpr/procedures/data-subject-rights</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/procedures/security-incident-response</span> <span class="onreq">available on request</span></li></ul>
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -591,8 +602,9 @@ built on it.
       </div><div class="persona">
         <strong>controller</strong> <span class="b documented">documented</span>
         
-        <p>Operate the request process, meet the response timeline and supply the
-extended minimum-information set.
+        <p>Operate the request process for the data you hold, meet the response
+timeline and supply the extended minimum-information set. For data
+still in the vault the individual asks HDS directly.
 </p>
       </div><div class="persona">
         <strong>processor</strong> <span class="b documented">documented</span>
@@ -643,6 +655,7 @@ version pin, app version, deploy URL, completion timestamp) for
 provenance.
 </p></details>
       <ul class="ev"><li>doc: https://demo-portability.datasafe.dev</li><li>doc: https://portability.hds.ngo</li><li>doc: https://github.com/healthdatasafe/app-portability</li><li><span class="lock">🔒 gdpr/procedures/data-subject-rights</span> <span class="onreq">available on request</span></li></ul>
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -655,7 +668,9 @@ controller via the capability flow.
       </div><div class="persona">
         <strong>controller</strong> <span class="b documented">documented</span>
         
-        <p>Support the portability request and any feasible direct transmission.
+        <p>Supply the data you hold on request, and support a direct
+transmission where feasible. Portability out of the vault itself is
+between the individual and HDS.
 </p>
       </div><div class="persona">
         <strong>processor</strong> <span class="b documented">documented</span>
@@ -699,14 +714,15 @@ the recorded legal-ground values. HDS stores and audits the ground; it does
 not determine which ground applies.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/access-control</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
       <div class="persona">
         <strong>controller</strong> <span class="b documented">documented</span>
         
-        <p>Determine the overriding interest or consent basis and record the cited
-ground on each access.
+        <p>Determine the overriding interest or consent basis for what you
+hold, and record the cited ground in your own register.
 </p>
       </div><div class="persona">
         <strong>processor</strong> <span class="b documented">documented</span>
@@ -752,6 +768,7 @@ account for. Automated time-based destruction is not implemented and must
 be operated as a controller process.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 gdpr/procedures/data-subject-rights</span> <span class="onreq">available on request</span></li></ul>
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -763,8 +780,9 @@ be operated as a controller process.
       </div><div class="persona">
         <strong>controller</strong> <span class="b documented">documented</span>
         
-        <p>Run the rectification and erasure process and operate retention and
-destruction as automation is not built in.
+        <p>Rectify, erase and destroy within the copy and the records you hold,
+and operate that retention yourself as no automation is built in.
+The vault's own contents are the individual's to correct or delete.
 </p>
       </div><div class="persona">
         <strong>processor</strong> <span class="b documented">documented</span>
@@ -813,14 +831,16 @@ on the originating access client-data. The CH region is operated in
 Switzerland; residency is enforced at the core level by architecture.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 gdpr/policies/international-transfers</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/registers/hosting-provider-attestations</span> <span class="onreq">available on request</span></li></ul>
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
       <div class="persona">
         <strong>controller</strong> <span class="b documented">documented</span>
         
-        <p>Choose the residency region per subject, and where data leaves
-Switzerland record the adequacy or safeguard basis.
+        <p>You cannot choose a region per subject; the individual picks it when
+they register. Where data leaves Switzerland by your own hand,
+record the adequacy or safeguard basis.
 </p>
       </div><div class="persona">
         <strong>processor</strong> <span class="b documented">documented</span>
@@ -867,14 +887,15 @@ cited exception and the disclosure event. Whether an exception applies is
 the controller's legal judgement.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 gdpr/policies/international-transfers</span> <span class="onreq">available on request</span></li></ul>
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
       <div class="persona">
         <strong>controller</strong> <span class="b documented">documented</span>
         
-        <p>Determine the applicable exception and record it on the disclosing
-access.
+        <p>Determine the applicable exception and record it against the
+disclosure you make, in your own transfer records.
 </p>
       </div><div class="persona">
         <strong>processor</strong> <span class="b documented">documented</span>
@@ -921,6 +942,7 @@ how the Act applies to its processing. The platform's audit and access
 records evidence that processing occurs.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/access-control</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -968,6 +990,7 @@ residency mechanism; the determination of territorial applicability is the
 controller's.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/registers/hosting-provider-attestations</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -1011,7 +1034,8 @@ described there.
       <details><summary>detail</summary><p>See Art. 34 for the data-residency control and the basis-recording
 pattern that satisfy the cross-border principle in practice.
 </p></details>
-      <ul class="ev"><li><span class="lock">🔒 gdpr/policies/international-transfers</span> <span class="onreq">available on request</span></li></ul>
+      <ul class="ev"><li><span class="lock">🔒 gdpr/policies/international-transfers</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/risk/cross-core-residency-data-flow</span> <span class="onreq">available on request</span></li></ul>
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -1058,13 +1082,15 @@ access and anchored in time by the audit log. HDS stores and audits it; it
 does not select it.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/access-control</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
       <div class="persona">
         <strong>controller</strong> <span class="b documented">documented</span>
         
-        <p>Determine the justification basis and record it on the relevant access.
+        <p>Determine the justification basis for your own processing and record
+it in your own register.
 </p>
       </div><div class="persona">
         <strong>processor</strong> <span class="b documented">documented</span>
@@ -1106,6 +1132,7 @@ chain are the evidence layer the controller can provide.
       <details><summary>detail</summary><p>Interaction with the Commissioner is the controller's legal and regulatory
 process. HDS supplies no control specific to this Article.
 </p></details>
+      
       
     </div>
     <div class="layer impl">
@@ -1158,14 +1185,16 @@ controller's configuration. HDS supplies the minimum-by-default
 primitives those settings exercise.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/minimum-necessary</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/policies/access-control</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
       <div class="persona">
         <strong>controller</strong> <span class="b documented">documented</span>
         
-        <p>Configure minimal defaults — token scopes, retention and MFA — so
-processing is limited to the minimum required.
+        <p>Keep your own processing to the minimum: request the narrowest
+grant, retain the least, and enforce MFA on your own systems. The
+vault's defaults are HDS's.
 </p>
       </div><div class="persona">
         <strong>processor</strong> <span class="b documented">documented</span>
@@ -1212,6 +1241,7 @@ is reconstructable later. HDS stores and audits the rationale; it makes no
 determination of justification.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 gdpr/procedures/data-subject-rights</span> <span class="onreq">available on request</span></li></ul>
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -1254,6 +1284,7 @@ specific to it.
 operations; HDS's residency and transfer controls under Art. 34 are the
 relevant operational layer.
 </p></details>
+      
       
     </div>
     <div class="layer impl">
@@ -1304,6 +1335,7 @@ primitives to evidence instructed-only processing; the substantive
 instructions are the controller's.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/registers/subprocessor-register</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/policies/access-control</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -1363,6 +1395,7 @@ the register document itself is the controller's and processor's to
 maintain.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 gdpr/registers/records-of-processing</span> <span class="onreq">available on request</span></li></ul>
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -1413,6 +1446,7 @@ reasoning as client-data so it is available for auditor questions.
 stored alongside the account or notice artefacts for traceability.
 </p></details>
       
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -1461,6 +1495,7 @@ responsibility. HDS makes the presented text recoverable per subject and
 per time as a durable artefact.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/notice-of-privacy-practices</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -1505,6 +1540,7 @@ Article.
 controller matter outside the platform's scope.
 </p></details>
       
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -1545,6 +1581,7 @@ supplies no control specific to this requirement.
       <details><summary>detail</summary><p>Whether the threshold is met and who is designated are the controller's
 decisions outside the platform's scope.
 </p></details>
+      
       
     </div>
     <div class="layer impl">
@@ -1595,6 +1632,7 @@ DPA-defined. HDS supplies the scoping evidence and cooperates; the duties
 toward subjects are ultimately the controller's.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/procedures/security-incident-response</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 gdpr/procedures/breach-notification-72h</span> <span class="onreq">available on request</span></li></ul>
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -1638,6 +1676,7 @@ software role. HDS supplies no control specific to this Article.
       <details><summary>detail</summary><p>The Article concerns statutory public-register access rather than the
 controller's own processing operations.
 </p></details>
+      
       
     </div>
     <div class="layer impl">

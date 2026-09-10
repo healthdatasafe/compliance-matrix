@@ -9,7 +9,7 @@ is nobody's Art.28 processor, and holds no HIPAA role in it.
 HDS's own position on Swiss nLPD:
   - vault: HDS is controller. The individual's vault. HDS determines the purposes and means of operating it, so HDS is the controller under the Act. Data enters only with the individual's explicit consent, and the individual decides who may access it afterwards.
   External assurance: self-assessed. No FDPIC review, no certification under Art.13 nLPD and no independent audit has been performed. This is HDS's own assessment. Nothing is on file for the Swiss hosting region either: the physical safeguards HDS inherits there are asserted by the provider, not evidenced by a third-party audit.
-  Evidence: 13 of 30 requirements answered from approved HDS documentation (24 cite internal evidence), as of 2026-09-08.
+  Evidence: 11 of 30 requirements answered from approved HDS documentation (24 cite internal evidence), as of 2026-09-10.
   Swiss residency is the strongest part of this position: the ch region runs on Swiss
   infrastructure and the data does not leave it, which is what most of this Act's
   residency and transfer concern is about. Thirteen of the thirty requirements rest on
@@ -58,10 +58,12 @@ HDS's own position on Swiss nLPD:
     heightened-protection posture follows the topology. HDS stores and enforces that layout;
     it does not assign the sensitivity classification.
     Evidence: internal:hipaa/policies/access-control
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [controller] coverage: documented
     applies_when: [processes-personal-data]
-    Classify data categories — including the nLPD's broader sensitive categories — and
-    design stream topology and permission scopes accordingly.
+    Classify the data categories you handle, including the nLPD's broader sensitive
+    categories, and request permission scopes no wider than those categories need. The
+    vault's stream topology is not yours to design.
   IMPLEMENTER [processor] coverage: documented
     applies_when: always
     Process the categories the controller designates only as instructed.
@@ -94,7 +96,7 @@ HDS's own position on Swiss nLPD:
     durable record. Storage limitation is operated through the same erasure mechanics
     described under Art. 32; automated retention enforcement is a known gap that the
     controller must cover by process.
-    Evidence: internal:hipaa/policies/minimum-necessary, internal:hipaa/policies/access-control
+    Evidence: internal:hipaa/policies/minimum-necessary, internal:hipaa/policies/access-control, internal:gdpr/policies/lawful-basis-and-consent
   IMPLEMENTER [controller] coverage: documented
     applies_when: [processes-personal-data]
     Determine the lawful purpose, present it recognisably at collection, and define a
@@ -127,10 +129,12 @@ HDS's own position on Swiss nLPD:
     minted, retention selected and the notice shown at registration. HDS supplies and
     operates the privacy-by-design substrate that those choices configure.
     Evidence: internal:hipaa/policies/access-control
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [controller] coverage: documented
     applies_when: [processes-personal-data]
-    Configure privacy-protective defaults at deployment — minimal token scopes, retention
-    policy and registration notice.
+    Set privacy-protective defaults in what you deploy: the narrowest grant you request,
+    your own retention policy, and your own collection notice. Vault registration and its
+    notices belong to HDS.
   IMPLEMENTER [processor] coverage: documented
     applies_when: always
     Operate within the design and defaults the controller sets.
@@ -160,6 +164,7 @@ HDS's own position on Swiss nLPD:
     provider-held keys as the documented residual (operator-held-key or end-to-end
     encryption remain optional strengthenings).
     Evidence: internal:hipaa/policies/transmission-security, internal:hipaa/policies/encryption, internal:hipaa/risk/at-rest-encryption, internal:hipaa/evidence/at-rest-encryption-verification
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [controller] coverage: documented
     applies_when: [processes-personal-data]
     Assess whether the operated measures meet your security obligation, weighing the
@@ -196,7 +201,7 @@ HDS's own position on Swiss nLPD:
     where data did not come from the subject, provenance metadata on the event client-data
     records the source. HDS stores these artefacts; presenting the notice is the
     controller's.
-    Evidence: internal:hipaa/policies/notice-of-privacy-practices
+    Evidence: internal:hipaa/policies/notice-of-privacy-practices, internal:gdpr/policies/lawful-basis-and-consent
   IMPLEMENTER [controller] coverage: documented
     applies_when: [connects, own-records]
     Author the information notice, present it at collection and record the source where data
@@ -222,6 +227,7 @@ HDS's own position on Swiss nLPD:
     event on a designated stream, time-anchored by the audit log. The decision logic and the
     duty to inform are the controller's.
     Evidence: internal:hipaa/procedures/security-incident-response
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [controller] coverage: documented
     applies_when: [analytics]
     Identify exclusively-automated decisions, inform the subject and offer the opportunity
@@ -249,7 +255,7 @@ HDS's own position on Swiss nLPD:
     Detail: The methodology and the writing of the assessment remain the controller's. HDS
     supplies concrete technical artefacts that populate the data-flow and residency sections
     of the DPIA.
-    Evidence: internal:gdpr/registers/records-of-processing
+    Evidence: internal:gdpr/registers/records-of-processing, internal:gdpr/procedures/dpia
   IMPLEMENTER [controller] coverage: documented
     applies_when: [analytics]
     Determine when a DPIA is required, run it, and use the platform artefacts as inputs.
@@ -334,8 +340,9 @@ HDS's own position on Swiss nLPD:
     You access your own data directly through the standard API or a portal built on it.
   IMPLEMENTER [controller] coverage: documented
     applies_when: [connects]
-    Operate the request process, meet the response timeline and supply the extended
-    minimum-information set.
+    Operate the request process for the data you hold, meet the response timeline and supply
+    the extended minimum-information set. For data still in the vault the individual asks
+    HDS directly.
   IMPLEMENTER [processor] coverage: documented
     applies_when: [connects]
     Make data available to the controller to satisfy access requests.
@@ -368,7 +375,8 @@ HDS's own position on Swiss nLPD:
     capability flow.
   IMPLEMENTER [controller] coverage: documented
     applies_when: [processes-personal-data]
-    Support the portability request and any feasible direct transmission.
+    Supply the data you hold on request, and support a direct transmission where feasible.
+    Portability out of the vault itself is between the individual and HDS.
   IMPLEMENTER [processor] coverage: documented
     applies_when: always
     Provide the controller with the data needed to satisfy portability.
@@ -393,10 +401,11 @@ HDS's own position on Swiss nLPD:
     recorded legal-ground values. HDS stores and audits the ground; it does not determine
     which ground applies.
     Evidence: internal:hipaa/policies/access-control
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [controller] coverage: documented
     applies_when: [secondary-use]
-    Determine the overriding interest or consent basis and record the cited ground on each
-    access.
+    Determine the overriding interest or consent basis for what you hold, and record the
+    cited ground in your own register.
   IMPLEMENTER [processor] coverage: documented
     applies_when: [secondary-use]
     Process sensitive data only on the ground the controller records.
@@ -428,8 +437,9 @@ HDS's own position on Swiss nLPD:
     You rectify your data through the API and may request erasure.
   IMPLEMENTER [controller] coverage: documented
     applies_when: [connects]
-    Run the rectification and erasure process and operate retention and destruction as
-    automation is not built in.
+    Rectify, erase and destroy within the copy and the records you hold, and operate that
+    retention yourself as no automation is built in. The vault's own contents are the
+    individual's to correct or delete.
   IMPLEMENTER [processor] coverage: documented
     applies_when: [connects]
     Execute rectification and erasure on the controller's instruction.
@@ -470,8 +480,8 @@ HDS's own position on Swiss nLPD:
     Evidence: internal:gdpr/policies/international-transfers, internal:hipaa/registers/hosting-provider-attestations
   IMPLEMENTER [controller] coverage: documented
     applies_when: [transfer-ch-us, third-parties]
-    Choose the residency region per subject, and where data leaves Switzerland record the
-    adequacy or safeguard basis.
+    You cannot choose a region per subject; the individual picks it when they register.
+    Where data leaves Switzerland by your own hand, record the adequacy or safeguard basis.
   IMPLEMENTER [processor] coverage: documented
     applies_when: [transfer-ch-us, third-parties]
     Disclose abroad only on the controller's instruction and recorded basis.
@@ -499,7 +509,8 @@ HDS's own position on Swiss nLPD:
     Evidence: internal:gdpr/policies/international-transfers
   IMPLEMENTER [controller] coverage: documented
     applies_when: [transfer-ch-us]
-    Determine the applicable exception and record it on the disclosing access.
+    Determine the applicable exception and record it against the disclosure you make, in
+    your own transfer records.
   IMPLEMENTER [processor] coverage: documented
     applies_when: always
     Transfer under an exception only on the controller's recorded basis.
@@ -524,6 +535,7 @@ HDS's own position on Swiss nLPD:
     Act applies to its processing. The platform's audit and access records evidence that
     processing occurs.
     Evidence: internal:hipaa/policies/access-control
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [controller] coverage: documented
     applies_when: always; nature: orientation (not a duty)
     Determine whether and how the Act applies to your processing.
@@ -546,6 +558,7 @@ HDS's own position on Swiss nLPD:
     Detail: The cross-border transfer side is handled under Art. 34. HDS supplies the
     residency mechanism; the determination of territorial applicability is the controller's.
     Evidence: internal:hipaa/registers/hosting-provider-attestations
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [controller] coverage: documented
     applies_when: always; nature: orientation (not a duty)
     Work out whether the Act reaches your own processing, if you carry out any. You cannot
@@ -566,7 +579,7 @@ HDS's own position on Swiss nLPD:
     contribution — data residency and recorded transfer basis — is described there.
     Detail: See Art. 34 for the data-residency control and the basis-recording pattern that
     satisfy the cross-border principle in practice.
-    Evidence: internal:gdpr/policies/international-transfers
+    Evidence: internal:gdpr/policies/international-transfers, internal:hipaa/risk/cross-core-residency-data-flow
   IMPLEMENTER [controller] coverage: documented
     applies_when: [transfer-ch-us, third-parties]
     Apply the Art. 34 framework; this row is cross-reference only.
@@ -589,9 +602,11 @@ HDS's own position on Swiss nLPD:
     Detail: The pattern mirrors lawful-basis recording: the cited basis is stored per access
     and anchored in time by the audit log. HDS stores and audits it; it does not select it.
     Evidence: internal:hipaa/policies/access-control
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [controller] coverage: documented
     applies_when: [connects]
-    Determine the justification basis and record it on the relevant access.
+    Determine the justification basis for your own processing and record it in your own
+    register.
   IMPLEMENTER [processor] coverage: documented
     applies_when: [connects]
     Process only on the basis the controller records.
@@ -638,10 +653,11 @@ HDS's own position on Swiss nLPD:
     Detail: Token-scope defaults, retention policy and MFA settings are the controller's
     configuration. HDS supplies the minimum-by-default primitives those settings exercise.
     Evidence: internal:hipaa/policies/minimum-necessary, internal:hipaa/policies/access-control
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [controller] coverage: documented
     applies_when: [processes-personal-data]
-    Configure minimal defaults — token scopes, retention and MFA — so processing is limited
-    to the minimum required.
+    Keep your own processing to the minimum: request the narrowest grant, retain the least,
+    and enforce MFA on your own systems. The vault's defaults are HDS's.
   IMPLEMENTER [processor] coverage: documented
     applies_when: always
     Operate within the minimal defaults the controller sets.
@@ -712,6 +728,7 @@ HDS's own position on Swiss nLPD:
     keeps the sub-processor register and uses the audit and access primitives to evidence
     instructed-only processing; the substantive instructions are the controller's.
     Evidence: internal:hipaa/registers/subprocessor-register, internal:hipaa/policies/access-control
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [controller] coverage: documented
     applies_when: [stores-phi-copy, third-parties]
     If you engage processors of your own for the copy you hold, contract with them, give
@@ -798,6 +815,7 @@ HDS's own position on Swiss nLPD:
     responsibility. HDS makes the presented text recoverable per subject and per time as a
     durable artefact.
     Evidence: internal:hipaa/policies/notice-of-privacy-practices
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [controller] coverage: documented
     applies_when: [processes-personal-data]
     Provide the additional information for transfers abroad, automated decisions and

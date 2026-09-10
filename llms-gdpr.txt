@@ -10,7 +10,7 @@ HDS's own position on GDPR:
   - vault: HDS is controller. The individual's vault. HDS determines the purposes and means of operating it, so HDS is the Art.4(7) controller. Data enters only with the individual's explicit consent, and the individual decides who may access it afterwards.
   External assurance: self-assessed. No supervisory-authority certification under Art.42, no independent audit and no readiness review has been performed against this scope. Every claim below is HDS's own assessment of HDS, reviewed internally only.
   Certificates HDS relies on but does NOT hold: AWS ISO/IEC 27001, 27017 and 27018 (us region hosting layer, obtained 2026-07-28)
-  Evidence: 3 of 47 requirements answered from approved HDS documentation (41 cite internal evidence), as of 2026-09-08.
+  Evidence: 3 of 47 requirements answered from approved HDS documentation (41 cite internal evidence), as of 2026-09-10.
   HDS operates a GDPR programme rather than holding a GDPR credential. A Data Protection
   Officer was designated on 2026-07-17, a processor-side record of processing activities
   under Art.30 is maintained with eight live activities, and the platform supplies the
@@ -341,8 +341,9 @@ HDS's own position on GDPR:
     Evidence: internal:gdpr/policies/lawful-basis-and-consent
   IMPLEMENTER [controller] coverage: documented
     applies_when: [connects, analytics, secondary-use]
-    Determine and document the lawful basis for each processing activity and record it on
-    the relevant accesses.
+    Determine and document the lawful basis for each processing activity you carry out, and
+    record it in your own Art.30 register. The grant an individual gives you evidences their
+    consent to share; it is not a record of your basis for what you then do.
   IMPLEMENTER [data-subject] coverage: out-of-scope
     applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
 
@@ -456,8 +457,9 @@ HDS's own position on GDPR:
     Evidence: internal:gdpr/policies/lawful-basis-and-consent, internal:hipaa/policies/access-control
   IMPLEMENTER [controller] coverage: documented
     applies_when: [connects, stores-phi-copy, analytics, secondary-use]
-    Determine the Art.9(2) condition for each special-category processing activity, design
-    your streams accordingly, and record the basis.
+    Determine the Art.9(2) condition for each special-category activity you carry out, and
+    record the basis. Ask for the narrowest scope you need; the vault's stream layout is
+    HDS's and the individual's, not yours to design.
   IMPLEMENTER [data-subject] coverage: out-of-scope
     applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
 
@@ -531,6 +533,7 @@ HDS's own position on GDPR:
     and records the by-law basis on each access; the audit log then captures every read and
     write under that access.
     Evidence: internal:hipaa/policies/access-control
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [controller] coverage: documented
     applies_when: [processes-personal-data]
     Confirm your legal authority to process such data and record the basis; isolate the data
@@ -595,8 +598,8 @@ HDS's own position on GDPR:
     Evidence: internal:gdpr/policies/lawful-basis-and-consent
   IMPLEMENTER [controller] coverage: documented
     applies_when: [connects, own-records, third-parties, analytics, secondary-use]
-    Author and present the Art.13 disclosures at collection time; record them on the
-    service-info and access surfaces.
+    Author and present the Art.13 disclosures when you collect, and keep your own record of
+    what was shown and when. HDS's own notices cover the vault, not your processing.
   IMPLEMENTER [data-subject] coverage: out-of-scope
     applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
 
@@ -672,8 +675,9 @@ HDS's own position on GDPR:
     Evidence: doc:https://demo-portability.datasafe.dev, doc:https://portability.hds.ngo, doc:https://github.com/healthdatasafe/app-portability, internal:gdpr/procedures/data-subject-rights
   IMPLEMENTER [controller] coverage: documented
     applies_when: [connects]
-    Run the request-intake process and, if desired, a subject portal; the read mechanics are
-    provided.
+    Answer access requests for the copy and the records you hold. For data still in the
+    vault the individual reads it directly from their own HDS dashboard, so that half of the
+    request is not yours to serve.
   IMPLEMENTER [data-subject] coverage: facilitated
     applies_when: NOT YET CLASSIFIED (always shown)
     Read or export your full data set directly via the API or the backup tool.
@@ -716,8 +720,8 @@ HDS's own position on GDPR:
     Evidence: doc:https://demo-portability.datasafe.dev, doc:https://portability.hds.ngo, internal:hipaa/policies/integrity, internal:gdpr/procedures/data-subject-rights
   IMPLEMENTER [controller] coverage: documented
     applies_when: [processes-personal-data]
-    Detect inaccuracy and trigger the rectification; the update and versioning mechanics are
-    provided.
+    Correct inaccurate data in the copy and the records you hold. Data in the vault is
+    corrected by the individual, or by HDS at their request, not by you.
   IMPLEMENTER [data-subject] coverage: facilitated
     applies_when: NOT YET CLASSIFIED (always shown)
     Request rectification, which is applied while preserving the prior value for
@@ -830,7 +834,9 @@ HDS's own position on GDPR:
     Evidence: internal:hipaa/policies/access-control, internal:gdpr/procedures/data-subject-rights
   IMPLEMENTER [controller] coverage: documented
     applies_when: [processes-personal-data]
-    Apply restriction by scoping or revoking the relevant accesses and record the reason.
+    Restrict your own processing: stop using the copy and the records you hold, keep them,
+    and record the reason. Revoking the grant that feeds you is the individual's act, not a
+    restriction you apply on their behalf.
   IMPLEMENTER [data-subject] coverage: facilitated
     applies_when: NOT YET CLASSIFIED (always shown)
     Request restriction, applied as an access scope-down that halts processing while
@@ -884,8 +890,9 @@ HDS's own position on GDPR:
     Evidence: doc:https://demo-portability.datasafe.dev, doc:https://portability.hds.ngo, doc:https://github.com/healthdatasafe/app-portability, internal:gdpr/procedures/data-subject-rights
   IMPLEMENTER [controller] coverage: documented
     applies_when: [processes-personal-data]
-    Optionally wrap the export in a download UI; ensure schema alignment for any direct
-    controller-to-controller transmission.
+    Supply the data you hold in a portable format on request. Portability out of the vault
+    is between the individual and HDS; where a direct controller-to-controller transmission
+    is asked for, align on the schema.
   IMPLEMENTER [data-subject] coverage: facilitated
     applies_when: NOT YET CLASSIFIED (always shown)
     Export your data in portable JSON and have it transmitted to another controller.
@@ -931,8 +938,9 @@ HDS's own position on GDPR:
     Evidence: internal:hipaa/policies/access-control, internal:gdpr/procedures/data-subject-rights
   IMPLEMENTER [controller] coverage: documented
     applies_when: [connects, analytics, secondary-use]
-    Run the compelling-grounds assessment where applicable and apply the objection by
-    revoking or narrowing the relevant access.
+    Run the compelling-grounds assessment where applicable, then stop the processing
+    objected to in your own systems. The individual narrows or withdraws their grant
+    themselves.
   IMPLEMENTER [data-subject] coverage: facilitated
     applies_when: NOT YET CLASSIFIED (always shown)
     Object to processing; the objection is applied through the access primitive and
@@ -959,8 +967,8 @@ HDS's own position on GDPR:
     Evidence: internal:gdpr/procedures/data-subject-rights
   IMPLEMENTER [controller] coverage: documented
     applies_when: [connects, third-parties]
-    Identify the recipients from the active accesses and notify each of the rectification,
-    erasure or restriction.
+    Notify each recipient you have passed data on to. The list is the one you keep of your
+    own disclosures; you cannot enumerate who else the individual has granted access to.
   IMPLEMENTER [data-subject] coverage: out-of-scope
     applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
 
@@ -1116,8 +1124,10 @@ HDS's own position on GDPR:
     Evidence: internal:hipaa/policies/access-control, internal:gdpr/registers/records-of-processing
   IMPLEMENTER [controller] coverage: documented
     applies_when: [stores-phi-copy, third-parties]
-    Express your processing instructions as scoped accesses and review the audit log for
-    deviations.
+    Art.29 covers people acting under YOUR authority: bind your staff and your own
+    processors to act only on your instructions. It does not describe your relationship to
+    HDS or to the vault, where processing follows the individual's permissions rather than
+    yours.
   IMPLEMENTER [processor] coverage: documented
     applies_when: [stores-phi-copy, third-parties]
     Process only on documented controller instructions and keep your staff within their
@@ -1179,8 +1189,9 @@ HDS's own position on GDPR:
     Evidence: internal:hipaa/policies/access-control, internal:gdpr/policies/data-retention
   IMPLEMENTER [controller] coverage: documented
     applies_when: [processes-personal-data]
-    Configure your defaults — minimal token scopes, opt-in notices, short retention — on top
-    of the platform's privacy-protective baseline.
+    Set privacy-protective defaults in what you build: request the narrowest grant you need,
+    write opt-in notices, and keep what you receive no longer than necessary. The vault's
+    own defaults are HDS's to set.
   IMPLEMENTER [data-subject] coverage: out-of-scope
     applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
 
@@ -1283,7 +1294,9 @@ HDS's own position on GDPR:
     Evidence: internal:hipaa/registers/subprocessor-register, internal:hipaa/registers/hosting-provider-attestations, internal:gdpr/registers/records-of-processing
   IMPLEMENTER [controller] coverage: documented
     applies_when: [stores-phi-copy, third-parties]
-    Evaluate the processor's guarantees and conclude an Art.28 DPA before processing begins.
+    If you engage processors of your own for the copy you hold, evaluate their guarantees
+    and conclude an Art.28 DPA before processing begins. This is not an agreement with HDS:
+    HDS is the controller of the vault, not your processor.
     Templates to sign: dpa
   IMPLEMENTER [processor] coverage: documented
     applies_when: [stores-phi-copy, third-parties]
@@ -1429,6 +1442,7 @@ HDS's own position on GDPR:
     HDS as operator runs CI test matrices and a monitored, alert-wired production
     environment; the controller runs its own organisational testing regime.
     Evidence: internal:hipaa/policies/encryption, internal:hipaa/policies/transmission-security, internal:hipaa/policies/access-control, internal:hipaa/risk/at-rest-encryption, internal:hipaa/evidence/at-rest-encryption-verification
+    Evidence backing: every internal document cited above has completed approval.
     PLANNED (platform, impact medium): End-to-end / operator-held-key encryption is queued upstream as the strengthening for the provider-managed-key at-rest residual; claimable on this row only after pryv ships it AND HDS deploys and enables it on all cores.
   IMPLEMENTER [controller] coverage: documented
     applies_when: [connects, stores-phi-copy]
@@ -1637,6 +1651,7 @@ HDS's own position on GDPR:
     Publishing a public DPO contact point through the service-info convention is the Art.38
     follow-up, tracked on that row.
     Evidence: internal:hipaa/registers/designated-roles
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [controller] coverage: documented
     applies_when: [processes-personal-data]
     Determine whether a DPO is required for your processing and designate one where it is.
@@ -1848,11 +1863,12 @@ HDS's own position on GDPR:
     cross-region move (e.g. choosing the US region, or a US counterparty fetching from a CH
     core) is the transfer event. The controller records the recipient and transfer basis on
     the access; the legal mechanism itself is a controller/legal artefact.
-    Evidence: internal:gdpr/policies/international-transfers, internal:hipaa/registers/hosting-provider-attestations
+    Evidence: internal:gdpr/policies/international-transfers, internal:hipaa/registers/hosting-provider-attestations, internal:hipaa/risk/cross-core-residency-data-flow
   IMPLEMENTER [controller] coverage: documented
     applies_when: [transfer-eu-us, transfer-eu-ch, third-parties]
-    Choose residency to avoid or to deliberately ground transfers, and record the basis for
-    each intentional transfer.
+    You do not choose where a vault lives; the individual does, at registration. Ground the
+    transfers you actually make, which are the ones into your own systems and your own
+    processors, and record the basis for each.
   IMPLEMENTER [data-subject] coverage: out-of-scope
     applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
 
@@ -1877,7 +1893,9 @@ HDS's own position on GDPR:
     Evidence: internal:gdpr/policies/international-transfers, internal:hipaa/registers/hosting-provider-attestations
   IMPLEMENTER [controller] coverage: documented
     applies_when: [transfer-eu-us, transfer-eu-ch]
-    Route subjects to an adequacy-covered region and track the current adequacy landscape.
+    You cannot route subjects: the individual chooses their vault's region when they
+    register. Track the adequacy landscape for the transfers you actually make, into your
+    own systems and your own processors.
   IMPLEMENTER [data-subject] coverage: out-of-scope
     applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
 
@@ -1932,8 +1950,9 @@ HDS's own position on GDPR:
     PLANNED (doc, impact high): Execution of the AWS GDPR DPA plus EU/Swiss SCCs with the transfer impact assessment for the US hosting layer is the tracked remediation (the HIPAA BAA is already in force; the crossing is pseudonymised since 2026-06-24, which strengthens the TIA).
   IMPLEMENTER [controller] coverage: documented
     applies_when: [transfer-eu-us, transfer-eu-ch, third-parties]
-    Conclude SCCs or another Art.46 safeguard for US-region or other third-country transfers
-    and record the mechanism.
+    Conclude SCCs or another Art.46 safeguard for the third-country transfers you make
+    yourself, and record the mechanism. The region the vault sits in is the individual's
+    choice, not a transfer you arrange.
     Templates to sign: dpa
   IMPLEMENTER [processor] coverage: documented
     applies_when: [transfer-eu-us, transfer-eu-ch, third-parties]
@@ -1956,8 +1975,8 @@ HDS's own position on GDPR:
     controller's legal artefact.
   IMPLEMENTER [controller] coverage: documented
     applies_when: [transfer-eu-us, transfer-eu-ch, third-parties]
-    If relying on BCRs, obtain approval and record the reference on the transferring
-    accesses.
+    If relying on BCRs, obtain approval and record the reference against the transfers you
+    make, in your own transfer records.
   IMPLEMENTER [data-subject] coverage: out-of-scope
     applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
 

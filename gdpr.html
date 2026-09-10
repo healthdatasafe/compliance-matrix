@@ -95,6 +95,7 @@ transparent processing. The free-movement objective is served by the
 open API and canonical event-type schemas that avoid vendor lock-in.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 gdpr/policies/lawful-basis-and-consent</span> <span class="onreq">available on request</span></li></ul>
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -147,6 +148,7 @@ filing-system branch) is a separate process the controller manages
 outside the platform.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 gdpr/policies/lawful-basis-and-consent</span> <span class="onreq">available on request</span></li></ul>
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -203,6 +205,7 @@ subjects is still pulled into GDPR under Art.3(2) — a determination the
 controller makes.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 gdpr/policies/international-transfers</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/registers/hosting-provider-attestations</span> <span class="onreq">available on request</span></li></ul>
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -261,6 +264,7 @@ instructions. The mapping of terms to primitives lets a controller point
 an auditor at artefacts rather than abstractions.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 gdpr/policies/lawful-basis-and-consent</span> <span class="onreq">available on request</span></li></ul>
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -321,6 +325,7 @@ permissions. Storage limitation has no built-in enforcement: automated
 retention is operator/controller-owned and must be composed externally.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 gdpr/policies/data-retention</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/policies/minimum-necessary</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/policies/integrity</span> <span class="onreq">available on request</span></li></ul>
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -377,6 +382,7 @@ the version chain preserving the history; the compatibility judgement is
 the controller's.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 gdpr/policies/lawful-basis-and-consent</span> <span class="onreq">available on request</span></li></ul>
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -384,7 +390,9 @@ the controller's.
         <strong>controller</strong> <span class="b documented">documented</span>
         
         <p>Determine and document the lawful basis for each processing activity
-and record it on the relevant accesses.
+you carry out, and record it in your own Art.30 register. The grant
+an individual gives you evidences their consent to share; it is not
+a record of your basis for what you then do.
 </p>
       </div><div class="persona">
         <strong>data-subject</strong> <span class="b out-of-scope">out-of-scope</span>
@@ -429,6 +437,7 @@ revoke or a permission scope-down, both versioned and auditable. Granular
 consent is expressed as separate per-purpose accesses.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 gdpr/policies/lawful-basis-and-consent</span> <span class="onreq">available on request</span></li></ul>
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -494,14 +503,17 @@ granularity means events mixing ordinary and special-category fields must
 be split into distinct event-types.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 gdpr/policies/lawful-basis-and-consent</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/policies/access-control</span> <span class="onreq">available on request</span></li></ul>
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
       <div class="persona">
         <strong>controller</strong> <span class="b documented">documented</span>
         
-        <p>Determine the Art.9(2) condition for each special-category processing
-activity, design your streams accordingly, and record the basis.
+        <p>Determine the Art.9(2) condition for each special-category activity
+you carry out, and record the basis. Ask for the narrowest scope you
+need; the vault's stream layout is HDS's and the individual's, not
+yours to design.
 </p>
       </div><div class="persona">
         <strong>data-subject</strong> <span class="b out-of-scope">out-of-scope</span>
@@ -548,6 +560,7 @@ targeting paediatric use-cases author it themselves. Re-verification at
 age-of-majority transitions is an external job the controller runs.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 gdpr/policies/lawful-basis-and-consent</span> <span class="onreq">available on request</span></li></ul>
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -596,6 +609,7 @@ subtree and records the by-law basis on each access; the audit log then
 captures every read and write under that access.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/access-control</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -646,6 +660,7 @@ presented. The DSAR turnaround procedure HDS runs as operator is
 available on request.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 gdpr/procedures/data-subject-rights</span> <span class="onreq">available on request</span></li></ul>
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -711,14 +726,16 @@ a version chain. Whether the wording satisfies Art.13 is the controller's
 responsibility.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 gdpr/policies/lawful-basis-and-consent</span> <span class="onreq">available on request</span></li></ul>
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
       <div class="persona">
         <strong>controller</strong> <span class="b documented">documented</span>
         
-        <p>Author and present the Art.13 disclosures at collection time; record
-them on the service-info and access surfaces.
+        <p>Author and present the Art.13 disclosures when you collect, and keep
+your own record of what was shown and when. HDS's own notices cover
+the vault, not your processing.
 </p>
       </div><div class="persona">
         <strong>data-subject</strong> <span class="b out-of-scope">out-of-scope</span>
@@ -762,6 +779,7 @@ combined with the disclosure-notice text on the access, the controller
 has the full Art.14 artefact set retrievable per subject.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 gdpr/policies/lawful-basis-and-consent</span> <span class="onreq">available on request</span></li></ul>
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -819,14 +837,17 @@ an HDS provenance manifest (data-model version, deploy URL, completion
 timestamp) and a portable sync-state for incremental re-runs.
 </p></details>
       <ul class="ev"><li>doc: https://demo-portability.datasafe.dev</li><li>doc: https://portability.hds.ngo</li><li>doc: https://github.com/healthdatasafe/app-portability</li><li><span class="lock">🔒 gdpr/procedures/data-subject-rights</span> <span class="onreq">available on request</span></li></ul>
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
       <div class="persona">
         <strong>controller</strong> <span class="b documented">documented</span>
         
-        <p>Run the request-intake process and, if desired, a subject portal; the
-read mechanics are provided.
+        <p>Answer access requests for the copy and the records you hold. For
+data still in the vault the individual reads it directly from their
+own HDS dashboard, so that half of the request is not yours to
+serve.
 </p>
       </div><div class="persona">
         <strong>data-subject</strong> <span class="b facilitated">facilitated</span>
@@ -872,14 +893,16 @@ version history, so a subject can audit their own data end-to-end before
 filing a rectification claim.
 </p></details>
       <ul class="ev"><li>doc: https://demo-portability.datasafe.dev</li><li>doc: https://portability.hds.ngo</li><li><span class="lock">🔒 hipaa/policies/integrity</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 gdpr/procedures/data-subject-rights</span> <span class="onreq">available on request</span></li></ul>
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
       <div class="persona">
         <strong>controller</strong> <span class="b documented">documented</span>
         
-        <p>Detect inaccuracy and trigger the rectification; the update and
-versioning mechanics are provided.
+        <p>Correct inaccurate data in the copy and the records you hold. Data
+in the vault is corrected by the individual, or by HDS at their
+request, not by you.
 </p>
       </div><div class="persona">
         <strong>data-subject</strong> <span class="b facilitated">facilitated</span>
@@ -940,6 +963,7 @@ Copy&quot;) so the subject's right to a copy under Art.20 is exercised
 ahead of an irreversible erasure.
 </p></details>
       <ul class="ev"><li>doc: https://www.healthdatasafe.org/users/data-deletion</li><li>doc: https://demo-portability.datasafe.dev</li><li>doc: https://portability.hds.ngo</li><li><span class="lock">🔒 gdpr/procedures/data-subject-rights</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 gdpr/policies/data-retention</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/procedures/data-backup-plan</span> <span class="onreq">available on request</span></li></ul>
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -991,14 +1015,17 @@ affected streams (or deletes the access) and may record the restriction
 reason on the access clientData for the Art.30 register.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/access-control</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 gdpr/procedures/data-subject-rights</span> <span class="onreq">available on request</span></li></ul>
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
       <div class="persona">
         <strong>controller</strong> <span class="b documented">documented</span>
         
-        <p>Apply restriction by scoping or revoking the relevant accesses and
-record the reason.
+        <p>Restrict your own processing: stop using the copy and the records
+you hold, keep them, and record the reason. Revoking the grant that
+feeds you is the individual's act, not a restriction you apply on
+their behalf.
 </p>
       </div><div class="persona">
         <strong>data-subject</strong> <span class="b facilitated">facilitated</span>
@@ -1054,14 +1081,17 @@ and receiving operators is the controller's responsibility when
 relying on direct transmission.
 </p></details>
       <ul class="ev"><li>doc: https://demo-portability.datasafe.dev</li><li>doc: https://portability.hds.ngo</li><li>doc: https://github.com/healthdatasafe/app-portability</li><li><span class="lock">🔒 gdpr/procedures/data-subject-rights</span> <span class="onreq">available on request</span></li></ul>
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
       <div class="persona">
         <strong>controller</strong> <span class="b documented">documented</span>
         
-        <p>Optionally wrap the export in a download UI; ensure schema alignment
-for any direct controller-to-controller transmission.
+        <p>Supply the data you hold in a portable format on request.
+Portability out of the vault is between the individual and HDS;
+where a direct controller-to-controller transmission is asked for,
+align on the schema.
 </p>
       </div><div class="persona">
         <strong>data-subject</strong> <span class="b facilitated">facilitated</span>
@@ -1113,14 +1143,16 @@ compelling-grounds review and records the outcome on the access; all of
 it is versioned and auditable.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/access-control</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 gdpr/procedures/data-subject-rights</span> <span class="onreq">available on request</span></li></ul>
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
       <div class="persona">
         <strong>controller</strong> <span class="b documented">documented</span>
         
-        <p>Run the compelling-grounds assessment where applicable and apply the
-objection by revoking or narrowing the relevant access.
+        <p>Run the compelling-grounds assessment where applicable, then stop
+the processing objected to in your own systems. The individual
+narrows or withdraws their grant themselves.
 </p>
       </div><div class="persona">
         <strong>data-subject</strong> <span class="b facilitated">facilitated</span>
@@ -1167,14 +1199,16 @@ accesses; the out-of-band notification to each, and the
 impossibility/disproportionality judgement, are the controller's.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 gdpr/procedures/data-subject-rights</span> <span class="onreq">available on request</span></li></ul>
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
       <div class="persona">
         <strong>controller</strong> <span class="b documented">documented</span>
         
-        <p>Identify the recipients from the active accesses and notify each of the
-rectification, erasure or restriction.
+        <p>Notify each recipient you have passed data on to. The list is the
+one you keep of your own disclosures; you cannot enumerate who else
+the individual has granted access to.
 </p>
       </div><div class="persona">
         <strong>data-subject</strong> <span class="b out-of-scope">out-of-scope</span>
@@ -1221,6 +1255,7 @@ that trail to satisfy human-intervention requests. HDS supplies the
 evidentiary substrate, not the decision.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 gdpr/procedures/data-subject-rights</span> <span class="onreq">available on request</span></li></ul>
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -1272,6 +1307,7 @@ programme and carries the demonstrability burden at the organisational
 level.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/access-control</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 gdpr/registers/records-of-processing</span> <span class="onreq">available on request</span></li></ul>
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -1333,6 +1369,7 @@ of the arrangement on the relevant access clientData, but no platform
 primitive enforces the allocation.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 gdpr/registers/records-of-processing</span> <span class="onreq">available on request</span></li></ul>
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -1372,6 +1409,7 @@ registration step with no software role. Where HDS itself processes for
 EU subjects from a non-EU establishment, HDS makes its own designation;
 the controller makes its own.
 </p>
+      
       
       
     </div>
@@ -1424,14 +1462,17 @@ audit data, making instruction violations detectable. The substantive
 instructions themselves come from the controller's DPA.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/access-control</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 gdpr/registers/records-of-processing</span> <span class="onreq">available on request</span></li></ul>
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
       <div class="persona">
         <strong>controller</strong> <span class="b documented">documented</span>
         
-        <p>Express your processing instructions as scoped accesses and review the
-audit log for deviations.
+        <p>Art.29 covers people acting under YOUR authority: bind your staff
+and your own processors to act only on your instructions. It does
+not describe your relationship to HDS or to the vault, where
+processing follows the individual's permissions rather than yours.
 </p>
       </div><div class="persona">
         <strong>processor</strong> <span class="b documented">documented</span>
@@ -1477,14 +1518,17 @@ controller still decides whether app tokens are minted with minimal
 scope, whether notices default on, and how short the retention period is.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/access-control</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 gdpr/policies/data-retention</span> <span class="onreq">available on request</span></li></ul>
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
       <div class="persona">
         <strong>controller</strong> <span class="b documented">documented</span>
         
-        <p>Configure your defaults — minimal token scopes, opt-in notices, short
-retention — on top of the platform's privacy-protective baseline.
+        <p>Set privacy-protective defaults in what you build: request the
+narrowest grant you need, write opt-in notices, and keep what you
+receive no longer than necessary. The vault's own defaults are HDS's
+to set.
 </p>
       </div><div class="persona">
         <strong>data-subject</strong> <span class="b out-of-scope">out-of-scope</span>
@@ -1535,14 +1579,17 @@ the documented controller instructions and the demonstrability evidence.
 A DPA template is offered.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/registers/subprocessor-register</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/registers/hosting-provider-attestations</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 gdpr/registers/records-of-processing</span> <span class="onreq">available on request</span></li></ul>
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
       <div class="persona">
         <strong>controller</strong> <span class="b documented">documented</span>
         <a class="tpl" href="templates.html#tpl-dpa">📄 dpa</a>
-        <p>Evaluate the processor's guarantees and conclude an Art.28 DPA before
-processing begins.
+        <p>If you engage processors of your own for the copy you hold, evaluate
+their guarantees and conclude an Art.28 DPA before processing
+begins. This is not an agreement with HDS: HDS is the controller of
+the vault, not your processor.
 </p>
       </div><div class="persona">
         <strong>processor</strong> <span class="b documented">documented</span>
@@ -1588,6 +1635,7 @@ to clientData and access expiry. The controller assembles and maintains
 the formal register; HDS provides the derivable inputs and keeps its own.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 gdpr/registers/records-of-processing</span> <span class="onreq">available on request</span></li></ul>
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -1661,6 +1709,7 @@ runs CI test matrices and a monitored, alert-wired production environment; the
 controller runs its own organisational testing regime.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/encryption</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/policies/transmission-security</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/policies/access-control</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/risk/at-rest-encryption</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/evidence/at-rest-encryption-verification</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -1736,6 +1785,7 @@ HDS runs detection and the operator-side incident procedure; the
 controller owns the supervisory-authority notification.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 gdpr/procedures/breach-notification-72h</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/procedures/security-incident-response</span> <span class="onreq">available on request</span></li></ul>
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -1801,6 +1851,7 @@ and send-receipts can be captured back as compliance events. The Art.34(3)
 exemptions are legal judgements the controller's counsel makes.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 gdpr/procedures/breach-notification-72h</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/procedures/security-incident-response</span> <span class="onreq">available on request</span></li></ul>
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -1856,6 +1907,7 @@ Art.32 row. The risk assessment and the DPIA document itself are the
 controller's.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 gdpr/procedures/dpia</span> <span class="onreq">available on request</span></li></ul>
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -1898,6 +1950,7 @@ supervisory authority and has no software role. HDS contributes the
 technical evidence the authority may request via the DPIA inputs noted at
 Art.35, but not the consultation itself.
 </p>
+      
       
       
     </div>
@@ -1951,6 +2004,7 @@ Publishing a public DPO contact point through the service-info
 convention is the Art.38 follow-up, tracked on that row.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/registers/designated-roles</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -2008,6 +2062,7 @@ independence and direct-reporting position remain organisational
 arrangements the controller establishes.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 gdpr/procedures/dpia</span> <span class="onreq">available on request</span></li></ul>
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -2059,6 +2114,7 @@ as the structured artefact the DPO references for the platform's
 contribution to each control.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 gdpr/registers/records-of-processing</span> <span class="onreq">available on request</span></li></ul>
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -2108,6 +2164,7 @@ the technical-control evidence a controller can cite when demonstrating
 adherence to a code it has signed up to.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 gdpr/registers/records-of-processing</span> <span class="onreq">available on request</span></li></ul>
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -2156,6 +2213,7 @@ structured technical-control evidence a controller's certification body
 will examine.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 gdpr/registers/records-of-processing</span> <span class="onreq">available on request</span></li></ul>
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -2204,6 +2262,7 @@ or processor relies on in a liability dispute; HDS makes no determination
 of fault or damage.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 gdpr/registers/records-of-processing</span> <span class="onreq">available on request</span></li></ul>
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -2250,6 +2309,7 @@ for mitigation under the Art.83(2) factors, such as the
 technical/organisational measures implemented and the degree of
 cooperation.
 </p>
+      
       
       
     </div>
@@ -2308,15 +2368,18 @@ fetching from a CH core) is the transfer event. The controller records
 the recipient and transfer basis on the access; the legal mechanism
 itself is a controller/legal artefact.
 </p></details>
-      <ul class="ev"><li><span class="lock">🔒 gdpr/policies/international-transfers</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/registers/hosting-provider-attestations</span> <span class="onreq">available on request</span></li></ul>
+      <ul class="ev"><li><span class="lock">🔒 gdpr/policies/international-transfers</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/registers/hosting-provider-attestations</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/risk/cross-core-residency-data-flow</span> <span class="onreq">available on request</span></li></ul>
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
       <div class="persona">
         <strong>controller</strong> <span class="b documented">documented</span>
         
-        <p>Choose residency to avoid or to deliberately ground transfers, and
-record the basis for each intentional transfer.
+        <p>You do not choose where a vault lives; the individual does, at
+registration. Ground the transfers you actually make, which are the
+ones into your own systems and your own processors, and record the
+basis for each.
 </p>
       </div><div class="persona">
         <strong>data-subject</strong> <span class="b out-of-scope">out-of-scope</span>
@@ -2360,14 +2423,17 @@ US region is not an adequacy-based transfer for general EU data and needs
 Art.46 safeguards instead.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 gdpr/policies/international-transfers</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/registers/hosting-provider-attestations</span> <span class="onreq">available on request</span></li></ul>
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
       <div class="persona">
         <strong>controller</strong> <span class="b documented">documented</span>
         
-        <p>Route subjects to an adequacy-covered region and track the current
-adequacy landscape.
+        <p>You cannot route subjects: the individual chooses their vault's
+region when they register. Track the adequacy landscape for the
+transfers you actually make, into your own systems and your own
+processors.
 </p>
       </div><div class="persona">
         <strong>data-subject</strong> <span class="b out-of-scope">out-of-scope</span>
@@ -2426,14 +2492,17 @@ with versioning and audit; the controller concludes the safeguard
 instrument.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 gdpr/policies/international-transfers</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/registers/subprocessor-register</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/risk/cross-core-residency-data-flow</span> <span class="onreq">available on request</span></li></ul>
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
       <div class="persona">
         <strong>controller</strong> <span class="b documented">documented</span>
         <a class="tpl" href="templates.html#tpl-dpa">📄 dpa</a>
-        <p>Conclude SCCs or another Art.46 safeguard for US-region or other
-third-country transfers and record the mechanism.
+        <p>Conclude SCCs or another Art.46 safeguard for the third-country
+transfers you make yourself, and record the mechanism. The region
+the vault sits in is the individual's choice, not a transfer you
+arrange.
 </p>
       </div><div class="persona">
         <strong>processor</strong> <span class="b documented">documented</span>
@@ -2473,14 +2542,15 @@ access; the BCR document is the controller's legal artefact.
 </p>
       
       
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
       <div class="persona">
         <strong>controller</strong> <span class="b documented">documented</span>
         
-        <p>If relying on BCRs, obtain approval and record the reference on the
-transferring accesses.
+        <p>If relying on BCRs, obtain approval and record the reference against
+the transfers you make, in your own transfer records.
 </p>
       </div><div class="persona">
         <strong>data-subject</strong> <span class="b out-of-scope">out-of-scope</span>
@@ -2517,6 +2587,7 @@ control. Because the access primitive is the only path data leaves the
 system, the audit log documents any forced disclosure after the fact; the
 decision to comply or contest is the controller's counsel's.
 </p>
+      
       
       
     </div>
@@ -2568,6 +2639,7 @@ controller's legal judgement.
 per-transfer artefact. HDS does not assess the derogation's availability.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 gdpr/policies/international-transfers</span> <span class="onreq">available on request</span></li></ul>
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -2606,6 +2678,7 @@ arises from this Article alone.
 activity with no software contribution and no implementer obligation
 arising from this Article alone.
 </p>
+      
       
       
     </div>

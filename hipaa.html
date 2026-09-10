@@ -141,6 +141,7 @@ they must run themselves; HDS supplies the technical raw material and its
 own programme as evidence of operator diligence.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/security-management-process</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 shared/registers/technology-stack</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 shared/registers/data-residency-regions</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -200,6 +201,7 @@ only on request under NDA, signed BAA or audit engagement, as is normal for
 a document whose contents are an inventory of what could go wrong.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/risk/risk-analysis</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -255,6 +257,7 @@ risk carries a decision, including the decisions to accept. The register's
 contents, like the analysis, are confidential and released on request.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/plans/risk-management</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -281,12 +284,15 @@ residual risk accepted by someone who has the authority to accept it.
 </article><article class="req" id="req-164-308-a-1-ii-d" data-coverage="implemented" data-personas="covered-entity business-associate individual" data-text="164.308(a)(1)(ii)(d) information system activity review — required on top of the platform's per-user audit log, hds operates the review
 substrate: system-level activity is collected and monitored across both
 us and switzerland data-residency options, with alerting on crash,
-error-rate and silence conditions. the platform telemetry channel is
-mid-transition (see the planned chip): the in-process vendor agent was
-removed 2026-07-28 in favour of an allow-list, aggregate-only emitter;
-until the self-hosted collector and rebuilt alert chain are verified,
-platform-core detection leans on synthetic and liveness checks. the
-written review cadence remains the implementer's responsibility.
+error-rate and silence conditions. the written procedure sets a
+quarterly cadence and a sign-off record. two parts of it are not yet
+operating: sampling the per-user audit log for anomalies is the step
+that remains outstanding, tracked as an open risk-analysis item, and the
+platform telemetry channel is mid-transition (see the planned chip),
+with the in-process vendor agent removed on 2026-07-28 in favour of an
+allow-list, aggregate-only emitter. until the self-hosted collector and
+rebuilt alert chain are verified, platform-core detection leans on
+synthetic and liveness checks.
 " data-planned="1">
   <h3><code>164.308(a)(1)(ii)(D)</code> Information system activity review — Required <span class="draft">draft</span></h3>
   <p class="text">Implement procedures to regularly review records of information system
@@ -308,21 +314,30 @@ procedure.
       <p>On top of the platform's per-user audit log, HDS operates the review
 substrate: system-level activity is collected and monitored across both
 US and Switzerland data-residency options, with alerting on crash,
-error-rate and silence conditions. The platform telemetry channel is
-mid-transition (see the planned chip): the in-process vendor agent was
-removed 2026-07-28 in favour of an allow-list, aggregate-only emitter;
-until the self-hosted collector and rebuilt alert chain are verified,
-platform-core detection leans on synthetic and liveness checks. The
-written review cadence remains the implementer's responsibility.
+error-rate and silence conditions. The written procedure sets a
+quarterly cadence and a sign-off record. Two parts of it are not yet
+operating: sampling the per-user audit log for anomalies is the step
+that remains outstanding, tracked as an open risk-analysis item, and the
+platform telemetry channel is mid-transition (see the planned chip),
+with the in-process vendor agent removed on 2026-07-28 in favour of an
+allow-list, aggregate-only emitter. Until the self-hosted collector and
+rebuilt alert chain are verified, platform-core detection leans on
+synthetic and liveness checks.
 </p>
-      <details><summary>detail</summary><p>Per-API-call audit records (platform layer) plus infrastructure telemetry
-(HDS layer) together give both subject-level and system-level activity
-review. HDS operates the alerting chain end to end as a matter of policy
-before any component is treated as in production, so silent failures are
-caught. The documented review procedure HDS runs as operator is available
-on request.
+      <details><summary>detail</summary><p>Per-API-call audit records (platform layer) plus infrastructure
+telemetry (HDS layer) together give both subject-level and system-level
+activity review. HDS operates the alerting chain end to end as a matter
+of policy before any component is treated as in production, so silent
+failures are caught. Operator activity is reviewed at an operator
+population of one, which makes that half inherent rather than scheduled;
+the scheduled cycle becomes substantive when a second operator holds
+credentials. The per-user half carries no such assurance and is the part
+still to be established in practice. The documented review procedure is
+available on request, and the implementer runs its own review over its
+own workload.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/procedures/information-system-activity-review</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -380,6 +395,7 @@ separately (see hipaa-privacy §164.530(a)). A partner running ePHI on
 HDS names their own security official.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/assigned-security-responsibility</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/registers/designated-roles</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -400,11 +416,13 @@ HDS names their own security official.
       </div>
     </div>
   </div>
-</article><article class="req" id="req-164-308-a-3-ii-c" data-coverage="implemented" data-personas="covered-entity business-associate individual" data-text="164.308(a)(3)(ii)(c) termination procedures — addressable workforce access to ephi is mediated by platform access tokens with
-granular per-stream permissions. termination is a single revocation that
-takes effect immediately, and the audit log records the termination
-instant; role changes narrow permissions without losing the version
-history of the change.
+</article><article class="req" id="req-164-308-a-3-ii-c" data-coverage="implemented" data-personas="covered-entity business-associate individual" data-text="164.308(a)(3)(ii)(c) termination procedures — addressable workforce termination at hds revokes operator and infrastructure access:
+platform admin and service credentials, hosting hosts, monitoring, the
+alert mailbox, code repositories carrying deploy rights, and any
+break-glass grant. it is a dated ticket rather than a single switch,
+because shared secrets must also be rotated, and it does not touch a
+user's own data-sharing tokens, which belong to the user and are
+unaffected by offboarding.
 " data-planned="0">
   <h3><code>164.308(a)(3)(ii)(C)</code> Termination procedures — Addressable <span class="draft">draft</span></h3>
   <p class="text">Implement procedures for terminating access to ePHI when employment ends or
@@ -422,20 +440,26 @@ full revocation, preserving the version history of the change.
     </div>
     <div class="layer hds">
       <div class="lh">HDS <span class="b implemented">implemented</span> <span class="rg">US</span><span class="rg">CH</span> </div>
-      <p>Workforce access to ePHI is mediated by platform access tokens with
-granular per-stream permissions. Termination is a single revocation that
-takes effect immediately, and the audit log records the termination
-instant; role changes narrow permissions without losing the version
-history of the change.
+      <p>Workforce termination at HDS revokes operator and infrastructure access:
+platform admin and service credentials, hosting hosts, monitoring, the
+alert mailbox, code repositories carrying deploy rights, and any
+break-glass grant. It is a dated ticket rather than a single switch,
+because shared secrets must also be rotated, and it does not touch a
+user's own data-sharing tokens, which belong to the user and are
+unaffected by offboarding.
 </p>
-      <details><summary>detail</summary><p>HDS operates the access-token model so that ending or changing a
-workforce member's access is an immediate, audited operation rather than
-a manual clean-up across systems. Full revocation removes the token;
-narrowing reduces permissions while preserving the access identity and its
-history. HDS documents the termination procedure it follows for its own
-workforce; partners apply the same primitives to their own staff.
+      <details><summary>detail</summary><p>HDS runs the revocation as a tracked procedure: the Security Official
+opens a dated termination ticket, revokes credentials and closes any
+break-glass grant (whose closure is recorded in the per-user audit log),
+disables accounts on each host and service, rotates shared secrets the
+person knew, confirms no active token or session remains, and closes the
+ticket the same business day, or immediately for involuntary or
+suspected-compromise cases. Partners apply their own termination
+procedure to their own staff; the platform's per-stream access model is
+what makes narrowing an access an alternative to revoking it.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/procedures/access-termination</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -458,10 +482,12 @@ process on HDS.
       </div>
     </div>
   </div>
-</article><article class="req" id="req-164-308-a-4-ii-b" data-coverage="implemented" data-personas="covered-entity business-associate individual" data-text="164.308(a)(4)(ii)(b) access authorization — addressable granting access to ephi on hds means minting an access token with explicit
-per-stream permissions, enforced at every api call. the authorization
-rationale can travel alongside the grant itself, so the &quot;why&quot; stays with
-the &quot;what&quot;.
+</article><article class="req" id="req-164-308-a-4-ii-b" data-coverage="implemented" data-personas="covered-entity business-associate individual" data-text="164.308(a)(4)(ii)(b) access authorization — addressable granting access to ephi on hds means minting an access token with
+explicit per-stream permissions, enforced at every api call. the
+authorization rationale can travel alongside the grant itself, so the
+&quot;why&quot; stays with the &quot;what&quot;. two authorisation paths are kept apart:
+access to a user's own ephi is decided by that user, while operator and
+infrastructure access is decided by hds under least privilege.
 " data-planned="0">
   <h3><code>164.308(a)(4)(ii)(B)</code> Access authorization — Addressable <span class="draft">draft</span></h3>
   <p class="text">Implement policies and procedures for granting access to ePHI through a
@@ -479,18 +505,28 @@ grant itself, so the &quot;why&quot; travels with the &quot;what&quot;.
     </div>
     <div class="layer hds">
       <div class="lh">HDS <span class="b implemented">implemented</span> <span class="rg">US</span><span class="rg">CH</span> </div>
-      <p>Granting access to ePHI on HDS means minting an access token with explicit
-per-stream permissions, enforced at every API call. The authorization
-rationale can travel alongside the grant itself, so the &quot;why&quot; stays with
-the &quot;what&quot;.
+      <p>Granting access to ePHI on HDS means minting an access token with
+explicit per-stream permissions, enforced at every API call. The
+authorization rationale can travel alongside the grant itself, so the
+&quot;why&quot; stays with the &quot;what&quot;. Two authorisation paths are kept apart:
+access to a user's own ePHI is decided by that user, while operator and
+infrastructure access is decided by HDS under least privilege.
 </p>
-      <details><summary>detail</summary><p>Access grants carry the streams and levels the grantee may exercise, plus
-free-form metadata such as workforce role, granting administrator and
-business reason. HDS operates this as the authoritative authorization
-mechanism for ePHI; there is no trust-based bypass path. HDS documents its
-own authorization policy and partners apply the same primitive.
+      <details><summary>detail</summary><p>Access grants carry the streams and levels the grantee may exercise,
+plus free-form metadata such as workforce role, granting administrator
+and business reason. On the platform path there is no trust-based
+bypass: no HDS role can grant itself an access into a user account. That
+is a statement about the authorisation mechanism and not about what
+infrastructure access can technically reach. An identity holding host or
+database access can read or alter stored ePHI without presenting a user
+token, because someone has to operate the database that holds the data;
+what bounds it is least-privilege authorisation, time-boxed and logged
+break-glass, and periodic access review, and HDS records it as an
+accepted residual rather than engineering it away. HDS documents its own
+authorization policy and partners apply the same primitives.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/access-authorization</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -551,6 +587,7 @@ grant over their own data: those are the account holder's to review and
 revoke, and HDS does not act on them.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/procedures/access-review</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -602,6 +639,7 @@ verified security-awareness training is a known gap being matured; each
 partner runs its own reminder programme for its own workforce.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/security-awareness-reminders</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -623,10 +661,12 @@ workforce.
       </div>
     </div>
   </div>
-</article><article class="req" id="req-164-308-a-5-ii-b" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.308(a)(5)(ii)(b) protection from malicious software — addressable anti-malware is a host, endpoint and network-layer control rather than a
-platform feature. hds operates malware protection and patching at the
-hosting layer for the environments it runs, documented internally; the
-partner's own endpoints remain the partner's responsibility.
+</article><article class="req" id="req-164-308-a-5-ii-b" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.308(a)(5)(ii)(b) protection from malicious software — addressable anti-malware here is a host, endpoint and network-layer concern rather
+than a platform feature. hds runs no dedicated anti-malware agent on its
+linux hosts, and states that as a deliberate decision rather than an
+omission: protection rests on os and platform patching, dependency
+scanning, a minimised attack surface and monitoring. the partner's own
+endpoints remain the partner's responsibility.
 " data-planned="0">
   <h3><code>164.308(a)(5)(ii)(B)</code> Protection from malicious software — Addressable <span class="draft">draft</span></h3>
   <p class="text">Implement procedures for guarding against, detecting, and reporting
@@ -643,18 +683,26 @@ this control.
     </div>
     <div class="layer hds">
       <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
-      <p>Anti-malware is a host, endpoint and network-layer control rather than a
-platform feature. HDS operates malware protection and patching at the
-hosting layer for the environments it runs, documented internally; the
-partner's own endpoints remain the partner's responsibility.
+      <p>Anti-malware here is a host, endpoint and network-layer concern rather
+than a platform feature. HDS runs no dedicated anti-malware agent on its
+Linux hosts, and states that as a deliberate decision rather than an
+omission: protection rests on OS and platform patching, dependency
+scanning, a minimised attack surface and monitoring. The partner's own
+endpoints remain the partner's responsibility.
 </p>
-      <details><summary>detail</summary><p>HDS's hosting environment carries malware-protection controls as part of
-operator-side infrastructure hardening, described privately and cited as
-an internal document. The platform software itself includes no antivirus.
-Partners must protect their own workstations and any infrastructure they
-operate outside HDS.
+      <details><summary>detail</summary><p>Internet-facing components receive priority patching for known CVEs,
+application dependencies are monitored for advisories and triaged, only
+required services are exposed, and the container model limits the blast
+radius of a compromised component. Anomalies that may indicate malware,
+such as unexpected processes or crash loops, are investigated under the
+incident process. The patch cadence and the dependency-triage service
+level are not yet defined, so currency rests on practice rather than on
+a control that can be evidenced; HDS records that as an open
+risk-analysis item. Partners must protect their own workstations and any
+infrastructure they operate outside HDS.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/malware-protection</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -678,9 +726,11 @@ outside HDS.
     </div>
   </div>
 </article><article class="req" id="req-164-308-a-5-ii-c" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.308(a)(5)(ii)(c) log-in monitoring — addressable authentication and login-failure events are captured in the per-user
-audit log, and hds's operational monitoring aggregates rate and anomaly
-signals across every data-residency option. discrepancy-reporting
-thresholds and the response cadence are operator-side procedure.
+audit log, and reverse-proxy and host auth logs are retained on hds
+infrastructure. review is quarterly and manual: automated login-anomaly
+detection and alert thresholds for this specification are not
+formalised, which hds names as the current gap rather than implying
+continuous detection.
 " data-planned="1">
   <h3><code>164.308(a)(5)(ii)(C)</code> Log-in monitoring — Addressable <span class="draft">draft</span></h3>
   <p class="text">Implement procedures for monitoring log-in attempts and reporting
@@ -699,17 +749,27 @@ are operator-side procedure.
     <div class="layer hds">
       <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> <span class="pl low" title="Upstream reference reverse-proxy rate-limiting configurations would add an enforcement companion to login monitoring on the authentication endpoints, once shipped and adopted in the HDS deployment. — upstream: proposals/rate-limiting-recipes.md">⏳ platform</span></div>
       <p>Authentication and login-failure events are captured in the per-user
-audit log, and HDS's operational monitoring aggregates rate and anomaly
-signals across every data-residency option. Discrepancy-reporting
-thresholds and the response cadence are operator-side procedure.
+audit log, and reverse-proxy and host auth logs are retained on HDS
+infrastructure. Review is quarterly and manual: automated login-anomaly
+detection and alert thresholds for this specification are not
+formalised, which HDS names as the current gap rather than implying
+continuous detection.
 </p>
-      <details><summary>detail</summary><p>HDS surfaces login and authentication-failure events through the audit log
-and layers monitoring on top to detect anomalous rates. The platform does
-not by itself lock accounts after N failures; HDS operates additional
-rate-limiting and alerting at the infrastructure boundary, documented
-privately. Partners tune their own discrepancy thresholds.
+      <details><summary>detail</summary><p>Logs are shipped to HDS-operated collectors and stay on HDS
+infrastructure, with only aggregate metrics reaching the monitoring
+service. On the quarterly cycle the Security Official reviews
+failed-login spikes, off-hours operator access and token-use anomalies;
+a suspected compromise is escalated to incident response within one
+business day and the affected user is contacted. While the Security
+Official is the only operator able to log in, every operator
+authentication is his own, so that surface carries assurance the
+user-side surface does not, and the user side is reviewed on the cadence
+regardless. Multi-factor authentication is mandated separately on the
+surfaces from which production can be reached. Partners tune their own
+discrepancy thresholds.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/procedures/login-monitoring</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -763,6 +823,7 @@ person-or-entity-authentication standard). HDS documents the configuration
 it runs; partners may layer their own additional rules.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/procedures/password-management</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -832,6 +893,7 @@ GHSA/CVE issuance); a published advisory affecting the deployed release
 enters HDS's incident procedure as a provider notification.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/procedures/security-incident-response</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -890,6 +952,7 @@ scale per region; that drill is the remaining gap. Partners
 operating their own deployments define their own schedule.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/procedures/data-backup-plan</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -944,6 +1007,7 @@ revision specification, a known gap). Partners running their own
 deployments document their own plan.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/procedures/disaster-recovery-plan</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -965,10 +1029,15 @@ loss event.
       </div>
     </div>
   </div>
-</article><article class="req" id="req-164-308-a-7-ii-c" data-coverage="documented" data-personas="covered-entity business-associate individual" data-text="164.308(a)(7)(ii)(c) emergency mode operation plan — required the platform's high-availability primitives (replicated multi-core cluster
-with mutually authenticated inter-core traffic) support continued
-operation when a single facility fails. hds documents which processes are
-critical and the emergency-mode runbook it operates.
+</article><article class="req" id="req-164-308-a-7-ii-c" data-coverage="documented" data-personas="covered-entity business-associate individual" data-text="164.308(a)(7)(ii)(c) emergency mode operation plan — required the platform's high-availability primitives (a replicated multi-core
+cluster with mutually authenticated inter-core traffic) support
+continued operation when a single facility fails. hds documents which
+processes are critical and holds an emergency-mode runbook whose
+governing rule is to fail closed: if a security control cannot be kept
+up while degraded, the affected function is restricted or suspended
+rather than serving ephi without it. the runbook is written but
+unexercised, since no degraded-operation event has occurred and no
+exercise has yet been run.
 " data-planned="0">
   <h3><code>164.308(a)(7)(ii)(C)</code> Emergency mode operation plan — Required <span class="draft">draft</span></h3>
   <p class="text">Establish, and implement as needed, procedures to enable continuation of
@@ -988,18 +1057,30 @@ Recovery row.
     </div>
     <div class="layer hds">
       <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span> </div>
-      <p>The platform's high-availability primitives (replicated multi-core cluster
-with mutually authenticated inter-core traffic) support continued
-operation when a single facility fails. HDS documents which processes are
-critical and the emergency-mode runbook it operates.
+      <p>The platform's high-availability primitives (a replicated multi-core
+cluster with mutually authenticated inter-core traffic) support
+continued operation when a single facility fails. HDS documents which
+processes are critical and holds an emergency-mode runbook whose
+governing rule is to fail closed: if a security control cannot be kept
+up while degraded, the affected function is restricted or suspended
+rather than serving ePHI without it. The runbook is written but
+unexercised, since no degraded-operation event has occurred and no
+exercise has yet been run.
 </p>
-      <details><summary>detail</summary><p>HDS treats emergency-mode operation as a documented runbook layered on the
-platform's HA topology and backup-restore path. The definition of critical
-business processes and the emergency procedures are operator artefacts,
-cited internally. Partners define their own emergency-mode plan for their
-workload.
+      <details><summary>detail</summary><p>Emergency mode is a documented runbook layered on the platform's HA
+topology and the backup-restore path, distinct from the
+disaster-recovery plan that covers full loss. On declaration the on-call
+operator confirms that per-user isolation, consent and access-token
+checks, TLS and per-user audit logging are all still enforced, sheds
+non-critical load to preserve the critical path, and keeps the
+unaffected region serving its own users. Every control degraded or
+suspended is recorded at closure and carries a follow-up. The definition
+of critical business processes and the procedure itself are operator
+artefacts, cited internally. Partners define their own emergency-mode
+plan for their workload.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/procedures/emergency-mode-operation</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -1054,6 +1135,7 @@ instead of reading a rehearsal as a drill. Partners run and document their
 own contingency-plan tests.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/procedures/contingency-plan-testing</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -1122,6 +1204,7 @@ findings; a partner runs its own periodic evaluation for its own
 programme.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/procedures/periodic-evaluation</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -1192,6 +1275,7 @@ Swiss region is contractually assured but not yet evidenced: nothing is on
 file for it, and the provider's audit clause is the route to closing that.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/physical-safeguards</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/registers/hosting-provider-attestations</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -1249,6 +1333,7 @@ The implementer's own facilities (offices where workforce members access
 ePHI) remain their responsibility.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/registers/hosting-provider-attestations</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/policies/physical-safeguards</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -1303,6 +1388,7 @@ organizational. HDS records this boundary so implementers can scope their own
 workstation-use policy to the residual physical/operational concerns.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/physical-safeguards</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -1359,6 +1445,7 @@ documents this so implementers can right-size their physical workstation
 controls.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/physical-safeguards</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -1427,6 +1514,7 @@ plaintext artefact, and encrypting it in transport/storage remains the
 mover's responsibility — HDS documents this boundary explicitly.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/registers/hosting-provider-attestations</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/procedures/media-controls</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/evidence/at-rest-encryption-verification</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -1488,6 +1576,7 @@ operates this stack and documents its access-control policy; the implementer
 configures which grants their application mints.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/access-control</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -1543,6 +1632,7 @@ operates by default. The implementer maps their workforce/role model onto
 these identities.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/access-control</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -1565,11 +1655,14 @@ document the mapping. Avoid shared credentials.
       </div>
     </div>
   </div>
-</article><article class="req" id="req-164-312-a-2-ii" data-coverage="configurable" data-personas="covered-entity business-associate individual" data-text="164.312(a)(2)(ii) emergency access procedure — required the platform provides an operator-held administrative access mechanism that
-can serve as a break-glass path to ephi during an emergency, and every action
-taken under it is captured by the per-user audit log. hds documents the
-custody controls; the implementer defines when the procedure may be invoked
-and the review that follows.
+</article><article class="req" id="req-164-312-a-2-ii" data-coverage="configurable" data-personas="covered-entity business-associate individual" data-text="164.312(a)(2)(ii) emergency access procedure — required the platform provides an operator-held administrative access mechanism
+that serves as a break-glass path to ephi during an emergency, and every
+action taken under it is captured by the per-user audit log. hds runs
+its own approved procedure over that mechanism: the security official
+authorises each grant with a stated scope and justification, time-boxes
+it to 24 hours by default, and reviews the audit and host logs against
+the grant within two business days. an implementer authors the
+equivalent procedure for its own workload.
 " data-planned="0">
   <h3><code>164.312(a)(2)(ii)</code> Emergency access procedure — Required <span class="draft">draft</span></h3>
   <p class="text">Establish (and implement as needed) procedures for obtaining necessary ePHI
@@ -1587,20 +1680,31 @@ review that must follow.
     </div>
     <div class="layer hds">
       <div class="lh">HDS <span class="b configurable">configurable</span> <span class="rg">US</span><span class="rg">CH</span> </div>
-      <p>The platform provides an operator-held administrative access mechanism that
-can serve as a break-glass path to ePHI during an emergency, and every action
-taken under it is captured by the per-user audit log. HDS documents the
-custody controls; the implementer defines when the procedure may be invoked
-and the review that follows.
+      <p>The platform provides an operator-held administrative access mechanism
+that serves as a break-glass path to ePHI during an emergency, and every
+action taken under it is captured by the per-user audit log. HDS runs
+its own approved procedure over that mechanism: the Security Official
+authorises each grant with a stated scope and justification, time-boxes
+it to 24 hours by default, and reviews the audit and host logs against
+the grant within two business days. An implementer authors the
+equivalent procedure for its own workload.
 </p>
-      <details><summary>detail</summary><p>Emergency access is supported by an operator-held privileged access capability
-treated as a custody-controlled credential. Because every call made under it
-is audited like any other, post-emergency review is concrete and the
-break-glass event is reconstructable. HDS configures and safeguards the
-mechanism; the implementer authors the emergency-access procedure (triggers,
-authorisers, mandatory after-action review) on top of it.
+      <details><summary>detail</summary><p>Routine access to a user's ePHI is by the user and their granted tokens;
+this procedure covers the exceptional operator-level case, such as
+assisting an individual locked out during an outage or validating a
+disaster-recovery restore. Temporary credentials are revoked on
+completion and the time box confirmed closed. One grant is standing
+rather than per-incident: HDS Leadership holds administrative access to
+the provider consoles and does not use it, as the means by which HDS can
+revoke the Security Official's own access, so that no single individual
+can lock the organisation out of its infrastructure. That grant carries
+the mandated multi-factor authentication, is reviewed on the quarterly
+access-review cadence (first cycle 2026-07-30, confirmed still unused),
+and rests on attestation by signature rather than a captured
+configuration record, a residual HDS has accepted.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/procedures/emergency-access</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -1660,6 +1764,7 @@ implementer tunes them and documents the rationale for the chosen inactivity
 window (the &quot;Addressable&quot; path).
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/access-control</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -1744,6 +1849,7 @@ attestation, since AWS EBS encryption is opt-in per volume and vendor
 documentation cannot establish it is in force.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/encryption</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/risk/at-rest-encryption</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/evidence/at-rest-encryption-verification</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -1806,6 +1912,7 @@ retains this substrate; the implementer defines the written review cadence
 (see §164.308(a)(1)(ii)(D)) and who performs it.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/audit-controls</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -1866,6 +1973,7 @@ identity. HDS operates these primitives and documents its integrity policy;
 the implementer owns the surrounding procedural obligation.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/integrity</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -1926,6 +2034,7 @@ documents the boundary; where an implementer's risk analysis demands stronger
 tamper-proofing, they layer in content-integrity verification themselves.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/integrity</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -1950,11 +2059,13 @@ decision.
       </div>
     </div>
   </div>
-</article><article class="req" id="req-164-312-d" data-coverage="implemented" data-personas="covered-entity business-associate individual" data-text="164.312(d) person or entity authentication — standard authentication in the hds-operated platform is mediated by the access-token
-primitive: the bearer of a valid token has been authenticated. authentication
-strength is layered — credentials by default, with multi-factor authentication
-available — and recovery paths preserve account ownership when a factor is
-lost.
+</article><article class="req" id="req-164-312-d" data-coverage="implemented" data-personas="covered-entity business-associate individual" data-text="164.312(d) person or entity authentication — standard authentication in the hds-operated platform is mediated by the
+access-token primitive: the bearer of a valid token has been
+authenticated, and no anonymous access to ephi is possible from the api.
+hds has decided and dated its own multi-factor position: mfa is
+mandatory for hds workforce and operator access, and available but not
+mandated for end users. recovery paths preserve account ownership when a
+factor is lost.
 " data-planned="1">
   <h3><code>164.312(d)</code> Person or entity authentication — standard <span class="draft">draft</span></h3>
   <p class="text">Implement procedures to verify that a person or entity seeking access to ePHI
@@ -1973,20 +2084,29 @@ device is lost.
     </div>
     <div class="layer hds">
       <div class="lh">HDS <span class="b implemented">implemented</span> <span class="rg">US</span><span class="rg">CH</span> </div>
-      <p>Authentication in the HDS-operated platform is mediated by the access-token
-primitive: the bearer of a valid token has been authenticated. Authentication
-strength is layered — credentials by default, with multi-factor authentication
-available — and recovery paths preserve account ownership when a factor is
-lost.
+      <p>Authentication in the HDS-operated platform is mediated by the
+access-token primitive: the bearer of a valid token has been
+authenticated, and no anonymous access to ePHI is possible from the API.
+HDS has decided and dated its own multi-factor position: MFA is
+mandatory for HDS workforce and operator access, and available but not
+mandated for end users. Recovery paths preserve account ownership when a
+factor is lost.
 </p>
-      <details><summary>detail</summary><p>Every request reaching ePHI must present a valid access token, so the platform
-verifies the requester before any access is granted. HDS operates this stack
-and can require multi-factor authentication where the implementer's risk
-profile calls for it; the achievable assurance level depends on which factor
-method is configured. HDS documents the authentication policy in effect; the
-implementer decides whether to require MFA universally or per-role.
+      <details><summary>detail</summary><p>Every request reaching ePHI through the API must present a valid access
+token, so the platform verifies the requester before any access is
+granted; credentials are stored one-way hashed in a separately
+access-controlled namespace. The MFA mandate covers the provider
+consoles, the code-hosting organisation carrying deploy rights, and
+administrative access to the platform hosts, because those are the
+surfaces from which production can be reached. It is attested by the
+Security Official rather than demonstrated by a captured configuration
+record, and HDS records that evidence gap as an accepted residual. This
+control governs the platform path; privileged infrastructure access is a
+separate path covered under access authorization. An implementer decides
+the MFA position for its own workforce and its own users.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/authentication</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -2042,6 +2162,7 @@ obligation is to ensure that its own onward transmission paths (any proxy or
 integration hop it controls) preserve the same protection.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/transmission-security</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -2099,6 +2220,7 @@ ensure those hops do not terminate and re-emit traffic in a way that loses the
 integrity guarantee.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/transmission-security</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -2153,6 +2275,7 @@ and, separately, assesses at-rest encryption under §164.312(a)(2)(iv), which
 is implemented in every region (no platform gap).
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/transmission-security</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -2214,6 +2337,7 @@ contract relies on, and flows obligations down to its own subcontractors
 via back-to-back agreements tracked in the BAA register.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/registers/baa-register</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -2271,6 +2395,7 @@ residency. This gives the contractual &quot;reasonable and appropriate
 safeguards&quot; clause a concrete, auditable backing.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/registers/baa-register</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -2327,6 +2452,7 @@ the implementer; HDS's incident-response procedure governs how that report
 is produced and what evidence it carries.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/registers/baa-register</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -2349,10 +2475,11 @@ down to your subcontractors.
       </div>
     </div>
   </div>
-</article><article class="req" id="req-164-314-a-2-ii-b" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.314(a)(2)(ii)(b) business associate contract — extend safeguards to subcontractors acting as a business associate, hds executes back-to-back agreements with
-each subcontractor that may touch ephi and tracks them in its baa register.
-hds also provides the implementer a subcontractor agreement template to
-flow the same obligations down their own chain.
+</article><article class="req" id="req-164-314-a-2-ii-b" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.314(a)(2)(ii)(b) business associate contract — extend safeguards to subcontractors hds executes back-to-back agreements with each subcontractor that may
+touch ephi and tracks them in its baa register, so the flow-down exists
+wherever a baa is in force. hds also provides the implementer a
+subcontractor agreement template to flow the same obligations down their
+own chain.
 " data-planned="0">
   <h3><code>164.314(a)(2)(ii)(B)</code> Business associate contract — extend safeguards to subcontractors </h3>
   <p class="text">Where applicable, the business associate must ensure that any subcontractors
@@ -2372,10 +2499,11 @@ and GDPR Art.28(4).
     </div>
     <div class="layer hds">
       <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
-      <p>Acting as a Business Associate, HDS executes back-to-back agreements with
-each subcontractor that may touch ePHI and tracks them in its BAA register.
-HDS also provides the implementer a subcontractor agreement template to
-flow the same obligations down their own chain.
+      <p>HDS executes back-to-back agreements with each subcontractor that may
+touch ePHI and tracks them in its BAA register, so the flow-down exists
+wherever a BAA is in force. HDS also provides the implementer a
+subcontractor agreement template to flow the same obligations down their
+own chain.
 </p>
       <details><summary>detail</summary><p>HDS maintains a current list of its ePHI-relevant subprocessors and holds a
 written contract with each that flows down the applicable Security Rule
@@ -2383,6 +2511,7 @@ obligations. The subprocessor list is made available to implementers so
 they can satisfy their own §164.314(a)(2)(ii)(B) due diligence.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/registers/baa-register</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -2440,6 +2569,7 @@ implementer cannot inherit these policies for its own organisation, but can
 cite HDS's programme where HDS operates the underlying system.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/information-security-policy</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -2500,6 +2630,7 @@ record. The implementer keeps the equivalent documentation for its own
 programme.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/documentation-and-retention</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -2558,6 +2689,7 @@ implementer's lawful basis and contractual instructions; the implementer
 retains its own documentation independently.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/documentation-and-retention</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -2614,6 +2746,7 @@ review history. The implementer runs its own review cycle for the
 documentation it owns.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/documentation-and-retention</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -2639,9 +2772,12 @@ event-driven reviews.
 </article></div><h2 class="rulehead" id="hipaa-privacy">HIPAA-Privacy
            <span class="short">45 CFR Part 164 Subpart E (HITECH 2013 Omnibus Final Rule)</span></h2>
          <div class="covbar"><span class="seg implemented" style="width:8.6%" title="implemented: 3"></span><span class="seg configurable" style="width:2.9%" title="configurable: 1"></span><span class="seg facilitated" style="width:71.4%" title="facilitated: 25"></span><span class="seg documented" style="width:11.4%" title="documented: 4"></span><span class="seg out-of-scope" style="width:5.7%" title="out-of-scope: 2"></span></div><div class="reqs"><article class="req" id="req-164-502" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.502 uses and disclosures of phi — general rules on top of pryv's permission model, hds operates the platform that
-enforces it: as a business associate, hds uses or discloses phi only as
-its baa and the covered entity's instructions permit. the substantive
-determination of which uses are permitted remains the covered entity's.
+enforces it. hds is not a business associate in the vault: it holds
+data for the individual, who decides who may see it, so there is no
+covered entity whose instructions bound its uses. what bounds them is
+the permission the individual granted. the substantive determination
+of which uses are permitted remains the covered entity's wherever one
+is party to the relationship.
 " data-planned="0">
   <h3><code>164.502</code> Uses and disclosures of PHI — general rules <span class="draft">draft</span></h3>
   <p class="text">A covered entity, or a business associate acting on its behalf, may use or
@@ -2663,9 +2799,12 @@ decision; Pryv enforces whatever scope you grant.
     <div class="layer hds">
       <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
       <p>On top of Pryv's permission model, HDS operates the platform that
-enforces it: as a business associate, HDS uses or discloses PHI only as
-its BAA and the covered entity's instructions permit. The substantive
-determination of which uses are permitted remains the covered entity's.
+enforces it. HDS is not a business associate in the vault: it holds
+data for the individual, who decides who may see it, so there is no
+covered entity whose instructions bound its uses. What bounds them is
+the permission the individual granted. The substantive determination
+of which uses are permitted remains the covered entity's wherever one
+is party to the relationship.
 </p>
       <details><summary>detail</summary><p>Every workforce, app, and counterparty action on PHI is mediated by an
 access whose permissions bound the streams and levels reachable. HDS
@@ -2674,6 +2813,7 @@ the audit log makes each use attributable to a specific access at a
 specific time.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/uses-and-disclosures</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -2730,6 +2870,7 @@ durable artefact rather than a verbal claim. HDS stores the purpose tag
 and preserves it across the access version chain.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/uses-and-disclosures</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -2786,6 +2927,7 @@ deletion. HDS ships the primitives; presenting the §508(c) elements at
 the grant moment is the covered entity's UX responsibility.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/authorizations</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -2842,6 +2984,7 @@ circumstance-driven. HDS stores the offered choice and the recorded
 response so the §164.510 determination is reconstructable later.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/uses-and-disclosures</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -2893,6 +3036,7 @@ the disclosure, then revokes the access. The audit trail shows the full
 lifecycle attached to the legal-basis claim.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/uses-and-disclosures</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -2942,6 +3086,7 @@ broader analyst group. The de-identification logic is the covered
 entity's application code; HDS stores its output.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/de-identification</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -2997,6 +3142,7 @@ channel is a place minimum-necessary can quietly fail, so it is
 evidenced rather than assumed.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/minimum-necessary</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/evidence/monitoring-telemetry-no-phi</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -3018,10 +3164,12 @@ to the minimum necessary, and document the rationale.
       </div>
     </div>
   </div>
-</article><article class="req" id="req-164-520" data-coverage="facilitated" data-personas="covered-entity individual" data-text="164.520 notice of privacy practices hds preserves the notice text shown to each individual, on the relevant
-access client-data or as a dedicated event, so the exact words presented
-are recoverable per individual and per time. the notice content is the
-covered entity's editorial responsibility.
+</article><article class="req" id="req-164-520" data-coverage="facilitated" data-personas="covered-entity individual" data-text="164.520 notice of privacy practices this section reaches covered entities, and hds issues no notice of
+privacy practices under it. what the platform supplies is
+preservation: the notice text shown to each individual is stored on
+the relevant access client-data or as a dedicated event, so the exact
+words presented are recoverable per individual and per time. the
+notice content stays the covered entity's editorial responsibility.
 " data-planned="0">
   <h3><code>164.520</code> Notice of privacy practices <span class="draft">draft</span></h3>
   <p class="text">A notice must be provided that adequately describes the entity's uses and
@@ -3040,16 +3188,26 @@ template is the surface where the notice typically appears.
     </div>
     <div class="layer hds">
       <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
-      <p>HDS preserves the notice text shown to each individual, on the relevant
-access client-data or as a dedicated event, so the exact words presented
-are recoverable per individual and per time. The notice content is the
-covered entity's editorial responsibility.
+      <p>This section reaches covered entities, and HDS issues no notice of
+privacy practices under it. What the platform supplies is
+preservation: the notice text shown to each individual is stored on
+the relevant access client-data or as a dedicated event, so the exact
+words presented are recoverable per individual and per time. The
+notice content stays the covered entity's editorial responsibility.
 </p>
-      <details><summary>detail</summary><p>The customer-facing authentication surface is where the notice typically
-appears at grant time. HDS stores the presented notice as a durable
-artefact bound to the individual's session.
+      <details><summary>detail</summary><p>The customer-facing authentication surface is where the notice
+typically appears at grant time, and HDS stores the presented notice
+as a durable artefact bound to the individual's session. A template
+and process for ingesting and displaying a covered entity's own notice
+through HDS software are not yet formalised; HDS records that as
+pending remediation, activated when a covered-entity engagement
+requires it. Separately, HDS plans to publish a notice-style privacy
+statement of its own, as good practice and because equivalent
+transparency is required under other regimes it operates within. That
+is a voluntary undertaking, not a §164.520 duty.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/notice-of-privacy-practices</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -3066,11 +3224,14 @@ individuals as required.
       </div>
     </div>
   </div>
-</article><article class="req" id="req-164-522" data-coverage="configurable" data-personas="covered-entity individual business-associate" data-text="164.522 right to request restriction; confidential communications a granted restriction is configured as a scope-down or revocation of the
-relevant access, and the access version chain proves what state was in
-force before and from when the restriction applies. confidential-
-communication preferences are stored as account client-data or a
-dedicated event.
+</article><article class="req" id="req-164-522" data-coverage="configurable" data-personas="covered-entity individual business-associate" data-text="164.522 right to request restriction; confidential communications on this platform a restriction is usually the individual's own act:
+they narrow or revoke the relevant access themselves, with immediate
+effect, and the access version chain proves what state was in force
+before and from when. where an individual asks hds to restrict their
+own data instead, hds sends written instructions rather than reaching
+into the account, because the individual remains the decision-maker.
+confidential-communication preferences are stored as account
+client-data or a dedicated event.
 " data-planned="0">
   <h3><code>164.522</code> Right to request restriction; confidential communications <span class="draft">draft</span></h3>
   <p class="text">An individual may request restrictions on uses and disclosures and may
@@ -3090,18 +3251,30 @@ live in `account.clientData` or a dedicated event.
     </div>
     <div class="layer hds">
       <div class="lh">HDS <span class="b configurable">configurable</span> <span class="rg">US</span><span class="rg">CH</span> </div>
-      <p>A granted restriction is configured as a scope-down or revocation of the
-relevant access, and the access version chain proves what state was in
-force before and from when the restriction applies. Confidential-
-communication preferences are stored as account client-data or a
-dedicated event.
+      <p>On this platform a restriction is usually the individual's own act:
+they narrow or revoke the relevant access themselves, with immediate
+effect, and the access version chain proves what state was in force
+before and from when. Where an individual asks HDS to restrict their
+own data instead, HDS sends written instructions rather than reaching
+into the account, because the individual remains the decision-maker.
+Confidential-communication preferences are stored as account
+client-data or a dedicated event.
 </p>
-      <details><summary>detail</summary><p>Post-HITECH §522(a)(1)(vi) makes restrictions on disclosure to a health
-plan for out-of-pocket-paid services mandatory on request; the
-configuration pattern is identical, but the covered entity must apply it
-without discretion when that condition is met.
+      <details><summary>detail</summary><p>HDS applies directly only those restrictions sitting in platform
+configuration it controls, and routes to the responsible covered
+entity any request belonging to a covered-entity relationship, since
+that decision is theirs. Stated response times are 30 days where HDS
+does not control the outcome and 60 days where it applies a
+restriction it does, each with one 30-day extension. The how-to guide
+and a formal intake for requests reaching HDS directly are not yet
+formalised, which HDS records as pending remediation. Post-HITECH
+§522(a)(1)(vi) makes a restriction on disclosure to a health plan for
+out-of-pocket-paid services mandatory on request; the configuration
+pattern is identical, but a covered entity must apply it without
+discretion when that condition is met.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/procedures/restriction-requests</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -3159,6 +3332,7 @@ covered entity's process target, not a software latency, and any
 non-native export format is produced by the implementer's portal.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/procedures/individual-right-of-access</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -3213,6 +3387,7 @@ designated-record-set stream linked back to the original, so the
 disagreement travels with the data on subsequent disclosures.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/procedures/amendment-requests</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -3270,6 +3445,7 @@ description is at the API-shape level — sufficient under §164.528 and
 favourable for data minimisation.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/procedures/accounting-of-disclosures</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -3293,14 +3469,15 @@ disclosure record.
       </div>
     </div>
   </div>
-</article><article class="req" id="req-164-530-a" data-coverage="implemented" data-personas="covered-entity individual" data-text="164.530(a) privacy officer / contact person hds has designated its own privacy official under its ba role: a
-distinct holder from the security official, appointed by the ceo
-effective 2026-07-15 and recorded in the designated-roles register
-(disclosed on request; the source documents are still moving through
-internal approval). the audit log gives that official a concrete
-artefact to review when investigating complaints or internal use. the
-covered entity's own privacy-official designation remains its
-organizational decision.
+</article><article class="req" id="req-164-530-a" data-coverage="implemented" data-personas="covered-entity individual" data-text="164.530(a) privacy officer / contact person hds has designated its own privacy official: a distinct holder from
+the security official, appointed by the ceo effective 2026-07-15 and
+recorded in the designated-roles register (disclosed on request; the
+source documents are still moving through internal approval). that
+designation is hds's own governance choice, not a duty it carries
+under this section, which reaches covered entities. the audit log
+gives that official a concrete artefact to review when investigating
+complaints or internal use. the covered entity's own privacy-official
+designation remains its organizational decision.
 " data-planned="0">
   <h3><code>164.530(a)</code> Privacy officer / contact person <span class="draft">draft</span></h3>
   <p class="text">A covered entity must designate a privacy official and a contact person
@@ -3317,20 +3494,22 @@ complaints or auditing internal use.
     </div>
     <div class="layer hds">
       <div class="lh">HDS <span class="b implemented">implemented</span> <span class="rg">US</span><span class="rg">CH</span> </div>
-      <p>HDS has designated its own Privacy Official under its BA role: a
-distinct holder from the Security Official, appointed by the CEO
-effective 2026-07-15 and recorded in the designated-roles register
-(disclosed on request; the source documents are still moving through
-internal approval). The audit log gives that official a concrete
-artefact to review when investigating complaints or internal use. The
-covered entity's own privacy-official designation remains its
-organizational decision.
+      <p>HDS has designated its own Privacy Official: a distinct holder from
+the Security Official, appointed by the CEO effective 2026-07-15 and
+recorded in the designated-roles register (disclosed on request; the
+source documents are still moving through internal approval). That
+designation is HDS's own governance choice, not a duty it carries
+under this section, which reaches covered entities. The audit log
+gives that official a concrete artefact to review when investigating
+complaints or internal use. The covered entity's own privacy-official
+designation remains its organizational decision.
 </p>
-      <details><summary>detail</summary><p>HDS operates as a business associate and names its own responsible
-official and contact; the covered entity's privacy-official designation
+      <details><summary>detail</summary><p>HDS names a responsible official and a contact point as a matter of
+its own programme. The covered entity's privacy-official designation
 is a programme element outside HDS's scope.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/privacy-program-governance</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/registers/designated-roles</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -3346,10 +3525,11 @@ is a programme element outside HDS's scope.
       </div>
     </div>
   </div>
-</article><article class="req" id="req-164-530-b" data-coverage="documented" data-personas="covered-entity business-associate individual" data-text="164.530(b) training workforce privacy training is the covered entity's programme. hds trains
-its own workforce on its privacy and security policies as a business
-associate and retains the training records; the customer's programme is
-out of hds's scope.
+</article><article class="req" id="req-164-530-b" data-coverage="documented" data-personas="covered-entity business-associate individual" data-text="164.530(b) training workforce privacy training is the covered entity's programme. hds
+trains its own workforce on its privacy and security policies and
+retains the training records, as its own governance rather than as a
+duty it carries under this section; the customer's programme is out of
+hds's scope.
 " data-planned="0">
   <h3><code>164.530(b)</code> Training <span class="draft">draft</span></h3>
   <p class="text">A covered entity must train all workforce members on its privacy policies
@@ -3368,16 +3548,18 @@ are yours.
     </div>
     <div class="layer hds">
       <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span> </div>
-      <p>Workforce privacy training is the covered entity's programme. HDS trains
-its own workforce on its privacy and security policies as a business
-associate and retains the training records; the customer's programme is
-out of HDS's scope.
+      <p>Workforce privacy training is the covered entity's programme. HDS
+trains its own workforce on its privacy and security policies and
+retains the training records, as its own governance rather than as a
+duty it carries under this section; the customer's programme is out of
+HDS's scope.
 </p>
       <details><summary>detail</summary><p>Audit and observability data can make training effectiveness measurable
 by revealing whether access patterns match policy after training, but the
 training content and record-keeping belong to the implementer.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/procedures/workforce-training</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -3434,6 +3616,7 @@ constitute the §530(c) technical and physical answer; the administrative
 safeguards remain the covered entity's.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/privacy-safeguards</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -3483,6 +3666,7 @@ operates the backup-restore capability across every region; the mitigation
 decision and any breach notification follow the covered entity's process.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/procedures/incident-mitigation</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -3542,6 +3726,7 @@ operator is evidenced as carrying no PHI and no individually
 identifiable health information.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/minimum-necessary</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/evidence/monitoring-telemetry-no-phi</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -3599,6 +3784,7 @@ contract reference so disclosures are attributable to the BAA, while the
 contract itself is signed between the parties.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/registers/baa-register</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -3653,6 +3839,7 @@ documentation requirement a byproduct of normal record-keeping. The
 intake workflow and response are the implementer's.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/procedures/complaint-handling</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -3669,10 +3856,12 @@ dispositions.
       </div>
     </div>
   </div>
-</article><article class="req" id="req-164-530-e" data-coverage="documented" data-personas="covered-entity business-associate individual" data-text="164.530(e) sanctions sanctions are an hr and disciplinary process with no software role at the
-decision layer. hds maintains its own workforce sanction policy as a
-business associate; the audit log supplies the underlying evidence that
-disciplinary processes evaluate.
+</article><article class="req" id="req-164-530-e" data-coverage="documented" data-personas="covered-entity business-associate individual" data-text="164.530(e) sanctions sanctions are an hr and disciplinary process with no software role at
+the decision layer. hds maintains a workforce sanction policy of its
+own, adopted by the ceo on 2026-07-15 with a graduated scale in force;
+the audit log supplies the underlying evidence a disciplinary process
+would evaluate. a covered entity's own sanction programme remains its
+own.
 " data-planned="0">
   <h3><code>164.530(e)</code> Sanctions <span class="draft">draft</span></h3>
   <p class="text">A covered entity must have and apply appropriate sanctions against
@@ -3690,15 +3879,21 @@ processes evaluate.
     </div>
     <div class="layer hds">
       <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span> </div>
-      <p>Sanctions are an HR and disciplinary process with no software role at the
-decision layer. HDS maintains its own workforce sanction policy as a
-business associate; the audit log supplies the underlying evidence that
-disciplinary processes evaluate.
+      <p>Sanctions are an HR and disciplinary process with no software role at
+the decision layer. HDS maintains a workforce sanction policy of its
+own, adopted by the CEO on 2026-07-15 with a graduated scale in force;
+the audit log supplies the underlying evidence a disciplinary process
+would evaluate. A covered entity's own sanction programme remains its
+own.
 </p>
-      <details><summary>detail</summary><p>HDS documents and applies sanctions for its own workforce, but the
-covered entity's sanction programme is outside HDS's scope.
+      <details><summary>detail</summary><p>The policy's enforceability rests on the workforce having acknowledged
+the policy set, which is tracked separately rather than asserted here:
+sanctioning someone against a policy they never acknowledged is the
+weak point that tracking exists to close. The covered entity's
+sanction programme is outside HDS's scope.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/workforce-sanctions</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -3743,6 +3938,7 @@ no software role. It rests entirely with the covered entity's programme.
       <details><summary>detail</summary><p>HDS provides no technical control bearing on this requirement; it is a
 conduct obligation of the covered entity.
 </p></details>
+      
       
     </div>
     <div class="layer impl">
@@ -3791,6 +3987,7 @@ retention and audit. The covered entity's policy programme is its own;
 HDS documents the policies governing its operations.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/privacy-policy-management</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -3848,6 +4045,7 @@ individual's opportunity-to-object record. HDS stores and enforces the
 narrowed scope; the disclosure decision is the implementer's.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/uses-and-disclosures</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -3902,6 +4100,7 @@ the statutory basis; the audit trail preserves the disclosure. HDS makes
 no public-health disclosure of customer PHI on its own initiative.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/uses-and-disclosures</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -3951,6 +4150,7 @@ audits the disclosure but makes no law-enforcement disclosure of customer
 PHI on its own initiative outside legal process served on it.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/procedures/law-enforcement-requests</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -4008,6 +4208,7 @@ individual-direct path; the timeline obligation remains operative on the
 partner-mediated path (covered entity intake → HDS-as-BA fulfilment).
 </p></details>
       <ul class="ev"><li>doc: https://demo-portability.datasafe.dev</li><li>doc: https://portability.hds.ngo</li><li><span class="lock">🔒 hipaa/procedures/individual-right-of-access</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -4066,6 +4267,7 @@ covered entity. Non-native formats and summaries are built by the
 implementer's portal from the same source events.
 </p></details>
       <ul class="ev"><li>doc: https://demo-portability.datasafe.dev</li><li>doc: https://portability.hds.ngo</li><li>doc: https://github.com/healthdatasafe/app-portability</li><li><span class="lock">🔒 hipaa/procedures/individual-right-of-access</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -4125,6 +4327,7 @@ stores the representative relationship and legal basis; the determination
 of whether an exception applies is the implementer's.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/personal-representatives</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -4173,11 +4376,12 @@ statutory basis be recorded so the audit chain ties the disclosure to its
 legal authority. The compliance burden of the cited law is the covered
 entity's.
 </p>
-      <details><summary>detail</summary><p>The access carries the statute reference; the audit trail preserves the
-disclosure. HDS responds to legal process served on it as a business
-associate per its BAA and applicable law.
+      <details><summary>detail</summary><p>The access carries the statute reference; the audit trail preserves
+the disclosure. HDS responds to legal process served on it under
+applicable law, and under the terms of a BAA wherever one is in force.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/uses-and-disclosures</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -4229,6 +4433,7 @@ responsibility; the platform simply persists whatever events the
 implementer's de-identification process produces.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/de-identification</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -4299,6 +4504,7 @@ and ensuring the code is random or derived from non-PHI is the
 implementer's.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/de-identification</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -4355,6 +4561,7 @@ source material for the covered entity to assemble the formal
 §528(b) accounting.
 </p></details>
       <ul class="ev"><li>doc: https://demo-portability.datasafe.dev</li><li>doc: https://portability.hds.ngo</li><li><span class="lock">🔒 hipaa/procedures/accounting-of-disclosures</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -4406,11 +4613,15 @@ business-associate access tagged with the contract reference and role,
 scoped to the covered subjects and streams, with full audit-log
 accountability. The contract content itself is contractual.
 </p>
-      <details><summary>detail</summary><p>HDS signs BAAs as a business associate and flows obligations down to its
-own subcontractors. The access tags and audit log support enforcement and
+      <details><summary>detail</summary><p>HDS is not a business associate in the vault, so no BAA governs that
+arrangement. It does execute BAAs for the separate arrangement in
+which an organisation places protected health information with it on
+its own behalf, and flows the obligations down to its own
+subcontractors. The access tags and audit log support enforcement and
 evidence of the §164.504(e) terms.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/registers/baa-register</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -4458,6 +4669,7 @@ specific to this requirement.
       <details><summary>detail</summary><p>The plan-document amendment and certification are entirely the covered
 entity's contractual obligations.
 </p></details>
+      
       
     </div>
     <div class="layer impl">
@@ -4512,6 +4724,7 @@ available as evidence in subsequent proceedings. The implementer still states
 the protection in their own policies; HDS's control binds HDS's own workforce.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/workforce-sanctions</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -4569,14 +4782,18 @@ regions by hosting-layer volume encryption (verified 2026-06-26). The
 unsecured-PHI boundary that remains is the in-use one: a running system,
 account or token compromise reaches decrypted content.
 </p>
-      <details><summary>detail</summary><p>As a business associate, HDS is squarely within Subpart D's reach. The
-practical effect of this row is to set the boundary that the encryption
-and risk-assessment rows below refine: what counts as unsecured PHI in an
-HDS deployment is governed by the transit/at-rest/in-use posture described
-under 164.402(2) — media exposures of at-rest content fall inside the
-safe harbor; live-system compromises do not.
+      <details><summary>detail</summary><p>Subpart D binds covered entities and business associates. HDS holds
+neither role in the vault, where every access flows from the
+individual's own consent, so this row is the map for an implementer
+that does hold one rather than a statement of an HDS duty. Its
+practical effect is to set the boundary the encryption and
+risk-assessment rows below refine: what counts as unsecured PHI in an
+HDS deployment is governed by the transit, at-rest and in-use posture
+described under 164.402(2), where media exposures of at-rest content
+fall inside the safe harbor and live-system compromises do not.
 </p></details>
-      <ul class="ev"><li><span class="lock">🔒 hipaa/risk/at-rest-encryption</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/evidence/at-rest-encryption-verification</span> <span class="onreq">available on request</span></li></ul>
+      <ul class="ev"><li><span class="lock">🔒 hipaa/risk/at-rest-encryption</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/evidence/at-rest-encryption-verification</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/procedures/breach-notification</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -4642,6 +4859,7 @@ event meets the breach definition — remains the implementer's, supported
 by HDS evidence.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/procedures/breach-risk-assessment</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/risk/at-rest-encryption</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -4712,6 +4930,7 @@ these factors and reaches the low-probability conclusion is the
 implementer's artefact; HDS supplies and preserves the inputs.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/procedures/breach-risk-assessment</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -4785,6 +5004,7 @@ attestation. A compromise of a live system, account or token reaches
 decrypted content and must still be assessed under 164.402(1).
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/risk/at-rest-encryption</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/evidence/at-rest-encryption-verification</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -4848,6 +5068,7 @@ and the per-recipient delivery sit with the covered entity, who carries
 this duty.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/procedures/breach-notification</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -4908,6 +5129,7 @@ Acting on the evidence within the window — and recording when discovery
 occurred — remains the implementer's responsibility.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/procedures/breach-notification</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -4973,6 +5195,7 @@ are composed by the covered entity. HDS therefore facilitates the
 evidence-derivable element and documents the rest.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/procedures/breach-notification</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -5030,6 +5253,7 @@ contribution is preserving an audit record if the implementer chooses to
 log delivery attempts as events.
 </p></details>
       
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -5077,6 +5301,7 @@ assemble. Identifying and notifying prominent media outlets is entirely the
 covered entity's process.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/procedures/breach-notification</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -5126,6 +5351,7 @@ while the act of submitting and tracking the report sits with the covered
 entity.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/procedures/breach-notification</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -5142,10 +5368,14 @@ submission records.
       </div>
     </div>
   </div>
-</article><article class="req" id="req-164-410" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.410 notification by a business associate this is hds's core breach duty. as a business associate, hds notifies the
-covered entity without unreasonable delay (and within 60 days) on discovery
-of a breach, following a documented procedure. the audit log lets hds
-gather the required content — affected subjects and timing — quickly.
+</article><article class="req" id="req-164-410" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.410 notification by a business associate this is the core breach duty of an implementer holding a
+business-associate role: notify the affected covered entity without
+unreasonable delay and within 60 days of discovery. hds holds no such
+role in the vault, so the duty is not hds's there. hds does maintain
+an approved notification procedure for the separate arrangement in
+which an organisation places protected health information with it on
+its own behalf, and the audit log lets whoever carries the duty
+assemble the required content quickly.
 " data-planned="0">
   <h3><code>164.410</code> Notification by a business associate <span class="draft">draft</span></h3>
   <p class="text">A business associate must notify the covered entity of a breach of unsecured
@@ -5166,21 +5396,27 @@ inter-organization handshakes; audit data lets you meet the
     </div>
     <div class="layer hds">
       <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
-      <p>This is HDS's core breach duty. As a business associate, HDS notifies the
-covered entity without unreasonable delay (and within 60 days) on discovery
-of a breach, following a documented procedure. The audit log lets HDS
-gather the required content — affected subjects and timing — quickly.
+      <p>This is the core breach duty of an implementer holding a
+business-associate role: notify the affected covered entity without
+unreasonable delay and within 60 days of discovery. HDS holds no such
+role in the vault, so the duty is not HDS's there. HDS does maintain
+an approved notification procedure for the separate arrangement in
+which an organisation places protected health information with it on
+its own behalf, and the audit log lets whoever carries the duty
+assemble the required content quickly.
 </p>
-      <details><summary>detail</summary><p>HDS maintains an internal breach-notification procedure that defines
-discovery, escalation, content assembly and the upstream notification to
-affected covered entities, with the 60-day ceiling. The per-user audit log
-is the data source for the &quot;identities of affected individuals&quot; element and
-for the timing evidence backing &quot;without unreasonable delay&quot;. When an
-implementer is itself a business associate to a covered entity and stores
-PHI on HDS, the same procedure and evidence support its own upstream
+      <details><summary>detail</summary><p>The approved procedure defines discovery, escalation, content assembly
+and upstream notification with the 60-day ceiling. It governs that
+out-of-matrix arrangement, and is available on request as a model an
+implementer can adopt. The per-user audit log is the data source for
+the identities-of-affected-individuals element and for the timing
+evidence behind &quot;without unreasonable delay&quot;. An implementer that is
+itself a business associate to a covered entity and stores protected
+health information on HDS uses the same evidence for its own upstream
 notification chain.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/procedures/breach-notification</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -5236,6 +5472,7 @@ evidence intact for the duration so notification can proceed once the delay
 lapses.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/procedures/breach-notification</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -5298,6 +5535,7 @@ to maintain. HDS also retains its own breach-procedure execution records as
 evidence of its §164.410 performance.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/registers/breach-log</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/procedures/breach-notification</span> <span class="onreq">available on request</span></li></ul>
+      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>

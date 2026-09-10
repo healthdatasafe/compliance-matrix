@@ -10,7 +10,7 @@ HDS's own position on HIPAA-Security:
   - vault: HDS is not-applicable. Every vault. The individual holds the account and decides who may see the data, so HDS holds it for them and never on a covered entity's behalf, whoever put it there and wherever it physically sits. A business associate is defined by acting on a covered entity's behalf, so HDS is not one here and HIPAA does not reach it.
   External assurance: self-assessed. No HIPAA audit, no independent Security Rule assessment and no third-party report covers HDS. The attestations on file belong to the hosting providers and cover their facilities, not HDS's practices.
   Certificates HDS relies on but does NOT hold: AWS ISO/IEC 27001 (us-east-1 named in the certified locations), 27017, 27018 — obtained 2026-07-28
-  Evidence: 43 of 43 requirements answered from approved HDS documentation (43 cite internal evidence), as of 2026-09-08.
+  Evidence: 43 of 43 requirements answered from approved HDS documentation (43 cite internal evidence), as of 2026-09-10.
   HIPAA does not reach HDS in the vault, so what follows is not a claim that HDS meets the
   Security Rule: it is what the platform supplies to an implementer that does hold a role.
   Every one of the forty-three requirements is answered from an approved HDS document, and
@@ -67,6 +67,7 @@ HDS's own position on HIPAA-Security:
     Entity or upstream BA, this is a programme they must run themselves; HDS supplies the
     technical raw material and its own programme as evidence of operator diligence.
     Evidence: internal:hipaa/policies/security-management-process, internal:shared/registers/technology-stack, internal:shared/registers/data-residency-regions
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: always; basis: entity
     Define, document and maintain your own security-management programme; you may reference
@@ -97,6 +98,7 @@ HDS's own position on HIPAA-Security:
     confidential and released only on request under NDA, signed BAA or audit engagement, as
     is normal for a document whose contents are an inventory of what could go wrong.
     Evidence: internal:hipaa/risk/risk-analysis
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: always; basis: entity
     Conduct and document your own risk analysis over the ePHI you hold; you may use this
@@ -125,6 +127,7 @@ HDS's own position on HIPAA-Security:
     list: every identified risk carries a decision, including the decisions to accept. The
     register's contents, like the analysis, are confidential and released on request.
     Evidence: internal:hipaa/plans/risk-management
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: always; basis: entity
     Select, implement and record treatments for the risks your own analysis identifies; the
@@ -154,17 +157,24 @@ HDS's own position on HIPAA-Security:
     On top of the platform's per-user audit log, HDS operates the review substrate:
     system-level activity is collected and monitored across both US and Switzerland
     data-residency options, with alerting on crash, error-rate and silence conditions. The
-    platform telemetry channel is mid-transition (see the planned chip): the in-process
-    vendor agent was removed 2026-07-28 in favour of an allow-list, aggregate-only emitter;
-    until the self-hosted collector and rebuilt alert chain are verified, platform-core
-    detection leans on synthetic and liveness checks. The written review cadence remains the
-    implementer's responsibility.
+    written procedure sets a quarterly cadence and a sign-off record. Two parts of it are
+    not yet operating: sampling the per-user audit log for anomalies is the step that
+    remains outstanding, tracked as an open risk-analysis item, and the platform telemetry
+    channel is mid-transition (see the planned chip), with the in-process vendor agent
+    removed on 2026-07-28 in favour of an allow-list, aggregate-only emitter. Until the
+    self-hosted collector and rebuilt alert chain are verified, platform-core detection
+    leans on synthetic and liveness checks.
     Detail: Per-API-call audit records (platform layer) plus infrastructure telemetry (HDS
     layer) together give both subject-level and system-level activity review. HDS operates
     the alerting chain end to end as a matter of policy before any component is treated as
-    in production, so silent failures are caught. The documented review procedure HDS runs
-    as operator is available on request.
+    in production, so silent failures are caught. Operator activity is reviewed at an
+    operator population of one, which makes that half inherent rather than scheduled; the
+    scheduled cycle becomes substantive when a second operator holds credentials. The
+    per-user half carries no such assurance and is the part still to be established in
+    practice. The documented review procedure is available on request, and the implementer
+    runs its own review over its own workload.
     Evidence: internal:hipaa/procedures/information-system-activity-review
+    Evidence backing: every internal document cited above has completed approval.
     PLANNED (feature, impact medium): Platform telemetry is moving from a vendor in-process agent (removed 2026-07-28) to a self-hosted OTLP collector fed by the platform's allow-list aggregate emitter; collector deployment, alert-chain rebuild and end-to-end delivery verification are the tracked remainder.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: always; basis: entity
@@ -196,6 +206,7 @@ HDS's own position on HIPAA-Security:
     designated separately (see hipaa-privacy §164.530(a)). A partner running ePHI on HDS
     names their own security official.
     Evidence: internal:hipaa/policies/assigned-security-responsibility, internal:hipaa/registers/designated-roles
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: always; basis: entity
     Designate and document your own security official.
@@ -230,16 +241,22 @@ HDS's own position on HIPAA-Security:
     while the seed + sibling sub-accesses remain untouched. Roles + groups are deliberately
     outside Pryv; the external IdP is the source of truth.
   HDS: implemented (effort saved: high)
-    Workforce access to ePHI is mediated by platform access tokens with granular per-stream
-    permissions. Termination is a single revocation that takes effect immediately, and the
-    audit log records the termination instant; role changes narrow permissions without
-    losing the version history of the change.
-    Detail: HDS operates the access-token model so that ending or changing a workforce
-    member's access is an immediate, audited operation rather than a manual clean-up across
-    systems. Full revocation removes the token; narrowing reduces permissions while
-    preserving the access identity and its history. HDS documents the termination procedure
-    it follows for its own workforce; partners apply the same primitives to their own staff.
+    Workforce termination at HDS revokes operator and infrastructure access: platform admin
+    and service credentials, hosting hosts, monitoring, the alert mailbox, code repositories
+    carrying deploy rights, and any break-glass grant. It is a dated ticket rather than a
+    single switch, because shared secrets must also be rotated, and it does not touch a
+    user's own data-sharing tokens, which belong to the user and are unaffected by
+    offboarding.
+    Detail: HDS runs the revocation as a tracked procedure: the Security Official opens a
+    dated termination ticket, revokes credentials and closes any break-glass grant (whose
+    closure is recorded in the per-user audit log), disables accounts on each host and
+    service, rotates shared secrets the person knew, confirms no active token or session
+    remains, and closes the ticket the same business day, or immediately for involuntary or
+    suspected-compromise cases. Partners apply their own termination procedure to their own
+    staff; the platform's per-stream access model is what makes narrowing an access an
+    alternative to revoking it.
     Evidence: internal:hipaa/procedures/access-termination
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: always; basis: entity
     Document your termination workflow and tie it to revocation of the access tokens your
@@ -267,13 +284,21 @@ HDS's own position on HIPAA-Security:
   HDS: implemented (effort saved: high)
     Granting access to ePHI on HDS means minting an access token with explicit per-stream
     permissions, enforced at every API call. The authorization rationale can travel
-    alongside the grant itself, so the "why" stays with the "what".
+    alongside the grant itself, so the "why" stays with the "what". Two authorisation paths
+    are kept apart: access to a user's own ePHI is decided by that user, while operator and
+    infrastructure access is decided by HDS under least privilege.
     Detail: Access grants carry the streams and levels the grantee may exercise, plus
     free-form metadata such as workforce role, granting administrator and business reason.
-    HDS operates this as the authoritative authorization mechanism for ePHI; there is no
-    trust-based bypass path. HDS documents its own authorization policy and partners apply
-    the same primitive.
+    On the platform path there is no trust-based bypass: no HDS role can grant itself an
+    access into a user account. That is a statement about the authorisation mechanism and
+    not about what infrastructure access can technically reach. An identity holding host or
+    database access can read or alter stored ePHI without presenting a user token, because
+    someone has to operate the database that holds the data; what bounds it is
+    least-privilege authorisation, time-boxed and logged break-glass, and periodic access
+    review, and HDS records it as an accepted residual rather than engineering it away. HDS
+    documents its own authorization policy and partners apply the same primitives.
     Evidence: internal:hipaa/policies/access-authorization
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: always; basis: entity
     Document who may authorise access and on what basis, and capture the rationale alongside
@@ -313,6 +338,7 @@ HDS's own position on HIPAA-Security:
     accesses that individual account holders grant over their own data: those are the
     account holder's to review and revoke, and HDS does not act on them.
     Evidence: internal:hipaa/procedures/access-review
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: always; basis: entity
     Document your establishment-and-modification workflow and your periodic access-review
@@ -339,6 +365,7 @@ HDS's own position on HIPAA-Security:
     internal document. Formal, verified security-awareness training is a known gap being
     matured; each partner runs its own reminder programme for its own workforce.
     Evidence: internal:hipaa/policies/security-awareness-reminders
+    Evidence backing: every internal document cited above has completed approval.
     PLANNED (procedure, impact medium): The workforce-training procedure is approved and the completion register holds dated third-party certifications for every workforce member, with expiry reminders wired to the internal tasks board. What remains is the HDS-specific curriculum, the recorded acknowledgements, and letting the monthly cadence run a first full cycle: no per-occurrence execution record has been filed yet.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: always; basis: entity
@@ -358,15 +385,21 @@ HDS's own position on HIPAA-Security:
     include AV. Same out-of-scope reasoning as ISO 27001 A.8.7. The operator's hosting
     environment carries this control.
   HDS: facilitated (effort saved: low) (mode: infrastructure)
-    Anti-malware is a host, endpoint and network-layer control rather than a platform
-    feature. HDS operates malware protection and patching at the hosting layer for the
-    environments it runs, documented internally; the partner's own endpoints remain the
-    partner's responsibility.
-    Detail: HDS's hosting environment carries malware-protection controls as part of
-    operator-side infrastructure hardening, described privately and cited as an internal
-    document. The platform software itself includes no antivirus. Partners must protect
-    their own workstations and any infrastructure they operate outside HDS.
+    Anti-malware here is a host, endpoint and network-layer concern rather than a platform
+    feature. HDS runs no dedicated anti-malware agent on its Linux hosts, and states that as
+    a deliberate decision rather than an omission: protection rests on OS and platform
+    patching, dependency scanning, a minimised attack surface and monitoring. The partner's
+    own endpoints remain the partner's responsibility.
+    Detail: Internet-facing components receive priority patching for known CVEs, application
+    dependencies are monitored for advisories and triaged, only required services are
+    exposed, and the container model limits the blast radius of a compromised component.
+    Anomalies that may indicate malware, such as unexpected processes or crash loops, are
+    investigated under the incident process. The patch cadence and the dependency-triage
+    service level are not yet defined, so currency rests on practice rather than on a
+    control that can be evidenced; HDS records that as an open risk-analysis item. Partners
+    must protect their own workstations and any infrastructure they operate outside HDS.
     Evidence: internal:hipaa/policies/malware-protection
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: always; basis: entity
     Operate and document anti-malware controls on your own endpoints and infrastructure.
@@ -395,15 +428,21 @@ HDS's own position on HIPAA-Security:
     PLANNED (enhancement, impact low): Reference reverse-proxy rate-limiting configurations add an enforcement companion to log-in monitoring on the authentication endpoints
   HDS: facilitated (effort saved: medium) (mode: evidence)
     Authentication and login-failure events are captured in the per-user audit log, and
-    HDS's operational monitoring aggregates rate and anomaly signals across every
-    data-residency option. Discrepancy-reporting thresholds and the response cadence are
-    operator-side procedure.
-    Detail: HDS surfaces login and authentication-failure events through the audit log and
-    layers monitoring on top to detect anomalous rates. The platform does not by itself lock
-    accounts after N failures; HDS operates additional rate-limiting and alerting at the
-    infrastructure boundary, documented privately. Partners tune their own discrepancy
-    thresholds.
+    reverse-proxy and host auth logs are retained on HDS infrastructure. Review is quarterly
+    and manual: automated login-anomaly detection and alert thresholds for this
+    specification are not formalised, which HDS names as the current gap rather than
+    implying continuous detection.
+    Detail: Logs are shipped to HDS-operated collectors and stay on HDS infrastructure, with
+    only aggregate metrics reaching the monitoring service. On the quarterly cycle the
+    Security Official reviews failed-login spikes, off-hours operator access and token-use
+    anomalies; a suspected compromise is escalated to incident response within one business
+    day and the affected user is contacted. While the Security Official is the only operator
+    able to log in, every operator authentication is his own, so that surface carries
+    assurance the user-side surface does not, and the user side is reviewed on the cadence
+    regardless. Multi-factor authentication is mandated separately on the surfaces from
+    which production can be reached. Partners tune their own discrepancy thresholds.
     Evidence: internal:hipaa/procedures/login-monitoring
+    Evidence backing: every internal document cited above has completed approval.
     PLANNED (platform, impact low): Upstream reference reverse-proxy rate-limiting configurations would add an enforcement companion to login monitoring on the authentication endpoints, once shipped and adopted in the HDS deployment.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: always; basis: entity
@@ -437,6 +476,7 @@ HDS's own position on HIPAA-Security:
     login beyond a password alone (see the person-or-entity-authentication standard). HDS
     documents the configuration it runs; partners may layer their own additional rules.
     Evidence: internal:hipaa/procedures/password-management
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: always; basis: entity
     Document your password policy and whether you require the second factor for your
@@ -475,6 +515,7 @@ HDS's own position on HIPAA-Security:
     advisory affecting the deployed release enters HDS's incident procedure as a provider
     notification.
     Evidence: internal:hipaa/procedures/security-incident-response
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: always; basis: entity
     Run and document your own incident-response procedures.
@@ -519,6 +560,7 @@ HDS's own position on HIPAA-Security:
     production scale per region; that drill is the remaining gap. Partners operating their
     own deployments define their own schedule.
     Evidence: internal:hipaa/procedures/data-backup-plan
+    Evidence backing: every internal document cited above has completed approval.
     PLANNED (procedure, impact medium): Automated, restore-verified backups are the tracked remediation. Provisioned and verified 2026-07-29: in-region off-host object storage in each region (Swiss and US) with object versioning; HDS-held hybrid encryption of every archive (a per-run AES-256-GCM key wrapped to a per-region RSA-4096 public key, the private key held off-host); least-privilege per-host access; and defined targets (RPO 24h, RTO 72h, retention a flat 30 days, the grandfather-father-son promotion having been retired 2026-09-02). The scheduled cycle is running on all regional cores as of 2026-07-30, and retrievability was demonstrated by fetching an archive off-host and decrypting it with the off-host private key. Outstanding before this is fully implemented: the per-region production restore drill at non-trivial scale, and confirmation of the storage lifecycle backstop.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: [stores-phi-copy]; basis: integration
@@ -553,6 +595,7 @@ HDS's own position on HIPAA-Security:
     tracked separately (see the testing-and- revision specification, a known gap). Partners
     running their own deployments document their own plan.
     Evidence: internal:hipaa/procedures/disaster-recovery-plan
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: [stores-phi-copy]; basis: integration
     Document your recovery objectives and the steps to restore data after a loss event.
@@ -572,15 +615,24 @@ HDS's own position on HIPAA-Security:
     definition + emergency-mode runbook are the operator's. See also Art.5+ of the Disaster
     Recovery row.
   HDS: documented (effort saved: medium)
-    The platform's high-availability primitives (replicated multi-core cluster with mutually
-    authenticated inter-core traffic) support continued operation when a single facility
-    fails. HDS documents which processes are critical and the emergency-mode runbook it
-    operates.
-    Detail: HDS treats emergency-mode operation as a documented runbook layered on the
-    platform's HA topology and backup-restore path. The definition of critical business
-    processes and the emergency procedures are operator artefacts, cited internally.
-    Partners define their own emergency-mode plan for their workload.
+    The platform's high-availability primitives (a replicated multi-core cluster with
+    mutually authenticated inter-core traffic) support continued operation when a single
+    facility fails. HDS documents which processes are critical and holds an emergency-mode
+    runbook whose governing rule is to fail closed: if a security control cannot be kept up
+    while degraded, the affected function is restricted or suspended rather than serving
+    ePHI without it. The runbook is written but unexercised, since no degraded-operation
+    event has occurred and no exercise has yet been run.
+    Detail: Emergency mode is a documented runbook layered on the platform's HA topology and
+    the backup-restore path, distinct from the disaster-recovery plan that covers full loss.
+    On declaration the on-call operator confirms that per-user isolation, consent and
+    access-token checks, TLS and per-user audit logging are all still enforced, sheds
+    non-critical load to preserve the critical path, and keeps the unaffected region serving
+    its own users. Every control degraded or suspended is recorded at closure and carries a
+    follow-up. The definition of critical business processes and the procedure itself are
+    operator artefacts, cited internally. Partners define their own emergency-mode plan for
+    their workload.
     Evidence: internal:hipaa/procedures/emergency-mode-operation
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: [stores-phi-copy]; basis: integration
     Define your critical processes and document the emergency-mode runbook.
@@ -611,6 +663,7 @@ HDS's own position on HIPAA-Security:
     satisfied, and HDS says so instead of reading a rehearsal as a drill. Partners run and
     document their own contingency-plan tests.
     Evidence: internal:hipaa/procedures/contingency-plan-testing
+    Evidence backing: every internal document cited above has completed approval.
     PLANNED (procedure, impact medium): The contingency-test procedure is approved and the first restore rehearsal was performed on 2026-07-29 and filed as an execution record. It covered a single account, not a full per-region restore, so the tracked remainder is recovery at production scale in each region.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: [stores-phi-copy]; basis: integration
@@ -652,6 +705,7 @@ HDS's own position on HIPAA-Security:
     the cadence and findings; a partner runs its own periodic evaluation for its own
     programme.
     Evidence: internal:hipaa/procedures/periodic-evaluation
+    Evidence backing: every internal document cited above has completed approval.
     PLANNED (platform, impact low): A read-only effective-configuration endpoint queued upstream would supply the per-core technical baseline snapshot this evaluation is measured against, once shipped and deployed by HDS.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: always; basis: entity
@@ -700,6 +754,7 @@ HDS's own position on HIPAA-Security:
     evidenced: nothing is on file for it, and the provider's audit clause is the route to
     closing that.
     Evidence: internal:hipaa/policies/physical-safeguards, internal:hipaa/registers/hosting-provider-attestations
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: [connects, stores-phi-copy]; basis: integration
     Rely on the HDS-selected hosting region for the server-side facility controls; you
@@ -733,6 +788,7 @@ HDS's own position on HIPAA-Security:
     yet obtained. The implementer's own facilities (offices where workforce members access
     ePHI) remain their responsibility.
     Evidence: internal:hipaa/registers/hosting-provider-attestations, internal:hipaa/policies/physical-safeguards
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: [connects, stores-phi-copy]; basis: integration
     Inherit the server-tier facility controls from the HDS hosting region; implement and
@@ -763,6 +819,7 @@ HDS's own position on HIPAA-Security:
     boundary so implementers can scope their own workstation-use policy to the residual
     physical/operational concerns.
     Evidence: internal:hipaa/policies/physical-safeguards
+    Evidence backing: every internal document cited above has completed approval.
     PLANNED (doc, impact low): A workstation and BYOD standard now states what any machine must be before it may hold credentials that reach ePHI, and is approved. Its evidence is the countersigned per-machine attestation record: two of the three machines in scope are attested and awaiting countersignature, and one is not yet assessed. Completing them is the tracked remediation.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: always; basis: entity
@@ -794,6 +851,7 @@ HDS's own position on HIPAA-Security:
     compromised workstation is bounded and recoverable. HDS documents this so implementers
     can right-size their physical workstation controls.
     Evidence: internal:hipaa/policies/physical-safeguards
+    Evidence backing: every internal document cited above has completed approval.
     PLANNED (doc, impact low): A workstation and BYOD standard now states what any machine must be before it may hold credentials that reach ePHI, and is approved. Its evidence is the countersigned per-machine attestation record: two of the three machines in scope are attested and awaiting countersignature, and one is not yet assessed. Completing them is the tracked remediation.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: always; basis: entity
@@ -833,6 +891,7 @@ HDS's own position on HIPAA-Security:
     plaintext artefact, and encrypting it in transport/storage remains the mover's
     responsibility — HDS documents this boundary explicitly.
     Evidence: internal:hipaa/registers/hosting-provider-attestations, internal:hipaa/procedures/media-controls, internal:hipaa/evidence/at-rest-encryption-verification
+    Evidence backing: every internal document cited above has completed approval.
     PLANNED (doc, impact low): Swiss region only. The US region's media-sanitisation evidence is on file (AWS third-party attestations obtained 2026-07-28), so the collection remediation is discharged for that half. Nothing is on file for the Swiss region, whose provider is contractually obliged to supply a current ISO/IEC 27001 certificate and SOC 2 Type II summary on request; obtaining them is the remaining remediation.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: [stores-phi-copy]; basis: integration
@@ -885,6 +944,7 @@ HDS's own position on HIPAA-Security:
     its access-control policy; the implementer configures which grants their application
     mints.
     Evidence: internal:hipaa/policies/access-control
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: [connects]; basis: integration
     Configure your application's use of HDS access tokens to grant least- privilege
@@ -915,6 +975,7 @@ HDS's own position on HIPAA-Security:
     and track" obligation a technical anchor that HDS operates by default. The implementer
     maps their workforce/role model onto these identities.
     Evidence: internal:hipaa/policies/access-control
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: [connects]; basis: integration
     Map each workforce member or program to a distinct identity/access token and document
@@ -940,17 +1001,26 @@ HDS's own position on HIPAA-Security:
     password. Every API call made under the admin key is audited like any other, so
     post-emergency review is concrete.
   HDS: configurable (effort saved: medium)
-    The platform provides an operator-held administrative access mechanism that can serve as
-    a break-glass path to ePHI during an emergency, and every action taken under it is
-    captured by the per-user audit log. HDS documents the custody controls; the implementer
-    defines when the procedure may be invoked and the review that follows.
-    Detail: Emergency access is supported by an operator-held privileged access capability
-    treated as a custody-controlled credential. Because every call made under it is audited
-    like any other, post-emergency review is concrete and the break-glass event is
-    reconstructable. HDS configures and safeguards the mechanism; the implementer authors
-    the emergency-access procedure (triggers, authorisers, mandatory after-action review) on
-    top of it.
+    The platform provides an operator-held administrative access mechanism that serves as a
+    break-glass path to ePHI during an emergency, and every action taken under it is
+    captured by the per-user audit log. HDS runs its own approved procedure over that
+    mechanism: the Security Official authorises each grant with a stated scope and
+    justification, time-boxes it to 24 hours by default, and reviews the audit and host logs
+    against the grant within two business days. An implementer authors the equivalent
+    procedure for its own workload.
+    Detail: Routine access to a user's ePHI is by the user and their granted tokens; this
+    procedure covers the exceptional operator-level case, such as assisting an individual
+    locked out during an outage or validating a disaster-recovery restore. Temporary
+    credentials are revoked on completion and the time box confirmed closed. One grant is
+    standing rather than per-incident: HDS Leadership holds administrative access to the
+    provider consoles and does not use it, as the means by which HDS can revoke the Security
+    Official's own access, so that no single individual can lock the organisation out of its
+    infrastructure. That grant carries the mandated multi-factor authentication, is reviewed
+    on the quarterly access-review cadence (first cycle 2026-07-30, confirmed still unused),
+    and rests on attestation by signature rather than a captured configuration record, a
+    residual HDS has accepted.
     Evidence: internal:hipaa/procedures/emergency-access
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: configurable
     applies_when: [connects, stores-phi-copy]; basis: integration
     Define and document your emergency-access procedure — who may invoke break-glass access,
@@ -989,6 +1059,7 @@ HDS's own position on HIPAA-Security:
     HDS documents the configured defaults; the implementer tunes them and documents the
     rationale for the chosen inactivity window (the "Addressable" path).
     Evidence: internal:hipaa/policies/access-control
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: configurable
     applies_when: [connects]; basis: integration
     Set session and access-token expiry windows appropriate to your workflow and document
@@ -1057,6 +1128,7 @@ HDS's own position on HIPAA-Security:
     us1 on the Security Official's attestation, since AWS EBS encryption is opt-in per
     volume and vendor documentation cannot establish it is in force.
     Evidence: internal:hipaa/policies/encryption, internal:hipaa/risk/at-rest-encryption, internal:hipaa/evidence/at-rest-encryption-verification
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: configurable
     applies_when: [stores-phi-copy]; basis: integration
     HDS encrypts ePHI at rest with provider-managed keys. In your own risk analysis, decide
@@ -1115,6 +1187,7 @@ HDS's own position on HIPAA-Security:
     implementer defines the written review cadence (see §164.308(a)(1)(ii)(D)) and who
     performs it.
     Evidence: internal:hipaa/policies/audit-controls
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: [connects, stores-phi-copy]; basis: integration
     Define and document your audit-review cadence and who performs it; retain the review
@@ -1150,6 +1223,7 @@ HDS's own position on HIPAA-Security:
     primitives and documents its integrity policy; the implementer owns the surrounding
     procedural obligation.
     Evidence: internal:hipaa/policies/integrity
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: [stores-phi-copy]; basis: entity
     Author your integrity policy — change-control, who may alter records, and how
@@ -1193,6 +1267,7 @@ HDS's own position on HIPAA-Security:
     where an implementer's risk analysis demands stronger tamper-proofing, they layer in
     content-integrity verification themselves.
     Evidence: internal:hipaa/policies/integrity
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: configurable
     applies_when: [stores-phi-copy]; basis: integration
     Decide, per your risk analysis, whether the platform's versioning + audit evidence
@@ -1258,16 +1333,22 @@ HDS's own position on HIPAA-Security:
     PLANNED (enhancement, impact medium): Reference MFA plugins (TOTP / WebAuthn) + primitive-catalogue doc surface the pluggability
   HDS: implemented (effort saved: high)
     Authentication in the HDS-operated platform is mediated by the access-token primitive:
-    the bearer of a valid token has been authenticated. Authentication strength is layered —
-    credentials by default, with multi-factor authentication available — and recovery paths
-    preserve account ownership when a factor is lost.
-    Detail: Every request reaching ePHI must present a valid access token, so the platform
-    verifies the requester before any access is granted. HDS operates this stack and can
-    require multi-factor authentication where the implementer's risk profile calls for it;
-    the achievable assurance level depends on which factor method is configured. HDS
-    documents the authentication policy in effect; the implementer decides whether to
-    require MFA universally or per-role.
+    the bearer of a valid token has been authenticated, and no anonymous access to ePHI is
+    possible from the API. HDS has decided and dated its own multi-factor position: MFA is
+    mandatory for HDS workforce and operator access, and available but not mandated for end
+    users. Recovery paths preserve account ownership when a factor is lost.
+    Detail: Every request reaching ePHI through the API must present a valid access token,
+    so the platform verifies the requester before any access is granted; credentials are
+    stored one-way hashed in a separately access-controlled namespace. The MFA mandate
+    covers the provider consoles, the code-hosting organisation carrying deploy rights, and
+    administrative access to the platform hosts, because those are the surfaces from which
+    production can be reached. It is attested by the Security Official rather than
+    demonstrated by a captured configuration record, and HDS records that evidence gap as an
+    accepted residual. This control governs the platform path; privileged infrastructure
+    access is a separate path covered under access authorization. An implementer decides the
+    MFA position for its own workforce and its own users.
     Evidence: internal:hipaa/policies/authentication
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: [connects]; basis: integration
     Decide and document your authentication strength (e.g. whether MFA is required, and for
@@ -1318,6 +1399,7 @@ HDS's own position on HIPAA-Security:
     that its own onward transmission paths (any proxy or integration hop it controls)
     preserve the same protection.
     Evidence: internal:hipaa/policies/transmission-security
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: [connects, stores-phi-copy, third-parties]; basis: integration
     Ensure your client and any onward integration hops you control transmit ePHI only over
@@ -1349,6 +1431,7 @@ HDS's own position on HIPAA-Security:
     implementer routes ePHI through intermediate hops it controls, it must ensure those hops
     do not terminate and re-emit traffic in a way that loses the integrity guarantee.
     Evidence: internal:hipaa/policies/transmission-security
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: [connects, stores-phi-copy, third-parties]; basis: integration
     Preserve transmission integrity across any hops you operate, and document the
@@ -1383,6 +1466,7 @@ HDS's own position on HIPAA-Security:
     at-rest encryption under §164.312(a)(2)(iv), which is implemented in every region (no
     platform gap).
     Evidence: internal:hipaa/policies/transmission-security
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: [connects, stores-phi-copy, third-parties]; basis: integration
     Document that transmission encryption is in force; separately address at-rest encryption
@@ -1417,6 +1501,7 @@ HDS's own position on HIPAA-Security:
     flows obligations down to its own subcontractors via back-to-back agreements tracked in
     the BAA register.
     Evidence: internal:hipaa/registers/baa-register
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: [connects, stores-phi-copy, third-parties]; basis: integration
     Execute a business associate agreement with every business associate you engage, before
@@ -1454,6 +1539,7 @@ HDS's own position on HIPAA-Security:
     logging, encryption, monitoring and regional residency. This gives the contractual
     "reasonable and appropriate safeguards" clause a concrete, auditable backing.
     Evidence: internal:hipaa/registers/baa-register
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: [connects, stores-phi-copy, third-parties]; basis: integration
     Confirm that the BAA's safeguards clause reflects the controls you rely on, and retain
@@ -1488,6 +1574,7 @@ HDS's own position on HIPAA-Security:
     HDS's incident-response procedure governs how that report is produced and what evidence
     it carries.
     Evidence: internal:hipaa/registers/baa-register
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: [connects, stores-phi-copy, third-parties]; basis: integration
     Ensure each agreement with your own business associates specifies the incident-report
@@ -1513,15 +1600,16 @@ HDS's own position on HIPAA-Security:
     enabled, the BA's subcontractor list adds the observability provider as a sub-processor
     under both HIPAA-Security §164.314(a)(2)(ii)(B) and GDPR Art.28(4).
   HDS: facilitated (effort saved: medium) (mode: evidence)
-    Acting as a Business Associate, HDS executes back-to-back agreements with each
-    subcontractor that may touch ePHI and tracks them in its BAA register. HDS also provides
-    the implementer a subcontractor agreement template to flow the same obligations down
-    their own chain.
+    HDS executes back-to-back agreements with each subcontractor that may touch ePHI and
+    tracks them in its BAA register, so the flow-down exists wherever a BAA is in force. HDS
+    also provides the implementer a subcontractor agreement template to flow the same
+    obligations down their own chain.
     Detail: HDS maintains a current list of its ePHI-relevant subprocessors and holds a
     written contract with each that flows down the applicable Security Rule obligations. The
     subprocessor list is made available to implementers so they can satisfy their own
     §164.314(a)(2)(ii)(B) due diligence.
     Evidence: internal:hipaa/registers/baa-register
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: [third-parties]; basis: integration
     Review HDS's subprocessor list as part of your vendor due diligence.
@@ -1554,6 +1642,7 @@ HDS's own position on HIPAA-Security:
     policies for its own organisation, but can cite HDS's programme where HDS operates the
     underlying system.
     Evidence: internal:hipaa/policies/information-security-policy
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: always; basis: entity
     Maintain your own reasonable and appropriate policies and procedures for the parts of
@@ -1585,6 +1674,7 @@ HDS's own position on HIPAA-Security:
     (Pryv layer) supplies the automatic operational record. The implementer keeps the
     equivalent documentation for its own programme.
     Evidence: internal:hipaa/policies/documentation-and-retention
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: always; basis: entity
     Keep your own policies, procedures and required activity records in written or
@@ -1640,6 +1730,7 @@ HDS's own position on HIPAA-Security:
     retention is configured per the implementer's lawful basis and contractual instructions;
     the implementer retains its own documentation independently.
     Evidence: internal:hipaa/policies/documentation-and-retention
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: [stores-phi-copy]; basis: integration
     Retain your own Security Rule documentation for at least six years from creation or
@@ -1669,6 +1760,7 @@ HDS's own position on HIPAA-Security:
     out-of-cycle update. Each policy and register carries its review history. The
     implementer runs its own review cycle for the documentation it owns.
     Evidence: internal:hipaa/policies/documentation-and-retention
+    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: always; basis: entity
     Review and update your own documentation periodically and in response to operational or
