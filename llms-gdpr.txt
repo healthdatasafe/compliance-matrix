@@ -669,11 +669,11 @@ HDS's own position on GDPR:
     library.
     Detail: All read-side resources are reachable: events, streams, accesses with version
     chain, audit-as-events, webhooks, HF series and attachments. The supplementary
-    information is in the access clientData when the controller recorded it there. The
-    subject can either drive the API directly or use app-portability (operator-hosted at
-    portability.hds.ngo / demo-portability.datasafe.dev); the ZIPs include an HDS provenance
-    manifest (data-model version, deploy URL, completion timestamp) and a portable
-    sync-state for incremental re-runs.
+    information sits in the access clientData where whoever granted the access recorded it
+    there. The subject can either drive the API directly or use app-portability
+    (operator-hosted at portability.hds.ngo / demo-portability.datasafe.dev); the ZIPs
+    include an HDS provenance manifest (data-model version, deploy URL, completion
+    timestamp) and a portable sync-state for incremental re-runs.
     Evidence: doc:https://demo-portability.datasafe.dev, doc:https://portability.hds.ngo, doc:https://github.com/healthdatasafe/app-portability, internal:gdpr/procedures/data-subject-rights
   IMPLEMENTER [controller] coverage: documented
     applies_when: [connects]
@@ -830,9 +830,12 @@ HDS's own position on GDPR:
     Data continues to live in events and streams while the access change stops processing,
     and the version chain proves when the restriction took effect. There is no separate
     restriction flag — the access mutation is the restriction primitive.
-    Detail: The controller lowers the relevant access's permissions to none on the affected
-    streams (or deletes the access) and may record the restriction reason on the access
-    clientData for the Art.30 register.
+    Detail: Restriction of what sits in the vault is the individual's act: they lower the
+    relevant access's permissions on the affected streams, or revoke it outright, with
+    immediate effect and a version chain proving when. An organisation restricting the copy
+    it holds stops processing that copy and records the reason in its own register. Where a
+    restriction concerns a covered-entity or partner relationship, the reason can also be
+    recorded on the access clientData for that party's Art.30 register.
     Evidence: internal:hipaa/policies/access-control, internal:gdpr/procedures/data-subject-rights
   IMPLEMENTER [controller] coverage: documented
     applies_when: [processes-personal-data]
@@ -933,10 +936,12 @@ HDS's own position on GDPR:
     objection mechanism is the same access revoke/scope-down as consent withdrawal, and the
     objection (and any compelling-grounds outcome) can be recorded on the access clientData.
     The legal distinction between objection and withdrawal is semantic, not technical.
-    Detail: For direct marketing the controller records the objection and narrows or revokes
-    the marketing access so subsequent runs find no scope. For legitimate-interest
-    objections the controller also runs a compelling-grounds review and records the outcome
-    on the access; all of it is versioned and auditable.
+    Detail: For direct marketing the objection is recorded and the marketing access narrowed
+    or revoked, so subsequent runs find no scope; in the vault the revocation is the
+    individual's to make, and an organisation acting on its own copy stops the processing
+    objected to at its own end. For legitimate-interest objections a compelling-grounds
+    review is run and its outcome recorded on the access or in the objector's own register;
+    all of it is versioned and auditable.
     Evidence: internal:hipaa/policies/access-control, internal:gdpr/procedures/data-subject-rights
   IMPLEMENTER [controller] coverage: documented
     applies_when: [connects, analytics, secondary-use]
@@ -959,13 +964,16 @@ HDS's own position on GDPR:
     CMC-paired counterparties, the `consent/revoke-cmc` or a custom
     `notification/rectification` event provides a structured notification channel.
   HDS: facilitated (effort saved: low) (mode: evidence)
-    The recipients are derivable from HDS data — the accesses the controller minted to third
-    parties. When an Art.16-18 action affects data held by those recipients, the controller
-    iterates the active accesses and notifies each holder; CMC-paired counterparties have a
-    structured notification channel.
-    Detail: The set of recipients to notify is reconstructable from the active accesses; the
-    out-of-band notification to each, and the impossibility/disproportionality judgement,
-    are the controller's.
+    Who can enumerate recipients depends on who is asking. HDS, as controller of the vault,
+    can see the accesses an individual has granted, and the individual sees the same list
+    live in their own dashboard. An organisation that received data cannot: it knows only
+    the onward disclosures it made itself, so its Art.19 notification runs against its own
+    records. CMC-paired counterparties have a structured notification channel.
+    Detail: The set of recipients an individual has granted is reconstructable from the
+    active accesses, by the individual and by HDS. For an organisation acting on its own
+    copy, the recipient list is the one it keeps of its own disclosures. The out-of-band
+    notification to each, and the impossibility or disproportionality judgement, belong to
+    whoever carries the duty.
     Evidence: internal:gdpr/procedures/data-subject-rights
   IMPLEMENTER [controller] coverage: documented
     applies_when: [connects, third-parties]
@@ -998,10 +1006,10 @@ HDS's own position on GDPR:
     Art.22 applies, the audit log proves which inputs were read, the decision output can be
     stored as an event referencing those inputs and the logic version, and the §2(c) consent
     basis lives on the access clientData like any other consent record.
-    Detail: The controller mints a dedicated access for the decision app, writes the
-    decision output with an input-audit reference and logic version, and uses that trail to
-    satisfy human-intervention requests. HDS supplies the evidentiary substrate, not the
-    decision.
+    Detail: The individual grants the decision app its own access; the app writes the
+    decision output with an input-audit reference and a logic version, and that trail is
+    what supports a later human-intervention request. HDS supplies the evidentiary
+    substrate, not the decision.
     Evidence: internal:gdpr/procedures/data-subject-rights
   IMPLEMENTER [controller] coverage: documented
     applies_when: [analytics]
@@ -1859,15 +1867,17 @@ HDS's own position on GDPR:
     `context/transfer-basis-convention.md`. The data-at-rest residency is preserved (no
     Tier-2 copy in the US); only the access path + Tier-1 routing-state crosses.
   HDS: facilitated (effort saved: medium) (mode: infrastructure)
-    HDS's data-residency option is the technical enforcement layer: binding a subject to the
-    Switzerland region keeps EU/EEA data under an adequacy regime, so no Chapter-V analysis
-    is needed. The US region is an international transfer requiring an Art.45/46 mechanism
-    (SCCs). Where transfer is intentional, the recipient and legal basis are recorded on the
-    access clientData, making compliance auditable per transfer.
-    Detail: Content and audit data stay pinned to the subject's region; a deliberate
-    cross-region move (e.g. choosing the US region, or a US counterparty fetching from a CH
-    core) is the transfer event. The controller records the recipient and transfer basis on
-    the access; the legal mechanism itself is a controller/legal artefact.
+    HDS's data-residency option is the technical enforcement layer, and the region is chosen
+    by the individual when they register their vault rather than assigned by an
+    organisation. A vault in the Switzerland region keeps EU and EEA data under an adequacy
+    regime, so no Chapter-V analysis is needed; the US region is an international transfer
+    requiring an Art.45 or Art.46 mechanism. Where a transfer is intentional, the recipient
+    and legal basis are recorded on the access, making compliance auditable per transfer.
+    Detail: Content and audit data stay pinned to the individual's chosen region; a
+    deliberate cross-region move, such as a US counterparty fetching from a Swiss core, is
+    the transfer event. The recipient and transfer basis are recorded on the access, and an
+    organisation making its own onward transfer records the basis in its own transfer
+    records. The legal mechanism itself is a legal artefact, not a platform one.
     Evidence: internal:gdpr/policies/international-transfers, internal:hipaa/registers/hosting-provider-attestations, internal:hipaa/risk/cross-core-residency-data-flow
   IMPLEMENTER [controller] coverage: documented
     applies_when: [transfer-eu-us, transfer-eu-ch, third-parties]
@@ -1975,9 +1985,9 @@ HDS's own position on GDPR:
     pattern); the BCR document itself is the operator's legal artefact.
   HDS: out-of-scope
     BCRs are organisational rules approved through a formal supervisory process, with no
-    software contribution. Where BCRs are the chosen Art.46 safeguard, the controller
-    records the BCR reference on the transferring access; the BCR document is the
-    controller's legal artefact.
+    software contribution. Where BCRs are the chosen Art.46 safeguard, the organisation
+    relying on them records the reference against the transfers it makes, and the BCR
+    document itself is its legal artefact.
   IMPLEMENTER [controller] coverage: documented
     applies_when: [transfer-eu-us, transfer-eu-ch, third-parties]
     If relying on BCRs, obtain approval and record the reference against the transfers you

@@ -829,9 +829,9 @@ as the canonical access path, built on the pryv-account-backup library.
 </p>
       <details><summary>detail</summary><p>All read-side resources are reachable: events, streams, accesses with
 version chain, audit-as-events, webhooks, HF series and attachments.
-The supplementary information is in the access clientData when the
-controller recorded it there. The subject can either drive the API
-directly or use app-portability (operator-hosted at
+The supplementary information sits in the access clientData where
+whoever granted the access recorded it there. The subject can either
+drive the API directly or use app-portability (operator-hosted at
 portability.hds.ngo / demo-portability.datasafe.dev); the ZIPs include
 an HDS provenance manifest (data-model version, deploy URL, completion
 timestamp) and a portable sync-state for incremental re-runs.
@@ -1010,9 +1010,14 @@ access change stops processing, and the version chain proves when the
 restriction took effect. There is no separate restriction flag — the
 access mutation is the restriction primitive.
 </p>
-      <details><summary>detail</summary><p>The controller lowers the relevant access's permissions to none on the
-affected streams (or deletes the access) and may record the restriction
-reason on the access clientData for the Art.30 register.
+      <details><summary>detail</summary><p>Restriction of what sits in the vault is the individual's act: they
+lower the relevant access's permissions on the affected streams, or
+revoke it outright, with immediate effect and a version chain proving
+when. An organisation restricting the copy it holds stops processing
+that copy and records the reason in its own register. Where a
+restriction concerns a covered-entity or partner relationship, the
+reason can also be recorded on the access clientData for that party's
+Art.30 register.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/access-control</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 gdpr/procedures/data-subject-rights</span> <span class="onreq">available on request</span></li></ul>
       
@@ -1136,11 +1141,13 @@ consent withdrawal, and the objection (and any compelling-grounds
 outcome) can be recorded on the access clientData. The legal distinction
 between objection and withdrawal is semantic, not technical.
 </p>
-      <details><summary>detail</summary><p>For direct marketing the controller records the objection and narrows or
-revokes the marketing access so subsequent runs find no scope. For
-legitimate-interest objections the controller also runs a
-compelling-grounds review and records the outcome on the access; all of
-it is versioned and auditable.
+      <details><summary>detail</summary><p>For direct marketing the objection is recorded and the marketing
+access narrowed or revoked, so subsequent runs find no scope; in the
+vault the revocation is the individual's to make, and an organisation
+acting on its own copy stops the processing objected to at its own
+end. For legitimate-interest objections a compelling-grounds review is
+run and its outcome recorded on the access or in the objector's own
+register; all of it is versioned and auditable.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/access-control</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 gdpr/procedures/data-subject-rights</span> <span class="onreq">available on request</span></li></ul>
       
@@ -1163,10 +1170,12 @@ primitive and recorded.
       </div>
     </div>
   </div>
-</article><article class="req" id="req-art-19" data-coverage="facilitated" data-personas="controller data-subject" data-text="art.19 notification obligation regarding rectification / erasure / restriction the recipients are derivable from hds data — the accesses the controller
-minted to third parties. when an art.16-18 action affects data held by
-those recipients, the controller iterates the active accesses and
-notifies each holder; cmc-paired counterparties have a structured
+</article><article class="req" id="req-art-19" data-coverage="facilitated" data-personas="controller data-subject" data-text="art.19 notification obligation regarding rectification / erasure / restriction who can enumerate recipients depends on who is asking. hds, as
+controller of the vault, can see the accesses an individual has
+granted, and the individual sees the same list live in their own
+dashboard. an organisation that received data cannot: it knows only
+the onward disclosures it made itself, so its art.19 notification runs
+against its own records. cmc-paired counterparties have a structured
 notification channel.
 " data-planned="0">
   <h3><code>Art.19</code> Notification obligation regarding rectification / erasure / restriction <span class="draft">draft</span></h3>
@@ -1188,15 +1197,20 @@ notification channel.
     </div>
     <div class="layer hds">
       <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">CH</span><span class="rg">US</span> </div>
-      <p>The recipients are derivable from HDS data — the accesses the controller
-minted to third parties. When an Art.16-18 action affects data held by
-those recipients, the controller iterates the active accesses and
-notifies each holder; CMC-paired counterparties have a structured
+      <p>Who can enumerate recipients depends on who is asking. HDS, as
+controller of the vault, can see the accesses an individual has
+granted, and the individual sees the same list live in their own
+dashboard. An organisation that received data cannot: it knows only
+the onward disclosures it made itself, so its Art.19 notification runs
+against its own records. CMC-paired counterparties have a structured
 notification channel.
 </p>
-      <details><summary>detail</summary><p>The set of recipients to notify is reconstructable from the active
-accesses; the out-of-band notification to each, and the
-impossibility/disproportionality judgement, are the controller's.
+      <details><summary>detail</summary><p>The set of recipients an individual has granted is reconstructable
+from the active accesses, by the individual and by HDS. For an
+organisation acting on its own copy, the recipient list is the one it
+keeps of its own disclosures. The out-of-band notification to each,
+and the impossibility or disproportionality judgement, belong to
+whoever carries the duty.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 gdpr/procedures/data-subject-rights</span> <span class="onreq">available on request</span></li></ul>
       
@@ -1249,10 +1263,10 @@ the decision output can be stored as an event referencing those inputs
 and the logic version, and the §2(c) consent basis lives on the access
 clientData like any other consent record.
 </p>
-      <details><summary>detail</summary><p>The controller mints a dedicated access for the decision app, writes the
-decision output with an input-audit reference and logic version, and uses
-that trail to satisfy human-intervention requests. HDS supplies the
-evidentiary substrate, not the decision.
+      <details><summary>detail</summary><p>The individual grants the decision app its own access; the app writes
+the decision output with an input-audit reference and a logic version,
+and that trail is what supports a later human-intervention request.
+HDS supplies the evidentiary substrate, not the decision.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 gdpr/procedures/data-subject-rights</span> <span class="onreq">available on request</span></li></ul>
       
@@ -2334,12 +2348,14 @@ factors should a fine be considered.
       </div>
     </div>
   </div>
-</article><article class="req" id="req-art-44" data-coverage="facilitated" data-personas="controller data-subject" data-text="art.44 general principle for transfers hds's data-residency option is the technical enforcement layer: binding a
-subject to the switzerland region keeps eu/eea data under an adequacy
-regime, so no chapter-v analysis is needed. the us region is an
-international transfer requiring an art.45/46 mechanism (sccs). where
-transfer is intentional, the recipient and legal basis are recorded on
-the access clientdata, making compliance auditable per transfer.
+</article><article class="req" id="req-art-44" data-coverage="facilitated" data-personas="controller data-subject" data-text="art.44 general principle for transfers hds's data-residency option is the technical enforcement layer, and
+the region is chosen by the individual when they register their vault
+rather than assigned by an organisation. a vault in the switzerland
+region keeps eu and eea data under an adequacy regime, so no chapter-v
+analysis is needed; the us region is an international transfer
+requiring an art.45 or art.46 mechanism. where a transfer is
+intentional, the recipient and legal basis are recorded on the access,
+making compliance auditable per transfer.
 " data-planned="0">
   <h3><code>Art.44</code> General principle for transfers <span class="draft">draft</span></h3>
   <p class="text">Any transfer to a third country or international organisation may take
@@ -2361,18 +2377,21 @@ rather than per system.
     </div>
     <div class="layer hds">
       <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">CH</span><span class="rg">US</span> </div>
-      <p>HDS's data-residency option is the technical enforcement layer: binding a
-subject to the Switzerland region keeps EU/EEA data under an adequacy
-regime, so no Chapter-V analysis is needed. The US region is an
-international transfer requiring an Art.45/46 mechanism (SCCs). Where
-transfer is intentional, the recipient and legal basis are recorded on
-the access clientData, making compliance auditable per transfer.
+      <p>HDS's data-residency option is the technical enforcement layer, and
+the region is chosen by the individual when they register their vault
+rather than assigned by an organisation. A vault in the Switzerland
+region keeps EU and EEA data under an adequacy regime, so no Chapter-V
+analysis is needed; the US region is an international transfer
+requiring an Art.45 or Art.46 mechanism. Where a transfer is
+intentional, the recipient and legal basis are recorded on the access,
+making compliance auditable per transfer.
 </p>
-      <details><summary>detail</summary><p>Content and audit data stay pinned to the subject's region; a deliberate
-cross-region move (e.g. choosing the US region, or a US counterparty
-fetching from a CH core) is the transfer event. The controller records
-the recipient and transfer basis on the access; the legal mechanism
-itself is a controller/legal artefact.
+      <details><summary>detail</summary><p>Content and audit data stay pinned to the individual's chosen region;
+a deliberate cross-region move, such as a US counterparty fetching
+from a Swiss core, is the transfer event. The recipient and transfer
+basis are recorded on the access, and an organisation making its own
+onward transfer records the basis in its own transfer records. The
+legal mechanism itself is a legal artefact, not a platform one.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 gdpr/policies/international-transfers</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/registers/hosting-provider-attestations</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/risk/cross-core-residency-data-flow</span> <span class="onreq">available on request</span></li></ul>
       
@@ -2520,9 +2539,10 @@ subprocessor.
     </div>
   </div>
 </article><article class="req" id="req-art-47" data-coverage="out-of-scope" data-personas="controller data-subject" data-text="art.47 binding corporate rules bcrs are organisational rules approved through a formal supervisory
-process, with no software contribution. where bcrs are the chosen art.46
-safeguard, the controller records the bcr reference on the transferring
-access; the bcr document is the controller's legal artefact.
+process, with no software contribution. where bcrs are the chosen
+art.46 safeguard, the organisation relying on them records the
+reference against the transfers it makes, and the bcr document itself
+is its legal artefact.
 " data-planned="0">
   <h3><code>Art.47</code> Binding corporate rules <span class="draft">draft</span></h3>
   <p class="text">A supervisory authority may approve binding corporate rules meeting the
@@ -2542,9 +2562,10 @@ artefact.
     <div class="layer hds">
       <div class="lh">HDS <span class="b out-of-scope">out-of-scope</span> <span class="rg">CH</span><span class="rg">US</span> </div>
       <p>BCRs are organisational rules approved through a formal supervisory
-process, with no software contribution. Where BCRs are the chosen Art.46
-safeguard, the controller records the BCR reference on the transferring
-access; the BCR document is the controller's legal artefact.
+process, with no software contribution. Where BCRs are the chosen
+Art.46 safeguard, the organisation relying on them records the
+reference against the transfers it makes, and the BCR document itself
+is its legal artefact.
 </p>
       
       
