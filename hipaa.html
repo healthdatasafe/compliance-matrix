@@ -38,7 +38,7 @@
     <p>Every vault. The individual holds the account and decides who may see the data, so HDS holds it for them and never on a covered entity's behalf, whoever put it there and wherever it physically sits. A business associate is defined by acting on a covered entity's behalf, so HDS is not one here and HIPAA does not reach it.
 </p>
   </div></div>
-      <p class="stmt">HIPAA does not reach HDS in the vault, so what follows is not a claim that HDS meets the Security Rule: it is what the platform supplies to an implementer that does hold a role. Every one of the forty-three requirements is answered from an approved HDS document, and the safeguards behind those answers are live rather than paper: a risk analysis and risk-management plan are approved, workforce training runs against a completion register, backups are provisioned on both regional cores and a first restore rehearsal was executed on 2026-07-29. Nine carry remediation HDS has committed to and not delivered, and encryption at rest uses provider-managed keys.
+      <p class="stmt">HIPAA does not reach HDS in the vault, so what follows is not a claim that HDS meets the Security Rule: it is what the platform supplies to an implementer that does hold a role. All forty-three requirements are answered from HDS documentation, and forty of them rest entirely on documents that have completed approval; the other three cite a procedure-execution record still in review, which is the evidence that the control actually ran on the date claimed. The safeguards behind those answers are live rather than paper: a risk analysis and risk-management plan are approved, workforce training runs continuously against a completion register, and backups run on a daily timer on both regional cores, first verified live on 2026-07-30, with a first restore rehearsal executed on 2026-07-29. Recovery at production scale is not yet demonstrated, nine requirements carry remediation HDS has committed to and not delivered, and encryption at rest uses provider-managed keys.
 </p>
       <p class="notproc"><b>What building on HDS does not create.</b>
         Consent is not delegation. When an individual grants a clinician or an application access to their own vault, that access flows from their consent, not from anyone instructing HDS, so it creates no business associate relationship: not with the clinician, not with the application, and not with HDS. The data sitting on HDS infrastructure does not change on whose behalf it is held. Where an organisation would place protected health information with HDS on its OWN behalf, a BAA would be required; that arrangement is documented separately and is outside this matrix. The requirements below remain the map for an implementer that holds a HIPAA role of its own, and the FTC Health Breach Notification Rule and state consumer-health-data law are what reach the user-sovereign case instead.
@@ -596,8 +596,8 @@ accounts HDS administers, not the accesses that individual account holders
 grant over their own data: those are the account holder's to review and
 revoke, and HDS does not act on them.
 </p></details>
-      <ul class="ev"><li><span class="lock">🔒 hipaa/procedures/access-review</span> <span class="onreq">available on request</span></li></ul>
-      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
+      <ul class="ev"><li><span class="lock">🔒 hipaa/procedures/access-review</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 procedures/access-review/executions/2026-07-30-1</span> <span class="onreq">available on request</span></li></ul>
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -975,8 +975,8 @@ merely produced. What is not yet demonstrated is restore at production
 scale per region; that drill is the remaining gap. Partners
 operating their own deployments define their own schedule.
 </p></details>
-      <ul class="ev"><li><span class="lock">🔒 hipaa/procedures/data-backup-plan</span> <span class="onreq">available on request</span></li></ul>
-      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
+      <ul class="ev"><li><span class="lock">🔒 hipaa/procedures/data-backup-plan</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 procedures/backup-run/executions/2026-07-30-1</span> <span class="onreq">available on request</span></li></ul>
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -1161,8 +1161,8 @@ specification is partly evidenced rather than satisfied, and HDS says so
 instead of reading a rehearsal as a drill. Partners run and document their
 own contingency-plan tests.
 </p></details>
-      <ul class="ev"><li><span class="lock">🔒 hipaa/procedures/contingency-plan-testing</span> <span class="onreq">available on request</span></li></ul>
-      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
+      <ul class="ev"><li><span class="lock">🔒 hipaa/procedures/contingency-plan-testing</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 procedures/contingency-test/executions/2026-07-29-1</span> <span class="onreq">available on request</span></li></ul>
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>

@@ -3720,15 +3720,19 @@ HDS's own position on HIPAA-Security:
   - vault: HDS is not-applicable. Every vault. The individual holds the account and decides who may see the data, so HDS holds it for them and never on a covered entity's behalf, whoever put it there and wherever it physically sits. A business associate is defined by acting on a covered entity's behalf, so HDS is not one here and HIPAA does not reach it.
   External assurance: self-assessed. No HIPAA audit, no independent Security Rule assessment and no third-party report covers HDS. The attestations on file belong to the hosting providers and cover their facilities, not HDS's practices.
   Certificates HDS relies on but does NOT hold: AWS ISO/IEC 27001 (us-east-1 named in the certified locations), 27017, 27018 — obtained 2026-07-28
-  Evidence: 43 of 43 requirements answered from approved HDS documentation (43 cite internal evidence), as of 2026-09-10.
+  Evidence: 40 of 43 requirements answered from approved HDS documentation (43 cite internal evidence), as of 2026-09-10.
   HIPAA does not reach HDS in the vault, so what follows is not a claim that HDS meets the
   Security Rule: it is what the platform supplies to an implementer that does hold a role.
-  Every one of the forty-three requirements is answered from an approved HDS document, and
-  the safeguards behind those answers are live rather than paper: a risk analysis and
-  risk-management plan are approved, workforce training runs against a completion
-  register, backups are provisioned on both regional cores and a first restore rehearsal
-  was executed on 2026-07-29. Nine carry remediation HDS has committed to and not
-  delivered, and encryption at rest uses provider-managed keys.
+  All forty-three requirements are answered from HDS documentation, and forty of them rest
+  entirely on documents that have completed approval; the other three cite a
+  procedure-execution record still in review, which is the evidence that the control
+  actually ran on the date claimed. The safeguards behind those answers are live rather
+  than paper: a risk analysis and risk-management plan are approved, workforce training
+  runs continuously against a completion register, and backups run on a daily timer on
+  both regional cores, first verified live on 2026-07-30, with a first restore rehearsal
+  executed on 2026-07-29. Recovery at production scale is not yet demonstrated, nine
+  requirements carry remediation HDS has committed to and not delivered, and encryption at
+  rest uses provider-managed keys.
   NOTE: Consent is not delegation. When an individual grants a clinician or an application
   access to their own vault, that access flows from their consent, not from anyone
   instructing HDS, so it creates no business associate relationship: not with the
@@ -4052,8 +4056,7 @@ HDS's own position on HIPAA-Security:
     their own populations. The review covers the operator accounts HDS administers, not the
     accesses that individual account holders grant over their own data: those are the
     account holder's to review and revoke, and HDS does not act on them.
-    Evidence: internal:hipaa/procedures/access-review
-    Evidence backing: every internal document cited above has completed approval.
+    Evidence: internal:hipaa/procedures/access-review, internal:procedures/access-review/executions/2026-07-30-1
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: always; basis: entity
     Document your establishment-and-modification workflow and your periodic access-review
@@ -4279,8 +4282,7 @@ HDS's own position on HIPAA-Security:
     are usable rather than merely produced. What is not yet demonstrated is restore at
     production scale per region; that drill is the remaining gap. Partners operating their
     own deployments define their own schedule.
-    Evidence: internal:hipaa/procedures/data-backup-plan
-    Evidence backing: every internal document cited above has completed approval.
+    Evidence: internal:hipaa/procedures/data-backup-plan, internal:procedures/backup-run/executions/2026-07-30-1
     PLANNED (procedure, impact medium): Automated, restore-verified backups are the tracked remediation. Provisioned and verified 2026-07-29: in-region off-host object storage in each region (Swiss and US) with object versioning; HDS-held hybrid encryption of every archive (a per-run AES-256-GCM key wrapped to a per-region RSA-4096 public key, the private key held off-host); least-privilege per-host access; and defined targets (RPO 24h, RTO 72h, retention a flat 30 days, the grandfather-father-son promotion having been retired 2026-09-02). The scheduled cycle is running on all regional cores as of 2026-07-30, and retrievability was demonstrated by fetching an archive off-host and decrypting it with the off-host private key. Outstanding before this is fully implemented: the per-region production restore drill at non-trivial scale, and confirmation of the storage lifecycle backstop.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: [stores-phi-copy]; basis: integration
@@ -4385,8 +4387,7 @@ HDS's own position on HIPAA-Security:
     than a full per-region restore, so this specification is partly evidenced rather than
     satisfied, and HDS says so instead of reading a rehearsal as a drill. Partners run and
     document their own contingency-plan tests.
-    Evidence: internal:hipaa/procedures/contingency-plan-testing
-    Evidence backing: every internal document cited above has completed approval.
+    Evidence: internal:hipaa/procedures/contingency-plan-testing, internal:procedures/contingency-test/executions/2026-07-29-1
     PLANNED (procedure, impact medium): The contingency-test procedure is approved and the first restore rehearsal was performed on 2026-07-29 and filed as an execution record. It covered a single account, not a full per-region restore, so the tracked remainder is recovery at production scale in each region.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: [stores-phi-copy]; basis: integration
