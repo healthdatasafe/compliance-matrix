@@ -622,8 +622,11 @@ process on HDS.
   </div>
 </article><article class="req" id="req-164-308-a-5-ii-a" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.308(a)(5)(ii)(a) security reminders — addressable security-reminder cadence and content are an organisational awareness
 control with no software role. hds runs reminders for its own workforce
-and documents the programme; the artefact is available on request but
-training delivery itself is not yet formalised as a verified programme.
+as part of a workforce-training programme it operates continuously,
+tracking certifications in a completion register and flagging overdue
+members. two pieces are still being assembled rather than absent: the
+hds-specific curriculum material, and the outstanding policy
+acknowledgements. the written programme is available on request.
 " data-planned="1">
   <h3><code>164.308(a)(5)(ii)(A)</code> Security reminders — Addressable </h3>
   <p class="text">Implement periodic security updates and reminders for the workforce.
@@ -639,14 +642,19 @@ at the awareness-content layer.
       <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> <span class="pl medium" title="The workforce-training procedure is approved and the completion register holds dated third-party certifications for every workforce member, with expiry reminders wired to the internal tasks board. What remains is the HDS-specific curriculum, the recorded acknowledgements, and letting the monthly cadence run a first full cycle: no per-occurrence execution record has been filed yet. — 🔒 hipaa/procedures/workforce-training">⏳ procedure</span></div>
       <p>Security-reminder cadence and content are an organisational awareness
 control with no software role. HDS runs reminders for its own workforce
-and documents the programme; the artefact is available on request but
-training delivery itself is not yet formalised as a verified programme.
+as part of a workforce-training programme it operates continuously,
+tracking certifications in a completion register and flagging overdue
+members. Two pieces are still being assembled rather than absent: the
+HDS-specific curriculum material, and the outstanding policy
+acknowledgements. The written programme is available on request.
 </p>
       <details><summary>detail</summary><p>HDS treats security reminders as part of its workforce-awareness
 programme, an operator artefact rather than a platform feature. The
-written programme is cited as an internal document. Formal,
-verified security-awareness training is a known gap being matured; each
-partner runs its own reminder programme for its own workforce.
+written programme is cited as an internal document and runs as a
+continuous process against a completion register, with residual gaps
+documented and addressed as they arise rather than blocking the
+programme. Each partner runs its own reminder programme for its own
+workforce.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/security-awareness-reminders</span> <span class="onreq">available on request</span></li></ul>
       <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
@@ -926,10 +934,13 @@ the covered entity per your BAA.
     </div>
   </div>
 </article><article class="req" id="req-164-308-a-7-ii-a" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.308(a)(7)(ii)(a) data backup plan — required the platform produces per-user backup files (events, streams, accesses,
-attachments) with a matching restore path, so the backup unit matches the
-natural ephi unit. hds operates a backup schedule on top; automated,
-regularly verified backups are still being formalised, so this is
-facilitated rather than fully implemented.
+attachments) with a matching restore path, so the backup unit matches
+the natural ephi unit. hds runs the cycle automatically on a daily timer
+on each regional core, first verified live on all cores on 2026-07-30,
+with a host-side watchdog that alerts when an expected archive is
+absent. what is not demonstrated is restore at production scale per
+region, which is why this reads as facilitated rather than fully
+implemented.
 " data-planned="1">
   <h3><code>164.308(a)(7)(ii)(A)</code> Data backup plan — Required </h3>
   <p class="text">Establish and implement procedures to create and maintain retrievable exact
@@ -947,10 +958,13 @@ schedule; the underlying primitive is shipped.
     <div class="layer hds">
       <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> <span class="pl medium" title="Automated, restore-verified backups are the tracked remediation. Provisioned and verified 2026-07-29: in-region off-host object storage in each region (Swiss and US) with object versioning; HDS-held hybrid encryption of every archive (a per-run AES-256-GCM key wrapped to a per-region RSA-4096 public key, the private key held off-host); least-privilege per-host access; and defined targets (RPO 24h, RTO 72h, retention a flat 30 days, the grandfather-father-son promotion having been retired 2026-09-02). The scheduled cycle is running on all regional cores as of 2026-07-30, and retrievability was demonstrated by fetching an archive off-host and decrypting it with the off-host private key. Outstanding before this is fully implemented: the per-region production restore drill at non-trivial scale, and confirmation of the storage lifecycle backstop. — 🔒 hipaa/procedures/data-backup-plan">⏳ procedure</span></div>
       <p>The platform produces per-user backup files (events, streams, accesses,
-attachments) with a matching restore path, so the backup unit matches the
-natural ePHI unit. HDS operates a backup schedule on top; automated,
-regularly verified backups are still being formalised, so this is
-facilitated rather than fully implemented.
+attachments) with a matching restore path, so the backup unit matches
+the natural ePHI unit. HDS runs the cycle automatically on a daily timer
+on each regional core, first verified live on all cores on 2026-07-30,
+with a host-side watchdog that alerts when an expected archive is
+absent. What is not demonstrated is restore at production scale per
+region, which is why this reads as facilitated rather than fully
+implemented.
 </p>
       <details><summary>detail</summary><p>HDS runs the backup primitive on a schedule and documents the plan
 (frequency, location, encryption-at-rest applied at the storage boundary).

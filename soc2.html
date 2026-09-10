@@ -239,10 +239,13 @@ operate downstream.
       </div>
     </div>
   </div>
-</article><article class="req" id="req-cc1-4" data-coverage="documented" data-personas="service-organization user-entity subservice-organization" data-text="cc1.4 cc1.4 — commitment to competence hiring, training and retention of competent staff is an hr programme with no
-software role. hds runs and documents its own competence programme for the
-workforce operating the platform; formal, verified security-awareness
-training is a known gap being matured. the service organization runs its own.
+</article><article class="req" id="req-cc1-4" data-coverage="documented" data-personas="service-organization user-entity subservice-organization" data-text="cc1.4 cc1.4 — commitment to competence hiring, training and retention of competent staff is an hr programme
+with no software role. hds runs and documents its own competence
+programme for the workforce operating the platform: training is
+continuous, certifications are tracked in a completion register, and
+overdue members are flagged. what is still being assembled is the
+hds-specific curriculum material and the outstanding policy
+acknowledgements. the service organization runs its own programme.
 " data-planned="1">
   <h3><code>CC1.4</code> CC1.4 — Commitment to competence </h3>
   <p class="text">The entity demonstrates a commitment to attract, develop, and retain competent
@@ -257,16 +260,21 @@ role.
     </div>
     <div class="layer hds">
       <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span> <span class="pl medium" title="The workforce-training procedure is approved and the completion register holds dated third-party certifications for every workforce member, with expiry reminders wired to the internal tasks board. What remains is the HDS-specific curriculum, the recorded acknowledgements, and letting the monthly cadence run a first full cycle: no per-occurrence execution record has been filed yet. — 🔒 hipaa/procedures/workforce-training">⏳ procedure</span></div>
-      <p>Hiring, training and retention of competent staff is an HR programme with no
-software role. HDS runs and documents its own competence programme for the
-workforce operating the platform; formal, verified security-awareness
-training is a known gap being matured. The service organization runs its own.
+      <p>Hiring, training and retention of competent staff is an HR programme
+with no software role. HDS runs and documents its own competence
+programme for the workforce operating the platform: training is
+continuous, certifications are tracked in a completion register, and
+overdue members are flagged. What is still being assembled is the
+HDS-specific curriculum material and the outstanding policy
+acknowledgements. The service organization runs its own programme.
 </p>
       <details><summary>detail</summary><p>HDS treats workforce competence as an operator governance artefact. Its
 documented programme covers role-relevant skills for staff operating the
-platform. The platform makes no contribution at this layer. HDS is honest
-that formal verified training delivery is still being formalised; a partner
-attesting under SOC 2 maintains its own competence programme.
+platform and runs continuously against a completion register rather than
+as isolated certificates. The platform makes no contribution at this
+layer. HDS states its residual gaps plainly, the curriculum material and
+the outstanding acknowledgements, and addresses them as they arise; a
+partner attesting under SOC 2 maintains its own competence programme.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 soc2/policies/workforce-competence</span> <span class="onreq">available on request</span></li></ul>
       
@@ -1367,12 +1375,15 @@ backups is storage-engine-dependent, so the engine is chosen to match the
 destruction policy. Physical media sanitisation at the server tier is the
 certified hosting provider's procedure.
 </p>
-      <details><summary>detail</summary><p>Per-user erasure gives a clean logical-destruction path; backup reach depends
-on the configured storage engine (a per-user file model unlinks cleanly, a
-shared relational store retains rows in historical dump artefacts until
-rotated). HDS documents the engine posture it operates and relies on the
-hosting provider's attested media-sanitisation for physical disposal. An
-organization selects the engine matching its disposal commitment.
+      <details><summary>detail</summary><p>Per-user erasure gives a clean logical-destruction path; backup reach
+depends on the configured storage engine (a per-user file model unlinks
+cleanly, a shared relational store retains rows in historical dump
+artefacts until rotated). HDS documents the engine posture it operates
+and relies on the hosting provider's media-sanitisation for physical
+disposal, which is evidenced by third-party attestation for the US
+region while the Swiss region rests on contract alone, with nothing yet
+on file. An organization selects the engine matching its disposal
+commitment.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/registers/hosting-provider-attestations</span> <span class="onreq">available on request</span></li></ul>
       <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
@@ -2177,12 +2188,14 @@ commitments back this control; record the reliance.
       </div>
     </div>
   </div>
-</article><article class="req" id="req-a1-2" data-coverage="facilitated" data-personas="service-organization user-entity subservice-organization" data-text="a1.2 a1.2 — environmental protections, backup, and recovery infrastructure the platform ships per-user backup and restore and a replicated multi-core
-topology, and hds operates these on a schedule with cluster-replicated tls
+</article><article class="req" id="req-a1-2" data-coverage="facilitated" data-personas="service-organization user-entity subservice-organization" data-text="a1.2 a1.2 — environmental protections, backup, and recovery infrastructure the platform ships per-user backup and restore and a replicated
+multi-core topology, and hds operates these with cluster-replicated tls
 so a surviving core stays user-facing. environmental protections (power,
 cooling, fire suppression) are inherited from the certified hosting
-provider per region. automated, regularly verified backups are still being
-formalised, so this is facilitated rather than fully implemented.
+provider per region. backups run automatically on a daily timer and were
+verified live on all cores on 2026-07-30; what remains unproven is
+recovery at production scale per region, so this is facilitated rather
+than fully implemented.
 " data-planned="1">
   <h3><code>A1.2</code> A1.2 — Environmental protections, backup, and recovery infrastructure </h3>
   <p class="text">The entity authorizes, designs, implements, operates, maintains, and
@@ -2203,20 +2216,24 @@ yours.
     </div>
     <div class="layer hds">
       <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> <span class="pl medium" title="The scheduled backup cycle is running on both regional cores as of 2026-07-30, producing encrypted off-host in-region copies, and an archive has been retrieved and decrypted with the off-host key to show the copies are usable. The tracked remainder is the per-region production restore drill at non-trivial scale and confirmation of the storage lifecycle backstop. — 🔒 hipaa/procedures/data-backup-plan">⏳ procedure</span></div>
-      <p>The platform ships per-user backup and restore and a replicated multi-core
-topology, and HDS operates these on a schedule with cluster-replicated TLS
+      <p>The platform ships per-user backup and restore and a replicated
+multi-core topology, and HDS operates these with cluster-replicated TLS
 so a surviving core stays user-facing. Environmental protections (power,
 cooling, fire suppression) are inherited from the certified hosting
-provider per region. Automated, regularly verified backups are still being
-formalised, so this is facilitated rather than fully implemented.
+provider per region. Backups run automatically on a daily timer and were
+verified live on all cores on 2026-07-30; what remains unproven is
+recovery at production scale per region, so this is facilitated rather
+than fully implemented.
 </p>
-      <details><summary>detail</summary><p>HDS runs the backup primitive on a schedule, relies on multi-core
-replication for hot redundancy, and documents the recovery infrastructure
-it operates. Environmental controls at the facility tier are covered by the
-hosting provider's attestation, which HDS records. Verified, automatically
-tested backups are a known gap being matured; the backup-and-recovery plan
-as it stands is cited as an internal document. A user-entity running its
-own deployment defines its own schedule.
+      <details><summary>detail</summary><p>HDS runs the backup primitive on a daily timer per regional core, relies
+on multi-core replication for hot redundancy, and documents the recovery
+infrastructure it operates. A host-side watchdog alerts when an expected
+archive is absent, though its own configuration rests on attestation
+rather than a captured record and it has not yet fired for real.
+Environmental controls at the facility tier are covered by the hosting
+provider's attestation, which HDS records. The outstanding item is the
+per-region production recovery drill. A user-entity running its own
+deployment defines its own schedule.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/procedures/data-backup-plan</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/procedures/disaster-recovery-plan</span> <span class="onreq">available on request</span></li></ul>
       <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
@@ -2672,9 +2689,11 @@ meet them; the platform supplies the canonical-state delivery substrate.
   </div>
 </article><article class="req" id="req-pi1-5" data-coverage="facilitated" data-personas="service-organization user-entity subservice-organization" data-text="pi1.5 pi1.5 — completeness and accuracy of stored information storage integrity on the hds-operated platform rests on event version
 history (prior states preserved), the per-user audit log (every change
-attributed), and operational backup-restore (a recoverable copy). together
-these give an accuracy-and-completeness signal for stored data. hds operates
-the substrate and the backup schedule; verified backups are a known gap.
+attributed), and operational backup-restore (a recoverable copy).
+together these give an accuracy-and-completeness signal for stored data.
+hds operates the substrate and runs the backup cycle automatically,
+verified live on all cores; what is not demonstrated is restore at
+production scale per region.
 " data-planned="1">
   <h3><code>PI1.5</code> PI1.5 — Completeness and accuracy of stored information <span class="draft">draft</span></h3>
   <p class="text">The entity implements controls to store inputs, items in processing, and
@@ -2696,15 +2715,18 @@ the CC7.4 chain proposal.
       <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> <span class="pl medium" title="A hash-chained (tamper-evident) audit log is queued upstream; the tamper-evidence half of this row becomes claimable after it ships and HDS deploys it. — upstream: proposals/audit-log-chaining.md">⏳ platform</span></div>
       <p>Storage integrity on the HDS-operated platform rests on event version
 history (prior states preserved), the per-user audit log (every change
-attributed), and operational backup-restore (a recoverable copy). Together
-these give an accuracy-and-completeness signal for stored data. HDS operates
-the substrate and the backup schedule; verified backups are a known gap.
+attributed), and operational backup-restore (a recoverable copy).
+Together these give an accuracy-and-completeness signal for stored data.
+HDS operates the substrate and runs the backup cycle automatically,
+verified live on all cores; what is not demonstrated is restore at
+production scale per region.
 </p>
       <details><summary>detail</summary><p>Stored data is protected against silent loss by versioning and by the
-audit trail of every mutation, and against destruction by the backup path
-HDS operates. Tamper-evidence on the audit log itself (hash chaining) is a
-future platform primitive, and automatically verified backups are being
-matured — both stated plainly. HDS documents the integrity posture; the
+audit trail of every mutation, and against destruction by the backup
+path HDS operates. Tamper-evidence on the audit log itself (hash
+chaining) is a future platform primitive. The per-region production
+restore drill has not been run, so the recoverable-copy half is
+provisioned rather than proven. HDS documents the integrity posture; the
 implementer owns the surrounding storage-control procedure.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/integrity</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/procedures/data-backup-plan</span> <span class="onreq">available on request</span></li></ul>

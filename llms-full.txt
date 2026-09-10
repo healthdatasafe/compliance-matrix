@@ -4072,13 +4072,16 @@ HDS's own position on HIPAA-Security:
     layer.
   HDS: facilitated (effort saved: low) (mode: awareness)
     Security-reminder cadence and content are an organisational awareness control with no
-    software role. HDS runs reminders for its own workforce and documents the programme; the
-    artefact is available on request but training delivery itself is not yet formalised as a
-    verified programme.
+    software role. HDS runs reminders for its own workforce as part of a workforce-training
+    programme it operates continuously, tracking certifications in a completion register and
+    flagging overdue members. Two pieces are still being assembled rather than absent: the
+    HDS-specific curriculum material, and the outstanding policy acknowledgements. The
+    written programme is available on request.
     Detail: HDS treats security reminders as part of its workforce-awareness programme, an
     operator artefact rather than a platform feature. The written programme is cited as an
-    internal document. Formal, verified security-awareness training is a known gap being
-    matured; each partner runs its own reminder programme for its own workforce.
+    internal document and runs as a continuous process against a completion register, with
+    residual gaps documented and addressed as they arise rather than blocking the programme.
+    Each partner runs its own reminder programme for its own workforce.
     Evidence: internal:hipaa/policies/security-awareness-reminders
     Evidence backing: every internal document cited above has completed approval.
     PLANNED (procedure, impact medium): The workforce-training procedure is approved and the completion register holds dated third-party certifications for every workforce member, with expiry reminders wired to the internal tasks board. What remains is the HDS-specific curriculum, the recorded acknowledgements, and letting the monthly cadence run a first full cycle: no per-occurrence execution record has been filed yet.
@@ -4264,9 +4267,11 @@ HDS's own position on HIPAA-Security:
     §164.308(a)(7)(ii)(A) compliance.
   HDS: facilitated (effort saved: high) (mode: storage)
     The platform produces per-user backup files (events, streams, accesses, attachments)
-    with a matching restore path, so the backup unit matches the natural ePHI unit. HDS
-    operates a backup schedule on top; automated, regularly verified backups are still being
-    formalised, so this is facilitated rather than fully implemented.
+    with a matching restore path, so the backup unit matches the natural ePHI unit. HDS runs
+    the cycle automatically on a daily timer on each regional core, first verified live on
+    all cores on 2026-07-30, with a host-side watchdog that alerts when an expected archive
+    is absent. What is not demonstrated is restore at production scale per region, which is
+    why this reads as facilitated rather than fully implemented.
     Detail: HDS runs the backup primitive on a schedule and documents the plan (frequency,
     location, encryption-at-rest applied at the storage boundary). The scheduled cycle
     produces encrypted, off-host, in-region copies on every regional core, and an archive
@@ -5641,13 +5646,16 @@ HDS's own position on SOC 2:
   HDS: documented (effort saved: low)
     Hiring, training and retention of competent staff is an HR programme with no software
     role. HDS runs and documents its own competence programme for the workforce operating
-    the platform; formal, verified security-awareness training is a known gap being matured.
-    The service organization runs its own.
+    the platform: training is continuous, certifications are tracked in a completion
+    register, and overdue members are flagged. What is still being assembled is the
+    HDS-specific curriculum material and the outstanding policy acknowledgements. The
+    service organization runs its own programme.
     Detail: HDS treats workforce competence as an operator governance artefact. Its
-    documented programme covers role-relevant skills for staff operating the platform. The
-    platform makes no contribution at this layer. HDS is honest that formal verified
-    training delivery is still being formalised; a partner attesting under SOC 2 maintains
-    its own competence programme.
+    documented programme covers role-relevant skills for staff operating the platform and
+    runs continuously against a completion register rather than as isolated certificates.
+    The platform makes no contribution at this layer. HDS states its residual gaps plainly,
+    the curriculum material and the outstanding acknowledgements, and addresses them as they
+    arise; a partner attesting under SOC 2 maintains its own competence programme.
     Evidence: internal:soc2/policies/workforce-competence
     PLANNED (procedure, impact medium): The workforce-training procedure is approved and the completion register holds dated third-party certifications for every workforce member, with expiry reminders wired to the internal tasks board. What remains is the HDS-specific curriculum, the recorded acknowledgements, and letting the monthly cadence run a first full cycle: no per-occurrence execution record has been filed yet.
   IMPLEMENTER [service-organization] coverage: documented
@@ -6296,9 +6304,10 @@ HDS's own position on SOC 2:
     Detail: Per-user erasure gives a clean logical-destruction path; backup reach depends on
     the configured storage engine (a per-user file model unlinks cleanly, a shared
     relational store retains rows in historical dump artefacts until rotated). HDS documents
-    the engine posture it operates and relies on the hosting provider's attested
-    media-sanitisation for physical disposal. An organization selects the engine matching
-    its disposal commitment.
+    the engine posture it operates and relies on the hosting provider's media-sanitisation
+    for physical disposal, which is evidenced by third-party attestation for the US region
+    while the Swiss region rests on contract alone, with nothing yet on file. An
+    organization selects the engine matching its disposal commitment.
     Evidence: internal:hipaa/registers/hosting-provider-attestations
     Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [service-organization] coverage: configurable
@@ -6763,16 +6772,19 @@ HDS's own position on SOC 2:
     Backup cadence, retention, and offsite policy are yours.
   HDS: facilitated (effort saved: high) (mode: infrastructure)
     The platform ships per-user backup and restore and a replicated multi-core topology, and
-    HDS operates these on a schedule with cluster-replicated TLS so a surviving core stays
-    user-facing. Environmental protections (power, cooling, fire suppression) are inherited
-    from the certified hosting provider per region. Automated, regularly verified backups
-    are still being formalised, so this is facilitated rather than fully implemented.
-    Detail: HDS runs the backup primitive on a schedule, relies on multi-core replication
-    for hot redundancy, and documents the recovery infrastructure it operates. Environmental
-    controls at the facility tier are covered by the hosting provider's attestation, which
-    HDS records. Verified, automatically tested backups are a known gap being matured; the
-    backup-and-recovery plan as it stands is cited as an internal document. A user-entity
-    running its own deployment defines its own schedule.
+    HDS operates these with cluster-replicated TLS so a surviving core stays user-facing.
+    Environmental protections (power, cooling, fire suppression) are inherited from the
+    certified hosting provider per region. Backups run automatically on a daily timer and
+    were verified live on all cores on 2026-07-30; what remains unproven is recovery at
+    production scale per region, so this is facilitated rather than fully implemented.
+    Detail: HDS runs the backup primitive on a daily timer per regional core, relies on
+    multi-core replication for hot redundancy, and documents the recovery infrastructure it
+    operates. A host-side watchdog alerts when an expected archive is absent, though its own
+    configuration rests on attestation rather than a captured record and it has not yet
+    fired for real. Environmental controls at the facility tier are covered by the hosting
+    provider's attestation, which HDS records. The outstanding item is the per-region
+    production recovery drill. A user-entity running its own deployment defines its own
+    schedule.
     Evidence: internal:hipaa/procedures/data-backup-plan, internal:hipaa/procedures/disaster-recovery-plan
     Evidence backing: every internal document cited above has completed approval.
     PLANNED (procedure, impact medium): The scheduled backup cycle is running on both regional cores as of 2026-07-30, producing encrypted off-host in-region copies, and an archive has been retrieved and decrypted with the off-host key to show the copies are usable. The tracked remainder is the per-region production restore drill at non-trivial scale and confirmation of the storage lifecycle backstop.
@@ -7036,14 +7048,15 @@ HDS's own position on SOC 2:
     Storage integrity on the HDS-operated platform rests on event version history (prior
     states preserved), the per-user audit log (every change attributed), and operational
     backup-restore (a recoverable copy). Together these give an accuracy-and-completeness
-    signal for stored data. HDS operates the substrate and the backup schedule; verified
-    backups are a known gap.
+    signal for stored data. HDS operates the substrate and runs the backup cycle
+    automatically, verified live on all cores; what is not demonstrated is restore at
+    production scale per region.
     Detail: Stored data is protected against silent loss by versioning and by the audit
     trail of every mutation, and against destruction by the backup path HDS operates.
-    Tamper-evidence on the audit log itself (hash chaining) is a future platform primitive,
-    and automatically verified backups are being matured — both stated plainly. HDS
-    documents the integrity posture; the implementer owns the surrounding storage-control
-    procedure.
+    Tamper-evidence on the audit log itself (hash chaining) is a future platform primitive.
+    The per-region production restore drill has not been run, so the recoverable-copy half
+    is provisioned rather than proven. HDS documents the integrity posture; the implementer
+    owns the surrounding storage-control procedure.
     Evidence: internal:hipaa/policies/integrity, internal:hipaa/procedures/data-backup-plan
     Evidence backing: every internal document cited above has completed approval.
     PLANNED (platform, impact medium): A hash-chained (tamper-evident) audit log is queued upstream; the tamper-evidence half of this row becomes claimable after it ships and HDS deploys it.
