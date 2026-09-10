@@ -18,7 +18,7 @@ hds_posture:
   evidence_backing:
     rows_total: 43
     rows_evidenced: 43
-    rows_approved: 43
+    rows_approved: 40
     as_of: "2026-09-10"
   roles:
     - arrangement: vault
@@ -50,15 +50,20 @@ hds_posture:
     inherited_provider_assurance:
       - AWS ISO/IEC 27001 (us-east-1 named in the certified locations), 27017, 27018 — obtained 2026-07-28
   statement: >
-    HIPAA does not reach HDS in the vault, so what follows is not a claim that HDS
-    meets the Security Rule: it is what the platform supplies to an implementer that
-    does hold a role. Every one of the forty-three requirements is answered from an
-    approved HDS document, and the safeguards behind those answers are live rather
-    than paper: a risk analysis and risk-management plan are approved, workforce
-    training runs against a completion register, backups are provisioned on both
-    regional cores and a first restore rehearsal was executed on 2026-07-29. Nine
-    carry remediation HDS has committed to and not delivered, and encryption at rest
-    uses provider-managed keys.
+    HIPAA does not reach HDS in the vault, so what follows is not a claim that
+    HDS meets the Security Rule: it is what the platform supplies to an
+    implementer that does hold a role. All forty-three requirements are
+    answered from HDS documentation, and forty of them rest entirely on
+    documents that have completed approval; the other three cite a
+    procedure-execution record still in review, which is the evidence that the
+    control actually ran on the date claimed. The safeguards behind those
+    answers are live rather than paper: a risk analysis and risk-management
+    plan are approved, workforce training runs continuously against a
+    completion register, and backups run on a daily timer on both regional
+    cores, first verified live on 2026-07-30, with a first restore rehearsal
+    executed on 2026-07-29. Recovery at production scale is not yet
+    demonstrated, nine requirements carry remediation HDS has committed to and
+    not delivered, and encryption at rest uses provider-managed keys.
   known_gaps:
     - summary: >
         Addressable encryption at rest rests on provider-managed keys. Neither
@@ -638,10 +643,10 @@ requirements:
       grant over their own data: those are the account holder's to review and
       revoke, and HDS does not act on them.
     regions: [us, ch]
-    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/procedures/access-review
+        - procedures/access-review/executions/2026-07-30-1
   implementer:
     - persona: covered-entity
       basis: entity
@@ -959,10 +964,10 @@ requirements:
       scale per region; that drill is the remaining gap. Partners
       operating their own deployments define their own schedule.
     regions: [us, ch]
-    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/procedures/data-backup-plan
+        - procedures/backup-run/executions/2026-07-30-1
     planned:
       - kind: procedure
         summary: >-
@@ -1124,10 +1129,10 @@ requirements:
       instead of reading a rehearsal as a drill. Partners run and document their
       own contingency-plan tests.
     regions: [us, ch]
-    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/procedures/contingency-plan-testing
+        - procedures/contingency-test/executions/2026-07-29-1
     planned:
       - kind: procedure
         summary: >-
