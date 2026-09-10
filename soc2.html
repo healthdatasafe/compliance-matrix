@@ -145,12 +145,15 @@ the service organization documents its own board's independence and oversight
 function. This matrix and the audit log can feed the oversight pack a board
 reviews, but the oversight function itself is a governance obligation.
 </p>
-      <details><summary>detail</summary><p>HDS treats board-level oversight as an operator governance artefact, held
-privately and available on request. Where HDS operates the platform, this
-matrix doubles as a control inventory the partner's own board can review, and
-the audit log supplies control-operation evidence. The independence and
-oversight obligation cannot be inherited; each attesting organization carries
-its own.
+      <details><summary>detail</summary><p>HDS treats board-level oversight as an operator governance artefact,
+held privately and available on request. The arrangements are written
+down; the formal, minuted oversight review of the control environment
+has not yet run its first cycle, and HDS records that as the outstanding
+half rather than presenting the arrangement as an operating control.
+Where HDS operates the platform, this matrix doubles as a control
+inventory the partner's own board can review, and the audit log supplies
+control-operation evidence. The independence and oversight obligation
+cannot be inherited; each attesting organization carries its own.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 soc2/policies/governance-and-oversight</span> <span class="onreq">available on request</span></li></ul>
       
@@ -686,8 +689,8 @@ from monitoring. The analytical step, deciding which fraud risks are in
 scope and how to respond, is governance. HDS's approved security risk
 analysis does not assess the potential for fraud, which is a wider
 question than ePHI security, so that consideration is the outstanding
-half here (see CC3.2). A partner runs its own fraud-risk analysis over
-the same substrate.
+half here. A partner runs its own fraud-risk analysis over the same
+substrate.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/audit-controls</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 soc2/procedures/risk-assessment</span> <span class="onreq">available on request</span></li></ul>
       
@@ -859,11 +862,14 @@ deficiency-evaluation and corrective-action flow and documents it; corrective
 records can themselves ride on the platform as events on a dedicated stream.
 The evaluation and communication workflow is each organization's procedure.
 </p>
-      <details><summary>detail</summary><p>HDS runs a documented process for evaluating and communicating deficiencies
-it observes in its own operation, fed by audit and monitoring signals and
-tied to its incident and periodic-evaluation procedures. A partner authors
-its own deficiency workflow over the same substrate. The platform can host
-the corrective-action records themselves as attributable events.
+      <details><summary>detail</summary><p>HDS runs a documented process for evaluating and communicating
+deficiencies it observes in its own operation, fed by audit and
+monitoring signals and tied to its incident procedure. The
+periodic-evaluation half of that chain is defined but has not yet run a
+cycle, so deficiencies surface today through incidents and monitoring
+rather than through a completed evaluation. A partner authors its own
+deficiency workflow over the same substrate. The platform can host the
+corrective-action records themselves as attributable events.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/procedures/periodic-evaluation</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 soc2/procedures/control-monitoring</span> <span class="onreq">available on request</span></li></ul>
       <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
@@ -1690,12 +1696,15 @@ per-user audit log gives application-level activity attributable to an access.
 HDS operates this monitoring; deciding which anomalies are security events is
 an organization's analysis.
 </p>
-      <details><summary>detail</summary><p>Two signal sources back anomaly monitoring: HDS's infrastructure monitoring
-and the audit log. HDS treats end-to-end alert wiring as a precondition for
-treating any component as in production, so silent failures are caught. The
-analytical step — classifying an anomaly as a security event — is governance
-and is each organization's own, fed by the raw signal HDS exposes and
-operates.
+      <details><summary>detail</summary><p>Two signal sources back anomaly monitoring: HDS's infrastructure
+monitoring and the audit log. HDS treats end-to-end alert wiring as a
+precondition for treating any component as in production, so an outright
+silent failure is caught. Security-relevant anomaly detection is less
+complete: automated login-anomaly detection and alert thresholds are not
+formalised, and what operates today is manual review of forwarded logs
+on a quarterly cadence. The analytical step, classifying an anomaly as a
+security event, is governance and is each organization's own, fed by the
+raw signal HDS exposes and operates.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/audit-controls</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/procedures/login-monitoring</span> <span class="onreq">available on request</span></li></ul>
       <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
@@ -2004,12 +2013,17 @@ cluster onto new infrastructure from a bootstrap bundle). HDS documents the
 continuity posture it operates; the business-continuity objectives and any
 insurance or contractual mitigation choices are an organization's own.
 </p>
-      <details><summary>detail</summary><p>HDS operates the technical continuity substrate — HA replication, backup and
-restore, replicated TLS certificates, portable cluster re-issue — across both
-data-residency options and documents it. The non-technical mitigation
-choices (continuity objectives, insurance, contractual risk transfer) are
-governance and belong to each attesting organization. HDS's own formal risk
-assessment that would prioritise these mitigations is a known gap (see CC3.2).
+      <details><summary>detail</summary><p>HDS operates the technical continuity substrate: HA replication, backup
+and restore, replicated TLS certificates and portable cluster re-issue,
+across both data-residency options, and documents it. What has not
+happened is the per-region production drill, so the continuity
+objectives are targets rather than demonstrated capability. The
+non-technical mitigation choices (continuity objectives, insurance,
+contractual risk transfer) are governance and belong to each attesting
+organization. HDS's security risk analysis is approved and would
+prioritise these mitigations; what it does not cover is the wider
+trust-services and fraud half, which is the outstanding piece under
+CC3.2.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/procedures/disaster-recovery-plan</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/procedures/data-backup-plan</span> <span class="onreq">available on request</span></li></ul>
       <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>

@@ -1010,11 +1010,14 @@ HDS documents internally. The written disaster-recovery plan is available
 on request.
 </p>
       <details><summary>detail</summary><p>Recovery rests on two layers: restore from backup as the canonical path,
-and live replication across cores so a single-region failure does not lose
-live data. HDS documents the recovery objectives and runbook it operates;
-contingency-plan testing is tracked separately (see the testing-and-
-revision specification, a known gap). Partners running their own
-deployments document their own plan.
+and live replication across cores so a single-region failure does not
+lose live data. HDS documents the recovery objectives and the runbook it
+operates, and states their standing plainly: the per-region production
+drill has not been run, so the recovery-time and recovery-point
+objectives are targets rather than demonstrated capability, and the
+runbook is documented but unproven at production scale. Contingency-plan
+testing is tracked under the testing-and-revision specification.
+Partners running their own deployments document their own plan.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/procedures/disaster-recovery-plan</span> <span class="onreq">available on request</span></li></ul>
       <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
