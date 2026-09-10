@@ -16,8 +16,8 @@ hds_posture:
   evidence_backing:
     rows_total: 30
     rows_evidenced: 24
-    rows_approved: 13
-    as_of: "2026-09-08"
+    rows_approved: 11
+    as_of: "2026-09-10"
   roles:
     - arrangement: vault
       role: controller
@@ -129,6 +129,7 @@ requirements:
         necessary subtree, so the heightened-protection posture follows the
         topology. HDS stores and enforces that layout; it does not assign the
         sensitivity classification.
+      evidence_approved: true
       evidence:
         internal_docs:
           - hipaa/policies/access-control
@@ -137,9 +138,10 @@ requirements:
         applies_when: [processes-personal-data]
         coverage: documented
         overview: |
-          Classify data categories — including the nLPD's broader sensitive
-          categories — and design stream topology and permission scopes
-          accordingly.
+          Classify the data categories you handle, including the nLPD's
+          broader sensitive categories, and request permission scopes no wider
+          than those categories need. The vault's stream topology is not yours
+          to design.
       - persona: processor
         applies_when: always
         coverage: documented
@@ -178,6 +180,7 @@ requirements:
         internal_docs:
           - hipaa/policies/minimum-necessary
           - hipaa/policies/access-control
+          - gdpr/policies/lawful-basis-and-consent
     implementer:
       - persona: controller
         applies_when: [processes-personal-data]
@@ -221,6 +224,7 @@ requirements:
         scopes minted, retention selected and the notice shown at registration.
         HDS supplies and operates the privacy-by-design substrate that those
         choices configure.
+      evidence_approved: true
       evidence:
         internal_docs:
           - hipaa/policies/access-control
@@ -229,8 +233,9 @@ requirements:
         applies_when: [processes-personal-data]
         coverage: documented
         overview: |
-          Configure privacy-protective defaults at deployment — minimal token
-          scopes, retention policy and registration notice.
+          Set privacy-protective defaults in what you deploy: the narrowest
+          grant you request, your own retention policy, and your own
+          collection notice. Vault registration and its notices belong to HDS.
       - persona: processor
         applies_when: always
         coverage: documented
@@ -266,6 +271,7 @@ requirements:
         encryption covers stored event data, with provider-held keys as the
         documented residual (operator-held-key or end-to-end encryption remain
         optional strengthenings).
+      evidence_approved: true
       evidence:
         internal_docs:
           - hipaa/policies/transmission-security
@@ -317,6 +323,7 @@ requirements:
       evidence:
         internal_docs:
           - hipaa/policies/notice-of-privacy-practices
+          - gdpr/policies/lawful-basis-and-consent
     implementer:
       - persona: controller
         applies_when: [connects, own-records]
@@ -349,6 +356,7 @@ requirements:
         A typical pattern records the subject's objection or statement as a
         dedicated event on a designated stream, time-anchored by the audit log.
         The decision logic and the duty to inform are the controller's.
+      evidence_approved: true
       evidence:
         internal_docs:
           - hipaa/procedures/security-incident-response
@@ -390,6 +398,7 @@ requirements:
       evidence:
         internal_docs:
           - gdpr/registers/records-of-processing
+          - gdpr/procedures/dpia
     implementer:
       - persona: controller
         applies_when: [analytics]
@@ -505,8 +514,9 @@ requirements:
         applies_when: [connects]
         coverage: documented
         overview: |
-          Operate the request process, meet the response timeline and supply the
-          extended minimum-information set.
+          Operate the request process for the data you hold, meet the response
+          timeline and supply the extended minimum-information set. For data
+          still in the vault the individual asks HDS directly.
       - persona: processor
         applies_when: [connects]
         coverage: documented
@@ -558,7 +568,9 @@ requirements:
         applies_when: [processes-personal-data]
         coverage: documented
         overview: |
-          Support the portability request and any feasible direct transmission.
+          Supply the data you hold on request, and support a direct
+          transmission where feasible. Portability out of the vault itself is
+          between the individual and HDS.
       - persona: processor
         applies_when: always
         coverage: documented
@@ -588,6 +600,7 @@ requirements:
         The nLPD's enumerated grounds drive the vocabulary the controller uses for
         the recorded legal-ground values. HDS stores and audits the ground; it does
         not determine which ground applies.
+      evidence_approved: true
       evidence:
         internal_docs:
           - hipaa/policies/access-control
@@ -596,8 +609,8 @@ requirements:
         applies_when: [secondary-use]
         coverage: documented
         overview: |
-          Determine the overriding interest or consent basis and record the cited
-          ground on each access.
+          Determine the overriding interest or consent basis for what you
+          hold, and record the cited ground in your own register.
       - persona: processor
         applies_when: [secondary-use]
         coverage: documented
@@ -641,8 +654,9 @@ requirements:
         applies_when: [connects]
         coverage: documented
         overview: |
-          Run the rectification and erasure process and operate retention and
-          destruction as automation is not built in.
+          Rectify, erase and destroy within the copy and the records you hold,
+          and operate that retention yourself as no automation is built in.
+          The vault's own contents are the individual's to correct or delete.
       - persona: processor
         applies_when: [connects]
         coverage: documented
@@ -684,8 +698,9 @@ requirements:
         applies_when: [transfer-ch-us, third-parties]
         coverage: documented
         overview: |
-          Choose the residency region per subject, and where data leaves
-          Switzerland record the adequacy or safeguard basis.
+          You cannot choose a region per subject; the individual picks it when
+          they register. Where data leaves Switzerland by your own hand,
+          record the adequacy or safeguard basis.
       - persona: processor
         applies_when: [transfer-ch-us, third-parties]
         coverage: documented
@@ -725,8 +740,8 @@ requirements:
         applies_when: [transfer-ch-us]
         coverage: documented
         overview: |
-          Determine the applicable exception and record it on the disclosing
-          access.
+          Determine the applicable exception and record it against the
+          disclosure you make, in your own transfer records.
       - persona: processor
         applies_when: always
         coverage: documented
@@ -759,6 +774,7 @@ requirements:
         HDS makes no scope determination; the controller establishes whether and
         how the Act applies to its processing. The platform's audit and access
         records evidence that processing occurs.
+      evidence_approved: true
       evidence:
         internal_docs:
           - hipaa/policies/access-control
@@ -793,6 +809,7 @@ requirements:
         The cross-border transfer side is handled under Art. 34. HDS supplies the
         residency mechanism; the determination of territorial applicability is the
         controller's.
+      evidence_approved: true
       evidence:
         internal_docs:
           - hipaa/registers/hosting-provider-attestations
@@ -831,6 +848,7 @@ requirements:
       evidence:
         internal_docs:
           - gdpr/policies/international-transfers
+          - hipaa/risk/cross-core-residency-data-flow
     implementer:
       - persona: controller
         applies_when: [transfer-ch-us, third-parties]
@@ -861,6 +879,7 @@ requirements:
         The pattern mirrors lawful-basis recording: the cited basis is stored per
         access and anchored in time by the audit log. HDS stores and audits it; it
         does not select it.
+      evidence_approved: true
       evidence:
         internal_docs:
           - hipaa/policies/access-control
@@ -869,7 +888,8 @@ requirements:
         applies_when: [connects]
         coverage: documented
         overview: |
-          Determine the justification basis and record it on the relevant access.
+          Determine the justification basis for your own processing and record
+          it in your own register.
       - persona: processor
         applies_when: [connects]
         coverage: documented
@@ -931,6 +951,7 @@ requirements:
         Token-scope defaults, retention policy and MFA settings are the
         controller's configuration. HDS supplies the minimum-by-default
         primitives those settings exercise.
+      evidence_approved: true
       evidence:
         internal_docs:
           - hipaa/policies/minimum-necessary
@@ -940,8 +961,9 @@ requirements:
         applies_when: [processes-personal-data]
         coverage: documented
         overview: |
-          Configure minimal defaults — token scopes, retention and MFA — so
-          processing is limited to the minimum required.
+          Keep your own processing to the minimum: request the narrowest
+          grant, retain the least, and enforce MFA on your own systems. The
+          vault's defaults are HDS's.
       - persona: processor
         applies_when: always
         coverage: documented
@@ -1036,6 +1058,7 @@ requirements:
         HDS keeps the sub-processor register and uses the audit and access
         primitives to evidence instructed-only processing; the substantive
         instructions are the controller's.
+      evidence_approved: true
       evidence:
         internal_docs:
           - hipaa/registers/subprocessor-register
@@ -1163,6 +1186,7 @@ requirements:
         The content of the additional disclosures is the controller's editorial
         responsibility. HDS makes the presented text recoverable per subject and
         per time as a durable artefact.
+      evidence_approved: true
       evidence:
         internal_docs:
           - hipaa/policies/notice-of-privacy-practices

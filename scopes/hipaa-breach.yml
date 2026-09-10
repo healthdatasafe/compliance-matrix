@@ -19,7 +19,7 @@ hds_posture:
     rows_total: 13
     rows_evidenced: 12
     rows_approved: 12
-    as_of: "2026-09-08"
+    as_of: "2026-09-10"
   roles:
     - arrangement: vault
       role: not-applicable
@@ -105,16 +105,21 @@ requirements:
         unsecured-PHI boundary that remains is the in-use one: a running system,
         account or token compromise reaches decrypted content.
       detail: |
-        As a business associate, HDS is squarely within Subpart D's reach. The
-        practical effect of this row is to set the boundary that the encryption
-        and risk-assessment rows below refine: what counts as unsecured PHI in an
-        HDS deployment is governed by the transit/at-rest/in-use posture described
-        under 164.402(2) — media exposures of at-rest content fall inside the
-        safe harbor; live-system compromises do not.
+        Subpart D binds covered entities and business associates. HDS holds
+        neither role in the vault, where every access flows from the
+        individual's own consent, so this row is the map for an implementer
+        that does hold one rather than a statement of an HDS duty. Its
+        practical effect is to set the boundary the encryption and
+        risk-assessment rows below refine: what counts as unsecured PHI in an
+        HDS deployment is governed by the transit, at-rest and in-use posture
+        described under 164.402(2), where media exposures of at-rest content
+        fall inside the safe harbor and live-system compromises do not.
+      evidence_approved: true
       evidence:
         internal_docs:
           - hipaa/risk/at-rest-encryption
           - hipaa/evidence/at-rest-encryption-verification
+          - hipaa/procedures/breach-notification
     implementer:
       - persona: covered-entity
         nature: orientation
@@ -164,6 +169,7 @@ requirements:
         compromises. The definitional analysis itself — deciding whether a given
         event meets the breach definition — remains the implementer's, supported
         by HDS evidence.
+      evidence_approved: true
       evidence:
         internal_docs:
           - hipaa/procedures/breach-risk-assessment
@@ -216,6 +222,7 @@ requirements:
         timestamps relative to the incident. The analytical write-up that weighs
         these factors and reaches the low-probability conclusion is the
         implementer's artefact; HDS supplies and preserves the inputs.
+      evidence_approved: true
       evidence:
         internal_docs:
           - hipaa/procedures/breach-risk-assessment
@@ -270,6 +277,7 @@ requirements:
         record holds the vendor statements plus the Security Official's
         attestation. A compromise of a live system, account or token reaches
         decrypted content and must still be assessed under 164.402(1).
+      evidence_approved: true
       evidence:
         internal_docs:
           - hipaa/risk/at-rest-encryption
@@ -316,6 +324,7 @@ requirements:
         the distinct set of affected subjects, with evidence. Producing the roster
         and the per-recipient delivery sit with the covered entity, who carries
         this duty.
+      evidence_approved: true
       evidence:
         internal_docs:
           - hipaa/procedures/breach-notification
@@ -362,6 +371,7 @@ requirements:
         that meeting the 60-day deadline becomes a matter of process discipline.
         Acting on the evidence within the window — and recording when discovery
         occurred — remains the implementer's responsibility.
+      evidence_approved: true
       evidence:
         internal_docs:
           - hipaa/procedures/breach-notification
@@ -409,6 +419,7 @@ requirements:
         entity's response, and the contact procedures are not data HDS holds; they
         are composed by the covered entity. HDS therefore facilitates the
         evidence-derivable element and documents the rest.
+      evidence_approved: true
       evidence:
         internal_docs:
           - hipaa/procedures/breach-notification
@@ -486,6 +497,7 @@ requirements:
         jurisdiction draws on the per-subject roster that HDS audit evidence helps
         assemble. Identifying and notifying prominent media outlets is entirely the
         covered entity's process.
+      evidence_approved: true
       evidence:
         internal_docs:
           - hipaa/procedures/breach-notification
@@ -523,6 +535,7 @@ requirements:
         annually. In both cases the factual inputs can be drawn from HDS evidence,
         while the act of submitting and tracking the report sits with the covered
         entity.
+      evidence_approved: true
       evidence:
         internal_docs:
           - hipaa/procedures/breach-notification
@@ -551,19 +564,25 @@ requirements:
       facilitation_mode: operations
       regions: [us, ch]
       overview: |
-        This is HDS's core breach duty. As a business associate, HDS notifies the
-        covered entity without unreasonable delay (and within 60 days) on discovery
-        of a breach, following a documented procedure. The audit log lets HDS
-        gather the required content — affected subjects and timing — quickly.
+        This is the core breach duty of an implementer holding a
+        business-associate role: notify the affected covered entity without
+        unreasonable delay and within 60 days of discovery. HDS holds no such
+        role in the vault, so the duty is not HDS's there. HDS does maintain
+        an approved notification procedure for the separate arrangement in
+        which an organisation places protected health information with it on
+        its own behalf, and the audit log lets whoever carries the duty
+        assemble the required content quickly.
       detail: |
-        HDS maintains an internal breach-notification procedure that defines
-        discovery, escalation, content assembly and the upstream notification to
-        affected covered entities, with the 60-day ceiling. The per-user audit log
-        is the data source for the "identities of affected individuals" element and
-        for the timing evidence backing "without unreasonable delay". When an
-        implementer is itself a business associate to a covered entity and stores
-        PHI on HDS, the same procedure and evidence support its own upstream
+        The approved procedure defines discovery, escalation, content assembly
+        and upstream notification with the 60-day ceiling. It governs that
+        out-of-matrix arrangement, and is available on request as a model an
+        implementer can adopt. The per-user audit log is the data source for
+        the identities-of-affected-individuals element and for the timing
+        evidence behind "without unreasonable delay". An implementer that is
+        itself a business associate to a covered entity and stores protected
+        health information on HDS uses the same evidence for its own upstream
         notification chain.
+      evidence_approved: true
       evidence:
         internal_docs:
           - hipaa/procedures/breach-notification
@@ -609,6 +628,7 @@ requirements:
         the affected notifications accordingly. HDS retention keeps the underlying
         evidence intact for the duration so notification can proceed once the delay
         lapses.
+      evidence_approved: true
       evidence:
         internal_docs:
           - hipaa/procedures/breach-notification
@@ -656,6 +676,7 @@ requirements:
         documented rationale for any decision not to notify — are the implementer's
         to maintain. HDS also retains its own breach-procedure execution records as
         evidence of its §164.410 performance.
+      evidence_approved: true
       evidence:
         internal_docs:
           - hipaa/registers/breach-log

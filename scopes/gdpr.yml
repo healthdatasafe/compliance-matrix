@@ -17,7 +17,7 @@ hds_posture:
     rows_total: 47
     rows_evidenced: 41
     rows_approved: 3
-    as_of: "2026-09-08"
+    as_of: "2026-09-10"
   roles:
     - arrangement: vault
       role: controller
@@ -394,7 +394,9 @@ requirements:
         coverage: documented
         overview: |
           Determine and document the lawful basis for each processing activity
-          and record it on the relevant accesses.
+          you carry out, and record it in your own Art.30 register. The grant
+          an individual gives you evidences their consent to share; it is not
+          a record of your basis for what you then do.
       - persona: data-subject
         coverage: out-of-scope
 
@@ -472,8 +474,10 @@ requirements:
         applies_when: [connects, stores-phi-copy, analytics, secondary-use]
         coverage: documented
         overview: |
-          Determine the Art.9(2) condition for each special-category processing
-          activity, design your streams accordingly, and record the basis.
+          Determine the Art.9(2) condition for each special-category activity
+          you carry out, and record the basis. Ask for the narrowest scope you
+          need; the vault's stream layout is HDS's and the individual's, not
+          yours to design.
       - persona: data-subject
         coverage: out-of-scope
 
@@ -535,6 +539,7 @@ requirements:
         subtree and records the by-law basis on each access; the audit log then
         captures every read and write under that access.
       regions: [ch, us]
+      evidence_approved: true
       evidence:
         internal_docs:
           - hipaa/policies/access-control
@@ -620,8 +625,9 @@ requirements:
         applies_when: [connects, own-records, third-parties, analytics, secondary-use]
         coverage: documented
         overview: |
-          Author and present the Art.13 disclosures at collection time; record
-          them on the service-info and access surfaces.
+          Author and present the Art.13 disclosures when you collect, and keep
+          your own record of what was shown and when. HDS's own notices cover
+          the vault, not your processing.
       - persona: data-subject
         coverage: out-of-scope
 
@@ -698,8 +704,10 @@ requirements:
         applies_when: [connects]
         coverage: documented
         overview: |
-          Run the request-intake process and, if desired, a subject portal; the
-          read mechanics are provided.
+          Answer access requests for the copy and the records you hold. For
+          data still in the vault the individual reads it directly from their
+          own HDS dashboard, so that half of the request is not yours to
+          serve.
       - persona: data-subject
         coverage: facilitated
         overview: |
@@ -742,8 +750,9 @@ requirements:
         applies_when: [processes-personal-data]
         coverage: documented
         overview: |
-          Detect inaccuracy and trigger the rectification; the update and
-          versioning mechanics are provided.
+          Correct inaccurate data in the copy and the records you hold. Data
+          in the vault is corrected by the individual, or by HDS at their
+          request, not by you.
       - persona: data-subject
         coverage: facilitated
         overview: |
@@ -848,8 +857,10 @@ requirements:
         applies_when: [processes-personal-data]
         coverage: documented
         overview: |
-          Apply restriction by scoping or revoking the relevant accesses and
-          record the reason.
+          Restrict your own processing: stop using the copy and the records
+          you hold, keep them, and record the reason. Revoking the grant that
+          feeds you is the individual's act, not a restriction you apply on
+          their behalf.
       - persona: data-subject
         coverage: facilitated
         overview: |
@@ -898,8 +909,10 @@ requirements:
         applies_when: [processes-personal-data]
         coverage: documented
         overview: |
-          Optionally wrap the export in a download UI; ensure schema alignment
-          for any direct controller-to-controller transmission.
+          Supply the data you hold in a portable format on request.
+          Portability out of the vault is between the individual and HDS;
+          where a direct controller-to-controller transmission is asked for,
+          align on the schema.
       - persona: data-subject
         coverage: facilitated
         overview: |
@@ -939,8 +952,9 @@ requirements:
         applies_when: [connects, analytics, secondary-use]
         coverage: documented
         overview: |
-          Run the compelling-grounds assessment where applicable and apply the
-          objection by revoking or narrowing the relevant access.
+          Run the compelling-grounds assessment where applicable, then stop
+          the processing objected to in your own systems. The individual
+          narrows or withdraws their grant themselves.
       - persona: data-subject
         coverage: facilitated
         overview: |
@@ -977,8 +991,9 @@ requirements:
         applies_when: [connects, third-parties]
         coverage: documented
         overview: |
-          Identify the recipients from the active accesses and notify each of the
-          rectification, erasure or restriction.
+          Notify each recipient you have passed data on to. The list is the
+          one you keep of your own disclosures; you cannot enumerate who else
+          the individual has granted access to.
       - persona: data-subject
         coverage: out-of-scope
 
@@ -1155,8 +1170,10 @@ requirements:
         applies_when: [stores-phi-copy, third-parties]
         coverage: documented
         overview: |
-          Express your processing instructions as scoped accesses and review the
-          audit log for deviations.
+          Art.29 covers people acting under YOUR authority: bind your staff
+          and your own processors to act only on your instructions. It does
+          not describe your relationship to HDS or to the vault, where
+          processing follows the individual's permissions rather than yours.
       - persona: processor
         applies_when: [stores-phi-copy, third-parties]
         coverage: documented
@@ -1197,8 +1214,10 @@ requirements:
         applies_when: [processes-personal-data]
         coverage: documented
         overview: |
-          Configure your defaults — minimal token scopes, opt-in notices, short
-          retention — on top of the platform's privacy-protective baseline.
+          Set privacy-protective defaults in what you build: request the
+          narrowest grant you need, write opt-in notices, and keep what you
+          receive no longer than necessary. The vault's own defaults are HDS's
+          to set.
       - persona: data-subject
         coverage: out-of-scope
 
@@ -1238,8 +1257,10 @@ requirements:
         applies_when: [stores-phi-copy, third-parties]
         coverage: documented
         overview: |
-          Evaluate the processor's guarantees and conclude an Art.28 DPA before
-          processing begins.
+          If you engage processors of your own for the copy you hold, evaluate
+          their guarantees and conclude an Art.28 DPA before processing
+          begins. This is not an agreement with HDS: HDS is the controller of
+          the vault, not your processor.
         templates: [dpa]
       - persona: processor
         applies_when: [stores-phi-copy, third-parties]
@@ -1339,6 +1360,7 @@ requirements:
         runs CI test matrices and a monitored, alert-wired production environment; the
         controller runs its own organisational testing regime.
       regions: [ch, us]
+      evidence_approved: true
       evidence:
         internal_docs:
           - hipaa/policies/encryption
@@ -1556,6 +1578,7 @@ requirements:
         Publishing a public DPO contact point through the service-info
         convention is the Art.38 follow-up, tracked on that row.
       regions: [ch, us]
+      evidence_approved: true
       evidence:
         internal_docs:
           - hipaa/registers/designated-roles
@@ -1810,13 +1833,16 @@ requirements:
         internal_docs:
           - gdpr/policies/international-transfers
           - hipaa/registers/hosting-provider-attestations
+          - hipaa/risk/cross-core-residency-data-flow
     implementer:
       - persona: controller
         applies_when: [transfer-eu-us, transfer-eu-ch, third-parties]
         coverage: documented
         overview: |
-          Choose residency to avoid or to deliberately ground transfers, and
-          record the basis for each intentional transfer.
+          You do not choose where a vault lives; the individual does, at
+          registration. Ground the transfers you actually make, which are the
+          ones into your own systems and your own processors, and record the
+          basis for each.
       - persona: data-subject
         coverage: out-of-scope
 
@@ -1851,8 +1877,10 @@ requirements:
         applies_when: [transfer-eu-us, transfer-eu-ch]
         coverage: documented
         overview: |
-          Route subjects to an adequacy-covered region and track the current
-          adequacy landscape.
+          You cannot route subjects: the individual chooses their vault's
+          region when they register. Track the adequacy landscape for the
+          transfers you actually make, into your own systems and your own
+          processors.
       - persona: data-subject
         coverage: out-of-scope
 
@@ -1904,8 +1932,10 @@ requirements:
         applies_when: [transfer-eu-us, transfer-eu-ch, third-parties]
         coverage: documented
         overview: |
-          Conclude SCCs or another Art.46 safeguard for US-region or other
-          third-country transfers and record the mechanism.
+          Conclude SCCs or another Art.46 safeguard for the third-country
+          transfers you make yourself, and record the mechanism. The region
+          the vault sits in is the individual's choice, not a transfer you
+          arrange.
         templates: [dpa]
       - persona: processor
         applies_when: [transfer-eu-us, transfer-eu-ch, third-parties]
@@ -1935,8 +1965,8 @@ requirements:
         applies_when: [transfer-eu-us, transfer-eu-ch, third-parties]
         coverage: documented
         overview: |
-          If relying on BCRs, obtain approval and record the reference on the
-          transferring accesses.
+          If relying on BCRs, obtain approval and record the reference against
+          the transfers you make, in your own transfer records.
       - persona: data-subject
         coverage: out-of-scope
 

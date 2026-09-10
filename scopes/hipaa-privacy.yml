@@ -19,7 +19,7 @@ hds_posture:
     rows_total: 35
     rows_evidenced: 33
     rows_approved: 33
-    as_of: "2026-09-08"
+    as_of: "2026-09-10"
   roles:
     - arrangement: vault
       role: not-applicable
@@ -121,15 +121,19 @@ requirements:
       regions: [us, ch]
       overview: |
         On top of Pryv's permission model, HDS operates the platform that
-        enforces it: as a business associate, HDS uses or discloses PHI only as
-        its BAA and the covered entity's instructions permit. The substantive
-        determination of which uses are permitted remains the covered entity's.
+        enforces it. HDS is not a business associate in the vault: it holds
+        data for the individual, who decides who may see it, so there is no
+        covered entity whose instructions bound its uses. What bounds them is
+        the permission the individual granted. The substantive determination
+        of which uses are permitted remains the covered entity's wherever one
+        is party to the relationship.
       detail: |
         Every workforce, app, and counterparty action on PHI is mediated by an
         access whose permissions bound the streams and levels reachable. HDS
         configures no use or disclosure of customer PHI for its own purposes, and
         the audit log makes each use attributable to a specific access at a
         specific time.
+      evidence_approved: true
       evidence:
         internal_docs:
           - hipaa/policies/uses-and-disclosures
@@ -175,6 +179,7 @@ requirements:
         billing and operations workflow — so the TPO classification becomes a
         durable artefact rather than a verbal claim. HDS stores the purpose tag
         and preserves it across the access version chain.
+      evidence_approved: true
       evidence:
         internal_docs:
           - hipaa/policies/uses-and-disclosures
@@ -220,6 +225,7 @@ requirements:
         expiration onto the access expiry, and the right to revoke onto access
         deletion. HDS ships the primitives; presenting the §508(c) elements at
         the grant moment is the covered entity's UX responsibility.
+      evidence_approved: true
       evidence:
         internal_docs:
           - hipaa/policies/authorizations
@@ -266,6 +272,7 @@ requirements:
         The opportunity-to-agree-or-object construct is operational and
         circumstance-driven. HDS stores the offered choice and the recorded
         response so the §164.510 determination is reconstructable later.
+      evidence_approved: true
       evidence:
         internal_docs:
           - hipaa/policies/uses-and-disclosures
@@ -303,6 +310,7 @@ requirements:
         invocation, records the disclosure category and statutory basis, executes
         the disclosure, then revokes the access. The audit trail shows the full
         lifecycle attached to the legal-basis claim.
+      evidence_approved: true
       evidence:
         internal_docs:
           - hipaa/policies/uses-and-disclosures
@@ -339,6 +347,7 @@ requirements:
         tree and de-identified projections on a parallel tree accessible to a
         broader analyst group. The de-identification logic is the covered
         entity's application code; HDS stores its output.
+      evidence_approved: true
       evidence:
         internal_docs:
           - hipaa/policies/de-identification
@@ -380,6 +389,7 @@ requirements:
         and no individually identifiable health information: the operator
         channel is a place minimum-necessary can quietly fail, so it is
         evidenced rather than assumed.
+      evidence_approved: true
       evidence:
         internal_docs:
           - hipaa/policies/minimum-necessary
@@ -415,14 +425,24 @@ requirements:
       facilitation_mode: storage
       regions: [us, ch]
       overview: |
-        HDS preserves the notice text shown to each individual, on the relevant
-        access client-data or as a dedicated event, so the exact words presented
-        are recoverable per individual and per time. The notice content is the
-        covered entity's editorial responsibility.
+        This section reaches covered entities, and HDS issues no notice of
+        privacy practices under it. What the platform supplies is
+        preservation: the notice text shown to each individual is stored on
+        the relevant access client-data or as a dedicated event, so the exact
+        words presented are recoverable per individual and per time. The
+        notice content stays the covered entity's editorial responsibility.
       detail: |
-        The customer-facing authentication surface is where the notice typically
-        appears at grant time. HDS stores the presented notice as a durable
-        artefact bound to the individual's session.
+        The customer-facing authentication surface is where the notice
+        typically appears at grant time, and HDS stores the presented notice
+        as a durable artefact bound to the individual's session. A template
+        and process for ingesting and displaying a covered entity's own notice
+        through HDS software are not yet formalised; HDS records that as
+        pending remediation, activated when a covered-entity engagement
+        requires it. Separately, HDS plans to publish a notice-style privacy
+        statement of its own, as good practice and because equivalent
+        transparency is required under other regimes it operates within. That
+        is a voluntary undertaking, not a §164.520 duty.
+      evidence_approved: true
       evidence:
         internal_docs:
           - hipaa/policies/notice-of-privacy-practices
@@ -450,16 +470,28 @@ requirements:
       effort_saved: medium
       regions: [us, ch]
       overview: |
-        A granted restriction is configured as a scope-down or revocation of the
-        relevant access, and the access version chain proves what state was in
-        force before and from when the restriction applies. Confidential-
-        communication preferences are stored as account client-data or a
-        dedicated event.
+        On this platform a restriction is usually the individual's own act:
+        they narrow or revoke the relevant access themselves, with immediate
+        effect, and the access version chain proves what state was in force
+        before and from when. Where an individual asks HDS to restrict their
+        own data instead, HDS sends written instructions rather than reaching
+        into the account, because the individual remains the decision-maker.
+        Confidential-communication preferences are stored as account
+        client-data or a dedicated event.
       detail: |
-        Post-HITECH §522(a)(1)(vi) makes restrictions on disclosure to a health
-        plan for out-of-pocket-paid services mandatory on request; the
-        configuration pattern is identical, but the covered entity must apply it
-        without discretion when that condition is met.
+        HDS applies directly only those restrictions sitting in platform
+        configuration it controls, and routes to the responsible covered
+        entity any request belonging to a covered-entity relationship, since
+        that decision is theirs. Stated response times are 30 days where HDS
+        does not control the outcome and 60 days where it applies a
+        restriction it does, each with one 30-day extension. The how-to guide
+        and a formal intake for requests reaching HDS directly are not yet
+        formalised, which HDS records as pending remediation. Post-HITECH
+        §522(a)(1)(vi) makes a restriction on disclosure to a health plan for
+        out-of-pocket-paid services mandatory on request; the configuration
+        pattern is identical, but a covered entity must apply it without
+        discretion when that condition is met.
+      evidence_approved: true
       evidence:
         internal_docs:
           - hipaa/procedures/restriction-requests
@@ -504,6 +536,7 @@ requirements:
         download in their stored MIME type. The 30-day response timeline is the
         covered entity's process target, not a software latency, and any
         non-native export format is produced by the implementer's portal.
+      evidence_approved: true
       evidence:
         internal_docs:
           - hipaa/procedures/individual-right-of-access
@@ -550,6 +583,7 @@ requirements:
         disagreement, the statement can be stored as a separate event on the
         designated-record-set stream linked back to the original, so the
         disagreement travels with the data on subsequent disclosures.
+      evidence_approved: true
       evidence:
         internal_docs:
           - hipaa/procedures/amendment-requests
@@ -595,6 +629,7 @@ requirements:
         purpose tag. The audit log does not capture request bodies, so the
         description is at the API-shape level — sufficient under §164.528 and
         favourable for data minimisation.
+      evidence_approved: true
       evidence:
         internal_docs:
           - hipaa/procedures/accounting-of-disclosures
@@ -631,18 +666,20 @@ requirements:
       effort_saved: low
       regions: [us, ch]
       overview: |
-        HDS has designated its own Privacy Official under its BA role: a
-        distinct holder from the Security Official, appointed by the CEO
-        effective 2026-07-15 and recorded in the designated-roles register
-        (disclosed on request; the source documents are still moving through
-        internal approval). The audit log gives that official a concrete
-        artefact to review when investigating complaints or internal use. The
-        covered entity's own privacy-official designation remains its
-        organizational decision.
+        HDS has designated its own Privacy Official: a distinct holder from
+        the Security Official, appointed by the CEO effective 2026-07-15 and
+        recorded in the designated-roles register (disclosed on request; the
+        source documents are still moving through internal approval). That
+        designation is HDS's own governance choice, not a duty it carries
+        under this section, which reaches covered entities. The audit log
+        gives that official a concrete artefact to review when investigating
+        complaints or internal use. The covered entity's own privacy-official
+        designation remains its organizational decision.
       detail: |
-        HDS operates as a business associate and names its own responsible
-        official and contact; the covered entity's privacy-official designation
+        HDS names a responsible official and a contact point as a matter of
+        its own programme. The covered entity's privacy-official designation
         is a programme element outside HDS's scope.
+      evidence_approved: true
       evidence:
         internal_docs:
           - hipaa/policies/privacy-program-governance
@@ -669,14 +706,16 @@ requirements:
       effort_saved: low
       regions: [us, ch]
       overview: |
-        Workforce privacy training is the covered entity's programme. HDS trains
-        its own workforce on its privacy and security policies as a business
-        associate and retains the training records; the customer's programme is
-        out of HDS's scope.
+        Workforce privacy training is the covered entity's programme. HDS
+        trains its own workforce on its privacy and security policies and
+        retains the training records, as its own governance rather than as a
+        duty it carries under this section; the customer's programme is out of
+        HDS's scope.
       detail: |
         Audit and observability data can make training effectiveness measurable
         by revealing whether access patterns match policy after training, but the
         training content and record-keeping belong to the implementer.
+      evidence_approved: true
       evidence:
         internal_docs:
           - hipaa/procedures/workforce-training
@@ -721,6 +760,7 @@ requirements:
         the physical-safeguard coverage of the hosting environment. Together they
         constitute the §530(c) technical and physical answer; the administrative
         safeguards remain the covered entity's.
+      evidence_approved: true
       evidence:
         internal_docs:
           - hipaa/policies/privacy-safeguards
@@ -757,6 +797,7 @@ requirements:
         HDS exposes access deletion to revoke an offending counterparty and
         operates the backup-restore capability across every region; the mitigation
         decision and any breach notification follow the covered entity's process.
+      evidence_approved: true
       evidence:
         internal_docs:
           - hipaa/procedures/incident-mitigation
@@ -805,6 +846,7 @@ requirements:
         entity's. On HDS's own side, the operational telemetry it collects as
         operator is evidenced as carrying no PHI and no individually
         identifiable health information.
+      evidence_approved: true
       evidence:
         internal_docs:
           - hipaa/policies/minimum-necessary
@@ -851,6 +893,7 @@ requirements:
         capability pattern. The access carries its business-associate role and
         contract reference so disclosures are attributable to the BAA, while the
         contract itself is signed between the parties.
+      evidence_approved: true
       evidence:
         internal_docs:
           - hipaa/registers/baa-register
@@ -895,6 +938,7 @@ requirements:
         Storing complaints and dispositions as data makes the §530(d)(2)
         documentation requirement a byproduct of normal record-keeping. The
         intake workflow and response are the implementer's.
+      evidence_approved: true
       evidence:
         internal_docs:
           - hipaa/procedures/complaint-handling
@@ -922,13 +966,19 @@ requirements:
       effort_saved: low
       regions: [us, ch]
       overview: |
-        Sanctions are an HR and disciplinary process with no software role at the
-        decision layer. HDS maintains its own workforce sanction policy as a
-        business associate; the audit log supplies the underlying evidence that
-        disciplinary processes evaluate.
+        Sanctions are an HR and disciplinary process with no software role at
+        the decision layer. HDS maintains a workforce sanction policy of its
+        own, adopted by the CEO on 2026-07-15 with a graduated scale in force;
+        the audit log supplies the underlying evidence a disciplinary process
+        would evaluate. A covered entity's own sanction programme remains its
+        own.
       detail: |
-        HDS documents and applies sanctions for its own workforce, but the
-        covered entity's sanction programme is outside HDS's scope.
+        The policy's enforceability rests on the workforce having acknowledged
+        the policy set, which is tracked separately rather than asserted here:
+        sanctioning someone against a policy they never acknowledged is the
+        weak point that tracking exists to close. The covered entity's
+        sanction programme is outside HDS's scope.
+      evidence_approved: true
       evidence:
         internal_docs:
           - hipaa/policies/workforce-sanctions
@@ -998,6 +1048,7 @@ requirements:
         Policies-as-data on a dedicated compliance stream inherit versioning,
         retention and audit. The covered entity's policy programme is its own;
         HDS documents the policies governing its operations.
+      evidence_approved: true
       evidence:
         internal_docs:
           - hipaa/policies/privacy-policy-management
@@ -1042,6 +1093,7 @@ requirements:
         The access records the relationship, the involved person's role, and the
         individual's opportunity-to-object record. HDS stores and enforces the
         narrowed scope; the disclosure decision is the implementer's.
+      evidence_approved: true
       evidence:
         internal_docs:
           - hipaa/policies/uses-and-disclosures
@@ -1084,6 +1136,7 @@ requirements:
         A per-instance access carries the public-health-authority recipient and
         the statutory basis; the audit trail preserves the disclosure. HDS makes
         no public-health disclosure of customer PHI on its own initiative.
+      evidence_approved: true
       evidence:
         internal_docs:
           - hipaa/policies/uses-and-disclosures
@@ -1120,6 +1173,7 @@ requirements:
         The access carries the specific §512(f) basis vocabulary; HDS stores and
         audits the disclosure but makes no law-enforcement disclosure of customer
         PHI on its own initiative outside legal process served on it.
+      evidence_approved: true
       evidence:
         internal_docs:
           - hipaa/procedures/law-enforcement-requests
@@ -1161,6 +1215,7 @@ requirements:
         eliminates the need for a §524(b)(2) timely-response procedure on the
         individual-direct path; the timeline obligation remains operative on the
         partner-mediated path (covered entity intake → HDS-as-BA fulfilment).
+      evidence_approved: true
       evidence:
         docs:
           - https://demo-portability.datasafe.dev
@@ -1208,6 +1263,7 @@ requirements:
         packages it into ZIPs the individual can keep or forward to another
         covered entity. Non-native formats and summaries are built by the
         implementer's portal from the same source events.
+      evidence_approved: true
       evidence:
         docs:
           - https://demo-portability.datasafe.dev
@@ -1255,6 +1311,7 @@ requirements:
         The exception pattern narrows or deletes the representative's access. HDS
         stores the representative relationship and legal basis; the determination
         of whether an exception applies is the implementer's.
+      evidence_approved: true
       evidence:
         internal_docs:
           - hipaa/policies/personal-representatives
@@ -1294,9 +1351,10 @@ requirements:
         legal authority. The compliance burden of the cited law is the covered
         entity's.
       detail: |
-        The access carries the statute reference; the audit trail preserves the
-        disclosure. HDS responds to legal process served on it as a business
-        associate per its BAA and applicable law.
+        The access carries the statute reference; the audit trail preserves
+        the disclosure. HDS responds to legal process served on it under
+        applicable law, and under the terms of a BAA wherever one is in force.
+      evidence_approved: true
       evidence:
         internal_docs:
           - hipaa/policies/uses-and-disclosures
@@ -1339,6 +1397,7 @@ requirements:
         HDS documents that de-identification is the covered entity's
         responsibility; the platform simply persists whatever events the
         implementer's de-identification process produces.
+      evidence_approved: true
       evidence:
         internal_docs:
           - hipaa/policies/de-identification
@@ -1385,6 +1444,7 @@ requirements:
         re-identification role; HDS enforces the scope and stores the mapping,
         and ensuring the code is random or derived from non-PHI is the
         implementer's.
+      evidence_approved: true
       evidence:
         internal_docs:
           - hipaa/policies/de-identification
@@ -1427,6 +1487,7 @@ requirements:
         timestamps, requesting access tokens, methods invoked) — sufficient
         source material for the covered entity to assemble the formal
         §528(b) accounting.
+      evidence_approved: true
       evidence:
         docs:
           - https://demo-portability.datasafe.dev
@@ -1473,9 +1534,13 @@ requirements:
         scoped to the covered subjects and streams, with full audit-log
         accountability. The contract content itself is contractual.
       detail: |
-        HDS signs BAAs as a business associate and flows obligations down to its
-        own subcontractors. The access tags and audit log support enforcement and
+        HDS is not a business associate in the vault, so no BAA governs that
+        arrangement. It does execute BAAs for the separate arrangement in
+        which an organisation places protected health information with it on
+        its own behalf, and flows the obligations down to its own
+        subcontractors. The access tags and audit log support enforcement and
         evidence of the §164.504(e) terms.
+      evidence_approved: true
       evidence:
         internal_docs:
           - hipaa/registers/baa-register
@@ -1555,6 +1620,7 @@ requirements:
         for having made it. The audit trail of a disclosing person's access remains
         available as evidence in subsequent proceedings. The implementer still states
         the protection in their own policies; HDS's control binds HDS's own workforce.
+      evidence_approved: true
       evidence:
         internal_docs:
           - hipaa/policies/workforce-sanctions

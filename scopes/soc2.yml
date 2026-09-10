@@ -17,7 +17,7 @@ hds_posture:
     rows_total: 61
     rows_evidenced: 61
     rows_approved: 45
-    as_of: "2026-09-08"
+    as_of: "2026-09-10"
   roles:
     - arrangement: vault
       role: service-organization
@@ -179,6 +179,7 @@ requirements:
       the audit log as the substrate that holds individuals accountable to whatever
       ethical baseline they set.
     regions: [us, ch]
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/policies/information-security-policy
@@ -415,6 +416,7 @@ requirements:
       operates. A partner consumes the same substrate to feed its own
       control-monitoring process and defines its own thresholds and review cadence.
     regions: [us, ch]
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/policies/audit-controls
@@ -458,6 +460,7 @@ requirements:
       attesting organization authors and operates its own internal communication
       of objectives and responsibilities.
     regions: [us, ch]
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/policies/information-security-policy
@@ -504,6 +507,7 @@ requirements:
       artefact and backed by the subprocessor register. A partner attesting under
       SOC 2 authors its own external-communication programme.
     regions: [us, ch]
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/policies/information-security-policy
@@ -547,6 +551,7 @@ requirements:
       it specifies its own objectives — but can use this matrix to map identified
       risks onto the platform controls that address them.
     regions: [us, ch]
+    evidence_approved: true
     evidence:
       internal_docs:
         - soc2/policies/system-description
@@ -736,6 +741,7 @@ requirements:
       sample its own controls and defines its own evaluation programme. This matrix
       doubles as the control inventory an evaluation assesses against.
     regions: [us, ch]
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/procedures/periodic-evaluation
@@ -780,6 +786,7 @@ requirements:
       its own deficiency workflow over the same substrate. The platform can host
       the corrective-action records themselves as attributable events.
     regions: [us, ch]
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/procedures/periodic-evaluation
@@ -826,6 +833,7 @@ requirements:
       selects and operates the activities appropriate to its risk assessment over
       the same primitives.
     regions: [us, ch]
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/policies/access-control
@@ -878,6 +886,7 @@ requirements:
       always-on per-user audit log; mutually authenticated inter-core transport;
       hosting-layer full-volume at-rest encryption in every region.
     regions: [us, ch]
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/policies/access-control
@@ -924,6 +933,7 @@ requirements:
       policy and procedure set; it cannot inherit HDS's, though it can cite HDS's
       programme where HDS operates the underlying system.
     regions: [us, ch]
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/policies/information-security-policy
@@ -977,6 +987,7 @@ requirements:
       API call; token authentication by default with optional MFA; privileged data
       on a separately controlled namespace.
     regions: [us, ch]
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/policies/access-control
@@ -1028,6 +1039,7 @@ requirements:
       version history; immediate revocation and account deletion; each stage
       recorded in the per-user audit log.
     regions: [us, ch]
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/policies/access-authorization
@@ -1078,6 +1090,7 @@ requirements:
       per role for segregation of duties; privileged-namespace isolation; audited,
       version-tracked access modification and removal.
     regions: [us, ch]
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/policies/access-control
@@ -1125,6 +1138,7 @@ requirements:
       satisfied by inheritance; an organization's own facilities (offices where
       workforce access the service) remain its responsibility.
     regions: [us, ch]
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/registers/hosting-provider-attestations
@@ -1175,6 +1189,7 @@ requirements:
       backup reach is storage-engine-dependent; physical media sanitisation
       inherited from the certified hosting provider.
     regions: [us, ch]
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/registers/hosting-provider-attestations
@@ -1225,6 +1240,7 @@ requirements:
       access per request; mutually authenticated inter-core transport; operator
       reverse-proxy edge controls.
     regions: [us, ch]
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/policies/transmission-security
@@ -1279,6 +1295,7 @@ requirements:
       core-to-core bundles; hosting-layer full-volume at-rest encryption in both
       regions (provider-managed keys).
     regions: [us, ch]
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/policies/transmission-security
@@ -1338,6 +1355,7 @@ requirements:
       endpoints and any infrastructure it operates outside HDS, and operates
       application-allowlisting on its hosts.
     regions: [us, ch]
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/policies/malware-protection
@@ -1384,6 +1402,7 @@ requirements:
       documents it. A partner defines its own vulnerability-scanning and
       configuration-drift detection cadence over the same substrate.
     regions: [us, ch]
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/policies/audit-controls
@@ -1432,6 +1451,7 @@ requirements:
       and is each organization's own, fed by the raw signal HDS exposes and
       operates.
     regions: [us, ch]
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/policies/audit-controls
@@ -1476,6 +1496,7 @@ requirements:
       triggers over the same inputs. The substrate is operated; the judgement is
       governance.
     regions: [us, ch]
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/procedures/security-incident-response
@@ -1526,6 +1547,7 @@ requirements:
       rehearses its own incident-response programme over the same technical
       substrate.
     regions: [us, ch]
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/procedures/security-incident-response
@@ -1576,6 +1598,7 @@ requirements:
       Per-user backup and restore; replicated multi-core topology with
       cluster-replicated TLS certificates for hot redundancy.
     regions: [us, ch]
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/procedures/disaster-recovery-plan
@@ -1680,6 +1703,7 @@ requirements:
       Multi-core HA with replication; per-user backup and restore; cluster-replicated
       TLS certificates; portable cluster re-issue from a bootstrap bundle.
     regions: [us, ch]
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/procedures/disaster-recovery-plan
@@ -1788,6 +1812,7 @@ requirements:
       shared on request; a user-entity running its own deployment performs its
       own capacity planning.
     regions: [us, ch]
+    evidence_approved: true
     evidence:
       internal_docs:
         - soc2/procedures/capacity-management
@@ -1837,6 +1862,7 @@ requirements:
       as it stands is cited as an internal document. A user-entity running its
       own deployment defines its own schedule.
     regions: [us, ch]
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/procedures/data-backup-plan
@@ -1894,6 +1920,7 @@ requirements:
       formalised and are stated plainly as a gap. A user-entity runs and
       evidences its own recovery tests for its workload.
     regions: [us, ch]
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/procedures/contingency-plan-testing
@@ -1957,6 +1984,7 @@ requirements:
       tokens enforced at every API call; privileged namespaces separately
       controlled.
     regions: [us, ch]
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/policies/access-control
@@ -2063,6 +2091,7 @@ requirements:
       objectives and service specifications themselves remain the implementer's
       editorial work; HDS documents the data-quality posture it operates.
     regions: [us, ch]
+    evidence_approved: true
     evidence:
       internal_docs:
         - soc2/policies/data-quality
@@ -2108,6 +2137,7 @@ requirements:
       Server-side event-type schema validation at ingest; non-conforming inputs
       rejected with an error, no silent truncation or downgrade.
     regions: [us, ch]
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/policies/integrity
@@ -2155,6 +2185,7 @@ requirements:
       Permission-gated, attributable writes; event version history; per-user
       audit log records every mutation.
     regions: [us, ch]
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/policies/integrity
@@ -2201,6 +2232,7 @@ requirements:
       Canonical read serialisations; signal-only change notification with
       authenticated fetch of the authoritative state.
     regions: [us, ch]
+    evidence_approved: true
     evidence:
       internal_docs:
         - soc2/policies/data-quality
@@ -2247,6 +2279,7 @@ requirements:
       Event version history; per-user audit log; per-user backup/restore. Audit
       tamper-evidence (chaining) and verified backups are not yet shipped.
     regions: [us, ch]
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/policies/integrity
@@ -2395,6 +2428,7 @@ requirements:
       Collection bounded by per-stream, per-level access-token permissions;
       out-of-scope writes rejected at the API.
     regions: [us, ch]
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/policies/minimum-necessary
@@ -2487,6 +2521,7 @@ requirements:
       Per-stream, per-level access scopes enforce purpose limitation on every
       API call; audit log evidences in-scope use.
     regions: [us, ch]
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/policies/minimum-necessary
@@ -2647,6 +2682,7 @@ requirements:
       Subject holds own credentials; direct reads of own data; complete portable
       account export with per-file sha256 integrity manifest.
     regions: [us, ch]
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/policies/access-control
@@ -2694,6 +2730,7 @@ requirements:
       Update with prior-value version history; audit log attribution; change
       notification to holders of a shared access.
     regions: [us, ch]
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/policies/integrity
@@ -2741,6 +2778,7 @@ requirements:
       Disclosure as a scoped, revocable shared access; purpose and consent basis
       in access metadata; no out-of-band export path.
     regions: [us, ch]
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/policies/access-control
@@ -2786,6 +2824,7 @@ requirements:
       Per-user audit log records each disclosure read with its acting access
       identity; the accesses list enumerates who holds a grant.
     regions: [us, ch]
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/policies/access-control
@@ -2832,6 +2871,7 @@ requirements:
       Audit log of access attempts (incl. failed/out-of-scope) plus
       infrastructure anomaly monitoring; logs may contain PII (known gap).
     regions: [us, ch]
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/procedures/security-incident-response
@@ -2886,6 +2926,7 @@ requirements:
       auditable limit that complements the contractual commitment. The
       implementer obtains and retains its own vendor commitments.
     regions: [us, ch]
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/registers/subprocessor-register
@@ -2932,6 +2973,7 @@ requirements:
       commitments from its vendors and runs its own response when notified (see
       CC7.4-equivalent incident handling).
     regions: [us, ch]
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/procedures/security-incident-response
@@ -2983,6 +3025,7 @@ requirements:
       implementer drafts and sends the breach notices and meets the regulatory
       clock; HDS's incident procedure governs the report it produces.
     regions: [us, ch]
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/procedures/security-incident-response
@@ -3027,6 +3070,7 @@ requirements:
       Audit log of disclosure reads plus the accesses list; together they yield a
       complete, attributable accounting per subject.
     regions: [us, ch]
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/policies/access-control
@@ -3071,6 +3115,7 @@ requirements:
       Event-type schema validation at ingest; subject-driven update with version
       history; relevance bounded by per-stream access scope.
     regions: [us, ch]
+    evidence_approved: true
     evidence:
       internal_docs:
         - soc2/policies/data-quality

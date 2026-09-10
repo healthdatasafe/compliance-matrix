@@ -19,7 +19,7 @@ hds_posture:
     rows_total: 43
     rows_evidenced: 43
     rows_approved: 43
-    as_of: "2026-09-08"
+    as_of: "2026-09-10"
   roles:
     - arrangement: vault
       role: not-applicable
@@ -252,6 +252,7 @@ requirements:
       they must run themselves; HDS supplies the technical raw material and its
       own programme as evidence of operator diligence.
     regions: [us, ch]
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/policies/security-management-process
@@ -303,6 +304,7 @@ requirements:
       only on request under NDA, signed BAA or audit engagement, as is normal for
       a document whose contents are an inventory of what could go wrong.
     regions: [us, ch]
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/risk/risk-analysis
@@ -349,6 +351,7 @@ requirements:
       risk carries a decision, including the decisions to accept. The register's
       contents, like the analysis, are confidential and released on request.
     regions: [us, ch]
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/plans/risk-management
@@ -386,20 +389,29 @@ requirements:
       On top of the platform's per-user audit log, HDS operates the review
       substrate: system-level activity is collected and monitored across both
       US and Switzerland data-residency options, with alerting on crash,
-      error-rate and silence conditions. The platform telemetry channel is
-      mid-transition (see the planned chip): the in-process vendor agent was
-      removed 2026-07-28 in favour of an allow-list, aggregate-only emitter;
-      until the self-hosted collector and rebuilt alert chain are verified,
-      platform-core detection leans on synthetic and liveness checks. The
-      written review cadence remains the implementer's responsibility.
+      error-rate and silence conditions. The written procedure sets a
+      quarterly cadence and a sign-off record. Two parts of it are not yet
+      operating: sampling the per-user audit log for anomalies is the step
+      that remains outstanding, tracked as an open risk-analysis item, and the
+      platform telemetry channel is mid-transition (see the planned chip),
+      with the in-process vendor agent removed on 2026-07-28 in favour of an
+      allow-list, aggregate-only emitter. Until the self-hosted collector and
+      rebuilt alert chain are verified, platform-core detection leans on
+      synthetic and liveness checks.
     detail: |
-      Per-API-call audit records (platform layer) plus infrastructure telemetry
-      (HDS layer) together give both subject-level and system-level activity
-      review. HDS operates the alerting chain end to end as a matter of policy
-      before any component is treated as in production, so silent failures are
-      caught. The documented review procedure HDS runs as operator is available
-      on request.
+      Per-API-call audit records (platform layer) plus infrastructure
+      telemetry (HDS layer) together give both subject-level and system-level
+      activity review. HDS operates the alerting chain end to end as a matter
+      of policy before any component is treated as in production, so silent
+      failures are caught. Operator activity is reviewed at an operator
+      population of one, which makes that half inherent rather than scheduled;
+      the scheduled cycle becomes substantive when a second operator holds
+      credentials. The per-user half carries no such assurance and is the part
+      still to be established in practice. The documented review procedure is
+      available on request, and the implementer runs its own review over its
+      own workload.
     regions: [us, ch]
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/procedures/information-system-activity-review
@@ -456,6 +468,7 @@ requirements:
       separately (see hipaa-privacy §164.530(a)). A partner running ePHI on
       HDS names their own security official.
     regions: [us, ch]
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/policies/assigned-security-responsibility
@@ -487,19 +500,25 @@ requirements:
     coverage: implemented
     effort_saved: high
     overview: |
-      Workforce access to ePHI is mediated by platform access tokens with
-      granular per-stream permissions. Termination is a single revocation that
-      takes effect immediately, and the audit log records the termination
-      instant; role changes narrow permissions without losing the version
-      history of the change.
+      Workforce termination at HDS revokes operator and infrastructure access:
+      platform admin and service credentials, hosting hosts, monitoring, the
+      alert mailbox, code repositories carrying deploy rights, and any
+      break-glass grant. It is a dated ticket rather than a single switch,
+      because shared secrets must also be rotated, and it does not touch a
+      user's own data-sharing tokens, which belong to the user and are
+      unaffected by offboarding.
     detail: |
-      HDS operates the access-token model so that ending or changing a
-      workforce member's access is an immediate, audited operation rather than
-      a manual clean-up across systems. Full revocation removes the token;
-      narrowing reduces permissions while preserving the access identity and its
-      history. HDS documents the termination procedure it follows for its own
-      workforce; partners apply the same primitives to their own staff.
+      HDS runs the revocation as a tracked procedure: the Security Official
+      opens a dated termination ticket, revokes credentials and closes any
+      break-glass grant (whose closure is recorded in the per-user audit log),
+      disables accounts on each host and service, rotates shared secrets the
+      person knew, confirms no active token or session remains, and closes the
+      ticket the same business day, or immediately for involuntary or
+      suspected-compromise cases. Partners apply their own termination
+      procedure to their own staff; the platform's per-stream access model is
+      what makes narrowing an access an alternative to revoking it.
     regions: [us, ch]
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/procedures/access-termination
@@ -532,17 +551,27 @@ requirements:
     coverage: implemented
     effort_saved: high
     overview: |
-      Granting access to ePHI on HDS means minting an access token with explicit
-      per-stream permissions, enforced at every API call. The authorization
-      rationale can travel alongside the grant itself, so the "why" stays with
-      the "what".
+      Granting access to ePHI on HDS means minting an access token with
+      explicit per-stream permissions, enforced at every API call. The
+      authorization rationale can travel alongside the grant itself, so the
+      "why" stays with the "what". Two authorisation paths are kept apart:
+      access to a user's own ePHI is decided by that user, while operator and
+      infrastructure access is decided by HDS under least privilege.
     detail: |
-      Access grants carry the streams and levels the grantee may exercise, plus
-      free-form metadata such as workforce role, granting administrator and
-      business reason. HDS operates this as the authoritative authorization
-      mechanism for ePHI; there is no trust-based bypass path. HDS documents its
-      own authorization policy and partners apply the same primitive.
+      Access grants carry the streams and levels the grantee may exercise,
+      plus free-form metadata such as workforce role, granting administrator
+      and business reason. On the platform path there is no trust-based
+      bypass: no HDS role can grant itself an access into a user account. That
+      is a statement about the authorisation mechanism and not about what
+      infrastructure access can technically reach. An identity holding host or
+      database access can read or alter stored ePHI without presenting a user
+      token, because someone has to operate the database that holds the data;
+      what bounds it is least-privilege authorisation, time-boxed and logged
+      break-glass, and periodic access review, and HDS records it as an
+      accepted residual rather than engineering it away. HDS documents its own
+      authorization policy and partners apply the same primitives.
     regions: [us, ch]
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/policies/access-authorization
@@ -592,6 +621,7 @@ requirements:
       grant over their own data: those are the account holder's to review and
       revoke, and HDS does not act on them.
     regions: [us, ch]
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/procedures/access-review
@@ -635,6 +665,7 @@ requirements:
       verified security-awareness training is a known gap being matured; each
       partner runs its own reminder programme for its own workforce.
     regions: [us, ch]
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/policies/security-awareness-reminders
@@ -678,17 +709,25 @@ requirements:
     effort_saved: low
     facilitation_mode: infrastructure
     overview: |
-      Anti-malware is a host, endpoint and network-layer control rather than a
-      platform feature. HDS operates malware protection and patching at the
-      hosting layer for the environments it runs, documented internally; the
-      partner's own endpoints remain the partner's responsibility.
+      Anti-malware here is a host, endpoint and network-layer concern rather
+      than a platform feature. HDS runs no dedicated anti-malware agent on its
+      Linux hosts, and states that as a deliberate decision rather than an
+      omission: protection rests on OS and platform patching, dependency
+      scanning, a minimised attack surface and monitoring. The partner's own
+      endpoints remain the partner's responsibility.
     detail: |
-      HDS's hosting environment carries malware-protection controls as part of
-      operator-side infrastructure hardening, described privately and cited as
-      an internal document. The platform software itself includes no antivirus.
-      Partners must protect their own workstations and any infrastructure they
-      operate outside HDS.
+      Internet-facing components receive priority patching for known CVEs,
+      application dependencies are monitored for advisories and triaged, only
+      required services are exposed, and the container model limits the blast
+      radius of a compromised component. Anomalies that may indicate malware,
+      such as unexpected processes or crash loops, are investigated under the
+      incident process. The patch cadence and the dependency-triage service
+      level are not yet defined, so currency rests on practice rather than on
+      a control that can be evidenced; HDS records that as an open
+      risk-analysis item. Partners must protect their own workstations and any
+      infrastructure they operate outside HDS.
     regions: [us, ch]
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/policies/malware-protection
@@ -723,16 +762,26 @@ requirements:
     facilitation_mode: evidence
     overview: |
       Authentication and login-failure events are captured in the per-user
-      audit log, and HDS's operational monitoring aggregates rate and anomaly
-      signals across every data-residency option. Discrepancy-reporting
-      thresholds and the response cadence are operator-side procedure.
+      audit log, and reverse-proxy and host auth logs are retained on HDS
+      infrastructure. Review is quarterly and manual: automated login-anomaly
+      detection and alert thresholds for this specification are not
+      formalised, which HDS names as the current gap rather than implying
+      continuous detection.
     detail: |
-      HDS surfaces login and authentication-failure events through the audit log
-      and layers monitoring on top to detect anomalous rates. The platform does
-      not by itself lock accounts after N failures; HDS operates additional
-      rate-limiting and alerting at the infrastructure boundary, documented
-      privately. Partners tune their own discrepancy thresholds.
+      Logs are shipped to HDS-operated collectors and stay on HDS
+      infrastructure, with only aggregate metrics reaching the monitoring
+      service. On the quarterly cycle the Security Official reviews
+      failed-login spikes, off-hours operator access and token-use anomalies;
+      a suspected compromise is escalated to incident response within one
+      business day and the affected user is contacted. While the Security
+      Official is the only operator able to log in, every operator
+      authentication is his own, so that surface carries assurance the
+      user-side surface does not, and the user side is reviewed on the cadence
+      regardless. Multi-factor authentication is mandated separately on the
+      surfaces from which production can be reached. Partners tune their own
+      discrepancy thresholds.
     regions: [us, ch]
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/procedures/login-monitoring
@@ -784,6 +833,7 @@ requirements:
       person-or-entity-authentication standard). HDS documents the configuration
       it runs; partners may layer their own additional rules.
     regions: [us, ch]
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/procedures/password-management
@@ -831,6 +881,7 @@ requirements:
       GHSA/CVE issuance); a published advisory affecting the deployed release
       enters HDS's incident procedure as a provider notification.
     regions: [us, ch]
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/procedures/security-incident-response
@@ -879,6 +930,7 @@ requirements:
       scale per region; that drill is the remaining gap. Partners
       operating their own deployments define their own schedule.
     regions: [us, ch]
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/procedures/data-backup-plan
@@ -939,6 +991,7 @@ requirements:
       revision specification, a known gap). Partners running their own
       deployments document their own plan.
     regions: [us, ch]
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/procedures/disaster-recovery-plan
@@ -971,17 +1024,29 @@ requirements:
     coverage: documented
     effort_saved: medium
     overview: |
-      The platform's high-availability primitives (replicated multi-core cluster
-      with mutually authenticated inter-core traffic) support continued
-      operation when a single facility fails. HDS documents which processes are
-      critical and the emergency-mode runbook it operates.
+      The platform's high-availability primitives (a replicated multi-core
+      cluster with mutually authenticated inter-core traffic) support
+      continued operation when a single facility fails. HDS documents which
+      processes are critical and holds an emergency-mode runbook whose
+      governing rule is to fail closed: if a security control cannot be kept
+      up while degraded, the affected function is restricted or suspended
+      rather than serving ePHI without it. The runbook is written but
+      unexercised, since no degraded-operation event has occurred and no
+      exercise has yet been run.
     detail: |
-      HDS treats emergency-mode operation as a documented runbook layered on the
-      platform's HA topology and backup-restore path. The definition of critical
-      business processes and the emergency procedures are operator artefacts,
-      cited internally. Partners define their own emergency-mode plan for their
-      workload.
+      Emergency mode is a documented runbook layered on the platform's HA
+      topology and the backup-restore path, distinct from the
+      disaster-recovery plan that covers full loss. On declaration the on-call
+      operator confirms that per-user isolation, consent and access-token
+      checks, TLS and per-user audit logging are all still enforced, sheds
+      non-critical load to preserve the critical path, and keeps the
+      unaffected region serving its own users. Every control degraded or
+      suspended is recorded at closure and carries a follow-up. The definition
+      of critical business processes and the procedure itself are operator
+      artefacts, cited internally. Partners define their own emergency-mode
+      plan for their workload.
     regions: [us, ch]
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/procedures/emergency-mode-operation
@@ -1025,6 +1090,7 @@ requirements:
       instead of reading a rehearsal as a drill. Partners run and document their
       own contingency-plan tests.
     regions: [us, ch]
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/procedures/contingency-plan-testing
@@ -1082,6 +1148,7 @@ requirements:
       findings; a partner runs its own periodic evaluation for its own
       programme.
     regions: [us, ch]
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/procedures/periodic-evaluation
@@ -1147,6 +1214,7 @@ requirements:
       with us-east-1 named in the certified locations, 27017 and 27018). The
       Swiss region is contractually assured but not yet evidenced: nothing is on
       file for it, and the provider's audit clause is the route to closing that.
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/policies/physical-safeguards
@@ -1198,6 +1266,7 @@ requirements:
       Swiss region's rest on contract alone, with no attestation yet obtained.
       The implementer's own facilities (offices where workforce members access
       ePHI) remain their responsibility.
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/registers/hosting-provider-attestations
@@ -1244,6 +1313,7 @@ requirements:
       proper-function obligations of the workstation-use standard remain
       organizational. HDS records this boundary so implementers can scope their own
       workstation-use policy to the residual physical/operational concerns.
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/policies/physical-safeguards
@@ -1300,6 +1370,7 @@ requirements:
       the blast radius of a compromised workstation is bounded and recoverable. HDS
       documents this so implementers can right-size their physical workstation
       controls.
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/policies/physical-safeguards
@@ -1369,6 +1440,7 @@ requirements:
       server volumes carry hosting-layer at-rest encryption (Exoscale
       hypervisor-layer on ch1, AWS EBS/KMS on us1); exports leaving the platform
       must be encrypted by the mover at the storage/transport boundary.
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/registers/hosting-provider-attestations
@@ -1436,6 +1508,7 @@ requirements:
     technical: |
       Per-user data isolation; per-stream access tokens with granular permissions
       enforced at every API call.
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/policies/access-control
@@ -1483,6 +1556,7 @@ requirements:
     technical: |
       Unique account and access-token identifiers; per-user audit log references the
       acting access identity on every action.
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/policies/access-control
@@ -1516,21 +1590,32 @@ requirements:
     effort_saved: medium
     regions: [us, ch]
     overview: |
-      The platform provides an operator-held administrative access mechanism that
-      can serve as a break-glass path to ePHI during an emergency, and every action
-      taken under it is captured by the per-user audit log. HDS documents the
-      custody controls; the implementer defines when the procedure may be invoked
-      and the review that follows.
+      The platform provides an operator-held administrative access mechanism
+      that serves as a break-glass path to ePHI during an emergency, and every
+      action taken under it is captured by the per-user audit log. HDS runs
+      its own approved procedure over that mechanism: the Security Official
+      authorises each grant with a stated scope and justification, time-boxes
+      it to 24 hours by default, and reviews the audit and host logs against
+      the grant within two business days. An implementer authors the
+      equivalent procedure for its own workload.
     detail: |
-      Emergency access is supported by an operator-held privileged access capability
-      treated as a custody-controlled credential. Because every call made under it
-      is audited like any other, post-emergency review is concrete and the
-      break-glass event is reconstructable. HDS configures and safeguards the
-      mechanism; the implementer authors the emergency-access procedure (triggers,
-      authorisers, mandatory after-action review) on top of it.
+      Routine access to a user's ePHI is by the user and their granted tokens;
+      this procedure covers the exceptional operator-level case, such as
+      assisting an individual locked out during an outage or validating a
+      disaster-recovery restore. Temporary credentials are revoked on
+      completion and the time box confirmed closed. One grant is standing
+      rather than per-incident: HDS Leadership holds administrative access to
+      the provider consoles and does not use it, as the means by which HDS can
+      revoke the Security Official's own access, so that no single individual
+      can lock the organisation out of its infrastructure. That grant carries
+      the mandated multi-factor authentication, is reviewed on the quarterly
+      access-review cadence (first cycle 2026-07-30, confirmed still unused),
+      and rests on attestation by signature rather than a captured
+      configuration record, a residual HDS has accepted.
     technical: |
       Operator-held privileged access capability under custody controls; all
       actions captured in the per-user audit log.
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/procedures/emergency-access
@@ -1581,6 +1666,7 @@ requirements:
     technical: |
       Configurable interactive session lifetime plus per-access-token expiry;
       sessions/tokens become inert automatically once the window elapses.
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/policies/access-control
@@ -1649,6 +1735,7 @@ requirements:
       (AES-256, KMS key aws/ebs). In transit: TLS. Optional operator-held-key path:
       container-encrypted-volume (pryvio/open-pryv.io-encrypted, CEV_ENABLED,
       CEV_BACKEND=luks) — LUKS conformance verified on HDS hosts, not enabled.
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/policies/encryption
@@ -1702,6 +1789,7 @@ requirements:
     technical: |
       Per-user audit log capturing timestamp, access identity, method and
       success/error for every API call; data-minimal by construction.
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/policies/audit-controls
@@ -1752,6 +1840,7 @@ requirements:
       Write authorization gated by per-stream permissions; event versioning
       retains prior values; per-user audit log; per-user backup/restore recovery
       path.
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/policies/integrity
@@ -1801,6 +1890,7 @@ requirements:
     technical: |
       Event version history for original-vs-current comparison; per-user audit log
       attributing each change to an authenticated access identity.
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/policies/integrity
@@ -1836,21 +1926,30 @@ requirements:
     effort_saved: high
     regions: [us, ch]
     overview: |
-      Authentication in the HDS-operated platform is mediated by the access-token
-      primitive: the bearer of a valid token has been authenticated. Authentication
-      strength is layered — credentials by default, with multi-factor authentication
-      available — and recovery paths preserve account ownership when a factor is
-      lost.
+      Authentication in the HDS-operated platform is mediated by the
+      access-token primitive: the bearer of a valid token has been
+      authenticated, and no anonymous access to ePHI is possible from the API.
+      HDS has decided and dated its own multi-factor position: MFA is
+      mandatory for HDS workforce and operator access, and available but not
+      mandated for end users. Recovery paths preserve account ownership when a
+      factor is lost.
     detail: |
-      Every request reaching ePHI must present a valid access token, so the platform
-      verifies the requester before any access is granted. HDS operates this stack
-      and can require multi-factor authentication where the implementer's risk
-      profile calls for it; the achievable assurance level depends on which factor
-      method is configured. HDS documents the authentication policy in effect; the
-      implementer decides whether to require MFA universally or per-role.
+      Every request reaching ePHI through the API must present a valid access
+      token, so the platform verifies the requester before any access is
+      granted; credentials are stored one-way hashed in a separately
+      access-controlled namespace. The MFA mandate covers the provider
+      consoles, the code-hosting organisation carrying deploy rights, and
+      administrative access to the platform hosts, because those are the
+      surfaces from which production can be reached. It is attested by the
+      Security Official rather than demonstrated by a captured configuration
+      record, and HDS records that evidence gap as an accepted residual. This
+      control governs the platform path; privileged infrastructure access is a
+      separate path covered under access authorization. An implementer decides
+      the MFA position for its own workforce and its own users.
     technical: |
       Access-token authentication on every request; configurable multi-factor
       authentication; account-recovery paths.
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/policies/authentication
@@ -1896,6 +1995,7 @@ requirements:
       integration hop it controls) preserve the same protection.
     technical: |
       TLS for all API transmission; no plaintext endpoint served.
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/policies/transmission-security
@@ -1943,6 +2043,7 @@ requirements:
     technical: |
       TLS authenticated-encryption provides in-transit integrity detection on every
       connection.
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/policies/transmission-security
@@ -1989,6 +2090,7 @@ requirements:
     technical: |
       TLS encryption default-on for all ePHI transmission; certificate lifecycle
       operated by HDS.
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/policies/transmission-security
@@ -2034,6 +2136,7 @@ requirements:
       template (templates/baa), supplies the technical-safeguards evidence the
       contract relies on, and flows obligations down to its own subcontractors
       via back-to-back agreements tracked in the BAA register.
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/registers/baa-register
@@ -2080,6 +2183,7 @@ requirements:
       access control, audit logging, encryption, monitoring and regional
       residency. This gives the contractual "reasonable and appropriate
       safeguards" clause a concrete, auditable backing.
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/registers/baa-register
@@ -2126,6 +2230,7 @@ requirements:
       BAA's notification clause defines the channel and timing for reporting to
       the implementer; HDS's incident-response procedure governs how that report
       is produced and what evidence it carries.
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/registers/baa-register
@@ -2163,15 +2268,17 @@ requirements:
     facilitation_mode: evidence
     regions: [us, ch]
     overview: |
-      Acting as a Business Associate, HDS executes back-to-back agreements with
-      each subcontractor that may touch ePHI and tracks them in its BAA register.
-      HDS also provides the implementer a subcontractor agreement template to
-      flow the same obligations down their own chain.
+      HDS executes back-to-back agreements with each subcontractor that may
+      touch ePHI and tracks them in its BAA register, so the flow-down exists
+      wherever a BAA is in force. HDS also provides the implementer a
+      subcontractor agreement template to flow the same obligations down their
+      own chain.
     detail: |
       HDS maintains a current list of its ePHI-relevant subprocessors and holds a
       written contract with each that flows down the applicable Security Rule
       obligations. The subprocessor list is made available to implementers so
       they can satisfy their own §164.314(a)(2)(ii)(B) due diligence.
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/registers/baa-register
@@ -2218,6 +2325,7 @@ requirements:
       matrix as the administrative backing for the technical controls. The
       implementer cannot inherit these policies for its own organisation, but can
       cite HDS's programme where HDS operates the underlying system.
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/policies/information-security-policy
@@ -2264,6 +2372,7 @@ requirements:
       the per-user audit log (Pryv layer) supplies the automatic operational
       record. The implementer keeps the equivalent documentation for its own
       programme.
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/policies/documentation-and-retention
@@ -2308,6 +2417,7 @@ requirements:
       subject-level data and audit records, retention is configured per the
       implementer's lawful basis and contractual instructions; the implementer
       retains its own documentation independently.
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/policies/documentation-and-retention
@@ -2351,6 +2461,7 @@ requirements:
       that prompt an out-of-cycle update. Each policy and register carries its
       review history. The implementer runs its own review cycle for the
       documentation it owns.
+    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/policies/documentation-and-retention
