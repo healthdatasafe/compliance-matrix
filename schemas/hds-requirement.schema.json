@@ -122,6 +122,10 @@
           },
           "uniqueItems": true
         },
+        "evidence_approved": {
+          "const": true,
+          "description": "GENERATED — never hand-write it. Set by scripts/evidence-status.js when EVERY internal document this row cites has completed approval in compliance-internal; removed otherwise. Deliberately one-sided: `true` or absent, never `false`. A row that cites nothing, or cites a document still in review, simply carries no flag, so the site can make the positive claim 'backed by approved documentation' without publishing which particular documents are unapproved. Do not read absence as a negative claim — most absences are rows with no internal citation at all. This is a DIFFERENT axis from the row-level `draft` flag, which records whether a second reader checked the matrix wording and says nothing about whether HDS holds the control."
+        },
         "planned": {
           "type": "array",
           "description": "Queued work whose delivery would change this row's claim, each entry backed by evidence it is actually coming (a compliance-internal document moving through review, a public tracking issue, or a vendored upstream proposal). Rendered as one chip per entry alongside the coverage badge; scope pages filter on it. THIS REPO IS PUBLIC: reference only internal document CODES, public URLs, or vendored paths \u2014 never private workspace paths or plan numbers.",

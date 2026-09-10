@@ -33,6 +33,23 @@ export function plannedChips (planned = []) {
   }).join('');
 }
 
+/**
+ * The per-row documentation-backing marker. ONE-SIDED ON PURPOSE: it is shown
+ * when every internal document the row cites has completed approval, and
+ * nothing at all is shown otherwise, so the page never publishes which
+ * particular documents are still in review. Absence has three different causes
+ * — no internal citation, a citation still in review, or a row HDS does not
+ * answer from documentation — and the tooltip says so, because a reader who
+ * reads absence as "not backed" would be drawing a conclusion the data does not
+ * support. The scope-level counts on the standing page remain the honest
+ * aggregate measure; this is the same signal at row granularity.
+ */
+export const backingMarker = (hds = {}) => (hds.evidence_approved === true
+  ? '<span class="apv" title="Every internal document cited by this row has completed approval. ' +
+    'The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">' +
+    '✓ backed by approved documentation</span>'
+  : '');
+
 export function evidenceList (ev = {}) {
   return [
     ...(ev.tests || []).map((x) => `test: ${esc(x)}`),
@@ -71,6 +88,7 @@ export function requirementCard (r, pryvRow = {}) {
       <p>${esc(hds.overview)}</p>
       ${hds.detail ? `<details><summary>detail</summary><p>${esc(hds.detail)}</p></details>` : ''}
       ${ev.length ? `<ul class="ev">${ev.map((x) => `<li>${x}</li>`).join('')}</ul>` : ''}
+      ${backingMarker(hds)}
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>

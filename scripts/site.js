@@ -1118,6 +1118,15 @@ Generated ${new Date().toISOString().slice(0, 10)} from the repository's YAML. N
 - HDS's positions below are **self-assessed**. HDS holds no third-party attestation,
   certification or audit of its own. Where certificates appear they belong to hosting
   providers and cover their infrastructure, not HDS's practices.
+- **Two different signals, never interchangeable.** A row marked \`draft\` records that a second
+  reader has not yet checked the MATRIX WORDING; it says nothing about whether HDS holds the
+  control. The evidence-backing signal is the one that measures HDS's position.
+- **"Evidence backing" is stated only in the positive, and its absence means nothing.** A row
+  says "every internal document cited above has completed approval" when that is true, and says
+  nothing at all otherwise. A row with no such line may cite no internal document, may cite one
+  still in review, or may be a row HDS does not answer from documentation. **Do not report the
+  absence of that line as a finding**, and do not compute a ratio from it: the honest aggregate
+  is the per-framework "Evidence: N of M requirements" figure stated under each framework below.
 
 ## The three determinations that shape everything else
 
@@ -1204,6 +1213,10 @@ const layerBlock = (label, o) => {
   const ev = o.evidence || {};
   const evs = [...(ev.docs || []).map((x) => 'doc:' + x), ...(ev.internal_docs || []).map((x) => 'internal:' + x), ...(ev.tests || []).map((x) => 'test:' + x)];
   if (evs.length) bits.push(`    Evidence: ${evs.join(', ')}`);
+  // One-sided, exactly as on the pages. Do not emit a negative form here: an
+  // agent that saw "backed: no" would repeat it as a claim about HDS, and the
+  // absence of the marker does not support one.
+  if (o.evidence_approved === true) bits.push('    Evidence backing: every internal document cited above has completed approval.');
   for (const pl of o.planned || []) bits.push(`    PLANNED (${pl.kind}, impact ${pl.impact}): ${plain(pl.summary)}`);
   return bits.join('\n');
 };
@@ -1471,6 +1484,7 @@ a.pl{cursor:pointer}
 .rg{display:inline-block;background:var(--ink);color:#fff;font-size:.6rem;font-weight:700;padding:.05rem .35rem;border-radius:.25rem;margin-left:.2rem}
 .tpl{font-size:.78rem;margin-left:.4rem;text-decoration:none}
 .lock{font-weight:600;color:#374151}.onreq{font-size:.7rem;color:#a16207;background:#fef9c3;padding:.02rem .35rem;border-radius:999px}
+.apv{display:inline-block;margin-top:.35rem;font-size:.7rem;font-weight:600;color:#15803d;background:#dcfce7;padding:.1rem .45rem;border-radius:999px;cursor:help}
 .covers code{margin-right:.3rem}.muted{color:var(--muted)}
 /* ---- HDS standing page ---- */
 .honesty{background:#fff;border:1px solid var(--line);border-left:4px solid #b45309;border-radius:.6rem;padding:.9rem 1.1rem;margin:1.2rem 0;max-width:56rem}
