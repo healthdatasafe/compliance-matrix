@@ -12,14 +12,16 @@ HDS's own position on GDPR:
   Certificates HDS relies on but does NOT hold: AWS ISO/IEC 27001, 27017 and 27018 (us region hosting layer, obtained 2026-07-28)
   Evidence: 3 of 47 requirements answered from approved HDS documentation (41 cite internal evidence), as of 2026-09-10.
   HDS operates a GDPR programme rather than holding a GDPR credential. A Data Protection
-  Officer was designated on 2026-07-17, a processor-side record of processing activities
-  under Art.30 is maintained with eight live activities, and the platform supplies the
-  technical measures the articles require. This is the least settled of the four
-  frameworks on paper: three requirements rest on fully approved documentation and
-  thirty-eight more are evidenced by documents still in review. The two material open
-  items are the transfer stack for the US hosting layer, where the AWS DPA, the EU and
-  Swiss standard contractual clauses and the transfer impact assessment are not yet
-  executed, and HDS's own DPIA process, which is drafted but not yet operating.
+  Officer was designated on 2026-07-17, a controller-side record of processing activities
+  under Art.30(1) is maintained with eight live activities, and the platform supplies the
+  technical measures the articles require. The Art.30(2) processor record is deliberately
+  empty: HDS processes on no controller's instructions, so there is nothing true to record
+  there. This is the least settled of the four frameworks on paper: three requirements
+  rest on fully approved documentation and thirty-eight more are evidenced by documents
+  still in review. The two material open items are the transfer stack for the US hosting
+  layer, where the AWS DPA, the EU and Swiss standard contractual clauses and the transfer
+  impact assessment are not yet executed, and HDS's own DPIA process, which is drafted but
+  not yet operating.
   NOTE: HDS is not an Art.28 processor for this product, and the matrix does not offer
   that arrangement. Art.28(3) requires processing on the controller's documented
   instructions, assistance with data subject rights, and deletion or return of the data at
@@ -1325,9 +1327,12 @@ HDS's own position on GDPR:
     PLANNED (feature, impact medium): Read-only effective-configuration endpoint turns the §1(g) description of technical security measures into emitable evidence
   HDS: facilitated (effort saved: medium) (mode: evidence)
     The combination of access, clientData, audit, CMC and data-residency lets much of the
-    Art.30 register be derived per subject and per time window — who, what, why, when,
+    Art.30 register be derived per subject and per time window: who, what, why, when,
     recipients, transfers, retention. A platform-generated, complete register is a known
-    gap; each operator keeps its own. HDS maintains its own processor-side record.
+    gap; each operator keeps its own. HDS maintains its own Art.30(1) controller record,
+    populated with eight live processing activities. Its Art.30(2) processor record is
+    deliberately empty and stays that way while HDS processes on no controller's
+    instructions.
     Detail: Register fields map onto platform sources: purpose to access clientData, data
     categories to event class/format, recipients to counterparty accesses, transfers to
     counterparty host plus chosen hosting, retention to clientData and access expiry. The

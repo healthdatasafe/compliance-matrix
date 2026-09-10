@@ -755,14 +755,16 @@ HDS's own position on Swiss nLPD:
     personnel processing low-risk data. The register substrate is available regardless;
     whether it's required is operator-side legal judgement.
   HDS: facilitated (effort saved: high) (mode: evidence)
-    HDS supplies the technical register substrate — access, client-data, audit and
-    data-residency records describe much of the processing. The register as a maintained
-    document is a known gap: HDS does not generate or keep the controller's register, which
-    the controller must author.
-    Detail: The nLPD's small-enterprise exception drops the obligation for low-risk
-    processing under the prescribed threshold; whether it applies is the controller's legal
-    judgement. The substrate is available regardless, but the register document itself is
-    the controller's and processor's to maintain.
+    HDS supplies the technical register substrate: access, client-data, audit and
+    data-residency records describe much of the processing. HDS also maintains its own
+    register as controller, carrying eight live processing activities. What it does not do
+    is generate or keep an implementer's register, which the implementer must author.
+    Detail: The nLPD's small-enterprise exception does not reach large-scale processing of
+    sensitive personal data, and hosting health records is exactly that, so an implementer
+    handling health data should not expect the exemption to drop this obligation; whether it
+    applies to its own processing at all remains its legal judgement. The substrate is
+    available regardless, and the register document itself stays the controller's to author
+    and maintain.
     Evidence: internal:gdpr/registers/records-of-processing
     PLANNED (doc, impact low): HDS's processor-side register is populated with its live processing activities. What remains is narrower: retention periods are not set for the recruitment, CRM and contact-mailbox rows, and the Art.30(2) half stays empty until the first partner DPA is executed, which the register states rather than filling with a fictional row.
   IMPLEMENTER [controller] coverage: documented

@@ -60,12 +60,15 @@ HDS's own position on HIPAA-Security:
     maintained programme that is reviewed periodically. The programme rests on a risk
     analysis that has been conducted, rated, reviewed and approved, with a treatment
     register keyed to its findings, and on an approved sanction policy; the analysis and
-    register are held internally and released on request. Only the activity-review
-    specification carries its own row in this matrix, because it is the only one of the four
-    with a platform contribution to describe; the other three are wholly organizational and
-    are evidenced by the internal documents cited here. For a partner acting as Covered
-    Entity or upstream BA, this is a programme they must run themselves; HDS supplies the
-    technical raw material and its own programme as evidence of operator diligence.
+    register are held internally and released on request. Three of the four specifications
+    carry their own row here: risk analysis (ii)(A), risk management (ii)(B) and
+    information-system activity review (ii)(D). Only the sanction policy (ii)(C) has none,
+    being wholly organizational and evidenced by the internal documents cited on this row.
+    This umbrella row does not assert that any specification is fully operational: that
+    status is held once, in the treatment register, and reading it alongside the programme
+    gives the honest current position. For a partner acting as Covered Entity or upstream
+    BA, this is a programme they must run themselves; HDS supplies the technical raw
+    material and its own programme as evidence of operator diligence.
     Evidence: internal:hipaa/policies/security-management-process, internal:shared/registers/technology-stack, internal:shared/registers/data-residency-regions
     Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
@@ -85,11 +88,13 @@ HDS's own position on HIPAA-Security:
   protected health information held by the covered entity or business associate.
   Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-308-a-1-ii-a
   HDS: implemented (effort saved: low)
-    HDS has conducted its own risk analysis over the ePHI it holds as operator: an asset
-    inventory covering every class in scope, a register of rated risks, and a documented
-    method. It was reviewed and approved through the internal sign-off process. Each partner
-    conducts its own analysis over its own workload; a risk analysis is not a thing one
-    entity can perform on another's behalf.
+    HDS has conducted its own risk analysis over the ePHI it will hold as operator: an asset
+    inventory covering every class in scope, a register of twenty rated risks, and a
+    documented method. It was reviewed and approved through the internal sign-off process.
+    The ratings are deliberately made against a populated platform even though no real
+    patient data is held yet, so that nothing reads Low on the day real records arrive. Each
+    partner conducts its own analysis over its own workload; a risk analysis is not a thing
+    one entity can perform on another's behalf.
     Detail: This specification is wholly organizational: no platform feature discharges it.
     What HDS contributes to a partner's own analysis is the control inventory in this matrix
     and the technology-stack register, which shorten the asset-identification step
@@ -1183,9 +1188,13 @@ HDS's own position on HIPAA-Security:
     Detail: Audit controls are a native, always-on property of the platform: each API
     invocation against a subject's data produces an audit record scoped to that subject. The
     log captures who did what, when, and via which access, and is retrievable for routine
-    review and incident investigation. HDS operates and retains this substrate; the
-    implementer defines the written review cadence (see §164.308(a)(1)(ii)(D)) and who
-    performs it.
+    review and incident investigation. One dependency is worth naming: the record has to
+    survive recovery. A restore that returns the data without its audit trail is not a
+    successful restore for this control, because the four-factor breach assessment rests on
+    being able to say whether PHI was acquired or viewed for the period before the restore.
+    HDS records that dependency as an open risk-analysis item. HDS operates and retains this
+    substrate; the implementer defines the written review cadence (see
+    §164.308(a)(1)(ii)(D)) and who performs it.
     Evidence: internal:hipaa/policies/audit-controls
     Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented

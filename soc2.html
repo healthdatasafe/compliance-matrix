@@ -578,12 +578,18 @@ drive your risk assessment.
       </div>
     </div>
   </div>
-</article><article class="req" id="req-cc3-2" data-coverage="documented" data-personas="service-organization user-entity subservice-organization" data-text="cc3.2 cc3.2 — identification and analysis of risk a formal risk assessment is each organization's own methodology and findings.
-hds is honest that its own formal risk assessment is not yet conducted — a
-known gap being matured. what hds contributes is the inventory of technical
-controls (this matrix, especially the cc6 access and cc6.6/6.7 boundary and
-cryptography rows), so when a confidentiality, integrity or availability risk
-is identified, the control that addresses it is mechanical to locate.
+</article><article class="req" id="req-cc3-2" data-coverage="documented" data-personas="service-organization user-entity subservice-organization" data-text="cc3.2 cc3.2 — identification and analysis of risk a formal risk assessment is each organization's own methodology and
+findings. hds has an approved security risk analysis covering the
+platform, all hosting regions and the access paths to them, with a
+treatment register keyed to it. what has not been run is the soc
+2-specific half: cc3.2 reaches wider than ephi security, to risks
+against the other trust-services objectives, and hds states that gap
+plainly rather than presenting the security analysis as the whole. what
+hds contributes to an attesting organization is the inventory of
+technical controls (this matrix, especially the cc6 access and cc6.6/6.7
+boundary and cryptography rows), so when a confidentiality, integrity or
+availability risk is identified, the control that addresses it is
+mechanical to locate.
 " data-planned="1">
   <h3><code>CC3.2</code> CC3.2 — Identification and analysis of risk </h3>
   <p class="text">The entity identifies risks to the achievement of its objectives across the
@@ -603,12 +609,18 @@ rather than judgemental.
     </div>
     <div class="layer hds">
       <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span> <span class="pl medium" title="The formal risk analysis is conducted, rated and approved for the security objective. Extending it to the non-security trust-services objectives (availability, confidentiality, processing integrity, privacy) is the tracked remainder; the fraud consideration is carried at CC3.3. — 🔒 hipaa/risk/risk-analysis">⏳ doc</span></div>
-      <p>A formal risk assessment is each organization's own methodology and findings.
-HDS is honest that its own formal risk assessment is not yet conducted — a
-known gap being matured. What HDS contributes is the inventory of technical
-controls (this matrix, especially the CC6 access and CC6.6/6.7 boundary and
-cryptography rows), so when a confidentiality, integrity or availability risk
-is identified, the control that addresses it is mechanical to locate.
+      <p>A formal risk assessment is each organization's own methodology and
+findings. HDS has an approved security risk analysis covering the
+platform, all hosting regions and the access paths to them, with a
+treatment register keyed to it. What has not been run is the SOC
+2-specific half: CC3.2 reaches wider than ePHI security, to risks
+against the other trust-services objectives, and HDS states that gap
+plainly rather than presenting the security analysis as the whole. What
+HDS contributes to an attesting organization is the inventory of
+technical controls (this matrix, especially the CC6 access and CC6.6/6.7
+boundary and cryptography rows), so when a confidentiality, integrity or
+availability risk is identified, the control that addresses it is
+mechanical to locate.
 </p>
       <details><summary>detail</summary><p>HDS treats its own risk assessment as an operator obligation in progress and
 states the gap plainly rather than claiming a completed assessment. Its
@@ -669,11 +681,13 @@ substrate; the fraud-risk analysis itself (which scenarios matter, what
 thresholds trigger review) is each organization's assessment.
 </p>
       <details><summary>detail</summary><p>HDS contributes the technical means to detect the fraud scenarios an
-assessment identifies: attributable audit records and anomaly signals from
-monitoring. The analytical step — deciding which fraud risks are in scope and
-how to respond — is governance and depends on the formal risk assessment
-(see CC3.2, a known gap on the HDS side). A partner runs its own fraud-risk
-analysis over the same substrate.
+assessment identifies: attributable audit records and anomaly signals
+from monitoring. The analytical step, deciding which fraud risks are in
+scope and how to respond, is governance. HDS's approved security risk
+analysis does not assess the potential for fraud, which is a wider
+question than ePHI security, so that consideration is the outstanding
+half here (see CC3.2). A partner runs its own fraud-risk analysis over
+the same substrate.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/audit-controls</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 soc2/procedures/risk-assessment</span> <span class="onreq">available on request</span></li></ul>
       

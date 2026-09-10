@@ -37,7 +37,7 @@
     <p>The individual's vault. HDS determines the purposes and means of operating it, so HDS is the Art.4(7) controller. Data enters only with the individual's explicit consent, and the individual decides who may access it afterwards.
 </p>
   </div></div>
-      <p class="stmt">HDS operates a GDPR programme rather than holding a GDPR credential. A Data Protection Officer was designated on 2026-07-17, a processor-side record of processing activities under Art.30 is maintained with eight live activities, and the platform supplies the technical measures the articles require. This is the least settled of the four frameworks on paper: three requirements rest on fully approved documentation and thirty-eight more are evidenced by documents still in review. The two material open items are the transfer stack for the US hosting layer, where the AWS DPA, the EU and Swiss standard contractual clauses and the transfer impact assessment are not yet executed, and HDS's own DPIA process, which is drafted but not yet operating.
+      <p class="stmt">HDS operates a GDPR programme rather than holding a GDPR credential. A Data Protection Officer was designated on 2026-07-17, a controller-side record of processing activities under Art.30(1) is maintained with eight live activities, and the platform supplies the technical measures the articles require. The Art.30(2) processor record is deliberately empty: HDS processes on no controller's instructions, so there is nothing true to record there. This is the least settled of the four frameworks on paper: three requirements rest on fully approved documentation and thirty-eight more are evidenced by documents still in review. The two material open items are the transfer stack for the US hosting layer, where the AWS DPA, the EU and Swiss standard contractual clauses and the transfer impact assessment are not yet executed, and HDS's own DPIA process, which is drafted but not yet operating.
 </p>
       <p class="notproc"><b>What building on HDS does not create.</b>
         HDS is not an Art.28 processor for this product, and the matrix does not offer that arrangement. Art.28(3) requires processing on the controller's documented instructions, assistance with data subject rights, and deletion or return of the data at the controller's choice. HDS acts on the individual's permissions, the individual exercises their rights directly from their own dashboard, and HDS cannot delete an individual's vault at a third party's direction. An organisation that receives data an individual chose to share with it is an independent controller of what it holds, not a controller instructing HDS. Any future engagement in which HDS genuinely does process on instructions falls outside this matrix and carries its own documentation.
@@ -1600,11 +1600,14 @@ subprocessor on equivalent terms.
       </div>
     </div>
   </div>
-</article><article class="req" id="req-art-30" data-coverage="facilitated" data-personas="controller processor" data-text="art.30 records of processing activities the combination of access, clientdata, audit, cmc and data-residency lets
-much of the art.30 register be derived per subject and per time window —
-who, what, why, when, recipients, transfers, retention. a
-platform-generated, complete register is a known gap; each operator keeps
-its own. hds maintains its own processor-side record.
+</article><article class="req" id="req-art-30" data-coverage="facilitated" data-personas="controller processor" data-text="art.30 records of processing activities the combination of access, clientdata, audit, cmc and data-residency
+lets much of the art.30 register be derived per subject and per time
+window: who, what, why, when, recipients, transfers, retention. a
+platform-generated, complete register is a known gap; each operator
+keeps its own. hds maintains its own art.30(1) controller record,
+populated with eight live processing activities. its art.30(2)
+processor record is deliberately empty and stays that way while hds
+processes on no controller's instructions.
 " data-planned="1">
   <h3><code>Art.30</code> Records of processing activities </h3>
   <p class="text">Each controller and processor must maintain a record of its processing
@@ -1622,11 +1625,14 @@ and per-time-window from primitives Pryv records continuously.
     </div>
     <div class="layer hds">
       <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">CH</span><span class="rg">US</span> <span class="pl medium" title="HDS's processor-side register is populated with its live processing activities. What remains is narrower: retention periods are not set for the recruitment, CRM and contact-mailbox rows, and the Art.30(2) half stays empty until the first partner DPA is executed, which the register states rather than filling with a fictional row. — 🔒 gdpr/registers/records-of-processing">⏳ doc</span></div>
-      <p>The combination of access, clientData, audit, CMC and data-residency lets
-much of the Art.30 register be derived per subject and per time window —
-who, what, why, when, recipients, transfers, retention. A
-platform-generated, complete register is a known gap; each operator keeps
-its own. HDS maintains its own processor-side record.
+      <p>The combination of access, clientData, audit, CMC and data-residency
+lets much of the Art.30 register be derived per subject and per time
+window: who, what, why, when, recipients, transfers, retention. A
+platform-generated, complete register is a known gap; each operator
+keeps its own. HDS maintains its own Art.30(1) controller record,
+populated with eight live processing activities. Its Art.30(2)
+processor record is deliberately empty and stays that way while HDS
+processes on no controller's instructions.
 </p>
       <details><summary>detail</summary><p>Register fields map onto platform sources: purpose to access clientData,
 data categories to event class/format, recipients to counterparty
