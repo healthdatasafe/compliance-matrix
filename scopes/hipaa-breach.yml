@@ -319,11 +319,15 @@ requirements:
         individuals, but composing and delivering the notices is the covered
         entity's operational responsibility.
       detail: |
-        HDS is not a bulk-notification system. The contribution is identification:
-        filtering the audit log by the implicated credential and time window yields
-        the distinct set of affected subjects, with evidence. Producing the roster
-        and the per-recipient delivery sit with the covered entity, who carries
-        this duty.
+        HDS is not a bulk-notification system. The contribution is
+        identification: filtering the audit log by the implicated credential
+        and time window yields the distinct set of affected subjects, with
+        evidence. Producing the roster and the per-recipient delivery sit with
+        the covered entity, who carries this duty. Where no covered entity is
+        party to the relationship, which is the vault's own case, HIPAA does
+        not reach the event at all and any duty to notify individuals arises
+        under the FTC Health Breach Notification Rule, which sets its own
+        delivery requirements. This matrix has no scope for that rule yet.
       evidence_approved: true
       evidence:
         internal_docs:

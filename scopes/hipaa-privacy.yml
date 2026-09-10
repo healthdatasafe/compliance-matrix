@@ -888,10 +888,13 @@ requirements:
       facilitation_mode: storage
       regions: [us, ch]
       overview: |
-        HDS offers a Business Associate Agreement and the technical disclosure
-        mechanism: a BA-specific access tagged with its role and contract
-        reference, scoped to the subjects and streams the BAA covers. HDS itself
-        signs a BAA when it acts as the business associate.
+        HDS offers a Business Associate Agreement template and the technical
+        disclosure mechanism: a BA-specific access tagged with its role and
+        contract reference, scoped to the subjects and streams the agreement
+        covers. HDS signs BAAs downstream, with the subcontractors that host
+        the data. It holds no upstream agreement: no covered entity or partner
+        customer has engaged HDS as its business associate, and in the vault
+        none arises, because access flows from the individual's own consent.
       detail: |
         Cross-platform business-associate arrangements inherit the cross-account
         capability pattern. The access carries its business-associate role and
@@ -1044,10 +1047,12 @@ requirements:
       facilitation_mode: storage
       regions: [us, ch]
       overview: |
-        As with the Security Rule's documentation requirement, HDS provides the
-        means to hold policies as versioned, retained, audited data on a
-        dedicated stream. The drafting, approval and review cycle is the privacy
-        officer's, and HDS maintains its own privacy policies as a BA.
+        As with the Security Rule's documentation requirement, HDS provides
+        the means to hold policies as versioned, retained, audited data on a
+        dedicated stream. The drafting, approval and review cycle is the
+        privacy officer's. HDS maintains its own privacy policies as a matter
+        of its own governance rather than as a duty this section places on it,
+        since §164.530 reaches covered entities.
       detail: |
         Policies-as-data on a dedicated compliance stream inherit versioning,
         retention and audit. The covered entity's policy programme is its own;
@@ -1214,11 +1219,13 @@ requirements:
         immediately, without a written-request intake).
       detail: |
         The request-intake artefact records receipt time and the resulting due
-        date. The substantive response is delivered through the §164.524 access
-        capability described in the parent row. Self-service via app-portability
-        eliminates the need for a §524(b)(2) timely-response procedure on the
-        individual-direct path; the timeline obligation remains operative on the
-        partner-mediated path (covered entity intake → HDS-as-BA fulfilment).
+        date. The substantive response is delivered through the §164.524
+        access capability described in the parent row. Self-service via
+        app-portability eliminates the need for a §524(b)(2) timely-response
+        procedure on the individual-direct path, which is the vault's own
+        case. The timeline obligation remains operative on the
+        partner-mediated path, where a covered entity takes the request in and
+        HDS fulfils it under whatever agreement is in force between them.
       evidence_approved: true
       evidence:
         docs:
@@ -1312,9 +1319,16 @@ requirements:
         client-data. The abuse, neglect and endangerment exceptions are clinical
         and legal judgements of the covered entity.
       detail: |
-        The exception pattern narrows or deletes the representative's access. HDS
-        stores the representative relationship and legal basis; the determination
-        of whether an exception applies is the implementer's.
+        The exception pattern narrows or deletes the representative's access.
+        HDS stores the representative relationship and legal basis; the
+        determination of whether an exception applies is the implementer's.
+        Where a covered entity is party to the relationship it verifies the
+        representative's legal authority before instructing HDS, and HDS does
+        not independently adjudicate that status. On the direct-to-individual
+        path, which is the vault's own case, HDS has no written intake or
+        verification procedure for representative status yet, and no evidence
+        template; it records that as pending remediation rather than implying
+        the check exists.
       evidence_approved: true
       evidence:
         internal_docs:
