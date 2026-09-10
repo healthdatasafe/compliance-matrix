@@ -675,14 +675,19 @@ requirements:
     overview: |
       Security-reminder cadence and content are an organisational awareness
       control with no software role. HDS runs reminders for its own workforce
-      and documents the programme; the artefact is available on request but
-      training delivery itself is not yet formalised as a verified programme.
+      as part of a workforce-training programme it operates continuously,
+      tracking certifications in a completion register and flagging overdue
+      members. Two pieces are still being assembled rather than absent: the
+      HDS-specific curriculum material, and the outstanding policy
+      acknowledgements. The written programme is available on request.
     detail: |
       HDS treats security reminders as part of its workforce-awareness
       programme, an operator artefact rather than a platform feature. The
-      written programme is cited as an internal document. Formal,
-      verified security-awareness training is a known gap being matured; each
-      partner runs its own reminder programme for its own workforce.
+      written programme is cited as an internal document and runs as a
+      continuous process against a completion register, with residual gaps
+      documented and addressed as they arise rather than blocking the
+      programme. Each partner runs its own reminder programme for its own
+      workforce.
     regions: [us, ch]
     evidence_approved: true
     evidence:
@@ -937,10 +942,13 @@ requirements:
     facilitation_mode: storage
     overview: |
       The platform produces per-user backup files (events, streams, accesses,
-      attachments) with a matching restore path, so the backup unit matches the
-      natural ePHI unit. HDS operates a backup schedule on top; automated,
-      regularly verified backups are still being formalised, so this is
-      facilitated rather than fully implemented.
+      attachments) with a matching restore path, so the backup unit matches
+      the natural ePHI unit. HDS runs the cycle automatically on a daily timer
+      on each regional core, first verified live on all cores on 2026-07-30,
+      with a host-side watchdog that alerts when an expected archive is
+      absent. What is not demonstrated is restore at production scale per
+      region, which is why this reads as facilitated rather than fully
+      implemented.
     detail: |
       HDS runs the backup primitive on a schedule and documents the plan
       (frequency, location, encryption-at-rest applied at the storage boundary).
