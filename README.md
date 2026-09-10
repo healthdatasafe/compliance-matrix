@@ -4,11 +4,21 @@ The compliance & regulation matrix for **Health Data Safe (HDS)** — the deploy
 platform and operations built on [open-pryv.io](https://github.com/pryv/open-pryv.io)
 plus the HDS stack (bridges, web app, libraries, data model, hosting).
 
-This repo answers two questions for every regulatory requirement:
+This repo answers three questions:
 
-1. **How is HDS compliant?** — what the platform and HDS operations handle for you.
-2. **What is still on your plate?** — what an organisation building on HDS must do
-   themselves, and **which agreement(s) they must sign** to do it.
+1. **How does HDS itself stand?** For each regulation, the role HDS holds, the
+   independent assurance it does and does not have, its named gaps, and how much
+   of its position rests on approved documentation. Per scope, in `hds_posture`.
+2. **What does HDS carry for you?** Per requirement, what the platform and HDS
+   operations handle on an implementer's behalf.
+3. **What is still on your plate?** What an organisation building on HDS must do
+   itself, filtered to what it is actually building, and **which agreement(s) it
+   must sign** to do it.
+
+The first question was added in September 2026 and is a **separate axis** from the
+second: HDS can carry a requirement completely for an implementer while holding no
+role at all under that regulation, which is exactly the HIPAA position. Never infer
+one from the other. See [`docs/hds-standing.md`](docs/hds-standing.md).
 
 > ⚠️ **Not legal advice.** This matrix and its templates are engineering and
 > operational guidance. Confirm your obligations with qualified counsel.
@@ -28,10 +38,22 @@ Coverage taxonomy (reused from Pryv) per layer: `implemented · configurable ·
 facilitated · documented · out-of-scope`. A claim without proof is a regression:
 `implemented`/`configurable` rows cite evidence; `documented` rows cite the doc.
 
-## Scopes
+## Scope of the matrix
 
-Starting with **HIPAA** (Security, Privacy, Breach Notification). Designed so
-**SOC 2, GDPR, ISO 27001/27701, Swiss nLPD, …** are added as *data*, not rebuilds.
+**This matrix covers the vault product.** Individuals hold their own HDS accounts,
+data enters only with their explicit consent, and they decide who may access it.
+HDS is therefore the controller of the vault, is nobody's GDPR Art.28 processor,
+and holds no HIPAA role there: consent is not delegation. An organisation that
+receives data an individual chose to share is an **independent controller** of
+what it then holds. Arrangements that would create a processor or business
+associate role are documented separately and are out of this matrix's scope.
+
+## Scopes covered
+
+**HIPAA** (Security, Privacy, Breach Notification), **GDPR**, **Swiss nLPD** and
+**SOC 2**: 229 requirements across six scope files. Designed so further scopes
+(ISO 27001/27701, …) are added as *data*, not rebuilds. See
+[`scopes/README.md`](scopes/README.md).
 
 ## Repository layout
 
@@ -42,7 +64,10 @@ templates/      Downloadable agreement templates (BAA, subcontractor, DPA, …)
 vendor/pryv/    Vendored snapshot of pryv/compliance-matrix (the platform layer)
                 — pinned commit in PINNED-COMMIT.txt; refreshed via npm run sync:pryv
 references/      (under vendor/pryv) canonical regulation sources
-schemas/, docs/ Methodology: coverage taxonomy, effort axis, glossary, how-to
+profiles.yml    Implementer-profile vocabulary: features, archetypes, scope rules
+families.yml    Display grouping (the three HIPAA rules present as one regulation)
+docs/           Methodology: standing axis, implementer profiles, coverage
+                taxonomy, effort axis, glossary, how-to-add-a-scope
 scripts/        build.js (YAML → dist/compliance.sqlite), validate.js (CI gate)
 wab/            The web app to browse the matrix (React + Vite) — adapted to the
                 HDS three-layer sqlite (2026-07-28); local-only (npm run dev), no deploy yet
@@ -56,7 +81,24 @@ npm install
 npm run validate      # schema + cross-reference checks (run before any commit)
 npm run build         # → dist/compliance.sqlite
 npm run build:all     # validate + build
+npm run site          # → dist/site/, INCLUDING the generated llms*.txt
+npm run evidence:status   # recompute evidence backing from compliance-internal
 ```
+
+`npm run validate` is the merge gate. After changing any content
+(`scopes/*.yml`, `profiles.yml`, `families.yml`, `templates/*.md`,
+`official-refs.yml`) run `npm run site`, because the `llms*.txt` files are
+generated from the same source and are the only form an AI agent can read. See
+the directive in [`AGENTS.md`](AGENTS.md).
+
+## Methodology docs
+
+| Doc | What it covers |
+|-----|----------------|
+| [`docs/hds-standing.md`](docs/hds-standing.md) | The standing axis, arrangements and roles, the gates that make an unearned assurance claim impossible, the evidence-backing numbers |
+| [`docs/implementer-profiles.md`](docs/implementer-profiles.md) | The feature vocabulary, the any-of rule, the untagged-is-shown invariant, how to add an area or a follow-up question |
+| [`docs/how-to-add-a-scope.md`](docs/how-to-add-a-scope.md) | Adding a regulation |
+| [`docs/effort-axis.md`](docs/effort-axis.md), [`docs/facilitation-typology.md`](docs/facilitation-typology.md), [`docs/glossary.md`](docs/glossary.md) | The coverage vocabulary |
 
 ## HTTPS for local development
 

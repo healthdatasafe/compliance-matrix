@@ -4,14 +4,44 @@ Welcome, agent. Fast orientation. Read this, then `README.md` for depth.
 
 ## What this repo is
 
-`compliance-matrix` maps **regulations and standards** (HIPAA first; then SOC 2,
-GDPR, ISO 27001/27701, Swiss nLPD, …) onto **Health Data Safe**: the deployed
-platform + operations built on [open-pryv.io](https://github.com/pryv/open-pryv.io)
-plus the HDS stack.
+`compliance-matrix` maps **regulations and standards** (HIPAA Security, Privacy
+and Breach, GDPR, Swiss nLPD and SOC 2 today; ISO 27001/27701 and others as added
+data) onto **Health Data Safe**: the deployed platform + operations built on
+[open-pryv.io](https://github.com/pryv/open-pryv.io) plus the HDS stack. It is
+published at <https://compliance.datasafe.dev>.
 
 It is **data + proof, not prose**: the matrix lives in YAML (`scopes/*.yml`),
 validates against JSON Schemas, and builds into SQLite browsed by the web app
 (`wab/`).
+
+## The three questions this repo answers
+
+1. **How does HDS itself stand?** `hds_posture` on each scope: the role HDS holds
+   in an arrangement, its independent assurance (or lack of it), its named gaps,
+   and how much of its position rests on approved documentation.
+2. **What does HDS carry for an implementer?** `hds.coverage` on each requirement.
+3. **What is still on the implementer's plate?** `implementer[]`, filtered to what
+   they are actually building via `profiles.yml`.
+
+**Questions 1 and 2 are independent axes. Never infer one from the other.** HDS
+carries every HIPAA Security requirement for an implementer and holds no HIPAA
+role itself in the vault. A third signal, the row-level `draft` flag, measures
+whether a second reader checked the matrix *wording* and is not a coverage or
+standing measure at all. Detail: [`docs/hds-standing.md`](docs/hds-standing.md).
+
+## Scope: the vault product
+
+Individuals hold their own accounts, data enters only with their explicit
+consent, and they decide who may access it. HDS is the controller of the vault,
+is nobody's Art.28 processor, and holds no HIPAA role there: consent is not
+delegation. An organisation receiving shared data is an **independent
+controller** of what it holds. Arrangements that would create a processor or
+business-associate role are documented separately and are out of scope here.
+
+**Do not write a row that says HDS is a business associate or a processor in the
+vault.** Nine rows said so in September 2026 while the standing page on the same
+site said the opposite, which is a contradiction a reader can see without any
+internal document.
 
 ## The three-layer model — read this first
 
@@ -28,11 +58,14 @@ HDS sits **between** Pryv and the implementer. Every requirement is answered acr
 ## Quick repo map
 
 ```
-scopes/         THE HDS MATRIX — one YAML per scope (HDS + implementer layers)
+scopes/         THE HDS MATRIX — one YAML per scope (posture + HDS + implementer)
+profiles.yml    Implementer-profile vocabulary: features, archetypes, scope rules
+families.yml    Display grouping (the three HIPAA rules present as one regulation)
 templates/      Agreement templates (BAA, subcontractor/subprocessor, DPA …)
 vendor/pryv/    Pinned snapshot of pryv/compliance-matrix (platform layer input)
 schemas/        JSON Schemas — the row format contract
-docs/           Methodology: coverage taxonomy, effort axis, glossary, how-to
+docs/           Methodology: hds-standing.md, implementer-profiles.md, coverage
+                taxonomy, effort axis, glossary, how-to-add-a-scope
 scripts/        build.js (YAML → dist/compliance.sqlite), validate.js (CI gate)
 wab/            Web app (React + Vite) — adapted to the HDS sqlite schema; local-only, no deploy yet
 ```
@@ -86,10 +119,26 @@ step with the source. Generation is what prevents that here.
   evidence; `documented` cite the doc.
 - Don't edit `vendor/pryv/` by hand — it's a generated snapshot. Propose platform
   changes upstream at [`pryv/open-pryv.io` issues](https://github.com/pryv/open-pryv.io/issues).
+- **`hds.evidence_approved` is GENERATED** by `scripts/evidence-status.js` and is
+  written only as `true`. Never hand-write it, and never render it negatively:
+  its absence has three different causes and supports no negative claim. See
+  [`docs/hds-standing.md`](docs/hds-standing.md).
+- **An obligation is hidden only when it carries an explicit `applies_when` and
+  every listed feature is off.** Untagged is always shown, marked "not yet
+  profiled". Silently concealing a real obligation is the one failure that
+  actually harms a reader.
+- **Match a row against the document it cites, not against what the control was
+  designed to do.** The internal documents name their open gaps; a row that
+  describes the designed control and omits the named gap overstates.
 - `npm run validate` is the merge gate.
 
 ## Status
 
-HIPAA (Security, Privacy, Breach) is in draft across all three layers, with the
-Pryv-sync script and agreement templates in place. Other scopes (SOC 2, GDPR,
-ISO) are planned as added data. All rows are `draft` pending review.
+Six scopes, 229 requirements: HIPAA (Security, Privacy, Breach), GDPR, Swiss nLPD
+and SOC 2. All 361 organisation-persona obligations are profiled; the rest show
+unfiltered and are marked as such. Four public pages are live at
+<https://compliance.datasafe.dev>.
+
+Most rows are still `draft`, which means the wording has not had a second reader,
+**not** that the control is absent. The honest measure of HDS's position is the
+per-scope `evidence_backing` count on the standing page.
