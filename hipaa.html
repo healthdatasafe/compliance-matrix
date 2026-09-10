@@ -1168,10 +1168,12 @@ records.
       </div>
     </div>
   </div>
-</article><article class="req" id="req-164-308-a-8" data-coverage="documented" data-personas="covered-entity business-associate individual" data-text="164.308(a)(8) evaluation — standard hds performs a periodic evaluation of its security programme, drawing on
-the audit log, operational monitoring, this matrix as a control inventory,
-and the platform's test results as control-effectiveness evidence. the
-evaluation write-up is held internally and shared on request.
+</article><article class="req" id="req-164-308-a-8" data-coverage="documented" data-personas="covered-entity business-associate individual" data-text="164.308(a)(8) evaluation — standard hds has defined a periodic evaluation of its security programme, drawing
+on the audit log, operational monitoring, this matrix as a control
+inventory, and the platform's test results as control-effectiveness
+evidence. the annual cadence is established and the procedure approved,
+but no cycle has completed yet, so this standard is defined rather than
+evidenced by a record.
 " data-planned="1">
   <h3><code>164.308(a)(8)</code> Evaluation — standard <span class="draft">draft</span></h3>
   <p class="text">Perform periodic technical and nontechnical evaluation, in response to
@@ -1199,19 +1201,24 @@ repositories). The assessment write-up is operator-side.
     </div>
     <div class="layer hds">
       <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span> <span class="pl low" title="A read-only effective-configuration endpoint queued upstream would supply the per-core technical baseline snapshot this evaluation is measured against, once shipped and deployed by HDS. — upstream: proposals/config-effective-exposure.md">⏳ platform</span></div>
-      <p>HDS performs a periodic evaluation of its security programme, drawing on
-the audit log, operational monitoring, this matrix as a control inventory,
-and the platform's test results as control-effectiveness evidence. The
-evaluation write-up is held internally and shared on request.
+      <p>HDS has defined a periodic evaluation of its security programme, drawing
+on the audit log, operational monitoring, this matrix as a control
+inventory, and the platform's test results as control-effectiveness
+evidence. The annual cadence is established and the procedure approved,
+but no cycle has completed yet, so this standard is defined rather than
+evidenced by a record.
 </p>
-      <details><summary>detail</summary><p>Inputs to the evaluation include audit-log samples, operational-stability
-data, this layered matrix as the inventory of controls to assess against,
-the platform's automated test suite as ongoing effectiveness evidence, and
-the upstream project's published security-advisory history (open-pryv.io's
-coordinated vulnerability disclosure program with GHSA/CVE issuance),
-checked against the release HDS deploys. HDS documents the cadence and
-findings; a partner runs its own periodic evaluation for its own
-programme.
+      <details><summary>detail</summary><p>Inputs to the evaluation include audit-log samples,
+operational-stability data, this layered matrix as the inventory of
+controls to assess against, the platform's automated test suite as
+ongoing effectiveness evidence, and the upstream project's published
+security-advisory history (open-pryv.io's coordinated vulnerability
+disclosure program with GHSA/CVE issuance), checked against the release
+HDS deploys. The procedure also requires re-verifying that controls
+previously evidenced are still in force, since a rebuild or provider
+change can silently regress one. HDS documents the cadence and the
+inputs; the first evaluation report is still to be produced. A partner
+runs its own periodic evaluation for its own programme.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/procedures/periodic-evaluation</span> <span class="onreq">available on request</span></li></ul>
       <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
@@ -1548,11 +1555,15 @@ at-rest encryption to any export you move off the platform, documenting the move
       </div>
     </div>
   </div>
-</article><article class="req" id="req-164-312-a-1" data-coverage="implemented" data-personas="covered-entity business-associate individual" data-text="164.312(a)(1) access control — standard hds deploys open-pryv.io with per-user data isolation and per-stream access
-tokens enforced at every api call: a token can read or write only the streams
-its permissions list, at the level granted, with no trust-based bypass path.
-access control is therefore a technical property of the api surface that hds
-operates, not a downstream policy layer.
+</article><article class="req" id="req-164-312-a-1" data-coverage="implemented" data-personas="covered-entity business-associate individual" data-text="164.312(a)(1) access control — standard hds deploys open-pryv.io with per-user data isolation and per-stream
+access tokens enforced at every api call: a token can read or write only
+the streams its permissions list, at the level granted. on that platform
+path there is no trust-based bypass, and no hds role can grant itself an
+access into a user account. access control is therefore a technical
+property of the api surface hds operates rather than a downstream policy
+layer. infrastructure access is a separate path that the api does not
+mediate, and it is bounded by authorisation rather than by this
+mechanism (see §164.308(a)(4)(ii)(b)).
 " data-planned="0">
   <h3><code>164.312(a)(1)</code> Access control — standard <span class="draft">draft</span></h3>
   <p class="text">Implement technical policies and procedures for electronic information
@@ -1572,11 +1583,15 @@ controlled namespace.
     </div>
     <div class="layer hds">
       <div class="lh">HDS <span class="b implemented">implemented</span> <span class="rg">US</span><span class="rg">CH</span> </div>
-      <p>HDS deploys open-pryv.io with per-user data isolation and per-stream access
-tokens enforced at every API call: a token can read or write only the streams
-its permissions list, at the level granted, with no trust-based bypass path.
-Access control is therefore a technical property of the API surface that HDS
-operates, not a downstream policy layer.
+      <p>HDS deploys open-pryv.io with per-user data isolation and per-stream
+access tokens enforced at every API call: a token can read or write only
+the streams its permissions list, at the level granted. On that platform
+path there is no trust-based bypass, and no HDS role can grant itself an
+access into a user account. Access control is therefore a technical
+property of the API surface HDS operates rather than a downstream policy
+layer. Infrastructure access is a separate path that the API does not
+mediate, and it is bounded by authorisation rather than by this
+mechanism (see §164.308(a)(4)(ii)(B)).
 </p>
       <details><summary>detail</summary><p>Each subject's data is isolated per user, and access by any person or program
 is mediated by an access token carrying explicit per-stream, per-level
@@ -1765,13 +1780,17 @@ lifetime and per-grant access-token expiry can both be bounded, so a session
 or token becomes inert automatically once its window passes. HDS operates the
 mechanism; the implementer sets the timeouts appropriate to its workflow.
 </p>
-      <details><summary>detail</summary><p>HIPAA's automatic-logoff specification is workstation-centric in origin; in an
-HDS-mediated workflow the analogous control is the validity window of the
-session and access token. The platform supports a bounded interactive session
-lifetime for workforce sessions and a per-grant token expiry for app-driven
-processes, covering both shapes. HDS documents the configured defaults; the
-implementer tunes them and documents the rationale for the chosen inactivity
-window (the &quot;Addressable&quot; path).
+      <details><summary>detail</summary><p>HIPAA's automatic-logoff specification is workstation-centric in origin;
+in an HDS-mediated workflow the analogous control is the validity window
+of the session and access token. The platform supports a bounded
+interactive session lifetime for workforce sessions and a per-grant
+token expiry for app-driven processes, covering both shapes. On the
+vault these values sit with the account holder: the approved policy
+places session lifetime and per-grant token expiry under the end user's
+control and approval, which is a consequence of the data being theirs.
+An implementer tunes what it can set for its own workforce and documents
+the rationale for the chosen inactivity window, which is the Addressable
+path.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/access-control</span> <span class="onreq">available on request</span></li></ul>
       <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
@@ -1981,12 +2000,19 @@ the audit log pins who-changed-what-when, and operational backups provide a
 recovery path if a destruction event must be reversed. The overall integrity
 programme remains the implementer's; the technical substrate is HDS-operated.
 </p>
-      <details><summary>detail</summary><p>Improper alteration is constrained because only tokens with write permission
-on a stream can modify it, and modifications are versioned so the prior state
-is retained. Improper destruction is mitigated by per-user export/backup as a
-recovery path. The audit log ties every change to an authenticated access
-identity. HDS operates these primitives and documents its integrity policy;
-the implementer owns the surrounding procedural obligation.
+      <details><summary>detail</summary><p>Improper alteration is constrained because only tokens with write
+permission on a stream can modify it, and modifications are versioned so
+the prior state is retained. The audit log ties every change to an
+authenticated access identity, on the platform path; privileged
+infrastructure access is a separate path covered under
+§164.308(a)(4)(ii)(B). Improper destruction is mitigated by per-user
+export and backup as a recovery path, with one dependency worth naming:
+the audit history has to return with the data, since a restore that
+brings back the records but not who touched them leaves improper
+alteration undetectable afterwards. How far that recovery capability is
+demonstrated is tracked as an open risk-analysis item rather than
+asserted here. HDS operates these primitives and documents its integrity
+policy; the implementer owns the surrounding procedural obligation.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/integrity</span> <span class="onreq">available on request</span></li></ul>
       <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
@@ -2346,11 +2372,15 @@ assurances (audit, access control, monitoring, regional residency) that
 back it, and signs BAAs with its own subcontractors. The contract itself
 is executed between the parties.
 </p>
-      <details><summary>detail</summary><p>When a partner acting as a Covered Entity or upstream Business Associate
-processes ePHI on HDS, HDS is their Business Associate. HDS offers the BAA
-template (templates/baa), supplies the technical-safeguards evidence the
-contract relies on, and flows obligations down to its own subcontractors
-via back-to-back agreements tracked in the BAA register.
+      <details><summary>detail</summary><p>The vault creates no business associate relationship, because access
+flows from the individual's consent rather than from a covered entity's
+delegation. The arrangement in which an organisation places protected
+health information with HDS on its own behalf would create one, and that
+is where the template applies; no such agreement has been signed to
+date. What is executed today is the downstream half: back-to-back
+subcontractor agreements with the hosting providers, tracked in the BAA
+register. HDS offers the BAA template (templates/baa) and supplies the
+technical-safeguards evidence such a contract would rely on.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/registers/baa-register</span> <span class="onreq">available on request</span></li></ul>
       <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
@@ -2374,10 +2404,12 @@ via back-to-back agreements tracked in the BAA register.
       </div>
     </div>
   </div>
-</article><article class="req" id="req-164-314-a-2-i-a" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.314(a)(2)(i)(a) business associate contract — implement reasonable and appropriate safeguards the safeguards hds commits to in its baa are the same technical and
-administrative controls enumerated across the §164.308, §164.310 and
-§164.312 rows of this matrix. the baa cites that programme so the
-implementer can populate its safeguards exhibit by reference.
+</article><article class="req" id="req-164-314-a-2-i-a" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.314(a)(2)(i)(a) business associate contract — implement reasonable and appropriate safeguards the safeguards an hds business associate agreement would commit to are
+the same technical and administrative controls enumerated across the
+§164.308, §164.310 and §164.312 rows of this matrix, and the template
+cites that programme so an implementer can populate its safeguards
+exhibit by reference. the same controls back the subcontractor
+agreements hds has actually executed downstream.
 " data-planned="0">
   <h3><code>164.314(a)(2)(i)(A)</code> Business associate contract — implement reasonable and appropriate safeguards <span class="draft">draft</span></h3>
   <p class="text">The business associate contract must require the business associate to
@@ -2399,10 +2431,12 @@ is the `derives_from` chain.
     </div>
     <div class="layer hds">
       <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
-      <p>The safeguards HDS commits to in its BAA are the same technical and
-administrative controls enumerated across the §164.308, §164.310 and
-§164.312 rows of this matrix. The BAA cites that programme so the
-implementer can populate its safeguards exhibit by reference.
+      <p>The safeguards an HDS business associate agreement would commit to are
+the same technical and administrative controls enumerated across the
+§164.308, §164.310 and §164.312 rows of this matrix, and the template
+cites that programme so an implementer can populate its safeguards
+exhibit by reference. The same controls back the subcontractor
+agreements HDS has actually executed downstream.
 </p>
       <details><summary>detail</summary><p>Rather than restating safeguards in prose, HDS's BAA points to the
 implemented and configurable controls already documented in this matrix —
@@ -2434,9 +2468,13 @@ the controls you and your downstream processors actually operate.
       </div>
     </div>
   </div>
-</article><article class="req" id="req-164-314-a-2-i-c" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.314(a)(2)(i)(c) business associate contract — report security incidents hds's baa commits hds to notifying the implementer of security incidents
-affecting their ephi, and hds's monitoring and incident-response programme
-supplies the detection and forensic evidence behind that obligation.
+</article><article class="req" id="req-164-314-a-2-i-c" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.314(a)(2)(i)(c) business associate contract — report security incidents an hds business associate agreement commits hds to notifying the
+counterparty of security incidents affecting their ephi, and hds's
+monitoring and incident-response programme supplies the detection and
+forensic evidence behind that obligation. no upstream agreement is in
+force today, so what operates now is hds's own incident procedure
+together with the reporting its downstream subcontractor agreements
+require.
 " data-planned="0">
   <h3><code>164.314(a)(2)(i)(C)</code> Business associate contract — report security incidents <span class="draft">draft</span></h3>
   <p class="text">The business associate contract must require the business associate to
@@ -2457,9 +2495,13 @@ The audit log supplies the forensic evidence the report cites.
     </div>
     <div class="layer hds">
       <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
-      <p>HDS's BAA commits HDS to notifying the implementer of security incidents
-affecting their ePHI, and HDS's monitoring and incident-response programme
-supplies the detection and forensic evidence behind that obligation.
+      <p>An HDS business associate agreement commits HDS to notifying the
+counterparty of security incidents affecting their ePHI, and HDS's
+monitoring and incident-response programme supplies the detection and
+forensic evidence behind that obligation. No upstream agreement is in
+force today, so what operates now is HDS's own incident procedure
+together with the reporting its downstream subcontractor agreements
+require.
 </p>
       <details><summary>detail</summary><p>Detection rests on the audit log (Pryv layer) plus HDS's infrastructure
 monitoring with end-to-end alert wiring. When an incident is detected, the
@@ -2550,10 +2592,10 @@ through.
       </div>
     </div>
   </div>
-</article><article class="req" id="req-164-316-a" data-coverage="documented" data-personas="covered-entity business-associate individual" data-text="164.316(a) policies and procedures — standard hds maintains its own written information-security policy set covering the
-security rule safeguards for the systems it operates. this governs hds's
-role as operator and business associate; the implementer keeps its own
-policy programme for the parts it controls.
+</article><article class="req" id="req-164-316-a" data-coverage="documented" data-personas="covered-entity business-associate individual" data-text="164.316(a) policies and procedures — standard hds maintains its own written information-security policy set covering
+the security rule safeguards for the systems it operates. this governs
+hds's role as operator; the implementer keeps its own policy programme
+for the parts it controls.
 " data-planned="0">
   <h3><code>164.316(a)</code> Policies and procedures — standard <span class="draft">draft</span></h3>
   <p class="text">Implement reasonable and appropriate policies and procedures to comply with
@@ -2573,10 +2615,10 @@ substitute for it.
     </div>
     <div class="layer hds">
       <div class="lh">HDS <span class="b documented">documented</span> <span class="rg">US</span><span class="rg">CH</span> </div>
-      <p>HDS maintains its own written information-security policy set covering the
-Security Rule safeguards for the systems it operates. This governs HDS's
-role as operator and Business Associate; the implementer keeps its own
-policy programme for the parts it controls.
+      <p>HDS maintains its own written information-security policy set covering
+the Security Rule safeguards for the systems it operates. This governs
+HDS's role as operator; the implementer keeps its own policy programme
+for the parts it controls.
 </p>
       <details><summary>detail</summary><p>HDS's security policies and procedures are owned by its security function
 and reviewed on a defined cadence. They are referenced throughout this
@@ -3764,10 +3806,13 @@ invoked.
       </div>
     </div>
   </div>
-</article><article class="req" id="req-164-502-e-1" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.502(e)(1) disclosures to business associates hds offers a business associate agreement and the technical disclosure
-mechanism: a ba-specific access tagged with its role and contract
-reference, scoped to the subjects and streams the baa covers. hds itself
-signs a baa when it acts as the business associate.
+</article><article class="req" id="req-164-502-e-1" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.502(e)(1) disclosures to business associates hds offers a business associate agreement template and the technical
+disclosure mechanism: a ba-specific access tagged with its role and
+contract reference, scoped to the subjects and streams the agreement
+covers. hds signs baas downstream, with the subcontractors that host
+the data. it holds no upstream agreement: no covered entity or partner
+customer has engaged hds as its business associate, and in the vault
+none arises, because access flows from the individual's own consent.
 " data-planned="0">
   <h3><code>164.502(e)(1)</code> Disclosures to business associates <span class="draft">draft</span></h3>
   <p class="text">A covered entity may disclose PHI to a business associate, and allow it to
@@ -3789,10 +3834,13 @@ account flow.
     </div>
     <div class="layer hds">
       <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
-      <p>HDS offers a Business Associate Agreement and the technical disclosure
-mechanism: a BA-specific access tagged with its role and contract
-reference, scoped to the subjects and streams the BAA covers. HDS itself
-signs a BAA when it acts as the business associate.
+      <p>HDS offers a Business Associate Agreement template and the technical
+disclosure mechanism: a BA-specific access tagged with its role and
+contract reference, scoped to the subjects and streams the agreement
+covers. HDS signs BAAs downstream, with the subcontractors that host
+the data. It holds no upstream agreement: no covered entity or partner
+customer has engaged HDS as its business associate, and in the vault
+none arises, because access flows from the individual's own consent.
 </p>
       <details><summary>detail</summary><p>Cross-platform business-associate arrangements inherit the cross-account
 capability pattern. The access carries its business-associate role and
@@ -3971,10 +4019,12 @@ conduct obligation of the covered entity.
       </div>
     </div>
   </div>
-</article><article class="req" id="req-164-530-i" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.530(i) policies and procedures as with the security rule's documentation requirement, hds provides the
-means to hold policies as versioned, retained, audited data on a
-dedicated stream. the drafting, approval and review cycle is the privacy
-officer's, and hds maintains its own privacy policies as a ba.
+</article><article class="req" id="req-164-530-i" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.530(i) policies and procedures as with the security rule's documentation requirement, hds provides
+the means to hold policies as versioned, retained, audited data on a
+dedicated stream. the drafting, approval and review cycle is the
+privacy officer's. hds maintains its own privacy policies as a matter
+of its own governance rather than as a duty this section places on it,
+since §164.530 reaches covered entities.
 " data-planned="0">
   <h3><code>164.530(i)</code> Policies and procedures <span class="draft">draft</span></h3>
   <p class="text">A covered entity must implement policies and procedures designed to comply
@@ -3993,10 +4043,12 @@ Security Rule's parallel obligation.
     </div>
     <div class="layer hds">
       <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
-      <p>As with the Security Rule's documentation requirement, HDS provides the
-means to hold policies as versioned, retained, audited data on a
-dedicated stream. The drafting, approval and review cycle is the privacy
-officer's, and HDS maintains its own privacy policies as a BA.
+      <p>As with the Security Rule's documentation requirement, HDS provides
+the means to hold policies as versioned, retained, audited data on a
+dedicated stream. The drafting, approval and review cycle is the
+privacy officer's. HDS maintains its own privacy policies as a matter
+of its own governance rather than as a duty this section places on it,
+since §164.530 reaches covered entities.
 </p>
       <details><summary>detail</summary><p>Policies-as-data on a dedicated compliance stream inherit versioning,
 retention and audit. The covered entity's policy programme is its own;
@@ -4217,11 +4269,13 @@ tool bypasses the 30-day clock entirely (the individual obtains the data
 immediately, without a written-request intake).
 </p>
       <details><summary>detail</summary><p>The request-intake artefact records receipt time and the resulting due
-date. The substantive response is delivered through the §164.524 access
-capability described in the parent row. Self-service via app-portability
-eliminates the need for a §524(b)(2) timely-response procedure on the
-individual-direct path; the timeline obligation remains operative on the
-partner-mediated path (covered entity intake → HDS-as-BA fulfilment).
+date. The substantive response is delivered through the §164.524
+access capability described in the parent row. Self-service via
+app-portability eliminates the need for a §524(b)(2) timely-response
+procedure on the individual-direct path, which is the vault's own
+case. The timeline obligation remains operative on the
+partner-mediated path, where a covered entity takes the request in and
+HDS fulfils it under whatever agreement is in force between them.
 </p></details>
       <ul class="ev"><li>doc: https://demo-portability.datasafe.dev</li><li>doc: https://portability.hds.ngo</li><li><span class="lock">🔒 hipaa/procedures/individual-right-of-access</span> <span class="onreq">available on request</span></li></ul>
       <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
@@ -4338,9 +4392,16 @@ permission — with the relationship and legal basis recorded as
 client-data. The abuse, neglect and endangerment exceptions are clinical
 and legal judgements of the covered entity.
 </p>
-      <details><summary>detail</summary><p>The exception pattern narrows or deletes the representative's access. HDS
-stores the representative relationship and legal basis; the determination
-of whether an exception applies is the implementer's.
+      <details><summary>detail</summary><p>The exception pattern narrows or deletes the representative's access.
+HDS stores the representative relationship and legal basis; the
+determination of whether an exception applies is the implementer's.
+Where a covered entity is party to the relationship it verifies the
+representative's legal authority before instructing HDS, and HDS does
+not independently adjudicate that status. On the direct-to-individual
+path, which is the vault's own case, HDS has no written intake or
+verification procedure for representative status yet, and no evidence
+template; it records that as pending remediation rather than implying
+the check exists.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/personal-representatives</span> <span class="onreq">available on request</span></li></ul>
       <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
@@ -5077,11 +5138,15 @@ supports it by supplying audit evidence to identify the affected
 individuals, but composing and delivering the notices is the covered
 entity's operational responsibility.
 </p>
-      <details><summary>detail</summary><p>HDS is not a bulk-notification system. The contribution is identification:
-filtering the audit log by the implicated credential and time window yields
-the distinct set of affected subjects, with evidence. Producing the roster
-and the per-recipient delivery sit with the covered entity, who carries
-this duty.
+      <details><summary>detail</summary><p>HDS is not a bulk-notification system. The contribution is
+identification: filtering the audit log by the implicated credential
+and time window yields the distinct set of affected subjects, with
+evidence. Producing the roster and the per-recipient delivery sit with
+the covered entity, who carries this duty. Where no covered entity is
+party to the relationship, which is the vault's own case, HIPAA does
+not reach the event at all and any duty to notify individuals arises
+under the FTC Health Breach Notification Rule, which sets its own
+delivery requirements. This matrix has no scope for that rule yet.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/procedures/breach-notification</span> <span class="onreq">available on request</span></li></ul>
       <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>

@@ -415,15 +415,16 @@ HDS's own position on SOC 2:
     sampling method.
   HDS: facilitated (effort saved: medium) (mode: evidence)
     The platform supplies the data an ongoing evaluation samples: the audit log evidences
-    control effectiveness (e.g. that access scoping actually blocks out-of-scope reads), and
-    operational monitoring evidences operational health. HDS runs its own periodic
-    evaluation over the platform and documents it. The evaluation cadence and sampling
-    method for an organization's own controls are its own.
-    Detail: HDS performs a periodic evaluation of its security programme drawing on audit
-    samples, monitoring data and this matrix as the control inventory, and documents the
-    cadence and findings. A partner consumes the same substrate to sample its own controls
-    and defines its own evaluation programme. This matrix doubles as the control inventory
-    an evaluation assesses against.
+    control effectiveness (for instance that access scoping actually blocks out-of-scope
+    reads), and operational monitoring evidences operational health. HDS has defined its own
+    periodic evaluation over the platform and approved the procedure, but no cycle has
+    completed yet. The evaluation cadence and sampling method for an organization's own
+    controls are its own.
+    Detail: HDS's periodic evaluation is designed to draw on audit samples, monitoring data
+    and this matrix as the control inventory, on an annual cadence; the first full cycle is
+    still to run, so the evaluation half is defined rather than evidenced. A partner
+    consumes the same substrate to sample its own controls and defines its own evaluation
+    programme. This matrix doubles as the control inventory an evaluation assesses against.
     Evidence: internal:hipaa/procedures/periodic-evaluation, internal:soc2/procedures/control-monitoring
     Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [service-organization] coverage: documented
@@ -1203,14 +1204,16 @@ HDS's own position on SOC 2:
   HDS: facilitated (effort saved: medium) (mode: infrastructure)
     HDS runs the platform on a topology that scales horizontally (cores added to a cluster),
     and operates infrastructure-level monitoring of memory, CPU, latency and request volume
-    across both the US and Switzerland data-residency options. The capacity-planning cadence
-    — thresholds, provisioning triggers — is an operator procedure HDS documents; the
-    user-entity inherits the headroom rather than sizing it.
+    across both the US and Switzerland data-residency options. The capacity-planning
+    cadence, its thresholds and provisioning triggers, is an operator procedure HDS
+    documents and has not yet exercised; the user-entity inherits the headroom rather than
+    sizing it.
     Detail: Capacity signal comes from the platform's observability metrics plus HDS's own
-    infrastructure telemetry. HDS evaluates utilisation against headroom on a defined
-    cadence and adds capacity by extending the cluster. The written capacity-management
-    procedure HDS operates is held internally and shared on request; a user-entity running
-    its own deployment performs its own capacity planning.
+    infrastructure telemetry, and capacity is added by extending the cluster. The written
+    capacity-management procedure HDS operates is held internally and shared on request; it
+    defines a monthly review cadence, and the first such review has not yet been run, so the
+    cadence is defined rather than evidenced by a dated note. A user-entity running its own
+    deployment performs its own capacity planning.
     Evidence: internal:soc2/procedures/capacity-management
     Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [service-organization] coverage: documented

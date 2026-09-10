@@ -698,17 +698,20 @@ HDS's own position on HIPAA-Security:
     is operator-side.
     PLANNED (feature, impact medium): Read-only effective-configuration endpoint supplies the technical baseline snapshot the periodic evaluation is measured against
   HDS: documented (effort saved: low)
-    HDS performs a periodic evaluation of its security programme, drawing on the audit log,
-    operational monitoring, this matrix as a control inventory, and the platform's test
-    results as control-effectiveness evidence. The evaluation write-up is held internally
-    and shared on request.
+    HDS has defined a periodic evaluation of its security programme, drawing on the audit
+    log, operational monitoring, this matrix as a control inventory, and the platform's test
+    results as control-effectiveness evidence. The annual cadence is established and the
+    procedure approved, but no cycle has completed yet, so this standard is defined rather
+    than evidenced by a record.
     Detail: Inputs to the evaluation include audit-log samples, operational-stability data,
     this layered matrix as the inventory of controls to assess against, the platform's
     automated test suite as ongoing effectiveness evidence, and the upstream project's
     published security-advisory history (open-pryv.io's coordinated vulnerability disclosure
-    program with GHSA/CVE issuance), checked against the release HDS deploys. HDS documents
-    the cadence and findings; a partner runs its own periodic evaluation for its own
-    programme.
+    program with GHSA/CVE issuance), checked against the release HDS deploys. The procedure
+    also requires re-verifying that controls previously evidenced are still in force, since
+    a rebuild or provider change can silently regress one. HDS documents the cadence and the
+    inputs; the first evaluation report is still to be produced. A partner runs its own
+    periodic evaluation for its own programme.
     Evidence: internal:hipaa/procedures/periodic-evaluation
     Evidence backing: every internal document cited above has completed approval.
     PLANNED (platform, impact low): A read-only effective-configuration endpoint queued upstream would supply the per-core technical baseline snapshot this evaluation is measured against, once shipped and deployed by HDS.
@@ -939,9 +942,11 @@ HDS's own position on HIPAA-Security:
   HDS: implemented (effort saved: high)
     HDS deploys open-pryv.io with per-user data isolation and per-stream access tokens
     enforced at every API call: a token can read or write only the streams its permissions
-    list, at the level granted, with no trust-based bypass path. Access control is therefore
-    a technical property of the API surface that HDS operates, not a downstream policy
-    layer.
+    list, at the level granted. On that platform path there is no trust-based bypass, and no
+    HDS role can grant itself an access into a user account. Access control is therefore a
+    technical property of the API surface HDS operates rather than a downstream policy
+    layer. Infrastructure access is a separate path that the API does not mediate, and it is
+    bounded by authorisation rather than by this mechanism (see §164.308(a)(4)(ii)(B)).
     Detail: Each subject's data is isolated per user, and access by any person or program is
     mediated by an access token carrying explicit per-stream, per-level permissions.
     Enforcement happens at the API boundary on every request, and privileged namespaces
@@ -1060,9 +1065,12 @@ HDS's own position on HIPAA-Security:
     Detail: HIPAA's automatic-logoff specification is workstation-centric in origin; in an
     HDS-mediated workflow the analogous control is the validity window of the session and
     access token. The platform supports a bounded interactive session lifetime for workforce
-    sessions and a per-grant token expiry for app-driven processes, covering both shapes.
-    HDS documents the configured defaults; the implementer tunes them and documents the
-    rationale for the chosen inactivity window (the "Addressable" path).
+    sessions and a per-grant token expiry for app-driven processes, covering both shapes. On
+    the vault these values sit with the account holder: the approved policy places session
+    lifetime and per-grant token expiry under the end user's control and approval, which is
+    a consequence of the data being theirs. An implementer tunes what it can set for its own
+    workforce and documents the rationale for the chosen inactivity window, which is the
+    Addressable path.
     Evidence: internal:hipaa/policies/access-control
     Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: configurable
@@ -1227,10 +1235,15 @@ HDS's own position on HIPAA-Security:
     technical substrate is HDS-operated.
     Detail: Improper alteration is constrained because only tokens with write permission on
     a stream can modify it, and modifications are versioned so the prior state is retained.
-    Improper destruction is mitigated by per-user export/backup as a recovery path. The
-    audit log ties every change to an authenticated access identity. HDS operates these
-    primitives and documents its integrity policy; the implementer owns the surrounding
-    procedural obligation.
+    The audit log ties every change to an authenticated access identity, on the platform
+    path; privileged infrastructure access is a separate path covered under
+    §164.308(a)(4)(ii)(B). Improper destruction is mitigated by per-user export and backup
+    as a recovery path, with one dependency worth naming: the audit history has to return
+    with the data, since a restore that brings back the records but not who touched them
+    leaves improper alteration undetectable afterwards. How far that recovery capability is
+    demonstrated is tracked as an open risk-analysis item rather than asserted here. HDS
+    operates these primitives and documents its integrity policy; the implementer owns the
+    surrounding procedural obligation.
     Evidence: internal:hipaa/policies/integrity
     Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
@@ -1504,11 +1517,14 @@ HDS's own position on HIPAA-Security:
     HDS provides a Business Associate Agreement template and the technical assurances
     (audit, access control, monitoring, regional residency) that back it, and signs BAAs
     with its own subcontractors. The contract itself is executed between the parties.
-    Detail: When a partner acting as a Covered Entity or upstream Business Associate
-    processes ePHI on HDS, HDS is their Business Associate. HDS offers the BAA template
-    (templates/baa), supplies the technical-safeguards evidence the contract relies on, and
-    flows obligations down to its own subcontractors via back-to-back agreements tracked in
-    the BAA register.
+    Detail: The vault creates no business associate relationship, because access flows from
+    the individual's consent rather than from a covered entity's delegation. The arrangement
+    in which an organisation places protected health information with HDS on its own behalf
+    would create one, and that is where the template applies; no such agreement has been
+    signed to date. What is executed today is the downstream half: back-to-back
+    subcontractor agreements with the hosting providers, tracked in the BAA register. HDS
+    offers the BAA template (templates/baa) and supplies the technical-safeguards evidence
+    such a contract would rely on.
     Evidence: internal:hipaa/registers/baa-register
     Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
@@ -1539,10 +1555,11 @@ HDS's own position on HIPAA-Security:
     Mapping this Article to the existing technical-safeguards rows is the `derives_from`
     chain.
   HDS: facilitated (effort saved: high) (mode: evidence)
-    The safeguards HDS commits to in its BAA are the same technical and administrative
-    controls enumerated across the §164.308, §164.310 and §164.312 rows of this matrix. The
-    BAA cites that programme so the implementer can populate its safeguards exhibit by
-    reference.
+    The safeguards an HDS business associate agreement would commit to are the same
+    technical and administrative controls enumerated across the §164.308, §164.310 and
+    §164.312 rows of this matrix, and the template cites that programme so an implementer
+    can populate its safeguards exhibit by reference. The same controls back the
+    subcontractor agreements HDS has actually executed downstream.
     Detail: Rather than restating safeguards in prose, HDS's BAA points to the implemented
     and configurable controls already documented in this matrix — access control, audit
     logging, encryption, monitoring and regional residency. This gives the contractual
@@ -1574,9 +1591,11 @@ HDS's own position on HIPAA-Security:
     report channel is email / API / portal at the BA's choice. The audit log supplies the
     forensic evidence the report cites.
   HDS: facilitated (effort saved: medium) (mode: evidence)
-    HDS's BAA commits HDS to notifying the implementer of security incidents affecting their
-    ePHI, and HDS's monitoring and incident-response programme supplies the detection and
-    forensic evidence behind that obligation.
+    An HDS business associate agreement commits HDS to notifying the counterparty of
+    security incidents affecting their ePHI, and HDS's monitoring and incident-response
+    programme supplies the detection and forensic evidence behind that obligation. No
+    upstream agreement is in force today, so what operates now is HDS's own incident
+    procedure together with the reporting its downstream subcontractor agreements require.
     Detail: Detection rests on the audit log (Pryv layer) plus HDS's infrastructure
     monitoring with end-to-end alert wiring. When an incident is detected, the BAA's
     notification clause defines the channel and timing for reporting to the implementer;
@@ -1643,8 +1662,8 @@ HDS's own position on HIPAA-Security:
     operator's policy work but doesn't substitute for it.
   HDS: documented (effort saved: medium)
     HDS maintains its own written information-security policy set covering the Security Rule
-    safeguards for the systems it operates. This governs HDS's role as operator and Business
-    Associate; the implementer keeps its own policy programme for the parts it controls.
+    safeguards for the systems it operates. This governs HDS's role as operator; the
+    implementer keeps its own policy programme for the parts it controls.
     Detail: HDS's security policies and procedures are owned by its security function and
     reviewed on a defined cadence. They are referenced throughout this matrix as the
     administrative backing for the technical controls. The implementer cannot inherit these
