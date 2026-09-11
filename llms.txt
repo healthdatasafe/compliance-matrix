@@ -87,8 +87,11 @@ so you can open only the rows that moved instead of re-deriving the scope. The
 `rows` count next to each scope digest distinguishes rows added or removed from
 entries changing inside existing rows.
 
-`format` in that file is the shape of the file itself; it changes only if the
-layout does, never because the matrix content moved.
+`format` in that file covers the file's shape AND the digest computation. Digests
+are comparable only within the same `format`: when it bumps, every digest may move
+without any content changing, so compare across that boundary by diffing rather than
+by hash. It bumped to 2 on 2026-09-11 when per-requirement digests were added and the
+unauthored list was folded into the scope digest.
 
 **Requirement ids are strings, and YAML will bite you.** An unquoted `164.410` parses
 as the number 164.41, which is not the same key and fails silently rather than

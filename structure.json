@@ -1,7 +1,7 @@
 {
-  "format": 1,
+  "format": 2,
   "generated": "2026-09-11",
-  "note": "Digests cover STRUCTURAL fields only. Prose may change without moving any digest.",
+  "note": "Digests cover STRUCTURAL fields only; prose may change without moving any digest. Digests are comparable only within the same `format`: a format bump means the computation changed, so compare content across one by diffing, not by hash.",
   "fields": [
     "ref",
     "hds.coverage",
