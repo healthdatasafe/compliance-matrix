@@ -58,11 +58,11 @@
   <label class="fgroup"><input type="checkbox" id="fplan"> <span class="pl low">⏳ planned only</span></label>
   <span class="fcount" id="fcount"></span>
 </div>
-    <div class="reqs"><article class="req" id="req-art-5" data-coverage="facilitated" data-personas="controller processor data-subject" data-text="art.5 definitions on top of pryv's primitive model, hds operates the platform on which the
-controller designs the stream layout. the classification of a data
-category as sensitive — including the nlpd's broader categories — is the
-controller's editorial decision, which hds carries into the access and
-audit record.
+    <div class="reqs"><article class="req" id="req-art-5" data-coverage="facilitated" data-personas="controller processor data-subject" data-text="art.5 definitions on top of pryv's primitive model, hds operates the platform and
+designs the vault's stream layout. the classification of a data
+category as sensitive, including the nlpd's broader categories, is a
+judgement for whoever processes the data, and hds carries the cited
+classification into the access and audit record.
 " data-planned="0">
   <h3><code>Art.5</code> Definitions <span class="draft">draft</span></h3>
   <p class="text">Defines key terms including personal data, sensitive personal data,
@@ -85,17 +85,18 @@ you apply to it.
     </div>
     <div class="layer hds">
       <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">CH</span> </div>
-      <p>On top of Pryv's primitive model, HDS operates the platform on which the
-controller designs the stream layout. The classification of a data
-category as sensitive — including the nLPD's broader categories — is the
-controller's editorial decision, which HDS carries into the access and
-audit record.
+      <p>On top of Pryv's primitive model, HDS operates the platform and
+designs the vault's stream layout. The classification of a data
+category as sensitive, including the nLPD's broader categories, is a
+judgement for whoever processes the data, and HDS carries the cited
+classification into the access and audit record.
 </p>
-      <details><summary>detail</summary><p>The recommended pattern dedicates separate stream subtrees per
-sensitive-data category and grants accesses scoped to the smallest
-necessary subtree, so the heightened-protection posture follows the
-topology. HDS stores and enforces that layout; it does not assign the
-sensitivity classification.
+      <details><summary>detail</summary><p>The layout dedicates separate stream subtrees per sensitive-data
+category, and accesses are granted scoped to the smallest necessary
+subtree, so the heightened-protection posture follows the topology. An
+organisation requests a scope no wider than its categories need; the
+vault's topology is not its to design, and the sensitivity
+classification is not HDS's to assign.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/access-control</span> <span class="onreq">available on request</span></li></ul>
       <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
@@ -187,10 +188,10 @@ preserved.
     </div>
   </div>
 </article><article class="req" id="req-art-7" data-coverage="facilitated" data-personas="controller processor data-subject" data-text="art.7 data protection by design and by default the pryv architecture hds operates is privacy-protective by
-construction — per-user storage isolation, stream-scoped permissions,
+construction: per-user storage isolation, stream-scoped permissions,
 distinct access types, system streams for privileged data and
-audit-by-default. hds runs this baseline; the per-deployment default
-configuration is the controller's.
+audit-by-default. hds runs this baseline and sets the vault's own
+defaults, including what is presented at registration.
 " data-planned="0">
   <h3><code>Art.7</code> Data protection by design and by default <span class="draft">draft</span></h3>
   <p class="text">The controller must ensure, from planning through implementation, that
@@ -213,14 +214,15 @@ shown at registration).
     <div class="layer hds">
       <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">CH</span> </div>
       <p>The Pryv architecture HDS operates is privacy-protective by
-construction — per-user storage isolation, stream-scoped permissions,
+construction: per-user storage isolation, stream-scoped permissions,
 distinct access types, system streams for privileged data and
-audit-by-default. HDS runs this baseline; the per-deployment default
-configuration is the controller's.
+audit-by-default. HDS runs this baseline and sets the vault's own
+defaults, including what is presented at registration.
 </p>
-      <details><summary>detail</summary><p>What stays on the controller is the deployment-time choice of token
-scopes minted, retention selected and the notice shown at registration.
-HDS supplies and operates the privacy-by-design substrate that those
+      <details><summary>detail</summary><p>What stays with an organisation is the defaults in what it builds: how
+narrow a grant it requests, its own retention, and its own collection
+notice. Vault registration and the notices shown there belong to HDS,
+which supplies and operates the privacy-by-design substrate those
 choices configure.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/access-control</span> <span class="onreq">available on request</span></li></ul>
@@ -961,9 +963,9 @@ records evidence that processing occurs.
     </div>
   </div>
 </article><article class="req" id="req-art-3" data-coverage="facilitated" data-personas="controller data-subject" data-text="art.3 territorial scope applicability turns on whether processing affects data subjects in
-switzerland, not on where infrastructure lives. hds operates a ch region in
-switzerland to which subjects can be bound explicitly when ch jurisdiction
-is the chosen regime.
+switzerland, not on where infrastructure lives. hds operates a ch
+region in switzerland, and an individual who chooses it at
+registration keeps their vault under swiss jurisdiction.
 " data-planned="0">
   <h3><code>Art.3</code> Territorial scope <span class="draft">draft</span></h3>
   <p class="text">The Act applies to facts that have an effect in Switzerland, even if
@@ -983,13 +985,14 @@ side.
     <div class="layer hds">
       <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">CH</span> </div>
       <p>Applicability turns on whether processing affects data subjects in
-Switzerland, not on where infrastructure lives. HDS operates a CH region in
-Switzerland to which subjects can be bound explicitly when CH jurisdiction
-is the chosen regime.
+Switzerland, not on where infrastructure lives. HDS operates a CH
+region in Switzerland, and an individual who chooses it at
+registration keeps their vault under Swiss jurisdiction.
 </p>
-      <details><summary>detail</summary><p>The cross-border transfer side is handled under Art. 34. HDS supplies the
-residency mechanism; the determination of territorial applicability is the
-controller's.
+      <details><summary>detail</summary><p>The cross-border transfer side is handled under Art. 34. HDS supplies
+and operates the residency mechanism; the determination of territorial
+applicability to an organisation's own processing is that
+organisation's.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/registers/hosting-provider-attestations</span> <span class="onreq">available on request</span></li></ul>
       <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
@@ -1182,9 +1185,12 @@ data, and per-user storage isolates subjects. Whether the by-default
 posture is fully exercised depends on the controller's deployment-time
 choices.
 </p>
-      <details><summary>detail</summary><p>Token-scope defaults, retention policy and MFA settings are the
-controller's configuration. HDS supplies the minimum-by-default
-primitives those settings exercise.
+      <details><summary>detail</summary><p>The smallest-permission default is none. The vault's own defaults are
+HDS's to set, with interactive session lifetime and per-grant token
+expiry under the account holder's control and approval, and
+multi-factor authentication available to them. An organisation sets
+the equivalent defaults in its own systems. HDS supplies the
+minimum-by-default primitives those settings exercise.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/minimum-necessary</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/policies/access-control</span> <span class="onreq">available on request</span></li></ul>
       <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>

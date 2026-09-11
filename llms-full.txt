@@ -1211,13 +1211,15 @@ HDS's own position on GDPR:
     layer; implementer's enrichment path).
   HDS: facilitated (effort saved: high) (mode: infrastructure)
     The HDS architecture is privacy-by-design by founding pattern: per-user storage
-    isolation, default-deny stream-scoped permissions, separate personal/app/shared access
-    types, privileged data on system streams, and audit-on by default. The controller's own
-    defaults — token scopes, retention period, opt-in UX — remain in its hands.
+    isolation, default-deny stream-scoped permissions, separate personal, app and shared
+    access types, privileged data on system streams, and audit-on by default. The vault's
+    own defaults are HDS's to set. The defaults an organisation controls are the ones in
+    what it builds: how narrow a grant its application requests, whether its notices default
+    on, and how long it keeps what it receives.
     Detail: Default-deny permissions, audit-by-construction, enforced transport encryption
-    and per-user residency pinning ship as platform defaults. The controller still decides
-    whether app tokens are minted with minimal scope, whether notices default on, and how
-    short the retention period is.
+    and per-user residency pinning ship as platform defaults. An organisation building on
+    the vault decides the scope of the grant it asks for, the defaults of its own consent
+    and notice surfaces, and the retention of any copy it keeps.
     Evidence: internal:hipaa/policies/access-control, internal:gdpr/policies/data-retention
   IMPLEMENTER [controller] coverage: documented
     applies_when: [processes-personal-data]
@@ -1314,15 +1316,22 @@ HDS's own position on GDPR:
     records-of-processing pipeline can consume directly. Until then, the operator reads
     `override-config.yml` + per-host overlays + identifies non-default integrations by hand.
   HDS: facilitated (effort saved: medium) (mode: storage)
-    In the usual arrangement HDS is the Art.28 processor and offers a data-processing
-    agreement covering the §3 terms and a documented subprocessor posture. HDS ships zero
-    mandatory subprocessors; every external integration (SMTP, SMS, observability) is opt-in
-    and inventoried with its data-flow. The substantive §1 "sufficient guarantees"
-    evaluation is the controller's.
-    Detail: HDS maintains a subprocessor register and hosting-provider attestations and
-    routes deletion/return of data at end of provision via account deletion and backup
-    tooling. The audit log and access primitives carry the documented controller
-    instructions and the demonstrability evidence. A DPA template is offered.
+    This article governs an organisation's engagement of its own processors. HDS is not one
+    of them for the vault, and the arrangement is not available to negotiate: Art.28(3)
+    requires processing on the controller's documented instructions and deletion or return
+    of the data at the controller's choice, while HDS acts on the individual's permissions
+    and cannot delete an individual's vault at a third party's direction. What HDS does
+    carry is a disciplined subprocessor posture of its own: zero mandatory subprocessors,
+    with every external integration (SMTP, SMS, observability) opt-in and inventoried with
+    its data flow. The sufficient-guarantees evaluation of an organisation's own processors
+    is that organisation's to make.
+    Detail: HDS maintains a subprocessor register and hosting-provider attestations covering
+    the providers it engages downstream, and signs the agreements that flow obligations to
+    them. It offers no Art.28 data-processing agreement for the vault, because there is no
+    arrangement for one to govern; an organisation placing data with HDS on its own behalf
+    is a different arrangement, documented separately and outside this matrix. The audit log
+    and access primitives remain available as demonstrability evidence for the processing an
+    organisation does carry out.
     Evidence: internal:hipaa/registers/subprocessor-register, internal:hipaa/registers/hosting-provider-attestations, internal:gdpr/registers/records-of-processing
   IMPLEMENTER [controller] coverage: documented
     applies_when: [stores-phi-copy, third-parties]
@@ -1631,10 +1640,12 @@ HDS's own position on GDPR:
     27001 A.8 control rows.
     PLANNED (feature, impact medium): Read-only effective-configuration endpoint feeds the DPIA safeguards inventory from live per-core data instead of a hand-written list
   HDS: facilitated (effort saved: low) (mode: evidence)
-    The DPIA is a written assessment the controller produces; HDS supplies inputs —
-    data-residency facts, audit/access descriptions of the processing flow, system-stream
-    isolation as the sensitive-data boundary, and this matrix as the technical-measures
-    inventory. A formal DPIA process is a known gap that the controller must run itself.
+    The DPIA is a written assessment the controller produces; HDS supplies inputs:
+    data-residency facts, audit and access descriptions of the processing flow,
+    system-stream isolation as the sensitive-data boundary, and this matrix as the
+    technical-measures inventory. HDS's own DPIA process is drafted but not yet operating,
+    which it records as an open item; the assessment for an organisation's own processing is
+    that organisation's to run.
     Detail: The prescribed Art.35(7) content maps onto platform inputs: a systematic
     description from audit and access purposes, a necessity assessment from the
     minimum-necessary stream design, and the measures inventory from the Art.32 row. The
@@ -1920,13 +1931,14 @@ HDS's own position on GDPR:
     which countries currently hold adequacy (EU-US DPF, Switzerland, UK, etc.) is
     operator-side regulatory tracking.
   HDS: configurable (effort saved: high)
-    HDS's Switzerland region rests on the EU adequacy decision for Switzerland, so routing
-    EU/EEA subjects there grounds the transfer (or avoids one entirely). The per-user
-    residency is exposed for auditor questions. Tracking which countries currently hold
-    adequacy is the controller's regulatory responsibility.
-    Detail: The controller selects the CH region for subjects whose transfer it wants to
-    ground on adequacy; the chosen hosting per user proves residency. The US region is not
-    an adequacy-based transfer for general EU data and needs Art.46 safeguards instead.
+    HDS's Switzerland region rests on the EU adequacy decision for Switzerland, so a vault
+    registered there grounds the transfer, or avoids one entirely. The per-user residency is
+    exposed for auditor questions. Tracking which countries currently hold adequacy is the
+    regulatory responsibility of whoever relies on it.
+    Detail: The region is the individual's choice at registration, and the hosting recorded
+    per user proves residency; an organisation can read it but cannot set it. The US region
+    is not an adequacy-based transfer for general EU data and needs Art.46 safeguards
+    instead.
     Evidence: internal:gdpr/policies/international-transfers, internal:hipaa/registers/hosting-provider-attestations
   IMPLEMENTER [controller] coverage: documented
     applies_when: [transfer-eu-us, transfer-eu-ch]
@@ -1971,18 +1983,18 @@ HDS's own position on GDPR:
     `adequacy_decision` field if relying on an adequacy decision. Full field reference in
     the convention note.
   HDS: facilitated (effort saved: low) (mode: storage)
-    Choosing the US region (AWS) is a transfer that needs an Art.46 safeguard — typically
-    standard contractual clauses. HDS records the chosen mechanism on the transferring
-    access clientData so the Art.30 transfers register is derivable, and offers a DPA into
-    which the SCCs are incorporated. HDS's own upstream instrument for the US hosting layer
-    is still being executed: the AWS HIPAA BAA is in force, and the GDPR DPA plus EU/Swiss
-    SCCs with the transfer impact assessment are the tracked remainder (see the planned
-    chip) — until signed and recorded, US-region transfers rest on the HIPAA instrument
-    alone. The SCC/BCR documents themselves are controller/legal artefacts.
-    Detail: The transfer surfaces — access-bound counterparty fetches, the US-region
-    residency choice, and subprocessor outbound flows — each carry the mechanism reference
-    on the relevant artefact. HDS persists the references with versioning and audit; the
-    controller concludes the safeguard instrument.
+    A vault registered in the US region is a transfer that needs an Art.46 safeguard,
+    typically standard contractual clauses. HDS records the chosen mechanism on the
+    transferring access clientData so the Art.30 transfers register is derivable. HDS's own
+    upstream instrument for the US hosting layer is still being executed: the AWS HIPAA BAA
+    is in force, while the GDPR DPA plus EU and Swiss standard contractual clauses with the
+    transfer impact assessment are the tracked remainder (see the planned chip). Until those
+    are signed and recorded, US-region transfers rest on the HIPAA instrument alone. The
+    safeguard documents themselves are legal artefacts of whoever concludes them.
+    Detail: The transfer surfaces, which are access-bound counterparty fetches, the region a
+    vault sits in, and subprocessor outbound flows, each carry the mechanism reference on
+    the relevant artefact. HDS persists the references with versioning and audit; whoever
+    makes the transfer concludes the safeguard instrument.
     Evidence: internal:gdpr/policies/international-transfers, internal:hipaa/registers/subprocessor-register, internal:hipaa/risk/cross-core-residency-data-flow
     PLANNED (doc, impact high): Execution of the AWS GDPR DPA plus EU/Swiss SCCs with the transfer impact assessment for the US hosting layer is the tracked remediation (the HIPAA BAA is already in force; the crossing is pseudonymised since 2026-06-24, which strengthens the TIA).
   IMPLEMENTER [controller] coverage: documented
@@ -7730,14 +7742,15 @@ HDS's own position on Swiss nLPD:
     classification of a category is a written editorial decision, Pryv carries the
     classification but doesn't assign it.
   HDS: facilitated (effort saved: medium) (mode: primitive)
-    On top of Pryv's primitive model, HDS operates the platform on which the controller
-    designs the stream layout. The classification of a data category as sensitive —
-    including the nLPD's broader categories — is the controller's editorial decision, which
-    HDS carries into the access and audit record.
-    Detail: The recommended pattern dedicates separate stream subtrees per sensitive-data
-    category and grants accesses scoped to the smallest necessary subtree, so the
-    heightened-protection posture follows the topology. HDS stores and enforces that layout;
-    it does not assign the sensitivity classification.
+    On top of Pryv's primitive model, HDS operates the platform and designs the vault's
+    stream layout. The classification of a data category as sensitive, including the nLPD's
+    broader categories, is a judgement for whoever processes the data, and HDS carries the
+    cited classification into the access and audit record.
+    Detail: The layout dedicates separate stream subtrees per sensitive-data category, and
+    accesses are granted scoped to the smallest necessary subtree, so the
+    heightened-protection posture follows the topology. An organisation requests a scope no
+    wider than its categories need; the vault's topology is not its to design, and the
+    sensitivity classification is not HDS's to assign.
     Evidence: internal:hipaa/policies/access-control
     Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [controller] coverage: documented
@@ -7802,13 +7815,14 @@ HDS's own position on Swiss nLPD:
     audit-by-default. What stays on the implementer is the per-deployment default
     configuration (token scopes minted, retention chosen, notice shown at registration).
   HDS: facilitated (effort saved: high) (mode: infrastructure)
-    The Pryv architecture HDS operates is privacy-protective by construction — per-user
+    The Pryv architecture HDS operates is privacy-protective by construction: per-user
     storage isolation, stream-scoped permissions, distinct access types, system streams for
-    privileged data and audit-by-default. HDS runs this baseline; the per-deployment default
-    configuration is the controller's.
-    Detail: What stays on the controller is the deployment-time choice of token scopes
-    minted, retention selected and the notice shown at registration. HDS supplies and
-    operates the privacy-by-design substrate that those choices configure.
+    privileged data and audit-by-default. HDS runs this baseline and sets the vault's own
+    defaults, including what is presented at registration.
+    Detail: What stays with an organisation is the defaults in what it builds: how narrow a
+    grant it requests, its own retention, and its own collection notice. Vault registration
+    and the notices shown there belong to HDS, which supplies and operates the
+    privacy-by-design substrate those choices configure.
     Evidence: internal:hipaa/policies/access-control
     Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [controller] coverage: documented
@@ -8235,10 +8249,11 @@ HDS's own position on Swiss nLPD:
     cross-border transfer side.
   HDS: facilitated (effort saved: low) (mode: infrastructure)
     Applicability turns on whether processing affects data subjects in Switzerland, not on
-    where infrastructure lives. HDS operates a CH region in Switzerland to which subjects
-    can be bound explicitly when CH jurisdiction is the chosen regime.
-    Detail: The cross-border transfer side is handled under Art. 34. HDS supplies the
-    residency mechanism; the determination of territorial applicability is the controller's.
+    where infrastructure lives. HDS operates a CH region in Switzerland, and an individual
+    who chooses it at registration keeps their vault under Swiss jurisdiction.
+    Detail: The cross-border transfer side is handled under Art. 34. HDS supplies and
+    operates the residency mechanism; the determination of territorial applicability to an
+    organisation's own processing is that organisation's.
     Evidence: internal:hipaa/registers/hosting-provider-attestations
     Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [controller] coverage: documented
@@ -8332,8 +8347,11 @@ HDS's own position on Swiss nLPD:
     smallest-permission default is none, system streams isolate privileged data, and
     per-user storage isolates subjects. Whether the by-default posture is fully exercised
     depends on the controller's deployment-time choices.
-    Detail: Token-scope defaults, retention policy and MFA settings are the controller's
-    configuration. HDS supplies the minimum-by-default primitives those settings exercise.
+    Detail: The smallest-permission default is none. The vault's own defaults are HDS's to
+    set, with interactive session lifetime and per-grant token expiry under the account
+    holder's control and approval, and multi-factor authentication available to them. An
+    organisation sets the equivalent defaults in its own systems. HDS supplies the
+    minimum-by-default primitives those settings exercise.
     Evidence: internal:hipaa/policies/minimum-necessary, internal:hipaa/policies/access-control
     Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [controller] coverage: documented
