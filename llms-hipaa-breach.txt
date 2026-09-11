@@ -374,6 +374,8 @@ HDS's own position on HIPAA-Breach:
     applies_when: always; basis: entity
     Select compliant notification methods, deliver the notices, and retain delivery records
     including any substitute-notice steps.
+  IMPLEMENTER [business-associate] coverage: out-of-scope
+    applies_when: always; PLACES NO DUTY ON THIS PERSONA
   IMPLEMENTER [individual] coverage: out-of-scope
     applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
 
@@ -400,6 +402,8 @@ HDS's own position on HIPAA-Breach:
     applies_when: always; basis: entity
     Where the threshold is met, notify prominent media in the affected jurisdiction and
     retain the records.
+  IMPLEMENTER [business-associate] coverage: out-of-scope
+    applies_when: always; PLACES NO DUTY ON THIS PERSONA
   IMPLEMENTER [individual] coverage: out-of-scope
     applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
 
@@ -426,6 +430,8 @@ HDS's own position on HIPAA-Breach:
     applies_when: always; basis: entity
     File the required HHS notification on the applicable schedule and keep the submission
     records.
+  IMPLEMENTER [business-associate] coverage: out-of-scope
+    applies_when: always; PLACES NO DUTY ON THIS PERSONA
   IMPLEMENTER [individual] coverage: out-of-scope
     applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
 

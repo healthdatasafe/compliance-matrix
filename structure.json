@@ -10,7 +10,7 @@
     "implementer[].nature",
     "implementer[].applies_when"
   ],
-  "combined": "ff545bf95607ace8",
+  "combined": "fca7b70e31b9bf0e",
   "profiles": {
     "version": 1,
     "digest": "bd5c667c7a134ce6"
@@ -22,11 +22,11 @@
     },
     "hipaa-breach": {
       "rows": 13,
-      "digest": "e7e6f9d9dcfd027a"
+      "digest": "b92e777b70fb2b81"
     },
     "hipaa-privacy": {
       "rows": 35,
-      "digest": "cf3cb98dc78b6ee1"
+      "digest": "85847e8f2927f4ff"
     },
     "hipaa-security": {
       "rows": 43,

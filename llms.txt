@@ -71,10 +71,10 @@ prose leaves every digest below untouched.
 
 **Digests, so one request tells you whether to re-verify.** Also at https://compliance.datasafe.dev/structure.json.
 
-  combined   ff545bf95607ace8
+  combined   fca7b70e31b9bf0e
   gdpr           df87ed09f085e77a  (47 rows)
-  hipaa-breach   e7e6f9d9dcfd027a  (13 rows)
-  hipaa-privacy  cf3cb98dc78b6ee1  (35 rows)
+  hipaa-breach   b92e777b70fb2b81  (13 rows)
+  hipaa-privacy  85847e8f2927f4ff  (35 rows)
   hipaa-security 3d4014e4e66ef5b3  (43 rows)
   soc2           f343b2f884845918  (61 rows)
   swiss-nlpd     1d20796196df8e43  (30 rows)

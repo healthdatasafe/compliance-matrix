@@ -323,6 +323,8 @@ HDS's own position on HIPAA-Privacy:
     applies_when: always; basis: entity
     Author and maintain your notice of privacy practices and present it to individuals as
     required.
+  IMPLEMENTER [business-associate] coverage: out-of-scope
+    applies_when: always; PLACES NO DUTY ON THIS PERSONA
   IMPLEMENTER [individual] coverage: out-of-scope
     applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
 
@@ -512,6 +514,8 @@ HDS's own position on HIPAA-Privacy:
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: always; basis: entity
     Designate and document your privacy official and complaint contact.
+  IMPLEMENTER [business-associate] coverage: out-of-scope
+    applies_when: always; PLACES NO DUTY ON THIS PERSONA
   IMPLEMENTER [individual] coverage: out-of-scope
     applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
 
@@ -1128,6 +1132,8 @@ HDS's own position on HIPAA-Privacy:
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: always; basis: entity
     Obtain the plan-sponsor certification before disclosing PHI to the sponsor.
+  IMPLEMENTER [business-associate] coverage: out-of-scope
+    applies_when: always; PLACES NO DUTY ON THIS PERSONA
   IMPLEMENTER [individual] coverage: out-of-scope
     applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
 
