@@ -477,6 +477,9 @@ requirements:
         overview: |
           Select compliant notification methods, deliver the notices, and retain
           delivery records including any substitute-notice steps.
+      - persona: business-associate
+        applies_when: always
+        coverage: out-of-scope
       - persona: individual
         coverage: out-of-scope
 
@@ -513,6 +516,9 @@ requirements:
         overview: |
           Where the threshold is met, notify prominent media in the affected
           jurisdiction and retain the records.
+      - persona: business-associate
+        applies_when: always
+        coverage: out-of-scope
       - persona: individual
         coverage: out-of-scope
 
@@ -551,6 +557,9 @@ requirements:
         overview: |
           File the required HHS notification on the applicable schedule and keep the
           submission records.
+      - persona: business-associate
+        applies_when: always
+        coverage: out-of-scope
       - persona: individual
         coverage: out-of-scope
 

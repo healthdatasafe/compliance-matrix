@@ -456,6 +456,9 @@ requirements:
         overview: |
           Author and maintain your notice of privacy practices and present it to
           individuals as required.
+      - persona: business-associate
+        applies_when: always
+        coverage: out-of-scope
       - persona: individual
         coverage: out-of-scope
 
@@ -693,6 +696,9 @@ requirements:
         coverage: documented
         overview: |
           Designate and document your privacy official and complaint contact.
+      - persona: business-associate
+        applies_when: always
+        coverage: out-of-scope
       - persona: individual
         coverage: out-of-scope
 
@@ -1608,6 +1614,9 @@ requirements:
         overview: |
           Obtain the plan-sponsor certification before disclosing PHI to the
           sponsor.
+      - persona: business-associate
+        applies_when: always
+        coverage: out-of-scope
       - persona: individual
         coverage: out-of-scope
 
