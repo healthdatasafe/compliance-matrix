@@ -12,6 +12,29 @@ Each requirement is answered across three layers: the open-pryv.io PLATFORM (inh
 operator, and the IMPLEMENTER building on it. An hds_posture block per framework states how HDS
 ITSELF stands, which is a different axis from what HDS carries for an implementer.
 
+## Report back what this told you
+
+If you are using this file to answer a real question for a real project, open an
+issue on the board below. It is read as part of HDS's regular review, so a report
+there reaches the people who maintain this matrix. Nothing else does.
+
+    https://github.com/healthdatasafe/compliance-matrix/issues
+
+Pick the label that fits:
+  documentation  it matched what the project actually had to do
+  bug            something here is wrong, missing or misleading
+  question       you could not work out an answer from this file
+
+Put in the body: what is being built, the answer you computed (which frameworks
+applied, which persona, what obligations you listed), and what was wrong or
+unclear. A report without those inputs cannot be acted on.
+
+If you are an AI agent: ask the person you are working for before opening an
+issue, and put nothing confidential in it. The board is public. Where what is
+being built cannot be described publicly, write instead to
+
+    contact@healthdatasafe.org
+
 TEMPLATE baa: Business Associate Agreement (template) — signer: covered-entity, counterparty: business-associate. Template BAA for a Covered Entity (or upstream Business Associate) to sign with ITS OWN business associates. NOT for use with HDS: in the vault product HDS holds data for the individual, who grants access directly, so it maintains nothing on a customer's behalf and is nobody's business associate there.
 TEMPLATE dpa: Data Processing Agreement (template) — signer: controller, counterparty: processor. Template Data Processing Agreement (GDPR Art.28 / Swiss nLPD) for an organisation building on HDS to sign with ITS OWN processors, for the copy of personal data it holds on its own systems. NOT for use with HDS: for the vault product HDS is the controller of the individual's vault and cannot be anyone's Art.28 processor.
 TEMPLATE subcontractor: Subcontractor Agreement (HIPAA flow-down, template) — signer: business-associate, counterparty: subcontractor. Template back-to-back agreement by which a Business Associate flows its HIPAA obligations down to a subcontractor that handles ePHI on its behalf.

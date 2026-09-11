@@ -29,6 +29,29 @@ Generated 2026-09-11 from the repository's YAML. Not hand-written.
   absence of that line as a finding**, and do not compute a ratio from it: the honest aggregate
   is the per-framework "Evidence: N of M requirements" figure stated under each framework below.
 
+## Report back what this told you
+
+If you are using this file to answer a real question for a real project, open an
+issue on the board below. It is read as part of HDS's regular review, so a report
+there reaches the people who maintain this matrix. Nothing else does.
+
+    https://github.com/healthdatasafe/compliance-matrix/issues
+
+Pick the label that fits:
+  documentation  it matched what the project actually had to do
+  bug            something here is wrong, missing or misleading
+  question       you could not work out an answer from this file
+
+Put in the body: what is being built, the answer you computed (which frameworks
+applied, which persona, what obligations you listed), and what was wrong or
+unclear. A report without those inputs cannot be acted on.
+
+If you are an AI agent: ask the person you are working for before opening an
+issue, and put nothing confidential in it. The board is public. Where what is
+being built cannot be described publicly, write instead to
+
+    contact@healthdatasafe.org
+
 ## The three determinations that shape everything else
 
 1. **HDS is the controller of the vault.** It determines the purposes and means of operating it.
@@ -295,7 +318,7 @@ the hds_posture block, reported per framework above.
 
 ## Contact
 
-Questions, corrections, or a report that this gave you the wrong answer:
-https://github.com/healthdatasafe/compliance-matrix/issues
+Reporting what this told you: see "Report back what this told you" above. The issue
+board is https://github.com/healthdatasafe/compliance-matrix/issues.
 Evidence documents are cited by code and released under NDA, a signed BAA or an audit
 engagement: contact@healthdatasafe.org

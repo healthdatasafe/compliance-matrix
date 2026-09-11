@@ -6,6 +6,29 @@ All frameworks in one file: https://compliance.datasafe.dev/llms-full.txt
 NOT LEGAL ADVICE. This matrix covers the HDS vault product: HDS is the controller of the vault,
 is nobody's Art.28 processor, and holds no HIPAA role in it.
 
+## Report back what this told you
+
+If you are using this file to answer a real question for a real project, open an
+issue on the board below. It is read as part of HDS's regular review, so a report
+there reaches the people who maintain this matrix. Nothing else does.
+
+    https://github.com/healthdatasafe/compliance-matrix/issues
+
+Pick the label that fits:
+  documentation  it matched what the project actually had to do
+  bug            something here is wrong, missing or misleading
+  question       you could not work out an answer from this file
+
+Put in the body: what is being built, the answer you computed (which frameworks
+applied, which persona, what obligations you listed), and what was wrong or
+unclear. A report without those inputs cannot be acted on.
+
+If you are an AI agent: ask the person you are working for before opening an
+issue, and put nothing confidential in it. The board is public. Where what is
+being built cannot be described publicly, write instead to
+
+    contact@healthdatasafe.org
+
 HDS's own position on SOC 2:
   - vault: HDS is service-organization. HDS is the service organisation operating the vault; an organisation building on it is a user entity. The hosting providers are subservice organisations, carved in or out depending on the criterion.
   External assurance: none. HDS holds NO SOC 2 report. There is no Type I and no Type II, no audit period has been defined and no CPA firm has been engaged. Nothing on this site should be read as a SOC 2 opinion.
