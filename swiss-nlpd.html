@@ -511,17 +511,19 @@ access — now automated by the deployed breach-scope primitive
 cores since 2026-07-29). The nLPD's &quot;as soon as possible&quot; timeline is
 the controller's to meet; HDS provides the underlying scoping evidence.
 </p>
-      <details><summary>detail</summary><p>As a processor, HDS notifies the controller of breaches it detects so the
-controller can meet its Commissioner-notification duty. The scoping
-report (compromised access → owner, affected subjects/streams, scoped
-exposure) is emitted by `bin/breach-scope.js` from the audit +
-access-version data. The subject notification trigger is more conditional
-than under GDPR; the controller's incident-response matrix should encode
-both regimes where it faces both. The event store is encrypted at rest
-(hosting-layer volume encryption, since 2026-06-26), which strengthens
-the safe-harbour assessment of a leaked at-rest artefact — a lost or
-decommissioned medium is protected; a live-system compromise reaches
-decrypted content and is assessed on its facts.
+      <details><summary>detail</summary><p>HDS notifies the parties affected of breaches it detects, as
+controller of the vault rather than as anyone's processor, so that
+whoever carries a Commissioner-notification duty can meet it. The
+scoping report (compromised access to owner, affected subjects and
+streams, scoped exposure) is emitted by bin/breach-scope.js from the
+audit and access-version data. The subject-notification trigger is
+more conditional than under the GDPR; an organisation facing both
+regimes should encode both in its incident-response matrix. The event
+store is encrypted at rest by hosting-layer volume encryption since
+2026-06-26, which strengthens the safe-harbour assessment of a leaked
+at-rest artefact: a lost or decommissioned medium is protected, while
+a live-system compromise reaches decrypted content and is assessed on
+its facts.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/procedures/security-incident-response</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 gdpr/procedures/breach-notification-72h</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/risk/at-rest-encryption</span> <span class="onreq">available on request</span></li></ul>
       
@@ -793,10 +795,10 @@ The vault's own contents are the individual's to correct or delete.
     </div>
   </div>
 </article><article class="req" id="req-art-34" data-coverage="configurable" data-personas="controller processor data-subject" data-text="art.34 disclosure of personal data abroad data residency is the technical control: hds hosts ch-region data in
-switzerland, so binding a subject to the ch region keeps the data in
-switzerland and the cross-border question moot. for legitimate transfers
-the per-user hosting field exposes which jurisdiction the data sits in,
-recoverable for audit.
+switzerland, so a vault registered in the ch region keeps the data in
+switzerland and the cross-border question is moot. for legitimate
+transfers the per-user hosting field exposes which jurisdiction the
+data sits in, recoverable for audit.
 " data-planned="0">
   <h3><code>Art.34</code> Disclosure of personal data abroad <span class="draft">draft</span></h3>
   <p class="text">Personal data may be disclosed abroad only where the receiving state
@@ -819,10 +821,10 @@ jurisdiction the data sits in, recoverable for audit.
     <div class="layer hds">
       <div class="lh">HDS <span class="b configurable">configurable</span> <span class="rg">CH</span> </div>
       <p>Data residency is the technical control: HDS hosts CH-region data in
-Switzerland, so binding a subject to the CH region keeps the data in
-Switzerland and the cross-border question moot. For legitimate transfers
-the per-user hosting field exposes which jurisdiction the data sits in,
-recoverable for audit.
+Switzerland, so a vault registered in the CH region keeps the data in
+Switzerland and the cross-border question is moot. For legitimate
+transfers the per-user hosting field exposes which jurisdiction the
+data sits in, recoverable for audit.
 </p>
       <details><summary>detail</summary><p>Cross-account disclosures inherit the same control: the counterparty
 access endpoint reveals the receiving jurisdiction, and the legal basis —
@@ -1300,10 +1302,12 @@ relevant operational layer.
       </div>
     </div>
   </div>
-</article><article class="req" id="req-art-9" data-coverage="facilitated" data-personas="controller processor data-subject" data-text="art.9 processing by a processor where hds acts as processor distinct from the controller, it offers a data
-processing agreement and maintains a sub-processor register. the audit log
-makes processing demonstrably attributable to instructed accesses, so the
-only-as-instructed duty rests on a record.
+</article><article class="req" id="req-art-9" data-coverage="facilitated" data-personas="controller processor data-subject" data-text="art.9 processing by a processor this article governs an organisation's engagement of its own
+processors. hds is not one of them for the vault: it is the controller
+there and does not act on another organisation's instructions. what it
+offers is a sub-processor register covering the providers it engages
+downstream, and an audit log that makes processing demonstrably
+attributable to the access that performed it.
 " data-planned="0">
   <h3><code>Art.9</code> Processing by a processor <span class="draft">draft</span></h3>
   <p class="text">The controller may entrust processing to a processor only where the
@@ -1324,15 +1328,17 @@ disabled).
     </div>
     <div class="layer hds">
       <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">CH</span> </div>
-      <p>Where HDS acts as processor distinct from the controller, it offers a Data
-Processing Agreement and maintains a sub-processor register. The audit log
-makes processing demonstrably attributable to instructed accesses, so the
-only-as-instructed duty rests on a record.
+      <p>This article governs an organisation's engagement of its own
+processors. HDS is not one of them for the vault: it is the controller
+there and does not act on another organisation's instructions. What it
+offers is a sub-processor register covering the providers it engages
+downstream, and an audit log that makes processing demonstrably
+attributable to the access that performed it.
 </p>
-      <details><summary>detail</summary><p>Sub-processor engagement follows the DPA's approval and flow-down terms.
-HDS keeps the sub-processor register and uses the audit and access
-primitives to evidence instructed-only processing; the substantive
-instructions are the controller's.
+      <details><summary>detail</summary><p>An organisation's engagement, approval and flow-down terms sit in its
+contracts with its own processors. HDS keeps the sub-processor
+register for the providers it engages, and uses the audit and access
+primitives to evidence what was done under which access.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/registers/subprocessor-register</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/policies/access-control</span> <span class="onreq">available on request</span></li></ul>
       <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
@@ -1603,10 +1609,13 @@ required.
       </div>
     </div>
   </div>
-</article><article class="req" id="req-art-15" data-coverage="facilitated" data-personas="processor controller data-subject" data-text="art.15 duty of the processor to inform the controller where hds acts as processor, breach notification to the controller is its
-contractual commitment under the dpa. hds uses the audit and access
-primitives to give the controller the scoping data needed for the
-notification and to cooperate on data-subject rights.
+</article><article class="req" id="req-art-15" data-coverage="facilitated" data-personas="processor controller data-subject" data-text="art.15 duty of the processor to inform the controller this duty binds a processor toward its controller. hds holds no such
+role in the vault: it acts on the individual's permissions rather than
+on an organisation's instructions, so the duty does not attach to it
+here. what hds supplies is the audit and access primitives that give
+whoever does carry the duty the scoping data a notification needs. an
+organisation's own processors owe it this duty, and its contracts with
+them are where that is fixed.
 " data-planned="0">
   <h3><code>Art.15</code> Duty of the processor to inform the controller <span class="draft">draft</span></h3>
   <p class="text">The processor must inform the controller of all data security breaches
@@ -1626,14 +1635,18 @@ is a structured channel when both sides run Pryv.
     </div>
     <div class="layer hds">
       <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">CH</span> </div>
-      <p>Where HDS acts as processor, breach notification to the controller is its
-contractual commitment under the DPA. HDS uses the audit and access
-primitives to give the controller the scoping data needed for the
-notification and to cooperate on data-subject rights.
+      <p>This duty binds a processor toward its controller. HDS holds no such
+role in the vault: it acts on the individual's permissions rather than
+on an organisation's instructions, so the duty does not attach to it
+here. What HDS supplies is the audit and access primitives that give
+whoever does carry the duty the scoping data a notification needs. An
+organisation's own processors owe it this duty, and its contracts with
+them are where that is fixed.
 </p>
       <details><summary>detail</summary><p>The notification channel and the assistance on subject requests are
-DPA-defined. HDS supplies the scoping evidence and cooperates; the duties
-toward subjects are ultimately the controller's.
+fixed in the contract between an organisation and its own processors.
+HDS supplies the scoping evidence from the audit and access-version
+data; the duties toward subjects remain the controller's.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/procedures/security-incident-response</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 gdpr/procedures/breach-notification-72h</span> <span class="onreq">available on request</span></li></ul>
       

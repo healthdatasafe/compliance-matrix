@@ -291,15 +291,16 @@ HDS's own position on Swiss nLPD:
     breach-scope primitive (`bin/breach-scope.js` + `GET /system/accesses/:accessId`, on all
     HDS cores since 2026-07-29). The nLPD's "as soon as possible" timeline is the
     controller's to meet; HDS provides the underlying scoping evidence.
-    Detail: As a processor, HDS notifies the controller of breaches it detects so the
-    controller can meet its Commissioner-notification duty. The scoping report (compromised
-    access → owner, affected subjects/streams, scoped exposure) is emitted by
-    `bin/breach-scope.js` from the audit + access-version data. The subject notification
-    trigger is more conditional than under GDPR; the controller's incident-response matrix
-    should encode both regimes where it faces both. The event store is encrypted at rest
-    (hosting-layer volume encryption, since 2026-06-26), which strengthens the safe-harbour
-    assessment of a leaked at-rest artefact — a lost or decommissioned medium is protected;
-    a live-system compromise reaches decrypted content and is assessed on its facts.
+    Detail: HDS notifies the parties affected of breaches it detects, as controller of the
+    vault rather than as anyone's processor, so that whoever carries a
+    Commissioner-notification duty can meet it. The scoping report (compromised access to
+    owner, affected subjects and streams, scoped exposure) is emitted by bin/breach-scope.js
+    from the audit and access-version data. The subject-notification trigger is more
+    conditional than under the GDPR; an organisation facing both regimes should encode both
+    in its incident-response matrix. The event store is encrypted at rest by hosting-layer
+    volume encryption since 2026-06-26, which strengthens the safe-harbour assessment of a
+    leaked at-rest artefact: a lost or decommissioned medium is protected, while a
+    live-system compromise reaches decrypted content and is assessed on its facts.
     Evidence: internal:hipaa/procedures/security-incident-response, internal:gdpr/procedures/breach-notification-72h, internal:hipaa/risk/at-rest-encryption
   IMPLEMENTER [controller] coverage: documented
     applies_when: [stores-phi-copy]
@@ -468,9 +469,9 @@ HDS's own position on Swiss nLPD:
     connects to the CH `apiEndpoint`), and that's the moment the implementer records the
     Art.34 legal basis on the access.
   HDS: configurable (effort saved: high)
-    Data residency is the technical control: HDS hosts CH-region data in Switzerland, so
-    binding a subject to the CH region keeps the data in Switzerland and the cross-border
-    question moot. For legitimate transfers the per-user hosting field exposes which
+    Data residency is the technical control: HDS hosts CH-region data in Switzerland, so a
+    vault registered in the CH region keeps the data in Switzerland and the cross-border
+    question is moot. For legitimate transfers the per-user hosting field exposes which
     jurisdiction the data sits in, recoverable for audit.
     Detail: Cross-account disclosures inherit the same control: the counterparty access
     endpoint reveals the receiving jurisdiction, and the legal basis — adequacy, standard
@@ -720,13 +721,15 @@ HDS's own position on Swiss nLPD:
     observability-provider primitive is the sole built-in subprocessor candidate (default
     disabled).
   HDS: facilitated (effort saved: medium) (mode: storage)
-    Where HDS acts as processor distinct from the controller, it offers a Data Processing
-    Agreement and maintains a sub-processor register. The audit log makes processing
-    demonstrably attributable to instructed accesses, so the only-as-instructed duty rests
-    on a record.
-    Detail: Sub-processor engagement follows the DPA's approval and flow-down terms. HDS
-    keeps the sub-processor register and uses the audit and access primitives to evidence
-    instructed-only processing; the substantive instructions are the controller's.
+    This article governs an organisation's engagement of its own processors. HDS is not one
+    of them for the vault: it is the controller there and does not act on another
+    organisation's instructions. What it offers is a sub-processor register covering the
+    providers it engages downstream, and an audit log that makes processing demonstrably
+    attributable to the access that performed it.
+    Detail: An organisation's engagement, approval and flow-down terms sit in its contracts
+    with its own processors. HDS keeps the sub-processor register for the providers it
+    engages, and uses the audit and access primitives to evidence what was done under which
+    access.
     Evidence: internal:hipaa/registers/subprocessor-register, internal:hipaa/policies/access-control
     Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [controller] coverage: documented
@@ -875,13 +878,16 @@ HDS's own position on Swiss nLPD:
     primitives give the operator the scoping data needed for the notification; CMC's
     cross-platform messaging is a structured channel when both sides run Pryv.
   HDS: facilitated (effort saved: medium) (mode: evidence)
-    Where HDS acts as processor, breach notification to the controller is its contractual
-    commitment under the DPA. HDS uses the audit and access primitives to give the
-    controller the scoping data needed for the notification and to cooperate on data-subject
-    rights.
-    Detail: The notification channel and the assistance on subject requests are DPA-defined.
-    HDS supplies the scoping evidence and cooperates; the duties toward subjects are
-    ultimately the controller's.
+    This duty binds a processor toward its controller. HDS holds no such role in the vault:
+    it acts on the individual's permissions rather than on an organisation's instructions,
+    so the duty does not attach to it here. What HDS supplies is the audit and access
+    primitives that give whoever does carry the duty the scoping data a notification needs.
+    An organisation's own processors owe it this duty, and its contracts with them are where
+    that is fixed.
+    Detail: The notification channel and the assistance on subject requests are fixed in the
+    contract between an organisation and its own processors. HDS supplies the scoping
+    evidence from the audit and access-version data; the duties toward subjects remain the
+    controller's.
     Evidence: internal:hipaa/procedures/security-incident-response, internal:gdpr/procedures/breach-notification-72h
   IMPLEMENTER [processor] coverage: documented
     applies_when: always

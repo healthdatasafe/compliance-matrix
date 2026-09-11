@@ -8,7 +8,7 @@ Canonical home: https://compliance.datasafe.dev
 Full matrix as text, for machine reading: https://compliance.datasafe.dev/llms-full.txt
 Per framework, if the full file is too large: https://compliance.datasafe.dev/llms-gdpr.txt, https://compliance.datasafe.dev/llms-hipaa-breach.txt, https://compliance.datasafe.dev/llms-hipaa-privacy.txt, https://compliance.datasafe.dev/llms-hipaa-security.txt, https://compliance.datasafe.dev/llms-soc2.txt, https://compliance.datasafe.dev/llms-swiss-nlpd.txt
 Source: https://github.com/healthdatasafe/compliance-matrix
-Generated 2026-09-10 from the repository's YAML. Not hand-written.
+Generated 2026-09-11 from the repository's YAML. Not hand-written.
 
 ## Read this before quoting anything here
 
