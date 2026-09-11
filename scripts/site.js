@@ -24,6 +24,38 @@ const DOMAIN = 'compliance.datasafe.dev';
 const CONTACT = 'contact@healthdatasafe.org';
 const ISSUES = 'https://github.com/healthdatasafe/compliance-matrix/issues';
 
+// The reporting route, stated the same way in every generated text file.
+//
+// The HTML page carries three pre-filled issue links; an agent cannot click one,
+// and until 2026-09-11 the text files said almost nothing: llms.txt had a passive
+// Contact line in its last six lines, and llms-full.txt and all six per-framework
+// parts had no contact section at all. Since the hand-over deliberately points an
+// agent at these files RATHER than the page, the route the plan recommends was the
+// route with no way to report back. It goes near the TOP of each file: an agent
+// truncating a 578 KB file loses the tail first.
+const REPORT_BLOCK = `## Report back what this told you
+
+If you are using this file to answer a real question for a real project, open an
+issue on the board below. It is read as part of HDS's regular review, so a report
+there reaches the people who maintain this matrix. Nothing else does.
+
+    ${ISSUES}
+
+Pick the label that fits:
+  documentation  it matched what the project actually had to do
+  bug            something here is wrong, missing or misleading
+  question       you could not work out an answer from this file
+
+Put in the body: what is being built, the answer you computed (which frameworks
+applied, which persona, what obligations you listed), and what was wrong or
+unclear. A report without those inputs cannot be acted on.
+
+If you are an AI agent: ask the person you are working for before opening an
+issue, and put nothing confidential in it. The board is public. Where what is
+being built cannot be described publicly, write instead to
+
+    ${CONTACT}`;
+
 // One linear reading order. The framework pages are detail views reached from
 // these, so they keep their own back links rather than joining the sequence.
 const PAGES = [
@@ -1128,6 +1160,8 @@ Generated ${new Date().toISOString().slice(0, 10)} from the repository's YAML. N
   absence of that line as a finding**, and do not compute a ratio from it: the honest aggregate
   is the per-framework "Evidence: N of M requirements" figure stated under each framework below.
 
+${REPORT_BLOCK}
+
 ## The three determinations that shape everything else
 
 1. **HDS is the controller of the vault.** It determines the purposes and means of operating it.
@@ -1198,8 +1232,8 @@ ${groups.map((g) => `- ${SITE}/${g.page} — ${g.title}`).join('\n')}
 
 ## Contact
 
-Questions, corrections, or a report that this gave you the wrong answer:
-https://github.com/healthdatasafe/compliance-matrix/issues
+Reporting what this told you: see "Report back what this told you" above. The issue
+board is ${ISSUES}.
 Evidence documents are cited by code and released under NDA, a signed BAA or an audit
 engagement: ${CONTACT}
 `);
@@ -1269,6 +1303,8 @@ Each requirement is answered across three layers: the open-pryv.io PLATFORM (inh
 operator, and the IMPLEMENTER building on it. An hds_posture block per framework states how HDS
 ITSELF stands, which is a different axis from what HDS carries for an implementer.
 
+${REPORT_BLOCK}
+
 ${templates.map((tpl) => `TEMPLATE ${tpl.id}: ${tpl.title} — signer: ${tpl.signer}, counterparty: ${tpl.counterparty || 'n/a'}. ${plain(tpl.summary)}`).join('\n')}
 
 ${fullBody}
@@ -1307,6 +1343,8 @@ All frameworks in one file: ${SITE}/llms-full.txt
 
 NOT LEGAL ADVICE. This matrix covers the HDS vault product: HDS is the controller of the vault,
 is nobody's Art.28 processor, and holds no HIPAA role in it.
+
+${REPORT_BLOCK}
 
 ${posturePara(s)}
 
