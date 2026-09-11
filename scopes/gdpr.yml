@@ -244,18 +244,19 @@ requirements:
       effort_saved: medium
       facilitation_mode: infrastructure
       overview: |
-        HDS offers data residency in Switzerland (Exoscale) and the US (AWS), so
-        a controller can pin each subject's data to a chosen jurisdiction. The
-        Swiss option keeps EU/EEA-subject data under an adequacy regime; the US
-        option is an international transfer (see Art.44-49). Whether GDPR applies
-        is a function of establishment and subject location, not of the platform.
+        HDS offers data residency in Switzerland (Exoscale) and the US (AWS),
+        and the individual chooses the region when they register their vault.
+        The Swiss option keeps EU and EEA subject data under an adequacy
+        regime; the US option is an international transfer (see Art.44-49).
+        Whether the GDPR applies at all is a function of establishment and
+        subject location, not of the platform.
       detail: |
-        HDS routes each subject to the CH or US region according to the
-        controller's policy and exposes the chosen region per user, so the
-        controller can attest "your data is stored in <region>". Even with
-        CH-only residency, a non-EU establishment offering services to EU
-        subjects is still pulled into GDPR under Art.3(2) — a determination the
-        controller makes.
+        HDS pins each subject's data to the region the individual chose at
+        registration and exposes that region per user, so an organisation can
+        see where a given vault sits rather than assign it. Even with
+        Swiss-only residency, a non-EU establishment offering services to EU
+        subjects is still pulled into the GDPR under Art.3(2), a determination
+        that organisation makes for itself.
       regions: [ch, us]
       evidence:
         internal_docs:
@@ -284,20 +285,24 @@ requirements:
       coverage: documented
       effort_saved: medium
       overview: |
-        HDS maps GDPR vocabulary onto concrete platform artefacts: personal data
-        is event content, the data subject is the account owner, consent is the
-        granted access plus clientData, processing is any audited API call, and
-        pseudonymisation maps to the platform's alias primitive —
-        `accesses.create {randomAlias:true}` mints a platform-unique routable
-        `r-XXXXXXXX` alias that hides the username per access — deployed on the
-        HDS cores since 2026-07-28. In the usual SaaS arrangement HDS is the
-        processor and the customer is the controller; the role assignment is
-        contractual.
+        HDS maps GDPR vocabulary onto concrete platform artefacts: personal
+        data is event content, the data subject is the account owner, consent
+        is the granted access plus clientData, processing is any audited API
+        call, and pseudonymisation maps to the platform's alias primitive,
+        accesses.create {randomAlias:true}, which mints a platform-unique
+        routable r-XXXXXXXX alias hiding the username per access, deployed on
+        the HDS cores since 2026-07-28. For the vault, HDS is the controller:
+        it determines the purposes and means of operating it, and data enters
+        only with the individual's explicit consent. An organisation that
+        receives data an individual chose to share is an independent
+        controller of what it then holds.
       detail: |
-        The controller/processor split is set in the data-processing agreement,
-        not by the software. HDS as processor acts on documented controller
-        instructions. The mapping of terms to primitives lets a controller point
-        an auditor at artefacts rather than abstractions.
+        HDS is nobody's Art.28 processor for this product, and the role
+        assignment is not merely contractual: it acts on the individual's
+        permissions rather than on a controller's documented instructions,
+        which is the test Art.28(3) sets. The mapping of terms to primitives
+        lets an organisation point an auditor at artefacts rather than
+        abstractions.
       regions: [ch, us]
       evidence:
         internal_docs:
@@ -1068,11 +1073,12 @@ requirements:
         to demonstrate it (audit log plus access version chain). The
         organisational-measures programme is the controller's.
       detail: |
-        HDS as processor supplies access control, transport encryption,
-        monitoring and the evidence layer, and offers a DPA documenting its own
-        measures. The controller assembles these into its own accountability
-        programme and carries the demonstrability burden at the organisational
-        level.
+        HDS supplies access control, transport encryption, monitoring and the
+        evidence layer as controller of the vault rather than as anyone's
+        processor, and offers no Art.28 DPA for this product because it cannot
+        satisfy Art.28(3). An organisation assembles those measures into its
+        own accountability programme and carries the demonstrability burden at
+        the organisational level.
       regions: [ch, us]
       evidence:
         internal_docs:
@@ -1168,14 +1174,18 @@ requirements:
       facilitation_mode: primitive
       overview: |
         "Only on instructions" is enforced operationally through the access
-        primitive: workforce, contractor and app accesses are scoped to specific
-        streams and levels per the controller's instructions, and the audit log
-        proves what was actually done. HDS as processor binds its own staff to
-        the same instruction-only discipline.
+        primitive: workforce, contractor and app accesses are scoped to
+        specific streams and levels, and the audit log proves what was
+        actually done. HDS binds its own staff to that discipline for the
+        vault it controls. It is not processing on another organisation's
+        instructions here, so this article describes the persons under that
+        organisation's own authority rather than HDS's relationship to it.
       detail: |
-        Out-of-scope access attempts and unauthorised method calls surface in the
-        audit data, making instruction violations detectable. The substantive
-        instructions themselves come from the controller's DPA.
+        Out-of-scope access attempts and unauthorised method calls surface in
+        the audit data, making instruction violations detectable. The
+        substantive instructions binding an organisation's own staff and
+        processors come from that organisation, not from any agreement with
+        HDS.
       regions: [ch, us]
       evidence:
         internal_docs:
