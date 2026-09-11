@@ -52,6 +52,47 @@ being built cannot be described publicly, write instead to
 
     contact@healthdatasafe.org
 
+## If you consume this matrix programmatically
+
+**Structural fields are the contract; prose is not.** These may be keyed on and
+computed against:
+
+  ref
+  hds.coverage
+  implementer[].persona
+  implementer[].coverage
+  implementer[].basis
+  implementer[].nature
+  implementer[].applies_when
+
+Everything else (titles, requirement text, overviews, details, posture statements,
+gap summaries, labels, notes) may change at any time. A release that only changes
+prose leaves every digest below untouched.
+
+**Digests, so one request tells you whether to re-verify.** Also at https://compliance.datasafe.dev/structure.json.
+
+  combined   ff545bf95607ace8
+  gdpr           df87ed09f085e77a  (47 rows)
+  hipaa-breach   e7e6f9d9dcfd027a  (13 rows)
+  hipaa-privacy  cf3cb98dc78b6ee1  (35 rows)
+  hipaa-security 3d4014e4e66ef5b3  (43 rows)
+  soc2           f343b2f884845918  (61 rows)
+  swiss-nlpd     1d20796196df8e43  (30 rows)
+  profiles       bd5c667c7a134ce6  (version 1)
+
+If a digest is unchanged since your pin, no structural field moved in that scope and
+you can re-pin without re-verifying. If one moved, diff that scope.
+
+**Requirement ids are strings, and YAML will bite you.** An unquoted `164.410` parses
+as the number 164.41, which is not the same key and fails silently rather than
+loudly. Ours are quoted; quote yours.
+
+**Two dates, and they answer different questions.** `hds_posture.assessed_at` is when
+the position was last reviewed by a person. `hds_posture.evidence_backing.as_of` is
+when the counts were last recomputed against the internal document set, which happens
+on its own cadence. They drift apart legitimately; show `assessed_at` when a reader
+asks how current the position is.
+
 ## The three determinations that shape everything else
 
 1. **HDS is the controller of the vault.** It determines the purposes and means of operating it.
@@ -291,11 +332,20 @@ An obligation is one entry under a requirement's `implementer:` list. For a give
    considered and places no duty on anyone; they are not obligations.
 3. An entry with `nature: orientation` is a scope provision, not a duty. Show it, never count
    it as an obligation.
+3b. **A requirement with NO entry for the derived persona states no obligation for that
+   persona, and that is NOT the same as `out-of-scope`.** The latter is a considered
+   "not yours"; a bare absence means this matrix has not authored an obligation there yet.
+   Do not merge the two. Count neither, and show the absent ones as their own bucket rather
+   than silently dropping them, for the same reason an absent `applies_when` is shown.
+
 4. Otherwise the entry applies if `applies_when` is absent, or is `always`, or ANY listed
    feature is on. Absent means "not yet classified": show it, never treat it as inapplicable.
 5. `basis: entity` means the duty attaches because of what the organisation already is and
    would exist on any platform. `basis: integration` means it arises from using HDS. Present
    them separately: roughly three quarters of the HIPAA family is `entity`.
+   **On an `entity` obligation, HDS's coverage is assistance and discharges nothing.** The
+   duty is still owed and still needs an answer of your own: HDS having a security official
+   does not answer an auditor asking who yours is.
 
 ### What HDS covers
 Each requirement's `hds.coverage` is one of implemented, configurable, facilitated, documented,

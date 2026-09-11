@@ -1,0 +1,44 @@
+{
+  "generated": "2026-09-11",
+  "note": "Digests cover STRUCTURAL fields only. Prose may change without moving any digest.",
+  "fields": [
+    "ref",
+    "hds.coverage",
+    "implementer[].persona",
+    "implementer[].coverage",
+    "implementer[].basis",
+    "implementer[].nature",
+    "implementer[].applies_when"
+  ],
+  "combined": "ff545bf95607ace8",
+  "profiles": {
+    "version": 1,
+    "digest": "bd5c667c7a134ce6"
+  },
+  "scopes": {
+    "gdpr": {
+      "rows": 47,
+      "digest": "df87ed09f085e77a"
+    },
+    "hipaa-breach": {
+      "rows": 13,
+      "digest": "e7e6f9d9dcfd027a"
+    },
+    "hipaa-privacy": {
+      "rows": 35,
+      "digest": "cf3cb98dc78b6ee1"
+    },
+    "hipaa-security": {
+      "rows": 43,
+      "digest": "3d4014e4e66ef5b3"
+    },
+    "soc2": {
+      "rows": 61,
+      "digest": "f343b2f884845918"
+    },
+    "swiss-nlpd": {
+      "rows": 30,
+      "digest": "1d20796196df8e43"
+    }
+  }
+}
