@@ -1179,9 +1179,16 @@ const profilesDigest = sha([
 const ALL_DIGEST = sha([scopeDigests.map((d) => [d.id, d.digest]), profilesDigest]);
 
 fs.writeFileSync(path.join(OUT, 'structure.json'), JSON.stringify({
-  format: 1,
+  // Bumped whenever the SHAPE of this file or the DIGEST COMPUTATION changes, so a
+  // consumer knows when digests stop being comparable with the ones it pinned.
+  // format 2 (2026-09-11) folded unauthored_obligations into each scope digest and
+  // added per-requirement digests; every scope digest moved once at that boundary,
+  // including scopes whose content had not changed at all.
+  format: 2,
   generated: new Date().toISOString().slice(0, 10),
-  note: 'Digests cover STRUCTURAL fields only. Prose may change without moving any digest.',
+  note: 'Digests cover STRUCTURAL fields only; prose may change without moving any digest. ' +
+    'Digests are comparable only within the same `format`: a format bump means the ' +
+    'computation changed, so compare content across one by diffing, not by hash.',
   fields: STRUCTURAL_FIELDS,
   combined: ALL_DIGEST,
   profiles: { version: PROFILES?.version ?? null, digest: profilesDigest },
@@ -1264,8 +1271,11 @@ so you can open only the rows that moved instead of re-deriving the scope. The
 \`rows\` count next to each scope digest distinguishes rows added or removed from
 entries changing inside existing rows.
 
-\`format\` in that file is the shape of the file itself; it changes only if the
-layout does, never because the matrix content moved.
+\`format\` in that file covers the file's shape AND the digest computation. Digests
+are comparable only within the same \`format\`: when it bumps, every digest may move
+without any content changing, so compare across that boundary by diffing rather than
+by hash. It bumped to 2 on 2026-09-11 when per-requirement digests were added and the
+unauthored list was folded into the scope digest.
 
 **Requirement ids are strings, and YAML will bite you.** An unquoted \`164.410\` parses
 as the number 164.41, which is not the same key and fails silently rather than
