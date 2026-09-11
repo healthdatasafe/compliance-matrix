@@ -53,6 +53,49 @@ HDS's own position on HIPAA-Privacy:
   Known gaps in HDS's own position:
   - [medium] Thirty-two of thirty-five rows are unreviewed drafts. The positions are stated but not second-read.
 
+## Considered and deliberately not authored
+
+These persona obligations were examined and left open because the answer is contested.
+Listed here means weighed; an absence NOT listed means nobody has looked yet. Neither is
+an obligation and neither is counted.
+
+  hipaa-privacy 164.510 [business-associate]
+    A business associate acts on the covered entity's instructions here, but is directly
+    liable for impermissible uses and disclosures under §164.502. Whether that leaves it an
+    obligation of its own under this section is the contested point.
+  hipaa-privacy 164.512 [business-associate]
+    Post-Omnibus a business associate is directly liable for §164.502(a), and the §164.512
+    conditions bound what it may disclose. Whether the section places a duty on it, or only
+    a limit, is what nobody here can settle.
+  hipaa-privacy 164.512(b) [business-associate]
+    As for §164.512. Public-health disclosures are made on the covered entity's
+    determination, yet a business associate disclosing outside the permitted conditions is
+    directly liable.
+  hipaa-privacy 164.512(f) [business-associate]
+    As for §164.512. Law-enforcement disclosures reach a business associate served with
+    process directly, which is precisely where the allocation is unclear.
+  hipaa-privacy 164.514(a) [business-associate]
+    A business associate may de-identify only if its agreement permits, and §164.514(d)
+    minimum-necessary liability attaches to it directly. Whether the de-identification
+    standard itself binds it is unsettled.
+  hipaa-privacy 164.514(b) [business-associate]
+    As for §164.514(a). The method determination is the covered entity's, while the
+    execution may sit with a business associate that is directly liable for the result.
+  hipaa-privacy 164.514(c) [business-associate]
+    As for §164.514(a). Re-identification codes may be held by a business associate, which
+    raises whether the derivation constraint binds it directly.
+  hipaa-privacy 164.530(c) [business-associate]
+    §164.530 addresses covered entities, but a business associate carries safeguard duties
+    under the Security Rule and under §164.502. Marking this out-of-scope would read as "no
+    safeguard duty", which is false in substance even if true of this section.
+  hipaa-privacy 164.530(d) [business-associate]
+    The complaints process is the covered entity's, yet a business associate receiving a
+    complaint directly has an unclear obligation to route it.
+  hipaa-privacy 164.530(g) [business-associate]
+    Anti-retaliation is directed at covered entities in this section, while §160.316 reaches
+    any person. Whether that leaves a business associate an obligation under §164.530(g)
+    itself is contested.
+
 ## hipaa-privacy 164.502 — Uses and disclosures of PHI — general rules
   Requirement: A covered entity, or a business associate acting on its behalf, may use or
   disclose protected health information only as permitted or required by the Privacy Rule.
