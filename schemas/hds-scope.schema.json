@@ -280,6 +280,39 @@
           "description": "Why HDS does not hold the role a reader would expect under this scope. THE MATRIX COVERS THE VAULT PRODUCT ONLY: data is held for the individual, who decides who may see it, so HDS is not an Art.28 processor and not a business associate here. Arrangements that would create such a role (a partnership where HDS handles data on an organisation's behalf) are documented separately and are out of this matrix's scope."
         }
       }
+    },
+    "unauthored_obligations": {
+      "type": "array",
+      "description": "Persona obligations this scope has CONSIDERED and deliberately not authored, because the answer is contested and guessing it would publish a compliance claim nobody has stood behind. LISTED HERE MEANS EXAMINED AND DELIBERATELY LEFT OPEN; an absence that is NOT listed means nobody has looked yet. Before this existed the two were indistinguishable from outside, and only the first is a statement (raised by a programmatic consumer, compliance-matrix#1, 2026-09-11). An entry is NOT an obligation and is never counted as one: it records that the matrix owes an answer here, not that the implementer owes a duty. validate.js rejects an entry whose ref does not exist, whose persona already has an implementer entry on that row (the absence would not be real), or which carries no note.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "ref",
+          "persona",
+          "note"
+        ],
+        "properties": {
+          "ref": {
+            "type": "string",
+            "description": "ref of a requirement in this scope."
+          },
+          "persona": {
+            "type": "string",
+            "description": "The persona with no authored entry on that row."
+          },
+          "note": {
+            "type": "string",
+            "minLength": 1,
+            "description": "One line: why the answer is contested, so a reader can see it was weighed."
+          },
+          "tracking_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "PUBLIC tracker where the determination is being sought. Never a private path."
+          }
+        }
+      }
     }
   }
 }

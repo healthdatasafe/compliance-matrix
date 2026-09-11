@@ -313,6 +313,32 @@ if (profiles) {
   const ORG_PERSONAS = new Set(['partner', 'covered-entity', 'business-associate', 'controller',
     'processor', 'service-organization', 'user-entity', 'subservice-organization']);
 
+  // ---- unauthored_obligations: the list must describe a real, real absence ----
+  //
+  // The point of the list is that "listed" means examined and deliberately left
+  // open, while an unlisted absence means nobody looked. That distinction is
+  // worth nothing if an entry can name a row that does not exist, a persona that
+  // already HAS an entry there, or carry no reason. Each of those would turn a
+  // statement back into noise.
+  for (const { scope, file } of hdsScopes) {
+    const r0 = rel(file);
+    const byRef = new Map((scope.requirements || []).map((r) => [String(r.ref), r]));
+    const seen = new Set();
+    for (const u of scope.unauthored_obligations || []) {
+      const key = `${u.ref}|${u.persona}`;
+      if (seen.has(key)) e(`${r0}: unauthored_obligations lists ${key} twice`);
+      seen.add(key);
+      const req = byRef.get(String(u.ref));
+      if (!req) {
+        e(`${r0}: unauthored_obligations cites ref '${u.ref}' which is not a requirement in this scope`);
+        continue;
+      }
+      if ((req.implementer || []).some((o) => o.persona === u.persona)) {
+        e(`${r0}: ${u.ref} is listed as unauthored for '${u.persona}' but an implementer entry for that persona exists — the absence is not real`);
+      }
+    }
+  }
+
   // An implementer entry is either a duty (it says what to do) or it is not one
   // (coverage out-of-scope, and nothing to say). Those two coincided exactly on
   // all 92 out-of-scope entries; making it a rule stops a future entry drifting

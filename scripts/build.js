@@ -29,6 +29,9 @@
  *   hds_posture_roles(scope_id, seq, arrangement, role, applies_to)
  *   hds_posture_gaps(scope_id, seq, summary, severity, refs, internal_doc, tracking_url)
  *   evidence_backing(scope_id, rows_total, rows_evidenced, rows_approved, as_of)
+ *   unauthored_obligations(scope_id, ref, persona, note, tracking_url)
+ *       persona obligations examined and deliberately NOT authored. Listed means
+ *       weighed and left open; an absence not listed means nobody has looked.
  *
  * THE IMPLEMENTER PROFILE MODEL (profiles.yml) — the vocabulary row tags are
  * drawn from, so a consumer can reproduce the implementer view's answer:
@@ -106,6 +109,10 @@ db.exec(`
     internal_doc TEXT, tracking_url TEXT,
     PRIMARY KEY (scope_id, seq)
   );
+  CREATE TABLE unauthored_obligations (
+    scope_id TEXT, ref TEXT, persona TEXT, note TEXT, tracking_url TEXT,
+    PRIMARY KEY (scope_id, ref, persona)
+  );
   CREATE TABLE evidence_backing (
     scope_id TEXT PRIMARY KEY, rows_total INTEGER, rows_evidenced INTEGER,
     rows_approved INTEGER, as_of TEXT
@@ -147,6 +154,7 @@ const insPosture = db.prepare(`INSERT INTO hds_posture VALUES
 const insPostureRole = db.prepare('INSERT INTO hds_posture_roles VALUES (?,?,?,?,?)');
 const insPostureGap = db.prepare('INSERT INTO hds_posture_gaps VALUES (?,?,?,?,?,?,?)');
 const insBacking = db.prepare('INSERT INTO evidence_backing VALUES (?,?,?,?,?)');
+const insUnauthored = db.prepare('INSERT INTO unauthored_obligations VALUES (?,?,?,?,?)');
 const insProfMeta = db.prepare('INSERT INTO profiles_meta VALUES (?,?)');
 const insProfFeature = db.prepare('INSERT INTO profile_features VALUES (?,?,?,?,?)');
 const insProfDerived = db.prepare('INSERT INTO profile_derived VALUES (?,?,?,?)');
@@ -222,6 +230,12 @@ const buildAll = db.transaction(() => {
       });
       const eb = p.evidence_backing;
       if (eb) insBacking.run(s.id, eb.rows_total, eb.rows_evidenced, eb.rows_approved, eb.as_of);
+    }
+
+    // Listed = examined and deliberately left open; absent from this list means
+    // nobody has looked. Never an obligation, never counted as one.
+    for (const u of s.unauthored_obligations || []) {
+      insUnauthored.run(s.id, String(u.ref), u.persona, u.note, u.tracking_url ?? null);
     }
 
     for (const r of reqs) {

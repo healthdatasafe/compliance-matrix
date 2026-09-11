@@ -104,6 +104,73 @@ changelog:
       Initial draft of the HDS layer over the HIPAA Privacy Rule. All rows draft
       pending review.
 
+# Persona obligations considered and deliberately NOT authored. Listed here means
+# examined and left open; an absence that is not listed means nobody has looked.
+# Raised by a programmatic consumer (compliance-matrix#1): from outside, a silence
+# nobody has weighed and a silence somebody refused to guess read identically, and
+# only the second is a statement.
+unauthored_obligations:
+  - ref: "164.510"
+    persona: business-associate
+    note: >
+      A business associate acts on the covered entity's instructions here, but is
+      directly liable for impermissible uses and disclosures under §164.502. Whether
+      that leaves it an obligation of its own under this section is the contested
+      point.
+  - ref: "164.512"
+    persona: business-associate
+    note: >
+      Post-Omnibus a business associate is directly liable for §164.502(a), and the
+      §164.512 conditions bound what it may disclose. Whether the section places a
+      duty on it, or only a limit, is what nobody here can settle.
+  - ref: "164.512(b)"
+    persona: business-associate
+    note: >
+      As for §164.512. Public-health disclosures are made on the covered entity's
+      determination, yet a business associate disclosing outside the permitted
+      conditions is directly liable.
+  - ref: "164.512(f)"
+    persona: business-associate
+    note: >
+      As for §164.512. Law-enforcement disclosures reach a business associate served
+      with process directly, which is precisely where the allocation is unclear.
+  - ref: "164.514(a)"
+    persona: business-associate
+    note: >
+      A business associate may de-identify only if its agreement permits, and
+      §164.514(d) minimum-necessary liability attaches to it directly. Whether the
+      de-identification standard itself binds it is unsettled.
+  - ref: "164.514(b)"
+    persona: business-associate
+    note: >
+      As for §164.514(a). The method determination is the covered entity's, while the
+      execution may sit with a business associate that is directly liable for the
+      result.
+  - ref: "164.514(c)"
+    persona: business-associate
+    note: >
+      As for §164.514(a). Re-identification codes may be held by a business associate,
+      which raises whether the derivation constraint binds it directly.
+  - ref: "164.530(c)"
+    persona: business-associate
+    note: >
+      §164.530 addresses covered entities, but a business associate carries safeguard
+      duties under the Security Rule and under §164.502. Marking this out-of-scope
+      would read as "no safeguard duty", which is false in substance even if true of
+      this section.
+  - ref: "164.530(d)"
+    persona: business-associate
+    note: >
+      The complaints process is the covered entity's, yet a business associate
+      receiving a complaint directly has an unclear obligation to route it.
+  - ref: "164.530(g)"
+    persona: business-associate
+    note: >
+      Anti-retaliation is directed at covered entities in this section, while
+      §160.316 reaches any person. Whether that leaves a business associate an
+      obligation under §164.530(g) itself is contested.
+
+
 requirements:
 
   - ref: "164.502"

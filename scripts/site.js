@@ -1138,6 +1138,15 @@ const STRUCTURAL_FIELDS = ['ref', 'hds.coverage',
   'implementer[].basis', 'implementer[].nature', 'implementer[].applies_when'];
 
 const appliesWhenKey = (v) => (v === undefined ? null : (v === 'always' ? 'always' : [...v].sort()));
+const rowProjection = (r) => [
+  String(r.ref),
+  r.hds?.coverage ?? null,
+  (r.implementer || [])
+    .map((o) => [o.persona, o.coverage, o.basis ?? null, o.nature ?? 'obligation', appliesWhenKey(o.applies_when)])
+    .sort((a, b) => String(a[0]).localeCompare(String(b[0]))),
+];
+const unauthoredProjection = (scope) => (scope.unauthored_obligations || [])
+  .map((u) => [String(u.ref), u.persona]).sort();
 const structuralProjection = (scope) => (scope.requirements || [])
   .map((r) => [
     String(r.ref),
@@ -1152,7 +1161,12 @@ const sha = (x) => crypto.createHash('sha256').update(JSON.stringify(x)).digest(
 const scopeDigests = scopes.map((s) => ({
   id: s.id,
   rows: (s.requirements || []).length,
-  digest: sha(structuralProjection(s)),
+  // Listing a persona obligation as deliberately unauthored is a structural
+  // statement about the scope, so it belongs in the digest: a consumer that
+  // renders the distinction must be told when the list changes.
+  digest: sha([structuralProjection(s), unauthoredProjection(s)]),
+  requirements: Object.fromEntries((s.requirements || []).map((r) => [String(r.ref), sha(rowProjection(r))])),
+  unauthored: (s.unauthored_obligations || []).map((u) => ({ ref: String(u.ref), persona: u.persona })),
 }));
 const profilesDigest = sha([
   (PROFILES?.features || []).map((f) => [f.id, f.group, f.exclusive ?? null]).sort(),
@@ -1165,12 +1179,21 @@ const profilesDigest = sha([
 const ALL_DIGEST = sha([scopeDigests.map((d) => [d.id, d.digest]), profilesDigest]);
 
 fs.writeFileSync(path.join(OUT, 'structure.json'), JSON.stringify({
+  format: 1,
   generated: new Date().toISOString().slice(0, 10),
   note: 'Digests cover STRUCTURAL fields only. Prose may change without moving any digest.',
   fields: STRUCTURAL_FIELDS,
   combined: ALL_DIGEST,
   profiles: { version: PROFILES?.version ?? null, digest: profilesDigest },
-  scopes: Object.fromEntries(scopeDigests.map((d) => [d.id, { rows: d.rows, digest: d.digest }])),
+  scopes: Object.fromEntries(scopeDigests.map((d) => [d.id, {
+    rows: d.rows,
+    digest: d.digest,
+    // Per-requirement digests, so a consumer opens only the rows that moved
+    // instead of re-deriving a whole scope. Asked for in compliance-matrix#1
+    // after a two-scope re-verify turned out to be six changed entries.
+    requirements: d.requirements,
+    unauthored: d.unauthored,
+  }])),
 }, null, 2) + '\n');
 
 // ---- llms.txt ----
@@ -1235,7 +1258,14 @@ ${scopeDigests.map((d) => `  ${d.id.padEnd(15)}${d.digest}  (${d.rows} rows)`).j
   profiles       ${profilesDigest}  (version ${PROFILES?.version ?? 'n/a'})
 
 If a digest is unchanged since your pin, no structural field moved in that scope and
-you can re-pin without re-verifying. If one moved, diff that scope.
+you can re-pin without re-verifying. If one moved, \`structure.json\` also carries a
+**per-requirement digest** for every row (\`scopes.<id>.requirements\`, keyed by ref),
+so you can open only the rows that moved instead of re-deriving the scope. The
+\`rows\` count next to each scope digest distinguishes rows added or removed from
+entries changing inside existing rows.
+
+\`format\` in that file is the shape of the file itself; it changes only if the
+layout does, never because the matrix content moved.
 
 **Requirement ids are strings, and YAML will bite you.** An unquoted \`164.410\` parses
 as the number 164.41, which is not the same key and fails silently rather than
@@ -1298,6 +1328,12 @@ An obligation is one entry under a requirement's \`implementer:\` list. For a gi
    "not yours"; a bare absence means this matrix has not authored an obligation there yet.
    Do not merge the two. Count neither, and show the absent ones as their own bucket rather
    than silently dropping them, for the same reason an absent \`applies_when\` is shown.
+   **Two kinds of absence, and one of them is a statement.** A scope may carry
+   \`unauthored_obligations\`, listing persona obligations it has examined and
+   deliberately not authored because the answer is contested. Listed means weighed
+   and left open; unlisted means nobody has looked. Neither is an obligation and
+   neither is counted, but only the first says anything. The list is in
+   \`structure.json\` per scope and is covered by that scope's digest.
 
 4. Otherwise the entry applies if \`applies_when\` is absent, or is \`always\`, or ANY listed
    feature is on. Absent means "not yet classified": show it, never treat it as inapplicable.
@@ -1441,7 +1477,17 @@ is nobody's Art.28 processor, and holds no HIPAA role in it.
 ${REPORT_BLOCK}
 
 ${posturePara(s)}
+${(s.unauthored_obligations || []).length
+? `
+## Considered and deliberately not authored
 
+These persona obligations were examined and left open because the answer is contested.
+Listed here means weighed; an absence NOT listed means nobody has looked yet. Neither is
+an obligation and neither is counted.
+
+${s.unauthored_obligations.map((u) => `  ${s.id} ${u.ref} [${u.persona}]\n${wrap(plain(u.note), 88, '    ')}`).join('\n')}
+`
+: ''}
 ${body}
 `;
   fs.writeFileSync(path.join(OUT, `llms-${s.id}.txt`), out);
