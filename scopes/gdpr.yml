@@ -1220,16 +1220,19 @@ requirements:
       effort_saved: high
       facilitation_mode: infrastructure
       overview: |
-        The HDS architecture is privacy-by-design by founding pattern: per-user
-        storage isolation, default-deny stream-scoped permissions, separate
-        personal/app/shared access types, privileged data on system streams, and
-        audit-on by default. The controller's own defaults — token scopes,
-        retention period, opt-in UX — remain in its hands.
+        The HDS architecture is privacy-by-design by founding pattern:
+        per-user storage isolation, default-deny stream-scoped permissions,
+        separate personal, app and shared access types, privileged data on
+        system streams, and audit-on by default. The vault's own defaults are
+        HDS's to set. The defaults an organisation controls are the ones in
+        what it builds: how narrow a grant its application requests, whether
+        its notices default on, and how long it keeps what it receives.
       detail: |
         Default-deny permissions, audit-by-construction, enforced transport
-        encryption and per-user residency pinning ship as platform defaults. The
-        controller still decides whether app tokens are minted with minimal
-        scope, whether notices default on, and how short the retention period is.
+        encryption and per-user residency pinning ship as platform defaults.
+        An organisation building on the vault decides the scope of the grant
+        it asks for, the defaults of its own consent and notice surfaces, and
+        the retention of any copy it keeps.
       regions: [ch, us]
       evidence:
         internal_docs:
@@ -1260,18 +1263,27 @@ requirements:
       effort_saved: medium
       facilitation_mode: storage
       overview: |
-        In the usual arrangement HDS is the Art.28 processor and offers a
-        data-processing agreement covering the §3 terms and a documented
-        subprocessor posture. HDS ships zero mandatory subprocessors; every
-        external integration (SMTP, SMS, observability) is opt-in and inventoried
-        with its data-flow. The substantive §1 "sufficient guarantees"
-        evaluation is the controller's.
+        This article governs an organisation's engagement of its own
+        processors. HDS is not one of them for the vault, and the arrangement
+        is not available to negotiate: Art.28(3) requires processing on the
+        controller's documented instructions and deletion or return of the
+        data at the controller's choice, while HDS acts on the individual's
+        permissions and cannot delete an individual's vault at a third party's
+        direction. What HDS does carry is a disciplined subprocessor posture
+        of its own: zero mandatory subprocessors, with every external
+        integration (SMTP, SMS, observability) opt-in and inventoried with its
+        data flow. The sufficient-guarantees evaluation of an organisation's
+        own processors is that organisation's to make.
       detail: |
-        HDS maintains a subprocessor register and hosting-provider attestations
-        and routes deletion/return of data at end of provision via account
-        deletion and backup tooling. The audit log and access primitives carry
-        the documented controller instructions and the demonstrability evidence.
-        A DPA template is offered.
+        HDS maintains a subprocessor register and hosting-provider
+        attestations covering the providers it engages downstream, and signs
+        the agreements that flow obligations to them. It offers no Art.28
+        data-processing agreement for the vault, because there is no
+        arrangement for one to govern; an organisation placing data with HDS
+        on its own behalf is a different arrangement, documented separately
+        and outside this matrix. The audit log and access primitives remain
+        available as demonstrability evidence for the processing an
+        organisation does carry out.
       regions: [ch, us]
       evidence:
         internal_docs:
@@ -1530,10 +1542,12 @@ requirements:
       facilitation_mode: evidence
       overview: |
         The DPIA is a written assessment the controller produces; HDS supplies
-        inputs — data-residency facts, audit/access descriptions of the
-        processing flow, system-stream isolation as the sensitive-data boundary,
-        and this matrix as the technical-measures inventory. A formal DPIA
-        process is a known gap that the controller must run itself.
+        inputs: data-residency facts, audit and access descriptions of the
+        processing flow, system-stream isolation as the sensitive-data
+        boundary, and this matrix as the technical-measures inventory. HDS's
+        own DPIA process is drafted but not yet operating, which it records as
+        an open item; the assessment for an organisation's own processing is
+        that organisation's to run.
       detail: |
         The prescribed Art.35(7) content maps onto platform inputs: a systematic
         description from audit and access purposes, a necessity assessment from
@@ -1892,15 +1906,15 @@ requirements:
       effort_saved: high
       overview: |
         HDS's Switzerland region rests on the EU adequacy decision for
-        Switzerland, so routing EU/EEA subjects there grounds the transfer (or
-        avoids one entirely). The per-user residency is exposed for auditor
+        Switzerland, so a vault registered there grounds the transfer, or
+        avoids one entirely. The per-user residency is exposed for auditor
         questions. Tracking which countries currently hold adequacy is the
-        controller's regulatory responsibility.
+        regulatory responsibility of whoever relies on it.
       detail: |
-        The controller selects the CH region for subjects whose transfer it wants
-        to ground on adequacy; the chosen hosting per user proves residency. The
-        US region is not an adequacy-based transfer for general EU data and needs
-        Art.46 safeguards instead.
+        The region is the individual's choice at registration, and the hosting
+        recorded per user proves residency; an organisation can read it but
+        cannot set it. The US region is not an adequacy-based transfer for
+        general EU data and needs Art.46 safeguards instead.
       regions: [ch, us]
       evidence:
         internal_docs:
@@ -1930,22 +1944,22 @@ requirements:
       effort_saved: low
       facilitation_mode: storage
       overview: |
-        Choosing the US region (AWS) is a transfer that needs an Art.46
-        safeguard — typically standard contractual clauses. HDS records the
+        A vault registered in the US region is a transfer that needs an Art.46
+        safeguard, typically standard contractual clauses. HDS records the
         chosen mechanism on the transferring access clientData so the Art.30
-        transfers register is derivable, and offers a DPA into which the SCCs are
-        incorporated. HDS's own upstream instrument for the US hosting layer is
-        still being executed: the AWS HIPAA BAA is in force, and the GDPR DPA
-        plus EU/Swiss SCCs with the transfer impact assessment are the tracked
-        remainder (see the planned chip) — until signed and recorded, US-region
-        transfers rest on the HIPAA instrument alone. The SCC/BCR documents
-        themselves are controller/legal artefacts.
+        transfers register is derivable. HDS's own upstream instrument for the
+        US hosting layer is still being executed: the AWS HIPAA BAA is in
+        force, while the GDPR DPA plus EU and Swiss standard contractual
+        clauses with the transfer impact assessment are the tracked remainder
+        (see the planned chip). Until those are signed and recorded, US-region
+        transfers rest on the HIPAA instrument alone. The safeguard documents
+        themselves are legal artefacts of whoever concludes them.
       detail: |
-        The transfer surfaces — access-bound counterparty fetches, the US-region
-        residency choice, and subprocessor outbound flows — each carry the
-        mechanism reference on the relevant artefact. HDS persists the references
-        with versioning and audit; the controller concludes the safeguard
-        instrument.
+        The transfer surfaces, which are access-bound counterparty fetches,
+        the region a vault sits in, and subprocessor outbound flows, each
+        carry the mechanism reference on the relevant artefact. HDS persists
+        the references with versioning and audit; whoever makes the transfer
+        concludes the safeguard instrument.
       regions: [ch, us]
       evidence:
         internal_docs:

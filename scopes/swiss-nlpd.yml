@@ -118,17 +118,18 @@ requirements:
       facilitation_mode: primitive
       regions: [ch]
       overview: |
-        On top of Pryv's primitive model, HDS operates the platform on which the
-        controller designs the stream layout. The classification of a data
-        category as sensitive — including the nLPD's broader categories — is the
-        controller's editorial decision, which HDS carries into the access and
-        audit record.
+        On top of Pryv's primitive model, HDS operates the platform and
+        designs the vault's stream layout. The classification of a data
+        category as sensitive, including the nLPD's broader categories, is a
+        judgement for whoever processes the data, and HDS carries the cited
+        classification into the access and audit record.
       detail: |
-        The recommended pattern dedicates separate stream subtrees per
-        sensitive-data category and grants accesses scoped to the smallest
-        necessary subtree, so the heightened-protection posture follows the
-        topology. HDS stores and enforces that layout; it does not assign the
-        sensitivity classification.
+        The layout dedicates separate stream subtrees per sensitive-data
+        category, and accesses are granted scoped to the smallest necessary
+        subtree, so the heightened-protection posture follows the topology. An
+        organisation requests a scope no wider than its categories need; the
+        vault's topology is not its to design, and the sensitivity
+        classification is not HDS's to assign.
       evidence_approved: true
       evidence:
         internal_docs:
@@ -215,14 +216,15 @@ requirements:
       regions: [ch]
       overview: |
         The Pryv architecture HDS operates is privacy-protective by
-        construction — per-user storage isolation, stream-scoped permissions,
+        construction: per-user storage isolation, stream-scoped permissions,
         distinct access types, system streams for privileged data and
-        audit-by-default. HDS runs this baseline; the per-deployment default
-        configuration is the controller's.
+        audit-by-default. HDS runs this baseline and sets the vault's own
+        defaults, including what is presented at registration.
       detail: |
-        What stays on the controller is the deployment-time choice of token
-        scopes minted, retention selected and the notice shown at registration.
-        HDS supplies and operates the privacy-by-design substrate that those
+        What stays with an organisation is the defaults in what it builds: how
+        narrow a grant it requests, its own retention, and its own collection
+        notice. Vault registration and the notices shown there belong to HDS,
+        which supplies and operates the privacy-by-design substrate those
         choices configure.
       evidence_approved: true
       evidence:
@@ -804,13 +806,14 @@ requirements:
       regions: [ch]
       overview: |
         Applicability turns on whether processing affects data subjects in
-        Switzerland, not on where infrastructure lives. HDS operates a CH region in
-        Switzerland to which subjects can be bound explicitly when CH jurisdiction
-        is the chosen regime.
+        Switzerland, not on where infrastructure lives. HDS operates a CH
+        region in Switzerland, and an individual who chooses it at
+        registration keeps their vault under Swiss jurisdiction.
       detail: |
-        The cross-border transfer side is handled under Art. 34. HDS supplies the
-        residency mechanism; the determination of territorial applicability is the
-        controller's.
+        The cross-border transfer side is handled under Art. 34. HDS supplies
+        and operates the residency mechanism; the determination of territorial
+        applicability to an organisation's own processing is that
+        organisation's.
       evidence_approved: true
       evidence:
         internal_docs:
@@ -950,9 +953,12 @@ requirements:
         posture is fully exercised depends on the controller's deployment-time
         choices.
       detail: |
-        Token-scope defaults, retention policy and MFA settings are the
-        controller's configuration. HDS supplies the minimum-by-default
-        primitives those settings exercise.
+        The smallest-permission default is none. The vault's own defaults are
+        HDS's to set, with interactive session lifetime and per-grant token
+        expiry under the account holder's control and approval, and
+        multi-factor authentication available to them. An organisation sets
+        the equivalent defaults in its own systems. HDS supplies the
+        minimum-by-default primitives those settings exercise.
       evidence_approved: true
       evidence:
         internal_docs:
