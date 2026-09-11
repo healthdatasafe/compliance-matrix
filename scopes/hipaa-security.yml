@@ -14,7 +14,7 @@ family: hipaa
 
 hds_posture:
   draft: true
-  assessed_at: "2026-09-08"
+  assessed_at: "2026-09-11"
   evidence_backing:
     rows_total: 43
     rows_evidenced: 43

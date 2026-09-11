@@ -12,7 +12,7 @@ regions: [ch, us]
 
 hds_posture:
   draft: true
-  assessed_at: "2026-09-08"
+  assessed_at: "2026-09-10"
   evidence_backing:
     rows_total: 47
     rows_evidenced: 41

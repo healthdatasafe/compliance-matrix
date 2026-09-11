@@ -10,6 +10,7 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
+import crypto from 'node:crypto';
 import {
   ROOT, loadYaml, parseFrontmatter,
   vendorScopeFiles, hdsScopeFiles, templateFiles,
@@ -1118,6 +1119,60 @@ const posturePara = (s) => {
 
 const SITE = `https://${DOMAIN}`;
 
+// ---- structural digest ----
+//
+// Asked for by a programmatic consumer (compliance-matrix#1) who re-pinned across
+// 12 commits and +568/-257 lines touching every HIPAA scope file, and found zero
+// structural change. They could only learn that by fetching both revisions and
+// diffing field by field. A digest lets them tell a prose release from a
+// structural one in one request.
+//
+// THE CONTRACT, and it is deliberately narrow: these fields are what a consumer
+// may key its own content by and compute against. Prose (title, text, overview,
+// detail, statement, gap summaries, labels, notes) may change at any time and is
+// NOT in the digest, so a prose-only release leaves every digest untouched.
+// Requirement ids are strings; note that YAML parses an unquoted 164.410 as the
+// number 164.41, so ours are quoted and a consumer's keys must be too.
+const STRUCTURAL_FIELDS = ['ref', 'hds.coverage',
+  'implementer[].persona', 'implementer[].coverage',
+  'implementer[].basis', 'implementer[].nature', 'implementer[].applies_when'];
+
+const appliesWhenKey = (v) => (v === undefined ? null : (v === 'always' ? 'always' : [...v].sort()));
+const structuralProjection = (scope) => (scope.requirements || [])
+  .map((r) => [
+    String(r.ref),
+    r.hds?.coverage ?? null,
+    (r.implementer || [])
+      .map((o) => [o.persona, o.coverage, o.basis ?? null, o.nature ?? 'obligation', appliesWhenKey(o.applies_when)])
+      .sort((a, b) => String(a[0]).localeCompare(String(b[0]))),
+  ])
+  .sort((a, b) => a[0].localeCompare(b[0]));
+const sha = (x) => crypto.createHash('sha256').update(JSON.stringify(x)).digest('hex').slice(0, 16);
+
+const scopeDigests = scopes.map((s) => ({
+  id: s.id,
+  rows: (s.requirements || []).length,
+  digest: sha(structuralProjection(s)),
+}));
+const profilesDigest = sha([
+  (PROFILES?.features || []).map((f) => [f.id, f.group, f.exclusive ?? null]).sort(),
+  (PROFILES?.derived || []).map((d) => [d.id, d.all ? ['all', [...d.all].sort()] : ['any', [...d.any].sort()]]).sort(),
+  (PROFILES?.presets || []).map((p) => [p.id, [...(p.features || [])].sort(), [...(p.locked || [])].sort()]).sort(),
+  (PROFILES?.scope_applicability || []).map((a) => [a.scope, a.when.all ? ['all', [...a.when.all].sort()] : ['any', [...a.when.any].sort()]]).sort(),
+  Object.entries(PROFILES?.personas || {}).map(([k, v]) => [k, v.default ?? null,
+    (v.derive || []).map((d) => [d.persona, d.when.all ? ['all', [...d.when.all].sort()] : ['any', [...d.when.any].sort()]])]).sort(),
+]);
+const ALL_DIGEST = sha([scopeDigests.map((d) => [d.id, d.digest]), profilesDigest]);
+
+fs.writeFileSync(path.join(OUT, 'structure.json'), JSON.stringify({
+  generated: new Date().toISOString().slice(0, 10),
+  note: 'Digests cover STRUCTURAL fields only. Prose may change without moving any digest.',
+  fields: STRUCTURAL_FIELDS,
+  combined: ALL_DIGEST,
+  profiles: { version: PROFILES?.version ?? null, digest: profilesDigest },
+  scopes: Object.fromEntries(scopeDigests.map((d) => [d.id, { rows: d.rows, digest: d.digest }])),
+}, null, 2) + '\n');
+
 // ---- llms.txt ----
 const featureLines = (PROFILES?.features || []).map((f) =>
   `- ${f.id} (${f.group}${f.exclusive ? ', exclusive: ' + f.exclusive : ''}): ${plain(f.label)}${f.note ? ' — ' + plain(f.note) : ''}`).join('\n');
@@ -1161,6 +1216,36 @@ Generated ${new Date().toISOString().slice(0, 10)} from the repository's YAML. N
   is the per-framework "Evidence: N of M requirements" figure stated under each framework below.
 
 ${REPORT_BLOCK}
+
+## If you consume this matrix programmatically
+
+**Structural fields are the contract; prose is not.** These may be keyed on and
+computed against:
+
+${STRUCTURAL_FIELDS.map((f) => '  ' + f).join('\n')}
+
+Everything else (titles, requirement text, overviews, details, posture statements,
+gap summaries, labels, notes) may change at any time. A release that only changes
+prose leaves every digest below untouched.
+
+**Digests, so one request tells you whether to re-verify.** Also at ${SITE}/structure.json.
+
+  combined   ${ALL_DIGEST}
+${scopeDigests.map((d) => `  ${d.id.padEnd(15)}${d.digest}  (${d.rows} rows)`).join('\n')}
+  profiles       ${profilesDigest}  (version ${PROFILES?.version ?? 'n/a'})
+
+If a digest is unchanged since your pin, no structural field moved in that scope and
+you can re-pin without re-verifying. If one moved, diff that scope.
+
+**Requirement ids are strings, and YAML will bite you.** An unquoted \`164.410\` parses
+as the number 164.41, which is not the same key and fails silently rather than
+loudly. Ours are quoted; quote yours.
+
+**Two dates, and they answer different questions.** \`hds_posture.assessed_at\` is when
+the position was last reviewed by a person. \`hds_posture.evidence_backing.as_of\` is
+when the counts were last recomputed against the internal document set, which happens
+on its own cadence. They drift apart legitimately; show \`assessed_at\` when a reader
+asks how current the position is.
 
 ## The three determinations that shape everything else
 
@@ -1208,11 +1293,20 @@ An obligation is one entry under a requirement's \`implementer:\` list. For a gi
    considered and places no duty on anyone; they are not obligations.
 3. An entry with \`nature: orientation\` is a scope provision, not a duty. Show it, never count
    it as an obligation.
+3b. **A requirement with NO entry for the derived persona states no obligation for that
+   persona, and that is NOT the same as \`out-of-scope\`.** The latter is a considered
+   "not yours"; a bare absence means this matrix has not authored an obligation there yet.
+   Do not merge the two. Count neither, and show the absent ones as their own bucket rather
+   than silently dropping them, for the same reason an absent \`applies_when\` is shown.
+
 4. Otherwise the entry applies if \`applies_when\` is absent, or is \`always\`, or ANY listed
    feature is on. Absent means "not yet classified": show it, never treat it as inapplicable.
 5. \`basis: entity\` means the duty attaches because of what the organisation already is and
    would exist on any platform. \`basis: integration\` means it arises from using HDS. Present
    them separately: roughly three quarters of the HIPAA family is \`entity\`.
+   **On an \`entity\` obligation, HDS's coverage is assistance and discharges nothing.** The
+   duty is still owed and still needs an answer of your own: HDS having a security official
+   does not answer an auditor asking who yours is.
 
 ### What HDS covers
 Each requirement's \`hds.coverage\` is one of implemented, configurable, facilitated, documented,
