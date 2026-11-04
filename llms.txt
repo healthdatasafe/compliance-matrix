@@ -8,7 +8,7 @@ Canonical home: https://compliance.datasafe.dev
 Full matrix as text, for machine reading: https://compliance.datasafe.dev/llms-full.txt
 Per framework, if the full file is too large: https://compliance.datasafe.dev/llms-gdpr.txt, https://compliance.datasafe.dev/llms-hipaa-breach.txt, https://compliance.datasafe.dev/llms-hipaa-privacy.txt, https://compliance.datasafe.dev/llms-hipaa-security.txt, https://compliance.datasafe.dev/llms-soc2.txt, https://compliance.datasafe.dev/llms-swiss-nlpd.txt
 Source: https://github.com/healthdatasafe/compliance-matrix
-Generated 2026-09-11 from the repository's YAML. Not hand-written.
+Generated 2026-11-04 from the repository's YAML. Not hand-written.
 
 ## Read this before quoting anything here
 
@@ -71,10 +71,10 @@ prose leaves every digest below untouched.
 
 **Digests, so one request tells you whether to re-verify.** Also at https://compliance.datasafe.dev/structure.json.
 
-  combined   7413e26e1c25e0a3
+  combined   5fb2a46ddd83c901
   gdpr           a19065315689ac27  (47 rows)
   hipaa-breach   49c4a68c49731803  (13 rows)
-  hipaa-privacy  fbfadc31e6635eec  (35 rows)
+  hipaa-privacy  c9ecb135f9d1dda9  (35 rows)
   hipaa-security 551e9fe39ff62351  (43 rows)
   soc2           0cfa4973a0cdbcc1  (61 rows)
   swiss-nlpd     97fc9cd9e3df12e2  (30 rows)
@@ -125,7 +125,7 @@ HDS's own position on GDPR:
   - vault: HDS is controller. The individual's vault. HDS determines the purposes and means of operating it, so HDS is the Art.4(7) controller. Data enters only with the individual's explicit consent, and the individual decides who may access it afterwards.
   External assurance: self-assessed. No supervisory-authority certification under Art.42, no independent audit and no readiness review has been performed against this scope. Every claim below is HDS's own assessment of HDS, reviewed internally only.
   Certificates HDS relies on but does NOT hold: AWS ISO/IEC 27001, 27017 and 27018 (us region hosting layer, obtained 2026-07-28)
-  Evidence: 3 of 47 requirements answered from approved HDS documentation (41 cite internal evidence), as of 2026-09-10.
+  Evidence: 3 of 47 requirements answered from approved HDS documentation (41 cite internal evidence), as of 2026-11-04.
   HDS operates a GDPR programme rather than holding a GDPR credential. A Data Protection
   Officer was designated on 2026-07-17, a controller-side record of processing activities
   under Art.30(1) is maintained with eight live activities, and the platform supplies the
@@ -160,7 +160,7 @@ HDS's own position on HIPAA-Security:
   - vault: HDS is not-applicable. Every vault. The individual holds the account and decides who may see the data, so HDS holds it for them and never on a covered entity's behalf, whoever put it there and wherever it physically sits. A business associate is defined by acting on a covered entity's behalf, so HDS is not one here and HIPAA does not reach it.
   External assurance: self-assessed. No HIPAA audit, no independent Security Rule assessment and no third-party report covers HDS. The attestations on file belong to the hosting providers and cover their facilities, not HDS's practices.
   Certificates HDS relies on but does NOT hold: AWS ISO/IEC 27001 (us-east-1 named in the certified locations), 27017, 27018 — obtained 2026-07-28
-  Evidence: 40 of 43 requirements answered from approved HDS documentation (43 cite internal evidence), as of 2026-09-10.
+  Evidence: 39 of 43 requirements answered from approved HDS documentation (43 cite internal evidence), as of 2026-11-04.
   HIPAA does not reach HDS in the vault, so what follows is not a claim that HDS meets the
   Security Rule: it is what the platform supplies to an implementer that does hold a role.
   All forty-three requirements are answered from HDS documentation, and forty of them rest
@@ -193,7 +193,7 @@ US · 35 requirements · page: https://compliance.datasafe.dev/hipaa.html
 HDS's own position on HIPAA-Privacy:
   - vault: HDS is not-applicable. Every vault. The individual holds the account and decides who may see the data, so HDS holds it for them and never on a covered entity's behalf, whoever put it there and wherever it physically sits. A business associate is defined by acting on a covered entity's behalf, so HDS is not one here and HIPAA does not reach it.
   External assurance: self-assessed. No independent Privacy Rule assessment covers HDS.
-  Evidence: 33 of 35 requirements answered from approved HDS documentation (33 cite internal evidence), as of 2026-09-10.
+  Evidence: 33 of 35 requirements answered from approved HDS documentation (33 cite internal evidence), as of 2026-11-04.
   HIPAA does not reach HDS in the vault. Thirty-three of the thirty-five requirements are
   answered from approved HDS documentation, which is what an implementer holding a
   covered-entity or business-associate role inherits when it builds here. Most of this
@@ -219,7 +219,7 @@ US · 13 requirements · page: https://compliance.datasafe.dev/hipaa.html
 HDS's own position on HIPAA-Breach:
   - vault: HDS is not-applicable. Every vault. The individual holds the account and decides who may see the data, so HDS holds it for them and never on a covered entity's behalf, whoever put it there and wherever it physically sits. A business associate is defined by acting on a covered entity's behalf, so HDS is not one here and HIPAA does not reach it.
   External assurance: self-assessed. No independent review. The incident and breach procedure has been rehearsed, not tested by a real reportable breach.
-  Evidence: 12 of 13 requirements answered from approved HDS documentation (12 cite internal evidence), as of 2026-09-10.
+  Evidence: 12 of 13 requirements answered from approved HDS documentation (12 cite internal evidence), as of 2026-11-04.
   HIPAA does not reach HDS in the vault, but the question this rule turns on is one the
   platform can answer: who was affected and what did they hold. The breach-scope primitive
   is deployed to every core with the access index backfilled, so the blast radius of a
@@ -245,7 +245,7 @@ HDS's own position on SOC 2:
   - vault: HDS is service-organization. HDS is the service organisation operating the vault; an organisation building on it is a user entity. The hosting providers are subservice organisations, carved in or out depending on the criterion.
   External assurance: none. HDS holds NO SOC 2 report. There is no Type I and no Type II, no audit period has been defined and no CPA firm has been engaged. Nothing on this site should be read as a SOC 2 opinion.
   Certificates HDS relies on but does NOT hold: AWS SOC 2 (hosting layer only, as a subservice organisation)
-  Evidence: 45 of 61 requirements answered from approved HDS documentation (61 cite internal evidence), as of 2026-09-10.
+  Evidence: 42 of 61 requirements answered from approved HDS documentation (61 cite internal evidence), as of 2026-11-04.
   Forty-five of the sixty-one Trust Services Criteria are answered from approved HDS
   documentation, and the remaining sixteen are evidenced by documents still moving through
   review. This is a readiness map: it shows which criteria the existing control
@@ -264,7 +264,7 @@ Switzerland (extraterritorial via Art. 3 for processing affecting CH) · 30 requ
 HDS's own position on Swiss nLPD:
   - vault: HDS is controller. The individual's vault. HDS determines the purposes and means of operating it, so HDS is the controller under the Act. Data enters only with the individual's explicit consent, and the individual decides who may access it afterwards.
   External assurance: self-assessed. No FDPIC review, no certification under Art.13 nLPD and no independent audit has been performed. This is HDS's own assessment. Nothing is on file for the Swiss hosting region either: the physical safeguards HDS inherits there are asserted by the provider, not evidenced by a third-party audit.
-  Evidence: 11 of 30 requirements answered from approved HDS documentation (24 cite internal evidence), as of 2026-09-10.
+  Evidence: 11 of 30 requirements answered from approved HDS documentation (24 cite internal evidence), as of 2026-11-04.
   Swiss residency is the strongest part of this position: the ch region runs on Swiss
   infrastructure and the data does not leave it, which is what most of this Act's
   residency and transfer concern is about. Thirteen of the thirty requirements rest on

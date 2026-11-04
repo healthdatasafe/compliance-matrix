@@ -1034,7 +1034,7 @@ testing is tracked under the testing-and-revision specification.
 Partners running their own deployments document their own plan.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/procedures/disaster-recovery-plan</span> <span class="onreq">available on request</span></li></ul>
-      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -3026,7 +3026,7 @@ is recorded.
       </div>
     </div>
   </div>
-</article><article class="req" id="req-164-510" data-coverage="facilitated" data-personas="covered-entity individual" data-text="164.510 uses and disclosures requiring opportunity to agree or object hds provides durable storage for the offered choice and the individual's
+</article><article class="req" id="req-164-510" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.510 uses and disclosures requiring opportunity to agree or object hds provides durable storage for the offered choice and the individual's
 response as client-data on the relevant access or as a consent event, so
 the reasonable-inference standard rests on a record rather than
 recollection. the operational offer itself is the covered entity's.
@@ -3070,13 +3070,21 @@ response so the §164.510 determination is reconstructable later.
 response.
 </p>
       </div><div class="persona">
+        <strong>business-associate</strong> <span class="b documented">documented</span>
+        <a class="tpl" href="templates.html#tpl-baa">📄 baa</a>
+        <p>Make a disclosure under this section only when your BAA permits it and
+the individual has been given the opportunity to agree or object. A
+disclosure the covered entity could not make, you cannot make either
+(§164.502(a)(3)).
+</p>
+      </div><div class="persona">
         <strong>individual</strong> <span class="b out-of-scope">out-of-scope</span>
         
         
       </div>
     </div>
   </div>
-</article><article class="req" id="req-164-512" data-coverage="facilitated" data-personas="covered-entity individual" data-text="164.512 uses and disclosures for which authorization or opportunity is not required hds contributes durability: every §164.512 disclosure still rides on an
+</article><article class="req" id="req-164-512" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.512 uses and disclosures for which authorization or opportunity is not required hds contributes durability: every §164.512 disclosure still rides on an
 access and is captured in the audit log, and the §512 category and
 rationale can be recorded against the access. whether a disclosure
 qualifies is the covered entity's legal determination.
@@ -3122,13 +3130,20 @@ lifecycle attached to the legal-basis claim.
 category and statutory basis.
 </p>
       </div><div class="persona">
+        <strong>business-associate</strong> <span class="b documented">documented</span>
+        <a class="tpl" href="templates.html#tpl-baa">📄 baa</a>
+        <p>Make a disclosure under this section only when your BAA permits it or
+the law requires it, and only within the section's conditions. What the
+covered entity could not disclose, you cannot (§164.502(a)(3)).
+</p>
+      </div><div class="persona">
         <strong>individual</strong> <span class="b out-of-scope">out-of-scope</span>
         
         
       </div>
     </div>
   </div>
-</article><article class="req" id="req-164-514-a" data-coverage="facilitated" data-personas="covered-entity individual" data-text="164.514(a) de-identification of phi hds stores whatever event content is written and lets identified and
+</article><article class="req" id="req-164-514-a" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.514(a) de-identification of phi hds stores whatever event content is written and lets identified and
 de-identified copies sit under separate permission scopes, simplifying
 §514(a) workflows. the de-identification determination and transformation
 are the covered entity's.
@@ -3170,6 +3185,12 @@ entity's application code; HDS stores its output.
         
         <p>Choose the de-identification method, perform the transformation, and
 retain the determination record.
+</p>
+      </div><div class="persona">
+        <strong>business-associate</strong> <span class="b documented">documented</span>
+        <a class="tpl" href="templates.html#tpl-baa">📄 baa</a>
+        <p>De-identify PHI only when your BAA permits it. Until the output meets
+§164.514(b) it remains PHI, and every duty follows it.
 </p>
       </div><div class="persona">
         <strong>individual</strong> <span class="b out-of-scope">out-of-scope</span>
@@ -3664,7 +3685,7 @@ records.
       </div>
     </div>
   </div>
-</article><article class="req" id="req-164-530-c" data-coverage="facilitated" data-personas="covered-entity individual" data-text="164.530(c) safeguards section 530(c) points to the security rule and to physical and
+</article><article class="req" id="req-164-530-c" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.530(c) safeguards section 530(c) points to the security rule and to physical and
 administrative safeguards. hds supplies the technical and hosting
 safeguards documented in the hipaa-security scope — access control,
 audit, encryption in transit and at rest, regional residency — that
@@ -3708,6 +3729,13 @@ safeguards remain the covered entity's.
         
         <p>Maintain administrative safeguards and document how the technical and
 physical safeguards meet §530(c).
+</p>
+      </div><div class="persona">
+        <strong>business-associate</strong> <span class="b documented">documented</span>
+        <a class="tpl" href="templates.html#tpl-baa">📄 baa</a>
+        <p>Your safeguard duty does not come from this section: the Security Rule
+binds you directly for ePHI, and your BAA for all PHI
+(§164.504(e)(2)(ii)(B)). See the HIPAA Security rows.
 </p>
       </div><div class="persona">
         <strong>individual</strong> <span class="b out-of-scope">out-of-scope</span>
@@ -3895,7 +3923,7 @@ scope their access to what the BAA covers.
       </div>
     </div>
   </div>
-</article><article class="req" id="req-164-530-d" data-coverage="facilitated" data-personas="covered-entity individual" data-text="164.530(d) complaints to the covered entity hds provides the means to store each complaint as an event on a dedicated
+</article><article class="req" id="req-164-530-d" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.530(d) complaints to the covered entity hds provides the means to store each complaint as an event on a dedicated
 stream with a disposition field, and the audit log captures the timestamp
 and actor on each disposition update. the complaint-handling process is
 the covered entity's.
@@ -3938,6 +3966,10 @@ intake workflow and response are the implementer's.
         <p>Operate the complaint process and document complaints and their
 dispositions.
 </p>
+      </div><div class="persona">
+        <strong>business-associate</strong> <span class="b out-of-scope">out-of-scope</span>
+        
+        
       </div><div class="persona">
         <strong>individual</strong> <span class="b out-of-scope">out-of-scope</span>
         
@@ -4004,7 +4036,7 @@ enforcement.
       </div>
     </div>
   </div>
-</article><article class="req" id="req-164-530-g" data-coverage="out-of-scope" data-personas="covered-entity individual" data-text="164.530(g) refraining from intimidating and retaliatory acts anti-retaliation is an organizational policy and culture commitment with
+</article><article class="req" id="req-164-530-g" data-coverage="out-of-scope" data-personas="covered-entity business-associate individual" data-text="164.530(g) refraining from intimidating and retaliatory acts anti-retaliation is an organizational policy and culture commitment with
 no software role. it rests entirely with the covered entity's programme.
 " data-planned="0">
   <h3><code>164.530(g)</code> Refraining from intimidating and retaliatory acts <span class="draft">draft</span></h3>
@@ -4036,6 +4068,13 @@ conduct obligation of the covered entity.
         <strong>covered-entity</strong> <span class="b documented">documented</span>
         
         <p>Maintain and enforce an anti-retaliation policy.
+</p>
+      </div><div class="persona">
+        <strong>business-associate</strong> <span class="b documented">documented</span>
+        
+        <p>Do not intimidate, threaten, coerce, discriminate against or retaliate
+against anyone for filing a complaint, assisting an investigation or
+opposing an unlawful practice. §160.316 binds you directly.
 </p>
       </div><div class="persona">
         <strong>individual</strong> <span class="b out-of-scope">out-of-scope</span>
@@ -4154,13 +4193,16 @@ the disclosure basis.
         <p>You identify the persons involved in your care and may object.
 </p>
       </div><div class="persona">
-        <strong>business-associate</strong> <span class="b out-of-scope">out-of-scope</span>
-        
-        
+        <strong>business-associate</strong> <span class="b documented">documented</span>
+        <a class="tpl" href="templates.html#tpl-baa">📄 baa</a>
+        <p>Disclose to family or friends involved in care only when your BAA
+permits it and the individual had the opportunity to agree or object
+(§164.502(a)(3)).
+</p>
       </div>
     </div>
   </div>
-</article><article class="req" id="req-164-512-b" data-coverage="facilitated" data-personas="covered-entity individual" data-text="164.512(b) uses and disclosures for public-health activities hds lets the recipient authority and statutory basis be recorded on the
+</article><article class="req" id="req-164-512-b" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.512(b) uses and disclosures for public-health activities hds lets the recipient authority and statutory basis be recorded on the
 access, and the audit log anchors the disclosure to a timestamp and event
 range. the authorized-by-law determination is the covered entity's legal
 judgement.
@@ -4204,13 +4246,20 @@ no public-health disclosure of customer PHI on its own initiative.
 disclosure.
 </p>
       </div><div class="persona">
+        <strong>business-associate</strong> <span class="b documented">documented</span>
+        <a class="tpl" href="templates.html#tpl-baa">📄 baa</a>
+        <p>Disclose for public health only when your BAA permits it, to an
+authority authorized by law to receive it, and record the basis for the
+covered entity.
+</p>
+      </div><div class="persona">
         <strong>individual</strong> <span class="b out-of-scope">out-of-scope</span>
         
         
       </div>
     </div>
   </div>
-</article><article class="req" id="req-164-512-f" data-coverage="facilitated" data-personas="covered-entity individual" data-text="164.512(f) uses and disclosures for law-enforcement purposes hds supports recording the §512(f) category as the law-enforcement basis
+</article><article class="req" id="req-164-512-f" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.512(f) uses and disclosures for law-enforcement purposes hds supports recording the §512(f) category as the law-enforcement basis
 on a per-instance access that is minted and revoked around the
 disclosure, with the audit log preserving the chain. whether the request
 qualifies under §512(f) is legal counsel's decision.
@@ -4252,6 +4301,14 @@ PHI on its own initiative outside legal process served on it.
         
         <p>Evaluate law-enforcement requests against §512(f) conditions and record
 the basis.
+</p>
+      </div><div class="persona">
+        <strong>business-associate</strong> <span class="b documented">documented</span>
+        <a class="tpl" href="templates.html#tpl-baa">📄 baa</a>
+        <p>Answer compulsory process served on you as required by law. Answer any
+other law-enforcement request only if your BAA permits it and the
+§512(f) conditions are met, and notify the covered entity as your BAA
+requires.
 </p>
       </div><div class="persona">
         <strong>individual</strong> <span class="b out-of-scope">out-of-scope</span>
@@ -4505,7 +4562,7 @@ the basis.
       </div>
     </div>
   </div>
-</article><article class="req" id="req-164-514-b" data-coverage="documented" data-personas="covered-entity individual" data-text="164.514(b) de-identification — implementation specifications the choice of method and its execution are application-side decisions of
+</article><article class="req" id="req-164-514-b" data-coverage="documented" data-personas="covered-entity business-associate individual" data-text="164.514(b) de-identification — implementation specifications the choice of method and its execution are application-side decisions of
 the covered entity. hds stores the output of either method as ordinary
 events on the de-identified streams and provides no de-identification
 determination of its own.
@@ -4546,13 +4603,20 @@ implementer's de-identification process produces.
 documentation.
 </p>
       </div><div class="persona">
+        <strong>business-associate</strong> <span class="b documented">documented</span>
+        <a class="tpl" href="templates.html#tpl-baa">📄 baa</a>
+        <p>Apply Expert Determination or Safe Harbor as the covered entity directs
+and retain the documentation. A failed de-identification is an
+impermissible disclosure.
+</p>
+      </div><div class="persona">
         <strong>individual</strong> <span class="b out-of-scope">out-of-scope</span>
         
         
       </div>
     </div>
   </div>
-</article><article class="req" id="req-164-514-c" data-coverage="facilitated" data-personas="covered-entity individual" data-text="164.514(c) de-identification — re-identification the platform's alias primitive provides the re-identification code
+</article><article class="req" id="req-164-514-c" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.514(c) de-identification — re-identification the platform's alias primitive provides the re-identification code
 directly: `accesses.create {randomalias:true}` (deployed on the hds
 cores since 2026-07-28) mints a platform-unique `r-xxxxxxxx` alias that
 is random by construction — it does not encode phi, satisfying
@@ -4615,6 +4679,12 @@ implementer's.
         
         <p>Generate codes that do not encode PHI and restrict their use to
 re-identification.
+</p>
+      </div><div class="persona">
+        <strong>business-associate</strong> <span class="b documented">documented</span>
+        
+        <p>Any re-identification code you assign must not derive from information
+about the individual and may be used for re-identification only.
 </p>
       </div><div class="persona">
         <strong>individual</strong> <span class="b out-of-scope">out-of-scope</span>

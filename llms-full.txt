@@ -1,6 +1,6 @@
 # HDS Compliance Matrix — full text
 
-Generated 2026-09-11 from https://github.com/healthdatasafe/compliance-matrix
+Generated 2026-11-04 from https://github.com/healthdatasafe/compliance-matrix
 Summary and the rules for computing an implementer's answer: https://compliance.datasafe.dev/llms.txt
 
 NOT LEGAL ADVICE. Engineering and operational guidance; confirm obligations with counsel.
@@ -48,7 +48,7 @@ HDS's own position on GDPR:
   - vault: HDS is controller. The individual's vault. HDS determines the purposes and means of operating it, so HDS is the Art.4(7) controller. Data enters only with the individual's explicit consent, and the individual decides who may access it afterwards.
   External assurance: self-assessed. No supervisory-authority certification under Art.42, no independent audit and no readiness review has been performed against this scope. Every claim below is HDS's own assessment of HDS, reviewed internally only.
   Certificates HDS relies on but does NOT hold: AWS ISO/IEC 27001, 27017 and 27018 (us region hosting layer, obtained 2026-07-28)
-  Evidence: 3 of 47 requirements answered from approved HDS documentation (41 cite internal evidence), as of 2026-09-10.
+  Evidence: 3 of 47 requirements answered from approved HDS documentation (41 cite internal evidence), as of 2026-11-04.
   HDS operates a GDPR programme rather than holding a GDPR credential. A Data Protection
   Officer was designated on 2026-07-17, a controller-side record of processing activities
   under Art.30(1) is maintained with eight live activities, and the platform supplies the
@@ -2120,7 +2120,7 @@ Official text: https://www.ecfr.gov/current/title-45/subtitle-A/subchapter-C/par
 HDS's own position on HIPAA-Breach:
   - vault: HDS is not-applicable. Every vault. The individual holds the account and decides who may see the data, so HDS holds it for them and never on a covered entity's behalf, whoever put it there and wherever it physically sits. A business associate is defined by acting on a covered entity's behalf, so HDS is not one here and HIPAA does not reach it.
   External assurance: self-assessed. No independent review. The incident and breach procedure has been rehearsed, not tested by a real reportable breach.
-  Evidence: 12 of 13 requirements answered from approved HDS documentation (12 cite internal evidence), as of 2026-09-10.
+  Evidence: 12 of 13 requirements answered from approved HDS documentation (12 cite internal evidence), as of 2026-11-04.
   HIPAA does not reach HDS in the vault, but the question this rule turns on is one the
   platform can answer: who was affected and what did they hold. The breach-scope primitive
   is deployed to every core with the access index backfilled, so the blast radius of a
@@ -2638,7 +2638,7 @@ Official text: https://www.ecfr.gov/current/title-45/subtitle-A/subchapter-C/par
 HDS's own position on HIPAA-Privacy:
   - vault: HDS is not-applicable. Every vault. The individual holds the account and decides who may see the data, so HDS holds it for them and never on a covered entity's behalf, whoever put it there and wherever it physically sits. A business associate is defined by acting on a covered entity's behalf, so HDS is not one here and HIPAA does not reach it.
   External assurance: self-assessed. No independent Privacy Rule assessment covers HDS.
-  Evidence: 33 of 35 requirements answered from approved HDS documentation (33 cite internal evidence), as of 2026-09-10.
+  Evidence: 33 of 35 requirements answered from approved HDS documentation (33 cite internal evidence), as of 2026-11-04.
   HIPAA does not reach HDS in the vault. Thirty-three of the thirty-five requirements are
   answered from approved HDS documentation, which is what an implementer holding a
   covered-entity or business-associate role inherits when it builds here. Most of this
@@ -2797,6 +2797,12 @@ HDS's own position on HIPAA-Privacy:
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: always; basis: entity
     Offer the opportunity to agree or object and record the individual's response.
+  IMPLEMENTER [business-associate] coverage: documented
+    applies_when: always; basis: entity
+    Make a disclosure under this section only when your BAA permits it and the individual
+    has been given the opportunity to agree or object. A disclosure the covered entity could
+    not make, you cannot make either (§164.502(a)(3)).
+    Templates to sign: baa
   IMPLEMENTER [individual] coverage: out-of-scope
     applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
 
@@ -2828,6 +2834,12 @@ HDS's own position on HIPAA-Privacy:
     applies_when: [secondary-use]; basis: entity
     Determine whether each disclosure qualifies under §512 and record its category and
     statutory basis.
+  IMPLEMENTER [business-associate] coverage: documented
+    applies_when: [secondary-use]; basis: entity
+    Make a disclosure under this section only when your BAA permits it or the law requires
+    it, and only within the section's conditions. What the covered entity could not
+    disclose, you cannot (§164.502(a)(3)).
+    Templates to sign: baa
   IMPLEMENTER [individual] coverage: out-of-scope
     applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
 
@@ -2859,6 +2871,11 @@ HDS's own position on HIPAA-Privacy:
     applies_when: [analytics, secondary-use]; basis: entity
     Choose the de-identification method, perform the transformation, and retain the
     determination record.
+  IMPLEMENTER [business-associate] coverage: documented
+    applies_when: [analytics, secondary-use]; basis: entity
+    De-identify PHI only when your BAA permits it. Until the output meets §164.514(b) it
+    remains PHI, and every duty follows it.
+    Templates to sign: baa
   IMPLEMENTER [individual] coverage: out-of-scope
     applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
 
@@ -3178,6 +3195,12 @@ HDS's own position on HIPAA-Privacy:
     applies_when: always; basis: entity
     Maintain administrative safeguards and document how the technical and physical
     safeguards meet §530(c).
+  IMPLEMENTER [business-associate] coverage: documented
+    applies_when: always; basis: entity
+    Your safeguard duty does not come from this section: the Security Rule binds you
+    directly for ePHI, and your BAA for all PHI (§164.504(e)(2)(ii)(B)). See the HIPAA
+    Security rows.
+    Templates to sign: baa
   IMPLEMENTER [individual] coverage: out-of-scope
     applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
 
@@ -3301,6 +3324,8 @@ HDS's own position on HIPAA-Privacy:
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: always; basis: entity
     Operate the complaint process and document complaints and their dispositions.
+  IMPLEMENTER [business-associate] coverage: out-of-scope
+    applies_when: always; PLACES NO DUTY ON THIS PERSONA
   IMPLEMENTER [individual] coverage: out-of-scope
     applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
 
@@ -3348,6 +3373,11 @@ HDS's own position on HIPAA-Privacy:
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: always; basis: entity
     Maintain and enforce an anti-retaliation policy.
+  IMPLEMENTER [business-associate] coverage: documented
+    applies_when: always; basis: entity
+    Do not intimidate, threaten, coerce, discriminate against or retaliate against anyone
+    for filing a complaint, assisting an investigation or opposing an unlawful practice.
+    §160.316 binds you directly.
   IMPLEMENTER [individual] coverage: out-of-scope
     applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
 
@@ -3409,8 +3439,11 @@ HDS's own position on HIPAA-Privacy:
   IMPLEMENTER [individual] coverage: facilitated
     applies_when: NOT YET CLASSIFIED (always shown)
     You identify the persons involved in your care and may object.
-  IMPLEMENTER [business-associate] coverage: out-of-scope
-    applies_when: always; basis: entity; PLACES NO DUTY ON THIS PERSONA
+  IMPLEMENTER [business-associate] coverage: documented
+    applies_when: always; basis: entity
+    Disclose to family or friends involved in care only when your BAA permits it and the
+    individual had the opportunity to agree or object (§164.502(a)(3)).
+    Templates to sign: baa
 
 ## hipaa-privacy 164.512(b) — Uses and disclosures for public-health activities
   Requirement: A covered entity may disclose PHI for public-health activities to
@@ -3434,6 +3467,11 @@ HDS's own position on HIPAA-Privacy:
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: always; basis: entity
     Confirm the public-health authority's legal basis and record the disclosure.
+  IMPLEMENTER [business-associate] coverage: documented
+    applies_when: always; basis: entity
+    Disclose for public health only when your BAA permits it, to an authority authorized by
+    law to receive it, and record the basis for the covered entity.
+    Templates to sign: baa
   IMPLEMENTER [individual] coverage: out-of-scope
     applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
 
@@ -3460,6 +3498,12 @@ HDS's own position on HIPAA-Privacy:
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: always; basis: entity
     Evaluate law-enforcement requests against §512(f) conditions and record the basis.
+  IMPLEMENTER [business-associate] coverage: documented
+    applies_when: always; basis: entity
+    Answer compulsory process served on you as required by law. Answer any other
+    law-enforcement request only if your BAA permits it and the §512(f) conditions are met,
+    and notify the covered entity as your BAA requires.
+    Templates to sign: baa
   IMPLEMENTER [individual] coverage: out-of-scope
     applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
 
@@ -3613,6 +3657,11 @@ HDS's own position on HIPAA-Privacy:
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: [analytics, secondary-use]; basis: entity
     Select and execute Expert Determination or Safe Harbor and retain the documentation.
+  IMPLEMENTER [business-associate] coverage: documented
+    applies_when: [analytics, secondary-use]; basis: entity
+    Apply Expert Determination or Safe Harbor as the covered entity directs and retain the
+    documentation. A failed de-identification is an impermissible disclosure.
+    Templates to sign: baa
   IMPLEMENTER [individual] coverage: out-of-scope
     applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
 
@@ -3651,6 +3700,10 @@ HDS's own position on HIPAA-Privacy:
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: [analytics, secondary-use]; basis: entity
     Generate codes that do not encode PHI and restrict their use to re-identification.
+  IMPLEMENTER [business-associate] coverage: documented
+    applies_when: [analytics, secondary-use]; basis: entity
+    Any re-identification code you assign must not derive from information about the
+    individual and may be used for re-identification only.
   IMPLEMENTER [individual] coverage: out-of-scope
     applies_when: NOT YET CLASSIFIED (always shown); PLACES NO DUTY ON THIS PERSONA
 
@@ -3784,7 +3837,7 @@ HDS's own position on HIPAA-Security:
   - vault: HDS is not-applicable. Every vault. The individual holds the account and decides who may see the data, so HDS holds it for them and never on a covered entity's behalf, whoever put it there and wherever it physically sits. A business associate is defined by acting on a covered entity's behalf, so HDS is not one here and HIPAA does not reach it.
   External assurance: self-assessed. No HIPAA audit, no independent Security Rule assessment and no third-party report covers HDS. The attestations on file belong to the hosting providers and cover their facilities, not HDS's practices.
   Certificates HDS relies on but does NOT hold: AWS ISO/IEC 27001 (us-east-1 named in the certified locations), 27017, 27018 — obtained 2026-07-28
-  Evidence: 40 of 43 requirements answered from approved HDS documentation (43 cite internal evidence), as of 2026-09-10.
+  Evidence: 39 of 43 requirements answered from approved HDS documentation (43 cite internal evidence), as of 2026-11-04.
   HIPAA does not reach HDS in the vault, so what follows is not a claim that HDS meets the
   Security Rule: it is what the platform supplies to an implementer that does hold a role.
   All forty-three requirements are answered from HDS documentation, and forty of them rest
@@ -4384,7 +4437,6 @@ HDS's own position on HIPAA-Security:
     tracked under the testing-and-revision specification. Partners running their own
     deployments document their own plan.
     Evidence: internal:hipaa/procedures/disaster-recovery-plan
-    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: [stores-phi-copy]; basis: integration
     Document your recovery objectives and the steps to restore data after a loss event.
@@ -5591,7 +5643,7 @@ HDS's own position on SOC 2:
   - vault: HDS is service-organization. HDS is the service organisation operating the vault; an organisation building on it is a user entity. The hosting providers are subservice organisations, carved in or out depending on the criterion.
   External assurance: none. HDS holds NO SOC 2 report. There is no Type I and no Type II, no audit period has been defined and no CPA firm has been engaged. Nothing on this site should be read as a SOC 2 opinion.
   Certificates HDS relies on but does NOT hold: AWS SOC 2 (hosting layer only, as a subservice organisation)
-  Evidence: 45 of 61 requirements answered from approved HDS documentation (61 cite internal evidence), as of 2026-09-10.
+  Evidence: 42 of 61 requirements answered from approved HDS documentation (61 cite internal evidence), as of 2026-11-04.
   Forty-five of the sixty-one Trust Services Criteria are answered from approved HDS
   documentation, and the remaining sixteen are evidenced by documents still moving through
   review. This is a readiness map: it shows which criteria the existing control
@@ -6662,7 +6714,6 @@ HDS's own position on SOC 2:
     regularly tested recovery drilling is being matured (see CC4.1 evaluation). A partner
     sets its own recovery-objective targets and drill cadence over the same primitives.
     Evidence: internal:hipaa/procedures/disaster-recovery-plan, internal:hipaa/procedures/security-incident-response
-    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [service-organization] coverage: documented
     applies_when: always
     Set your recovery-objective targets and drill cadence, and document the recovery runbook
@@ -6736,7 +6787,6 @@ HDS's own position on SOC 2:
     does not cover is the wider trust-services and fraud half, which is the outstanding
     piece under CC3.2.
     Evidence: internal:hipaa/procedures/disaster-recovery-plan, internal:hipaa/procedures/data-backup-plan
-    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [service-organization] coverage: documented
     applies_when: always
     Set your business-continuity objectives and choose your non-technical mitigations over
@@ -6851,7 +6901,6 @@ HDS's own position on SOC 2:
     production recovery drill. A user-entity running its own deployment defines its own
     schedule.
     Evidence: internal:hipaa/procedures/data-backup-plan, internal:hipaa/procedures/disaster-recovery-plan
-    Evidence backing: every internal document cited above has completed approval.
     PLANNED (procedure, impact medium): The scheduled backup cycle is running on both regional cores as of 2026-07-30, producing encrypted off-host in-region copies, and an archive has been retrieved and decrypted with the off-host key to show the copies are usable. The tracked remainder is the per-region production restore drill at non-trivial scale and confirmation of the storage lifecycle backstop.
   IMPLEMENTER [service-organization] coverage: documented
     applies_when: [stores-phi-copy]
@@ -7737,7 +7786,7 @@ Official text: https://www.fedlex.admin.ch/eli/cc/2022/491/en
 HDS's own position on Swiss nLPD:
   - vault: HDS is controller. The individual's vault. HDS determines the purposes and means of operating it, so HDS is the controller under the Act. Data enters only with the individual's explicit consent, and the individual decides who may access it afterwards.
   External assurance: self-assessed. No FDPIC review, no certification under Art.13 nLPD and no independent audit has been performed. This is HDS's own assessment. Nothing is on file for the Swiss hosting region either: the physical safeguards HDS inherits there are asserted by the provider, not evidenced by a third-party audit.
-  Evidence: 11 of 30 requirements answered from approved HDS documentation (24 cite internal evidence), as of 2026-09-10.
+  Evidence: 11 of 30 requirements answered from approved HDS documentation (24 cite internal evidence), as of 2026-11-04.
   Swiss residency is the strongest part of this position: the ch region runs on Swiss
   infrastructure and the data does not leave it, which is what most of this Act's
   residency and transfer concern is about. Thirteen of the thirty requirements rest on

@@ -32,7 +32,7 @@ being built cannot be described publicly, write instead to
 HDS's own position on HIPAA-Breach:
   - vault: HDS is not-applicable. Every vault. The individual holds the account and decides who may see the data, so HDS holds it for them and never on a covered entity's behalf, whoever put it there and wherever it physically sits. A business associate is defined by acting on a covered entity's behalf, so HDS is not one here and HIPAA does not reach it.
   External assurance: self-assessed. No independent review. The incident and breach procedure has been rehearsed, not tested by a real reportable breach.
-  Evidence: 12 of 13 requirements answered from approved HDS documentation (12 cite internal evidence), as of 2026-09-10.
+  Evidence: 12 of 13 requirements answered from approved HDS documentation (12 cite internal evidence), as of 2026-11-04.
   HIPAA does not reach HDS in the vault, but the question this rule turns on is one the
   platform can answer: who was affected and what did they hold. The breach-scope primitive
   is deployed to every core with the access index backfilled, so the blast radius of a

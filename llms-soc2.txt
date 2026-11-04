@@ -33,7 +33,7 @@ HDS's own position on SOC 2:
   - vault: HDS is service-organization. HDS is the service organisation operating the vault; an organisation building on it is a user entity. The hosting providers are subservice organisations, carved in or out depending on the criterion.
   External assurance: none. HDS holds NO SOC 2 report. There is no Type I and no Type II, no audit period has been defined and no CPA firm has been engaged. Nothing on this site should be read as a SOC 2 opinion.
   Certificates HDS relies on but does NOT hold: AWS SOC 2 (hosting layer only, as a subservice organisation)
-  Evidence: 45 of 61 requirements answered from approved HDS documentation (61 cite internal evidence), as of 2026-09-10.
+  Evidence: 42 of 61 requirements answered from approved HDS documentation (61 cite internal evidence), as of 2026-11-04.
   Forty-five of the sixty-one Trust Services Criteria are answered from approved HDS
   documentation, and the remaining sixteen are evidenced by documents still moving through
   review. This is a readiness map: it shows which criteria the existing control
@@ -1104,7 +1104,6 @@ HDS's own position on SOC 2:
     regularly tested recovery drilling is being matured (see CC4.1 evaluation). A partner
     sets its own recovery-objective targets and drill cadence over the same primitives.
     Evidence: internal:hipaa/procedures/disaster-recovery-plan, internal:hipaa/procedures/security-incident-response
-    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [service-organization] coverage: documented
     applies_when: always
     Set your recovery-objective targets and drill cadence, and document the recovery runbook
@@ -1178,7 +1177,6 @@ HDS's own position on SOC 2:
     does not cover is the wider trust-services and fraud half, which is the outstanding
     piece under CC3.2.
     Evidence: internal:hipaa/procedures/disaster-recovery-plan, internal:hipaa/procedures/data-backup-plan
-    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [service-organization] coverage: documented
     applies_when: always
     Set your business-continuity objectives and choose your non-technical mitigations over
@@ -1293,7 +1291,6 @@ HDS's own position on SOC 2:
     production recovery drill. A user-entity running its own deployment defines its own
     schedule.
     Evidence: internal:hipaa/procedures/data-backup-plan, internal:hipaa/procedures/disaster-recovery-plan
-    Evidence backing: every internal document cited above has completed approval.
     PLANNED (procedure, impact medium): The scheduled backup cycle is running on both regional cores as of 2026-07-30, producing encrypted off-host in-region copies, and an archive has been retrieved and decrypted with the off-host key to show the copies are usable. The tracked remainder is the per-region production restore drill at non-trivial scale and confirmation of the storage lifecycle backstop.
   IMPLEMENTER [service-organization] coverage: documented
     applies_when: [stores-phi-copy]

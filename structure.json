@@ -1,6 +1,6 @@
 {
   "format": 2,
-  "generated": "2026-09-11",
+  "generated": "2026-11-04",
   "note": "Digests cover STRUCTURAL fields only; prose may change without moving any digest. Digests are comparable only within the same `format`: a format bump means the computation changed, so compare content across one by diffing, not by hash.",
   "fields": [
     "ref",
@@ -11,7 +11,7 @@
     "implementer[].nature",
     "implementer[].applies_when"
   ],
-  "combined": "7413e26e1c25e0a3",
+  "combined": "5fb2a46ddd83c901",
   "profiles": {
     "version": 1,
     "digest": "bd5c667c7a134ce6"
@@ -93,14 +93,14 @@
     },
     "hipaa-privacy": {
       "rows": 35,
-      "digest": "fbfadc31e6635eec",
+      "digest": "c9ecb135f9d1dda9",
       "requirements": {
         "164.502": "ccc5d569bd2b049b",
         "164.506": "bc9af52493f70a52",
         "164.508": "d553ea104c866b46",
-        "164.510": "9723f75f63ba1e11",
-        "164.512": "39dbf96239145946",
-        "164.514(a)": "4dabbe8715c4a385",
+        "164.510": "bafa24342ec689b5",
+        "164.512": "af37178fb52ea115",
+        "164.514(a)": "db158d19b8a0967c",
         "164.514(d)": "4884081d5925e216",
         "164.520": "de55ff5e8e3daf0d",
         "164.522": "b66bd46d3d21048f",
@@ -109,70 +109,29 @@
         "164.528": "b0b2e2f662c46a46",
         "164.530(a)": "6538d24d01bf913b",
         "164.530(b)": "cc8e5349f61d6353",
-        "164.530(c)": "167c831e18817fb5",
+        "164.530(c)": "e57234c833ff3b69",
         "164.530(f)": "1dd8c15c6678ecf0",
         "164.502(b)": "9cce53dcfb4eb7ee",
         "164.502(e)(1)": "274d01be1d9063a3",
-        "164.530(d)": "de2cc4d8376055e2",
+        "164.530(d)": "f59f1a4e4d21ce02",
         "164.530(e)": "c3942b43adc79441",
-        "164.530(g)": "2c52f8c003cbb4dd",
+        "164.530(g)": "04055673abad4f9a",
         "164.530(i)": "443fb6ddfcaa9c2b",
-        "164.510(b)": "c8db76652cff37b5",
-        "164.512(b)": "fe91d3029c0117d0",
-        "164.512(f)": "2c88b11dfc41551a",
+        "164.510(b)": "6dd4bfe2899fcfc4",
+        "164.512(b)": "290a8b7acb7e9bba",
+        "164.512(f)": "f86ec7ca8014d6e4",
         "164.524(b)": "050da6865630ef71",
         "164.524(c)": "46e1172063220866",
         "164.502(g)": "67c8d2029ae85c03",
         "164.512(a)": "091fce04f7687642",
-        "164.514(b)": "c6f5d1d3f68a4c2e",
-        "164.514(c)": "8e8131300c2bbc87",
+        "164.514(b)": "9c213f898b4e08fa",
+        "164.514(c)": "d78c0c19923d14d1",
         "164.528(b)": "67980087f89b3671",
         "164.504(e)": "5d8f904adf379cc9",
         "164.504(g)": "d46713805200a0db",
         "164.502(j)": "d64b093c1c6737cd"
       },
-      "unauthored": [
-        {
-          "ref": "164.510",
-          "persona": "business-associate"
-        },
-        {
-          "ref": "164.512",
-          "persona": "business-associate"
-        },
-        {
-          "ref": "164.512(b)",
-          "persona": "business-associate"
-        },
-        {
-          "ref": "164.512(f)",
-          "persona": "business-associate"
-        },
-        {
-          "ref": "164.514(a)",
-          "persona": "business-associate"
-        },
-        {
-          "ref": "164.514(b)",
-          "persona": "business-associate"
-        },
-        {
-          "ref": "164.514(c)",
-          "persona": "business-associate"
-        },
-        {
-          "ref": "164.530(c)",
-          "persona": "business-associate"
-        },
-        {
-          "ref": "164.530(d)",
-          "persona": "business-associate"
-        },
-        {
-          "ref": "164.530(g)",
-          "persona": "business-associate"
-        }
-      ]
+      "unauthored": []
     },
     "hipaa-security": {
       "rows": 43,
