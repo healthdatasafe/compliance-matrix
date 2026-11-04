@@ -36,9 +36,9 @@ This Business Associate Agreement ("Agreement") is entered into by and between
 
 ## 1. Definitions
 Terms used but not otherwise defined have the meaning given in 45 CFR Parts 160
-and 164. "PHI" means Protected Health Information; "ePHI" means PHI in electronic
-form, created, received, maintained, or transmitted by Business Associate on
-behalf of Covered Entity.
+and 164. "PHI" means Protected Health Information created, received, maintained,
+or transmitted by Business Associate on behalf of Covered Entity; "ePHI" means PHI
+in electronic form.
 
 ## 2. Permitted uses and disclosures
 Business Associate may use or disclose PHI only:
@@ -49,10 +49,13 @@ agreement and on Covered Entity's documented instructions;
 Business Associate will not use or disclose PHI in any manner that would violate
 Subpart E of 45 CFR Part 164 if done by Covered Entity.
 
-## 3. Safeguards (45 CFR §164.314(a), §164.308–312)
-Business Associate will implement administrative, physical, and technical
-safeguards that reasonably and appropriately protect the confidentiality,
-integrity, and availability of the ePHI it handles, including:
+## 3. Safeguards (45 CFR §164.504(e)(2)(ii)(B), §164.314(a), §164.308–312)
+Business Associate will use appropriate safeguards to prevent use or disclosure
+of PHI, in any form, other than as provided by this Agreement. With respect to
+ePHI, Business Associate will also comply with Subpart C of 45 CFR Part 164 and
+implement administrative, physical, and technical safeguards that reasonably and
+appropriately protect the confidentiality, integrity, and availability of the
+ePHI it handles, including:
 - access control and unique user identification;
 - audit logging of access to ePHI;
 - encryption of ePHI in transit;
@@ -62,10 +65,12 @@ integrity, and availability of the ePHI it handles, including:
 _At-rest encryption status and other current control details are described in
 the Business Associate's documentation, available on request under this Agreement._
 
-## 4. Subcontractors (§164.308(b), §164.314(a)(2)(ii))
+## 4. Subcontractors (§164.502(e)(1)(ii), §164.504(e)(2)(ii)(D), §164.308(b)(2), §164.314(a)(2)(i)(B))
 Business Associate will ensure that any subcontractor that creates, receives,
-maintains, or transmits ePHI on its behalf agrees in writing to restrictions and
-conditions at least as stringent as those in this Agreement (see the companion
+maintains, or transmits PHI on its behalf agrees in writing to the same
+restrictions and conditions that apply to Business Associate under this
+Agreement with respect to that PHI and, for ePHI, to comply with the applicable
+requirements of Subpart C of 45 CFR Part 164 (see the companion
 **subcontractor** / **subprocessor** templates).
 
 ## 5. Reporting and breach notification (§164.410)
@@ -75,9 +80,10 @@ this Agreement, any Security Incident, and any Breach of Unsecured PHI, with the
 information required by §164.410(c).
 
 ## 6. Individual rights (access, amendment, accounting — §164.524/526/528)
-Business Associate will make PHI available to Covered Entity (or, as directed, to
-the individual) to enable Covered Entity to meet its obligations regarding access,
-amendment, and accounting of disclosures.
+Business Associate will make PHI available to Covered Entity or, as Covered Entity
+directs, to the individual or the individual's designee, to enable Covered Entity
+to meet its obligations regarding access (including §164.524(c)(2)(ii) and (3)(ii)
+on requests for an electronic copy), amendment, and accounting of disclosures.
 
 ## 7. Access to records
 Business Associate will make its internal practices, books, and records relating

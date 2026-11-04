@@ -63,6 +63,18 @@ hds_posture:
 changelog:
   - date: "2026-11-04"
     change: >
+      164.524(c) business associate: out-of-scope -> documented.
+      §164.502(a)(4)(ii) binds a business associate directly to disclose PHI as
+      needed for the covered entity to meet §164.524(c)(2)(ii) and (3)(ii) on a
+      request for an electronic copy, and the parent 164.524 row already carried
+      a documented business-associate entry. The BAA template's §3 now binds the
+      business associate to safeguards for all PHI (§164.504(e)(2)(ii)(B)), with
+      Subpart C on top for ePHI; it covered ePHI only. Its §4 subcontractor
+      flow-down follows (all PHI, §164.504(e)(2)(ii)(D)), §6 names the
+      individual's designee, and §1 scopes PHI to what the business associate
+      holds for the covered entity.
+  - date: "2026-11-04"
+    change: >
       Business-associate entries authored for the ten rows left open in
       unauthored_obligations (compliance-matrix#1). 164.510, 164.512, 164.512(b),
       164.512(f), 164.514(a), 164.514(b), 164.514(c): documented, because
@@ -1397,7 +1409,13 @@ requirements:
       - persona: business-associate
         basis: entity
         applies_when: always
-        coverage: out-of-scope
+        coverage: documented
+        overview: |
+          When an individual asks for an electronic copy, disclose the PHI you
+          hold to the covered entity, the individual or their designee (whichever
+          your BAA specifies) as the covered entity needs to meet §524(c)(2)(ii)
+          and (3)(ii). §164.502(a)(4)(ii) binds you directly.
+        templates: [baa]
 
   - ref: 164.502(g)
     title: Personal representatives
