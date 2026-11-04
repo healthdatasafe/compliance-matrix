@@ -16,8 +16,8 @@ hds_posture:
   evidence_backing:
     rows_total: 61
     rows_evidenced: 61
-    rows_approved: 45
-    as_of: "2026-09-10"
+    rows_approved: 42
+    as_of: "2026-11-04"
   roles:
     - arrangement: vault
       role: service-organization
@@ -1635,7 +1635,6 @@ requirements:
       Per-user backup and restore; replicated multi-core topology with
       cluster-replicated TLS certificates for hot redundancy.
     regions: [us, ch]
-    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/procedures/disaster-recovery-plan
@@ -1745,7 +1744,6 @@ requirements:
       Multi-core HA with replication; per-user backup and restore; cluster-replicated
       TLS certificates; portable cluster re-issue from a bootstrap bundle.
     regions: [us, ch]
-    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/procedures/disaster-recovery-plan
@@ -1912,7 +1910,6 @@ requirements:
       per-region production recovery drill. A user-entity running its own
       deployment defines its own schedule.
     regions: [us, ch]
-    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/procedures/data-backup-plan
