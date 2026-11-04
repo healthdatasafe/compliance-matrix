@@ -11,7 +11,7 @@
     "implementer[].nature",
     "implementer[].applies_when"
   ],
-  "combined": "5fb2a46ddd83c901",
+  "combined": "a83cb1da01b8b314",
   "profiles": {
     "version": 1,
     "digest": "bd5c667c7a134ce6"
@@ -93,7 +93,7 @@
     },
     "hipaa-privacy": {
       "rows": 35,
-      "digest": "c9ecb135f9d1dda9",
+      "digest": "8fde602e6ebdc5e3",
       "requirements": {
         "164.502": "ccc5d569bd2b049b",
         "164.506": "bc9af52493f70a52",
@@ -121,7 +121,7 @@
         "164.512(b)": "290a8b7acb7e9bba",
         "164.512(f)": "f86ec7ca8014d6e4",
         "164.524(b)": "050da6865630ef71",
-        "164.524(c)": "46e1172063220866",
+        "164.524(c)": "dd03dca31612e525",
         "164.502(g)": "67c8d2029ae85c03",
         "164.512(a)": "091fce04f7687642",
         "164.514(b)": "9c213f898b4e08fa",

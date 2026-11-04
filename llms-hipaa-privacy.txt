@@ -964,8 +964,12 @@ HDS's own position on HIPAA-Privacy:
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: always; basis: entity
     Provide requested formats and summaries and agree applicable fees in advance.
-  IMPLEMENTER [business-associate] coverage: out-of-scope
-    applies_when: always; basis: entity; PLACES NO DUTY ON THIS PERSONA
+  IMPLEMENTER [business-associate] coverage: documented
+    applies_when: always; basis: entity
+    When an individual asks for an electronic copy, disclose the PHI you hold to the covered
+    entity, the individual or their designee (whichever your BAA specifies) as the covered
+    entity needs to meet §524(c)(2)(ii) and (3)(ii). §164.502(a)(4)(ii) binds you directly.
+    Templates to sign: baa
 
 ## hipaa-privacy 164.502(g) — Personal representatives
   Requirement: A covered entity must treat a personal representative as the individual for
