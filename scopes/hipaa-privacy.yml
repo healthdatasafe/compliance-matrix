@@ -61,6 +61,21 @@ hds_posture:
       internal_doc: hipaa/policies/privacy-practices
 
 changelog:
+  - date: "2026-11-04"
+    change: >
+      Business-associate entries authored for the ten rows left open in
+      unauthored_obligations (compliance-matrix#1). 164.510, 164.512, 164.512(b),
+      164.512(f), 164.514(a), 164.514(b), 164.514(c): documented, because
+      §164.502(a)(3) bars a business associate from any use or disclosure the
+      covered entity could not make, so the section's conditions bind it whenever
+      it acts under them. 164.530(c): documented, pointing at the safeguard duty's
+      real sources (the Security Rule and §164.504(e)(2)(ii)(B)). 164.530(g):
+      documented, the duty coming from §160.316, which binds business associates
+      directly. 164.530(d): out-of-scope, the complaint process being the covered
+      entity's alone (§164.500(c): Subpart E reaches a business associate only
+      where it says so). 164.510(b) business associate moved from out-of-scope to
+      documented for consistency with 164.510. The list is now empty, so an absent
+      business-associate entry in this scope means "not yet authored".
   - date: "2026-08-26"
     change: >
       The HDS-layer privacy policies and procedures cited by these rows reached
@@ -109,66 +124,7 @@ changelog:
 # Raised by a programmatic consumer (compliance-matrix#1): from outside, a silence
 # nobody has weighed and a silence somebody refused to guess read identically, and
 # only the second is a statement.
-unauthored_obligations:
-  - ref: "164.510"
-    persona: business-associate
-    note: >
-      A business associate acts on the covered entity's instructions here, but is
-      directly liable for impermissible uses and disclosures under §164.502. Whether
-      that leaves it an obligation of its own under this section is the contested
-      point.
-  - ref: "164.512"
-    persona: business-associate
-    note: >
-      Post-Omnibus a business associate is directly liable for §164.502(a), and the
-      §164.512 conditions bound what it may disclose. Whether the section places a
-      duty on it, or only a limit, is what nobody here can settle.
-  - ref: "164.512(b)"
-    persona: business-associate
-    note: >
-      As for §164.512. Public-health disclosures are made on the covered entity's
-      determination, yet a business associate disclosing outside the permitted
-      conditions is directly liable.
-  - ref: "164.512(f)"
-    persona: business-associate
-    note: >
-      As for §164.512. Law-enforcement disclosures reach a business associate served
-      with process directly, which is precisely where the allocation is unclear.
-  - ref: "164.514(a)"
-    persona: business-associate
-    note: >
-      A business associate may de-identify only if its agreement permits, and
-      §164.514(d) minimum-necessary liability attaches to it directly. Whether the
-      de-identification standard itself binds it is unsettled.
-  - ref: "164.514(b)"
-    persona: business-associate
-    note: >
-      As for §164.514(a). The method determination is the covered entity's, while the
-      execution may sit with a business associate that is directly liable for the
-      result.
-  - ref: "164.514(c)"
-    persona: business-associate
-    note: >
-      As for §164.514(a). Re-identification codes may be held by a business associate,
-      which raises whether the derivation constraint binds it directly.
-  - ref: "164.530(c)"
-    persona: business-associate
-    note: >
-      §164.530 addresses covered entities, but a business associate carries safeguard
-      duties under the Security Rule and under §164.502. Marking this out-of-scope
-      would read as "no safeguard duty", which is false in substance even if true of
-      this section.
-  - ref: "164.530(d)"
-    persona: business-associate
-    note: >
-      The complaints process is the covered entity's, yet a business associate
-      receiving a complaint directly has an unclear obligation to route it.
-  - ref: "164.530(g)"
-    persona: business-associate
-    note: >
-      Anti-retaliation is directed at covered entities in this section, while
-      §160.316 reaches any person. Whether that leaves a business associate an
-      obligation under §164.530(g) itself is contested.
+unauthored_obligations: []
 
 
 requirements:
@@ -351,6 +307,16 @@ requirements:
         overview: |
           Offer the opportunity to agree or object and record the individual's
           response.
+      - persona: business-associate
+        basis: entity
+        applies_when: always
+        coverage: documented
+        overview: |
+          Make a disclosure under this section only when your BAA permits it and
+          the individual has been given the opportunity to agree or object. A
+          disclosure the covered entity could not make, you cannot make either
+          (§164.502(a)(3)).
+        templates: [baa]
       - persona: individual
         coverage: out-of-scope
 
@@ -389,6 +355,15 @@ requirements:
         overview: |
           Determine whether each disclosure qualifies under §512 and record its
           category and statutory basis.
+      - persona: business-associate
+        basis: entity
+        applies_when: [secondary-use]
+        coverage: documented
+        overview: |
+          Make a disclosure under this section only when your BAA permits it or
+          the law requires it, and only within the section's conditions. What the
+          covered entity could not disclose, you cannot (§164.502(a)(3)).
+        templates: [baa]
       - persona: individual
         coverage: out-of-scope
 
@@ -426,6 +401,14 @@ requirements:
         overview: |
           Choose the de-identification method, perform the transformation, and
           retain the determination record.
+      - persona: business-associate
+        basis: entity
+        applies_when: [analytics, secondary-use]
+        coverage: documented
+        overview: |
+          De-identify PHI only when your BAA permits it. Until the output meets
+          §164.514(b) it remains PHI, and every duty follows it.
+        templates: [baa]
       - persona: individual
         coverage: out-of-scope
 
@@ -847,6 +830,15 @@ requirements:
         overview: |
           Maintain administrative safeguards and document how the technical and
           physical safeguards meet §530(c).
+      - persona: business-associate
+        basis: entity
+        applies_when: always
+        coverage: documented
+        overview: |
+          Your safeguard duty does not come from this section: the Security Rule
+          binds you directly for ePHI, and your BAA for all PHI
+          (§164.504(e)(2)(ii)(B)). See the HIPAA Security rows.
+        templates: [baa]
       - persona: individual
         coverage: out-of-scope
 
@@ -1030,6 +1022,9 @@ requirements:
         overview: |
           Operate the complaint process and document complaints and their
           dispositions.
+      - persona: business-associate
+        applies_when: always
+        coverage: out-of-scope
       - persona: individual
         coverage: out-of-scope
 
@@ -1104,6 +1099,14 @@ requirements:
         coverage: documented
         overview: |
           Maintain and enforce an anti-retaliation policy.
+      - persona: business-associate
+        basis: entity
+        applies_when: always
+        coverage: documented
+        overview: |
+          Do not intimidate, threaten, coerce, discriminate against or retaliate
+          against anyone for filing a complaint, assisting an investigation or
+          opposing an unlawful practice. §160.316 binds you directly.
       - persona: individual
         coverage: out-of-scope
 
@@ -1194,7 +1197,12 @@ requirements:
       - persona: business-associate
         basis: entity
         applies_when: always
-        coverage: out-of-scope
+        coverage: documented
+        overview: |
+          Disclose to family or friends involved in care only when your BAA
+          permits it and the individual had the opportunity to agree or object
+          (§164.502(a)(3)).
+        templates: [baa]
 
   - ref: "164.512(b)"
     title: Uses and disclosures for public-health activities
@@ -1230,6 +1238,15 @@ requirements:
         overview: |
           Confirm the public-health authority's legal basis and record the
           disclosure.
+      - persona: business-associate
+        basis: entity
+        applies_when: always
+        coverage: documented
+        overview: |
+          Disclose for public health only when your BAA permits it, to an
+          authority authorized by law to receive it, and record the basis for the
+          covered entity.
+        templates: [baa]
       - persona: individual
         coverage: out-of-scope
 
@@ -1267,6 +1284,16 @@ requirements:
         overview: |
           Evaluate law-enforcement requests against §512(f) conditions and record
           the basis.
+      - persona: business-associate
+        basis: entity
+        applies_when: always
+        coverage: documented
+        overview: |
+          Answer compulsory process served on you as required by law. Answer any
+          other law-enforcement request only if your BAA permits it and the
+          §512(f) conditions are met, and notify the covered entity as your BAA
+          requires.
+        templates: [baa]
       - persona: individual
         coverage: out-of-scope
 
@@ -1500,6 +1527,15 @@ requirements:
         overview: |
           Select and execute Expert Determination or Safe Harbor and retain the
           documentation.
+      - persona: business-associate
+        basis: entity
+        applies_when: [analytics, secondary-use]
+        coverage: documented
+        overview: |
+          Apply Expert Determination or Safe Harbor as the covered entity directs
+          and retain the documentation. A failed de-identification is an
+          impermissible disclosure.
+        templates: [baa]
       - persona: individual
         coverage: out-of-scope
 
@@ -1547,6 +1583,13 @@ requirements:
         overview: |
           Generate codes that do not encode PHI and restrict their use to
           re-identification.
+      - persona: business-associate
+        basis: entity
+        applies_when: [analytics, secondary-use]
+        coverage: documented
+        overview: |
+          Any re-identification code you assign must not derive from information
+          about the individual and may be used for re-identification only.
       - persona: individual
         coverage: out-of-scope
 
