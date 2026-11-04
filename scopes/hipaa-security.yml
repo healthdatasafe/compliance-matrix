@@ -18,8 +18,8 @@ hds_posture:
   evidence_backing:
     rows_total: 43
     rows_evidenced: 43
-    rows_approved: 40
-    as_of: "2026-09-10"
+    rows_approved: 39
+    as_of: "2026-11-04"
   roles:
     - arrangement: vault
       role: not-applicable
@@ -1028,7 +1028,6 @@ requirements:
       testing is tracked under the testing-and-revision specification.
       Partners running their own deployments document their own plan.
     regions: [us, ch]
-    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/procedures/disaster-recovery-plan
