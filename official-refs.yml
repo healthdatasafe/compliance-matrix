@@ -139,9 +139,17 @@ refs:
     url: "https://www.ecfr.gov/current/title-45/section-164.312#p-164.312(e)(2)(ii)"
     label: "45 CFR §164.312(e)(2)(ii)"
     source: eCFR
+  "hipaa-security.164.314(a)(2)(i)(B)":
+    url: "https://www.ecfr.gov/current/title-45/section-164.314#p-164.314(a)(2)(i)(B)"
+    label: "45 CFR §164.314(a)(2)(i)(B)"
+    source: eCFR
   "hipaa-security.164.314(a)(2)(ii)":
     url: "https://www.ecfr.gov/current/title-45/section-164.314#p-164.314(a)(2)(ii)"
     label: "45 CFR §164.314(a)(2)(ii)"
+    source: eCFR
+  "hipaa-security.164.314(a)(2)(iii)":
+    url: "https://www.ecfr.gov/current/title-45/section-164.314#p-164.314(a)(2)(iii)"
+    label: "45 CFR §164.314(a)(2)(iii)"
     source: eCFR
   "hipaa-security.164.316(b)(1)":
     url: "https://www.ecfr.gov/current/title-45/section-164.316#p-164.316(b)(1)"
