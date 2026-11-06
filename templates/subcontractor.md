@@ -23,9 +23,11 @@ summary: >
 Between `[Business Associate legal name]` ("Business Associate") and
 `[Subcontractor legal name]` ("Subcontractor"), effective `[date]`.
 
-Under 45 CFR §164.308(b)(2) and §164.314(a)(2)(ii), a Business Associate must
+Under 45 CFR §164.308(b)(2) and §164.314(a)(2)(i)(B), a Business Associate must
 obtain satisfactory assurances that each subcontractor handling ePHI will apply
-safeguards at least as stringent as those the Business Associate is bound to.
+safeguards at least as stringent as those the Business Associate is bound to;
+§164.314(a)(2)(iii) applies the business associate contract requirements to this
+agreement.
 
 ## 1. Definitions
 Per 45 CFR Parts 160 and 164.

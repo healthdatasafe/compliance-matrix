@@ -24,7 +24,8 @@ the Business Associate Agreement.
 
 ## Purpose
 Provides transparency over the subprocessors involved in handling ePHI and
-records, for each, the written assurances obtained per 45 CFR §164.314(a)(2)(ii).
+records, for each, the written assurances obtained per 45 CFR §164.308(b)(2) and
+§164.314(a)(2)(i)(B).
 A change to this list is notified to affected customers per the BAA.
 
 ## Subprocessor register

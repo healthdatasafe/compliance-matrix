@@ -87,6 +87,14 @@ hds_posture:
       internal_doc: hipaa/registers/hosting-provider-attestations
 
 changelog:
+  - date: "2026-11-05"
+    change: >
+      164.314(a)(2)(ii)(B): the business associate's subcontractor flow-down is
+      §164.314(a)(2)(i)(B), applied to the business associate / subcontractor
+      contract by §164.314(a)(2)(iii); (a)(2)(ii) is "Other arrangements"
+      (arrangements under §164.504(e)(3)). The row text now names the right
+      paragraph and the detail cites it. The row id stays as it is: it is
+      Pryv's pinned key, and renaming it is raised with Pryv upstream.
   - date: "2026-09-08"
     change: >
       164.308(a)(5)(ii)(A): the training chip described the procedure and its
@@ -2346,6 +2354,9 @@ requirements:
     Where applicable, the business associate must ensure that any subcontractors
     that create, receive, maintain, or transmit ePHI on its behalf agree, via a
     written contract, to comply with the applicable Security Rule requirements.
+    The provision is 45 CFR §164.314(a)(2)(i)(B), applied to the contract with
+    the subcontractor by §164.314(a)(2)(iii); the row id is Pryv's pinned key
+    and is raised with Pryv for renaming.
   pryv_ref: 164.314(a)(2)(ii)(B)
   draft: false
   reviewed_by: perki
@@ -2365,7 +2376,7 @@ requirements:
       HDS maintains a current list of its ePHI-relevant subprocessors and holds a
       written contract with each that flows down the applicable Security Rule
       obligations. The subprocessor list is made available to implementers so
-      they can satisfy their own §164.314(a)(2)(ii)(B) due diligence.
+      they can satisfy their own §164.314(a)(2)(i)(B) due diligence.
     evidence_approved: true
     evidence:
       internal_docs:
