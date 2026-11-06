@@ -1,6 +1,6 @@
 # HDS Compliance Matrix — full text
 
-Generated 2026-11-04 from https://github.com/healthdatasafe/compliance-matrix
+Generated 2026-11-06 from https://github.com/healthdatasafe/compliance-matrix
 Summary and the rules for computing an implementer's answer: https://compliance.datasafe.dev/llms.txt
 
 NOT LEGAL ADVICE. Engineering and operational guidance; confirm obligations with counsel.
@@ -5459,7 +5459,10 @@ HDS's own position on HIPAA-Security:
 ## hipaa-security 164.314(a)(2)(ii)(B) — Business associate contract — extend safeguards to subcontractors
   Requirement: Where applicable, the business associate must ensure that any
   subcontractors that create, receive, maintain, or transmit ePHI on its behalf agree, via
-  a written contract, to comply with the applicable Security Rule requirements.
+  a written contract, to comply with the applicable Security Rule requirements. The
+  provision is 45 CFR §164.314(a)(2)(i)(B), applied to the contract with the subcontractor
+  by §164.314(a)(2)(iii); the row id is Pryv's pinned key and is raised with Pryv for
+  renaming.
   Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-314-a-2-ii-b
   PRYV PLATFORM: out-of-scope
     Subcontracting chains are contractual; no software role. The only built-in subprocessor
@@ -5474,7 +5477,7 @@ HDS's own position on HIPAA-Security:
     Detail: HDS maintains a current list of its ePHI-relevant subprocessors and holds a
     written contract with each that flows down the applicable Security Rule obligations. The
     subprocessor list is made available to implementers so they can satisfy their own
-    §164.314(a)(2)(ii)(B) due diligence.
+    §164.314(a)(2)(i)(B) due diligence.
     Evidence: internal:hipaa/registers/baa-register
     Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented

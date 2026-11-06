@@ -1,6 +1,6 @@
 {
   "format": 2,
-  "generated": "2026-11-04",
+  "generated": "2026-11-06",
   "note": "Digests cover STRUCTURAL fields only; prose may change without moving any digest. Digests are comparable only within the same `format`: a format bump means the computation changed, so compare content across one by diffing, not by hash.",
   "fields": [
     "ref",
