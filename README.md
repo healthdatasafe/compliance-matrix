@@ -138,3 +138,7 @@ ecosystem's single tracker).
 ---
 
 Maintained by Health Data Safe.
+
+## License
+
+[BSD-3-Clause](LICENSE)

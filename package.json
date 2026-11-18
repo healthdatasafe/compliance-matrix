@@ -2,7 +2,7 @@
   "name": "compliance-matrix",
   "version": "0.0.1",
   "private": true,
-  "description": "HDS compliance & regulation matrix \u2014 how Health Data Safe is compliant and what implementers must do themselves. Layered on pryv/compliance-matrix.",
+  "description": "HDS compliance & regulation matrix — how Health Data Safe is compliant and what implementers must do themselves. Layered on pryv/compliance-matrix.",
   "type": "module",
   "engines": {
     "node": ">=24"
@@ -19,7 +19,8 @@
     "test": "echo \"no script tests yet\" && exit 0",
     "lint": "eslint scripts/",
     "lint:fix": "eslint scripts/ --fix",
-    "evidence:status": "node scripts/evidence-status.js"
+    "evidence:status": "node scripts/evidence-status.js",
+    "license": "source-licenser -c .licenser.yml ."
   },
   "dependencies": {
     "ajv": "^8.17.1",
@@ -30,11 +31,13 @@
   },
   "devDependencies": {
     "eslint": "^9.9.0",
-    "neostandard": "^0.12.2"
+    "neostandard": "^0.12.2",
+    "source-licenser": "^2.0.6"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/healthdatasafe/compliance-matrix.git"
   },
-  "license": "BSD-3-Clause"
+  "license": "BSD-3-Clause",
+  "author": "Health Data Safe (https://www.healthdatasafe.org)"
 }
