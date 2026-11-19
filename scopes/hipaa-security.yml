@@ -18,8 +18,8 @@ hds_posture:
   evidence_backing:
     rows_total: 43
     rows_evidenced: 43
-    rows_approved: 39
-    as_of: "2026-11-04"
+    rows_approved: 32
+    as_of: "2026-11-19"
   roles:
     - arrangement: vault
       role: not-applicable
@@ -281,7 +281,6 @@ requirements:
       the technical raw material and its own programme as evidence of operator
       diligence.
     regions: [us, ch]
-    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/policies/security-management-process
@@ -338,7 +337,6 @@ requirements:
       only on request under NDA, signed BAA or audit engagement, as is normal for
       a document whose contents are an inventory of what could go wrong.
     regions: [us, ch]
-    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/risk/risk-analysis
@@ -387,7 +385,6 @@ requirements:
       risk carries a decision, including the decisions to accept. The register's
       contents, like the analysis, are confidential and released on request.
     regions: [us, ch]
-    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/plans/risk-management
@@ -2234,7 +2231,6 @@ requirements:
       subcontractor agreements with the hosting providers, tracked in the BAA
       register. HDS offers the BAA template (templates/baa) and supplies the
       technical-safeguards evidence such a contract would rely on.
-    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/registers/baa-register
@@ -2283,7 +2279,6 @@ requirements:
       access control, audit logging, encryption, monitoring and regional
       residency. This gives the contractual "reasonable and appropriate
       safeguards" clause a concrete, auditable backing.
-    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/registers/baa-register
@@ -2334,7 +2329,6 @@ requirements:
       written contract with each that flows down the applicable Security Rule
       obligations. The subprocessor list is made available to implementers so
       they can satisfy their own §164.314(a)(2)(i)(B) due diligence.
-    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/registers/baa-register
@@ -2385,7 +2379,6 @@ requirements:
       BAA's notification clause defines the channel and timing for reporting to
       the implementer; HDS's incident-response procedure governs how that report
       is produced and what evidence it carries.
-    evidence_approved: true
     evidence:
       internal_docs:
         - hipaa/registers/baa-register
