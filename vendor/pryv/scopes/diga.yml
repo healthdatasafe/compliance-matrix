@@ -192,18 +192,26 @@ requirements:
     text: |
       All communication interfaces of the digital health application
       shall employ Transport Layer Security at current state of the art.
-    coverage: implemented
-    pryv_effort_saved: high
+    coverage: configurable
+    pryv_effort_saved: medium
     draft: true
     pryv_primitives: [letsEncrypt-integration, multi-core-mTLS]
     derives_from: [gdpr.Art.32]
+    config_keys: [http.ssl.keyFile, http.ssl.certFile, letsEncrypt.enabled, storages.engines.rqlite.tls]
     tests: [ACMEINT, ACMEORCH, CERTUTILS, FORCERENEWIPC]
     overview: |
-      Pryv's built-in ACME integration ships TLS 1.3 default-on with
-      automated renewal + cluster-replicated rotation; inter-core
-      traffic runs over mTLS with a cluster-private CA. There is no
-      plaintext shipped path. BfArM's "current state of the art"
-      requirement is met by current cipher-suite defaults.
+      TLS is configured, not default: the core terminates it when
+      `http.ssl.*` is set (the built-in ACME integration issues, renews
+      and replicates certificates across the cluster when
+      `letsEncrypt.enabled` is set), otherwise it serves plain HTTP and
+      your reverse proxy terminates TLS. Inter-core Raft traffic runs
+      over mTLS with a cluster-private CA once `bin/bootstrap.js` has
+      written `storages.engines.rqlite.tls` (default plain TCP). The
+      core sets no TLS version or cipher options of its own, so
+      "current state of the art" in the core rests on Node.js defaults
+      (on the Node 24 the image runs: TLS 1.2 floor, TLS 1.3 when the
+      client supports it); if BfArM expects a TLS 1.3-only or narrower
+      cipher policy, enforce it at your proxy.
 
   - ref: A1.2.7
     title: Annex 1.2, Penetration test within 12 months
@@ -225,6 +233,18 @@ requirements:
       test commissioning + remediation cycle is the manufacturer's.
       For repeat customers, Pryv-side findings already remediated
       upstream reduce repeat test scope.
+    detail: |
+      The 2026 code-level security review of open-pryv.io (fixes in
+      2.0.0-rc.40 to 2.0.0-rc.51; public report `SECURITY-AUDIT.md`,
+      published 2026-10-14,
+      https://github.com/pryv/open-pryv.io/blob/master/SECURITY-AUDIT.md;
+      `context/code-security-review-2026.md`) does **not**
+      satisfy this requirement: it was performed by the maintainers of the
+      code, not by an independent third party, and it reviewed source code,
+      not your running application. It helps your penetration test: run a
+      release that carries the fixes before the test, and hand the tester
+      the report and release notes so known, fixed platform findings are
+      not re-reported against your listing.
 
   - ref: A1.3.1
     title: Annex 1.3, Interoperability, FHIR R4 export of treatment-relevant data
@@ -301,7 +321,7 @@ requirements:
     pryv_primitives: [access, MFA, system-streams]
     derives_from: [hipaa-security.164.312(d), iso-27001.A.8.5]
     config_keys: [services.mfa.mode]
-    tests: [MA01, MA02, MA03, MA04, MA05]
+    tests: [MA15A, MA15C, MA10A, MA11A, MA3A, MA12A]
     planned:
       - kind: enhancement
         summary: "Reference WebAuthn plugin meets the BfArM 'strong authentication for sensitive health data' bar without SMS-OTP weakness"
@@ -310,7 +330,11 @@ requirements:
         tracking_url: https://github.com/orgs/pryv/projects/5?pane=issue&itemId=190467852&issue=pryv%7Copen-pryv.io%7C78
         impact: medium
     overview: |
-      MFA via the `mfa.*` API methods (`services.mfa.mode` enables it);
+      MFA via the `mfa.*` API methods (live by default since
+      open-pryv.io 2.0.0-rc.14 with authenticator-app TOTP,
+      `services.mfa.active`; the legacy `services.mfa.mode` is still
+      honoured); failed second factors hit a per-account backoff, not a
+      lockout, since 2.0.0-rc.27 (see HIPAA §164.312(d));
       personal-token + access-token model gives separation of user
       identity from app identity. The BfArM "strong authentication
       where sensitive health data is processed" bar maps to MFA on by
@@ -367,6 +391,7 @@ requirements:
     draft: true
     pryv_primitives: [multi-core-mTLS, letsEncrypt-integration, backup-restore, observability-provider]
     derives_from: [iso-27001.A.5.23, mdr.A1.17]
+    docs: [customer-resources/rate-limiting.md]
     overview: |
       Pryv-side availability:
       multi-core HA (cluster topology + Raft replication); TLS
@@ -375,6 +400,21 @@ requirements:
       application-layer continuity procedures (offline mode,
       degraded-service messaging, support channels) are
       manufacturer-side.
+    detail: |
+      Since open-pryv.io 2.0.0-rc.47 and 2.0.0-rc.50 the core also
+      bounds what one client can consume (batch, paging, upload,
+      socket.io and preview limits; per-address budgets on the
+      unauthenticated entry points) and replaces a crashing worker after
+      a growing delay instead of in a tight loop, so a single misbehaving
+      client is less likely to make the service unavailable for others.
+      Since open-pryv.io 2.0.0-rc.87, a flood
+      of password checks no longer stalls a worker's other requests
+      (a bounded number run at a time, the rest refused with
+      `Retry-After`), and on PostgreSQL a runaway database statement of an
+      API request is stopped after a time limit instead of holding its
+      connection for as long as it takes.
+      See `context/rate-limiting-and-dos-protection.md` and iso-27001
+      A.8.6. An edge layer in front of the cores remains your part.
 
   - ref: A1.5.1
     title: Annex 1.5, Consumer protection, clear pricing + contractual conditions

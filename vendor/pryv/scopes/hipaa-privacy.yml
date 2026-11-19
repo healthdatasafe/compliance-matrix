@@ -87,12 +87,16 @@ requirements:
     pryv_effort_saved: high
     draft: true
     pryv_primitives: [access, clientData, CMC, event]
-    tests: [AA01, ACCP]
+    tests: [AA01, ACCP, CN58, CN59, CN60]
     overview: |
       The authorization Pryv mints when your subject grants an access IS
       the §164.508 authorization record, versioned, immutable per
       version, with the granted scope (permissions) and the authorization
       text (clientData or a `consent/request-cmc` event) inseparable.
+      The access keeps every previous version; a request event keeps
+      its previous versions only with `versioning.forceKeepHistory:
+      true` (off by default), so do not edit it after sending unless
+      that is on.
       Withdrawal is a single API call. For cross-account / cross-entity
       authorizations, the CMC plugin carries the negotiation state.
     detail: |
@@ -105,7 +109,11 @@ requirements:
         - signature equivalent → the act of granting the access through
           the auth flow (auditable)
         - expiration → `access.expires`
-        - right to revoke → `accesses.delete` + audit row at revocation
+        - right to revoke → `accesses.delete` + audit row at revocation;
+          for a cross-account (CMC) authorization, the individual's own
+          accept event also records the revocation, whichever party
+          ended it (`content.withdrawal`, open-pryv.io
+          2.0.0-rc.36) `[CN58]`, `[CN59]`, `[CN60]`
         - re-disclosure statement → `clientData.redisclosure_notice`
       Implementer responsibility: ensure the consent UX presents the
       §508(c) elements at the grant moment.
@@ -310,17 +318,26 @@ requirements:
     text: |
       Individual has a right to have a covered entity amend PHI or a
       record about the individual in a designated record set.
-    coverage: implemented
+    coverage: configurable
     pryv_effort_saved: high
     draft: true
     pryv_primitives: [event]
+    config_keys: [versioning.forceKeepHistory]
     functional_specs: [EVENT.BASE]
     tests: [PTU1]
     overview: |
-      `events.update` is the amendment primitive; event versioning
-      preserves the prior content so the amendment trail is auditable.
-      The §164.526 process (request → decision → action → notice) is
-      yours to run; the technical record-keeping is shipped.
+      `events.update` is the amendment primitive, and the audit log
+      records who amended which event and when. The prior content is
+      kept, so the amendment trail shows what changed, only on a
+      deployment with `versioning.forceKeepHistory: true` (off by
+      default; see `context/event-history.md`): set it, or record each
+      amendment as a new event linked to the one it amends. Configurable
+      rather than implemented: §164.526(c)(1) asks you to append the
+      amendment to, or link it from, the record it amends, and on the
+      default configuration an update overwrites that record; one
+      setting (or that modelling convention) gives you the trail. The
+      §164.526 process (request → decision → action → notice) is yours
+      to run.
     detail: |
       For denied amendments where the individual files a statement of
       disagreement (§526(d)), store the statement as a separate event
@@ -552,8 +569,9 @@ requirements:
     overview: |
       Same pattern as HIPAA-
       Security §164.316(a): policies-as-data on a
-      `compliance/policies/*` stream get versioning + retention +
-      audit. The drafting + approval + review-cycle procedure is the
+      `compliance/policies/*` stream get retention + audit, and
+      versioning once `versioning.forceKeepHistory: true` is set (off by
+      default). The drafting + approval + review-cycle procedure is the
       privacy officer's. Cross-link to §164.316(a) preserves the
       Security Rule's parallel obligation.
 
@@ -671,21 +689,50 @@ requirements:
       individual with respect to uses + disclosures of PHI, subject to
       enumerated exceptions (abuse / neglect concerns, endangerment).
     coverage: facilitated
-    pryv_effort_saved: low
-    facilitation_mode: storage
-    draft: true
-    pryv_primitives: [access, clientData]
+    pryv_effort_saved: medium
+    facilitation_mode: primitive
+    draft: false
+    reviewed_by: Pryv compliance
+    reviewed_at: "2026-09-15"
+    pryv_primitives: [access, delegation, clientData, audit]
+    tests: [DCH01, DCH05, DCH12]
     derives_from: [hipaa-privacy.164.502]
     overview: |
-      Pryv pattern: the personal
-      representative holds an `app` or `shared` access to the subject's
-      data with full scope (the effective "treat as individual"
-      technical permission). The access's
-      `clientData.representative_relationship` +
-      `clientData.legal_basis` capture the relationship; the
-      revocation-by-exception pattern is `accesses.update` to narrow
-      / `accesses.delete` to remove. The "abuse / neglect /
-      endangerment" determination is clinical / legal judgement.
+      Pryv's account-delegation primitive
+      (`open-pryv.io/components/delegation/`) is the technical
+      mechanism for "treat the personal representative as the
+      individual": the representative holds an **owner-equivalent
+      delegate token** over the subject's account, full owner
+      authority over the data, with the single exception that a
+      delegate can never remove its own delegation. Every action the
+      representative takes is **audited per delegate on the subject's
+      account**, so uses and disclosures made under the
+      representative's authority are attributable. The individual
+      **revokes** the representative by a genuine login on their own
+      account and detaching (the authoritative teardown; a delegate
+      cannot block it), which is the technical shape of §164.502(g)'s
+      exceptions (abuse / neglect / endangerment) once the covered
+      entity makes that clinical / legal determination. Same-core and
+      cross-core (same platform) both carry the audited attribution;
+      see `context/delegation-model.md`.
+
+      The representative can also authorize an app for the individual
+      through the auth request: the app receives an ordinary app
+      access on the individual's account (never the representative's
+      owner-equivalent token), stamped by the server with a
+      non-forgeable lineage attribute naming the representative, and
+      its uses and disclosures are audited on the individual's account
+      with the representative named on every record. Revoking the
+      representative revokes every app access granted that way
+      (open-pryv.io 2.0.0-rc.23).
+
+      A lighter-weight alternative where full owner-equivalence is not
+      wanted: the representative holds a scoped `app` / `shared`
+      access instead, with `clientData.representative_relationship` +
+      `clientData.legal_basis` capturing the relationship and
+      `accesses.update` / `accesses.delete` narrowing or removing it.
+      The "abuse / neglect / endangerment" determination is clinical /
+      legal judgement either way.
 
   - ref: "164.512(a)"
     title: Uses + disclosures required by law
@@ -734,8 +781,9 @@ requirements:
     pryv_effort_saved: medium
     facilitation_mode: primitive
     draft: true
-    pryv_primitives: [randomAlias, stream, system-streams, access, clientData]
+    pryv_primitives: [randomAlias, stream, system-streams, access, clientData, external-id-index]
     derives_from: [hipaa-privacy.164.514(a)]
+    tests: [XIDC1, XIDG1, XIDN4, BKAL1, ALRT1, AL13, OPSE5]
     overview: |
       `accesses.create {randomAlias:true}` provides the re-identification
       code directly: it mints a platform-unique `r-XXXXXXXX` alias that is
@@ -743,11 +791,31 @@ requirements:
       §514(c)(1)(ii) out of the box. The platform holds the alias-to-user
       mapping and the aliased access exposes only the alias, the covered
       entity re-identifies by resolving the alias, and the code is used for
-      no other purpose. When the workflow instead needs an explicit
+      no other purpose. Since open-pryv.io `4547b32a` (2.0.0-rc.66) the alias survives a backup and restore (`[BKAL1]`)
+      and routes on a single core answering DNS (`[ALRT1]`). The alias
+      keeps the username from the recipient, and since open-pryv.io
+      2.0.0-rc.69 the token is accepted under its alias only, so a
+      recipient who suspects whose record it is cannot confirm the guess
+      with the token (`[AL13]`, `[OPSE5]`; earlier releases accepted it
+      under every name of the account). The data stays linked to the
+      account, so the alias does not by itself make it de-identified
+      under §514(b): that determination stays yours. When the workflow instead needs an explicit
       code-to-PHI map, keep it on a dedicated `re-id-map/*` system-
       stream-adjacent subtree with access permitted only to the
       re-identification administrator role; the code generation method
       (random / hash-of-non-PHI) must not encode PHI per §514(c)(1)(ii).
+      To link an account to a record id your EHR already uses (a patient
+      id), external ids (open-pryv.io 2.0.0-rc.58, `external-id-index`)
+      keep the re-identification means with you, not the platform: your
+      service sends `HMAC(K_namespace, recordId)` under a key it holds,
+      and Pryv stores only a token of that value mapped to a core, never
+      the record id nor the key, and never returns the value `[XIDC1]`,
+      `[XIDG1]`, `[XIDN4]`. The blinded value is derived from the record
+      id, so it is not by itself a code "not derived from" information
+      about the individual (§514(c)(1)): whether your design meets
+      §514(c) rests on your key custody (the key, the means of
+      re-identification, is not disclosed nor used for another purpose,
+      §514(c)(2)) and is your determination.
 
   - ref: 164.528(b)
     title: Accounting of disclosures, Implementation specifications

@@ -112,13 +112,18 @@ requirements:
     draft: true
     pryv_primitives: [access, permissions, CMC]
     derives_from: [gdpr.Art.7]
-    tests: [AA02, ACCP]
+    tests: [AA02, ACCP, CN58, CN59, CN60]
     overview: |
       Withdrawal = `accesses.delete`; modification = `accesses.update`
       with new permissions / clientData. Both are versioned and
       auditable; the prior consent state is preserved for §7
       demonstrability. Cross-account (CMC) consent withdrawal uses
-      `consent/revoke-cmc` for symmetric teardown.
+      `consent/revoke-cmc` for symmetric teardown, and since
+      open-pryv.io 2.0.0-rc.36 the principal's own
+      accept event records each withdrawal, whichever party and path
+      ended it (`content.withdrawal`, server-owned, never overwritten)
+      `[CN58]`, `[CN59]`, `[CN60]`. See
+      `context/cmc-consent-primitives.md`.
 
   - ref: A.7.4.1
     title: A.7.4.1 Limit collection
@@ -229,9 +234,12 @@ requirements:
     derives_from: [gdpr.Art.5, gdpr.Art.16]
     tests: [PTU1]
     overview: |
-      `events.update` rectifies events with version-history preservation
-      (matching GDPR Art.16 mechanics). For "throughout the lifecycle"
-      proof, the event version chain is the artefact. The accuracy
+      `events.update` rectifies events (matching GDPR Art.16 mechanics),
+      and the audit log records who rectified which event and when. For
+      "throughout the lifecycle" proof of the values themselves, the
+      event version chain is the artefact, and it exists only on a
+      deployment with `versioning.forceKeepHistory: true` (off by
+      default; see `context/event-history.md`). The accuracy
       determination + correction workflow is the controller's.
 
   - ref: A.7.4.5
@@ -244,10 +252,11 @@ requirements:
     coverage: configurable
     pryv_effort_saved: medium
     draft: true
-    pryv_primitives: [event, stream, backup-restore, randomAlias]
+    pryv_primitives: [event, stream, backup-restore, randomAlias, account-auto-deletion]
     derives_from: [gdpr.Art.17, gdpr.Art.4, hipaa-security.164.310, hipaa-privacy.164.514, ccpa.1798.105]
-    config_keys: [storages.userAccountStorage.engine, user-account.delete]
-    tests: [USAD]
+    config_keys: [storages.userAccountStorage.engine, user-account.delete, account.autoDeletion.inactivity.defaultDays, account.autoDeletion.reminders.minNoticeDays]
+    docs: [customer-resources/account-auto-deletion.md]
+    tests: [USAD, ACXP2, ACXP3, ACXP8, ACST10, ACST14, ADSW8]
     overview: |
       Per-user deletion via `system.users.delete` (engine-dependent
       backup behaviour, same notes as GDPR Art. 17). Per-event /
@@ -255,15 +264,39 @@ requirements:
       De-identification (Safe Harbor / Expert Determination methods) is
       an application-layer transformation; Pryv stores the result.
       "**Soon as the original PII is no longer necessary**" is the
-      operator's scheduled-retention obligation; Pryv ships no
-      TTL primitive; the operator composes `events.get toTime=` +
-      `events.delete` + audit-log inactivity oracle in an external
+      operator's scheduled-retention obligation for records; Pryv
+      ships no TTL primitive for events and streams (whole accounts:
+      account auto-deletion since 2.0.0-rc.66, see detail); the
+      operator composes `events.get toTime=` + `events.delete` +
+      audit-log inactivity oracle in an external
       retention job (`context/data-retention-operator-owned.md`).
-      `accesses.create {randomAlias:true}` ships the anonymisation
-      companion for "render in a non-identifying form" rather than
-      "delete": a platform-unique routable alias replaces the username
-      on that access, so a counterparty holding it cannot re-identify
-      the principal or cross-match them against another access.
+      `accesses.create {randomAlias:true}` reduces identification at
+      the access layer while processing continues: a platform-unique
+      routable alias replaces the username on that access, so what the
+      server returns to a counterparty holding it does not name the
+      principal nor match it against another access. It is not an
+      end-of-processing de-identification of the PII (the data stays
+      linked to the account). Since open-pryv.io 2.0.0-rc.69 the token
+      is accepted under its alias only, so a counterparty who guesses
+      the username cannot confirm it with the token (earlier releases
+      accepted it under every name of the account). At the end of
+      processing, deletion stays the mechanism.
+    detail: |
+      Account auto-deletion, since open-pryv.io 2.0.0-rc.66
+      (`8521c8d5`, see gdpr.Art.5 §1(e)). For whole accounts, "no
+      longer necessary" is enforceable by configuration: your
+      inactivity preset (`account.autoDeletion.inactivity.defaultDays`,
+      default none) deletes plain accounts with an email address
+      (`[ACST14]`) after that many days without use of their personal
+      accesses (app accesses too only with
+      `account.autoDeletion.inactivity.countAppUse`, since
+      2.0.0-rc.81, `[ACST20]`), its clock starting the day it first applies
+      (`[ACXP2]`), after reminder mails (`[ACXP3]`) and at least 7 days
+      after the first notice (`[ACXP8]`); the PII principal may also
+      schedule their own account's deletion at a date or after a
+      period, where self-deletion is allowed (`[ACST10]`). The deletion
+      is `system.users.delete`'s, guards included (`[ADSW8]`).
+      Per-record retention and de-identification stay as above.
 
   - ref: A.7.4.6
     title: A.7.4.6 Temporary files
@@ -390,13 +423,22 @@ requirements:
     draft: true
     pryv_primitives: [access, permissions, clientData, CMC, event]
     derives_from: [gdpr.Art.7, iso-27701.A.7.3.4]
-    tests: [AA01, ACCP]
+    tests: [AA01, ACCP, HA43, CD28, HA46, CN67, ESR1]
     overview: |
       Consent recording = `accesses.create` with permissions +
       clientData carrying the consent text; cross-account consent =
-      `consent/request-cmc` events. Both are immutable per their
-      primitive semantics, the §7 demonstrability requirement is
-      structural.
+      `consent/request-cmc` events. The access keeps every previous
+      version; an event keeps its previous versions only with
+      `versioning.forceKeepHistory: true` (off by default), so the §7
+      demonstrability requirement is structural for the access and,
+      for the request event, holds as long as your app does not edit
+      it or history is on. Since open-pryv.io 2.0.0-rc.38 the principal's
+      cross-account accept records the channels the relationship got
+      (`features`, resolved from the offer, which the accept may only
+      narrow) `[HA43]`, `[CD28]`, an account cannot record a consent to
+      its own offer (`cmc-self-accept-forbidden`) `[HA46]`, `[CN67]`,
+      and the server-written parts of the record survive a concurrent
+      client update `[ESR1]`. See `context/cmc-consent-primitives.md`.
 
   - ref: A.7.2.5
     title: A.7.2.5 Privacy impact assessment

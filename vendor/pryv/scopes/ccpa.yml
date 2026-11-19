@@ -46,18 +46,36 @@ requirements:
     coverage: configurable
     pryv_effort_saved: medium
     draft: true
-    pryv_primitives: [event, stream, backup-restore]
+    pryv_primitives: [event, stream, backup-restore, external-id-index, account-auto-deletion]
     derives_from: [gdpr.Art.17]
-    config_keys: [storages.userAccountStorage.engine, user-account.delete]
-    tests: [USAD]
+    config_keys: [storages.userAccountStorage.engine, user-account.delete, account.autoDeletion.enabled]
+    docs: [customer-resources/account-auto-deletion.md]
+    tests: [USAD, XIDD2, ACST3, ACST10, ADSW8, ACRM1]
     overview: |
       Same primitive as GDPR Art. 17: `system.users.delete` is the
       per-consumer erasure call. Backup-completeness of the deletion
       depends on the chosen storage engine (SQLite per-user file vs
-      PG row deletion), same notes as gdpr.Art.17 apply. The
+      PG row deletion), same notes as gdpr.Art.17 apply. Since
+      open-pryv.io 2.0.0-rc.58 the deletion also releases the
+      consumer's external ids (links to third-party record ids) at
+      once, on the home core and in the platform index `[XIDD2]`. The
       §1798.105(d) statutory exceptions (warranty, security, legal
       compliance, etc.) are your programmatic determination; if an
       exception applies you suppress the deletion and document why.
+    detail: |
+      Account auto-deletion, since open-pryv.io 2.0.0-rc.66
+      (`8521c8d5`, see gdpr.Art.17): the consumer can schedule the
+      deletion of their own account, at a date or after a period
+      without use, from the reference account app, where your
+      `user-account.delete` lets them delete it directly
+      (`[ACST10]`; arming needs the password, `[ACST3]`); reminders
+      precede it (`[ACRM1]`) and the deletion is the same as
+      `system.users.delete`, guards included (`[ADSW8]`). It has no
+      hook for a §1798.105(d) exception: if one applies to a consumer
+      whose deletion is scheduled, that is still your determination,
+      made before the deadline (for example by turning the feature off
+      on the core with `account.autoDeletion.enabled: false`, or by
+      your own process outside it).
 
   - ref: "1798.106"
     title: Right to correct inaccurate personal information
@@ -72,11 +90,14 @@ requirements:
     functional_specs: [EVENT.BASE]
     tests: [PTU1]
     overview: |
-      `events.update` is the correction primitive; event versioning
-      preserves the prior (inaccurate) value for traceability. The
-      §1798.106 process (consumer request → reasonable efforts →
-      action) is yours to run; the technical correction + history is
-      shipped.
+      `events.update` is the correction primitive, and the audit log
+      records who corrected which event and when. The prior
+      (inaccurate) value is kept for traceability only if your
+      deployment sets `versioning.forceKeepHistory: true` (off by
+      default; see `context/event-history.md`). The §1798.106 process
+      (consumer request → reasonable efforts → action) is yours to run;
+      the technical correction is shipped, and keeping the history is
+      your configuration choice.
 
   - ref: "1798.110"
     title: Right to know, categories and specific pieces
@@ -292,7 +313,8 @@ requirements:
     detail: |
       The §1798.150 trigger is narrow, encrypted-and-redacted PI
       that leaks doesn't ground a statutory-damages claim. Pryv's
-      posture (TLS default + operator-side at-rest encryption + per-
+      posture (TLS in the core or at your proxy, as you configure it
+      + operator-side at-rest encryption + per-
       access access-control + audit) substantially constrains the
       surface where §1798.150 can attach. Encryption-at-rest is
       operator-side (LUKS, PG TDE, etc.) for event content today;
@@ -408,6 +430,10 @@ requirements:
       available: issue accesses with `randomAlias:true` so counterparties
       hold a routable `r-XXXXXXXX` alias instead of a linkable username,
       keeping linkable identifiers off the sensitive-PI access path.
+      Since open-pryv.io 2.0.0-rc.69 the token is accepted under its
+      alias only, so a counterparty that suspects the username cannot
+      confirm it with the token; earlier releases accepted the token
+      under every name of the account.
 
   - ref: "1798.155"
     title: Enforcement

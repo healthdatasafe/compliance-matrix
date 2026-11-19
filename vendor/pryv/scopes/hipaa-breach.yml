@@ -30,9 +30,10 @@ requirements:
       Subpart D applies only
       to "unsecured" PHI, PHI that has not been rendered unusable
       through encryption or destruction per HHS guidance (NIST SP
-      800-111 / SP 800-88). Pryv's posture (TLS in transit by default,
-      operator-side encryption-at-rest, per-user backup files
-      transportable as encrypted bundles) lets you put PHI inside the
+      800-111 / SP 800-88). Pryv's posture (TLS in transit in the core
+      or at your proxy, as you configure it; operator-side
+      encryption-at-rest; per-user backup files that `bin/backup.js`
+      can encrypt itself) lets you put PHI inside the
       safe-harbor where you choose to, narrowing what §400 actually
       reaches in your deployment.
 
@@ -58,8 +59,10 @@ requirements:
       granted scope?) rather than an after-the-fact narrative.
     detail: |
       §402(2) safe-harbor, "unsecured" excludes PHI made unusable
-      through encryption guidance. Pryv default: TLS 1.3 in transit
-      (always); operator-side at-rest encryption (when configured).
+      through encryption guidance. In transit: TLS once configured, in
+      the core (`http.ssl.*` / `letsEncrypt.*`) or at your proxy (the
+      core serves plain HTTP without that configuration); at rest:
+      operator-side encryption (when configured).
       AES-256-GCM is the at-rest cipher for the Pryv-managed secrets
       (platform DB), aligning with the NIST SP 800-111 AES guidance,
       though for ePHI content at rest, the operator-side encryption
@@ -333,9 +336,11 @@ requirements:
       narrows what triggers Subpart D notification: PHI that's
       actually secured per HHS guidance is outside §164.402's
       "unsecured PHI" definition and a leak of it doesn't compel
-      notification. Pryv's default posture (TLS 1.3 in transit via
-      built-in ACME, AES-256-GCM for platform secrets at rest) puts
-      the in-transit half firmly inside the safe-harbor; the at-rest
+      notification. With TLS configured (in the core via `http.ssl.*`
+      and the built-in ACME integration, or at your proxy), plus
+      AES-256-GCM for platform secrets at rest, the in-transit half
+      sits inside the safe-harbor; without that configuration the
+      core serves plain HTTP, so make sure no hop carries it. The at-rest
       half for ePHI content itself depends on the operator's chosen
       at-rest encryption (operator-side LUKS / PG TDE / dm-crypt).
     detail: |

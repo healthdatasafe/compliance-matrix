@@ -1,8 +1,13 @@
 # Proposal: cluster clock-skew checks (bootstrap + cert-load)
 
-**Status:** **two small intra-core checks queued.** Mirror of the
-upstream backlog item (filed 2026-05-20 from the gap-probing
-session, Q11 on time synchronization across cores).
+**Status:** **shipped in open-pryv.io `5266b697`** (2026-10-05, released
+after 2.0.0-rc.34). Mirror of the upstream backlog item (filed
+2026-05-20 from the gap-probing session, Q11 on time synchronization
+across cores). Shipped names: flag `--bootstrap-clock-skew-seconds`
+and config key `cluster.clockSkewSeconds` (both default 30 s, `0`
+disables); the `cluster.clockSkewThresholdSec` named below was
+renamed to match the existing `oauth.dpop.clockSkewSeconds`. The
+rest of this file is the original proposal, kept as written.
 
 ## Today's posture
 

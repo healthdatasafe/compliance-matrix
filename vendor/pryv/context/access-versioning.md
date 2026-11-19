@@ -68,7 +68,28 @@ Every mutation bumps `serial` + writes a history snapshot, **no
 
 Telemetry-only fields (`lastUsed`, `calls.<method>`) mutate the head row in
 place WITHOUT bumping `serial` or writing history. This is intentional: counts
-are not contract terms.
+are not contract terms. Since open-pryv.io 2.0.0-rc.84 the account owner reads
+the counters as `usage` on `accesses.get` / `accesses.getOne` (head and
+deletion records; never for app or shared callers) `[AUG1]`, `[AUG3]`,
+`[AUG4]`, and history snapshots carry no counters: earlier releases returned
+each snapshot's raw `calls` with `includeHistory` or an older version `[AUG5]`.
+
+## Integrity of an access version
+
+Each access version carries an `integrity` checksum. Since open-pryv.io
+2.0.0-rc.84 it is computed on the form the API returns (composite `id`,
+`modifiedBy`), so a client verifies an updated access, an older version or an
+`includeHistory` entry with `@pryv/stable-object-representation`, stripping
+`usage`, `lastUsed`, `calls` and `apiEndpoint` first `[AIWF]`, `[AIWG]`,
+`[AIWK]`, `[AIWL]`, `[AIWM]`, `[AIWW]`. Before it, the value of an updated
+access was computed on the stored form (base id plus internal serial fields)
+and did not verify client side; a never-updated access hashes the same in
+both forms `[AIWH]`. The upgrade recomputes stored values once (PostgreSQL
+migration; SQLite one-shot pass recorded by a marker file), rewriting only
+rows that hold the previous form's value `[AIWR]`, `[AIWS]`, `[AIWT]`,
+`[AIWX]`. A copy returned without credentials (a deletion record, an app's
+listing of accesses whose token it does not hold) is the server's record: a
+holder of the token verifies it after restoring it `[AIWN]`.
 
 ## Composite-id surface (audit cross-reference)
 
