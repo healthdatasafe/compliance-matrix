@@ -87,6 +87,16 @@ hds_posture:
       internal_doc: hipaa/registers/hosting-provider-attestations
 
 changelog:
+  - date: "2026-11-19"
+    change: >
+      164.314(a)(2)(ii)(B) is now 164.314(a)(2)(i)(B), following Pryv's rename
+      (pryv/compliance-matrix#8, vendor sync to c90cd3b): row id, pryv_ref and
+      the subcontractor and subprocessor templates' covers. The row moves next
+      to (a)(2)(i)(A) and (i)(C), and its text no longer carries the pinned-key
+      note. Same vendor sync: the transmission-security rows (164.312(e)(1),
+      (e)(2)(i), (e)(2)(ii)) keep "implemented": Pryv now says configurable (a
+      core serves TLS only when the operator configures it), and HDS, the
+      operator, serves TLS only and runs rqlite over mutual TLS.
   - date: "2026-11-05"
     change: >
       164.314(a)(2)(ii)(B): the business associate's subcontractor flow-down is
@@ -2297,6 +2307,57 @@ requirements:
     - persona: individual
       coverage: out-of-scope
 
+- ref: 164.314(a)(2)(i)(B)
+  title: Business associate contract — extend safeguards to subcontractors
+  text: |
+    Where applicable, the business associate must ensure that any subcontractors
+    that create, receive, maintain, or transmit ePHI on its behalf agree, via a
+    written contract, to comply with the applicable Security Rule requirements.
+    Applied to the contract with the subcontractor by §164.314(a)(2)(iii).
+  pryv_ref: 164.314(a)(2)(i)(B)
+  draft: false
+  reviewed_by: perki
+  reviewed_at: "2026-09-10"
+  hds:
+    coverage: facilitated
+    effort_saved: medium
+    facilitation_mode: evidence
+    regions: [us, ch]
+    overview: |
+      HDS executes back-to-back agreements with each subcontractor that may
+      touch ePHI and tracks them in its BAA register, so the flow-down exists
+      wherever a BAA is in force. HDS also provides the implementer a
+      subcontractor agreement template to flow the same obligations down their
+      own chain.
+    detail: |
+      HDS maintains a current list of its ePHI-relevant subprocessors and holds a
+      written contract with each that flows down the applicable Security Rule
+      obligations. The subprocessor list is made available to implementers so
+      they can satisfy their own §164.314(a)(2)(i)(B) due diligence.
+    evidence_approved: true
+    evidence:
+      internal_docs:
+        - hipaa/registers/baa-register
+  implementer:
+    - persona: covered-entity
+      basis: integration
+      applies_when: [third-parties]
+      coverage: documented
+      overview: |
+        Review HDS's subprocessor list as part of your vendor due diligence.
+      templates: [baa]
+    - persona: business-associate
+      basis: integration
+      applies_when: [third-parties]
+      coverage: documented
+      overview: |
+        Execute written agreements with each of your own downstream
+        subcontractors that handle ePHI, flowing the Security Rule obligations
+        through.
+      templates: [subcontractor, subprocessor]
+    - persona: individual
+      coverage: out-of-scope
+
 - ref: 164.314(a)(2)(i)(C)
   title: Business associate contract — report security incidents
   text: |
@@ -2345,59 +2406,6 @@ requirements:
         Flow the incident-report obligation through to your covered entity and
         down to your subcontractors.
       templates: [baa, subcontractor]
-    - persona: individual
-      coverage: out-of-scope
-
-- ref: 164.314(a)(2)(ii)(B)
-  title: Business associate contract — extend safeguards to subcontractors
-  text: |
-    Where applicable, the business associate must ensure that any subcontractors
-    that create, receive, maintain, or transmit ePHI on its behalf agree, via a
-    written contract, to comply with the applicable Security Rule requirements.
-    The provision is 45 CFR §164.314(a)(2)(i)(B), applied to the contract with
-    the subcontractor by §164.314(a)(2)(iii); the row id is Pryv's pinned key
-    and is raised with Pryv for renaming.
-  pryv_ref: 164.314(a)(2)(ii)(B)
-  draft: false
-  reviewed_by: perki
-  reviewed_at: "2026-09-10"
-  hds:
-    coverage: facilitated
-    effort_saved: medium
-    facilitation_mode: evidence
-    regions: [us, ch]
-    overview: |
-      HDS executes back-to-back agreements with each subcontractor that may
-      touch ePHI and tracks them in its BAA register, so the flow-down exists
-      wherever a BAA is in force. HDS also provides the implementer a
-      subcontractor agreement template to flow the same obligations down their
-      own chain.
-    detail: |
-      HDS maintains a current list of its ePHI-relevant subprocessors and holds a
-      written contract with each that flows down the applicable Security Rule
-      obligations. The subprocessor list is made available to implementers so
-      they can satisfy their own §164.314(a)(2)(i)(B) due diligence.
-    evidence_approved: true
-    evidence:
-      internal_docs:
-        - hipaa/registers/baa-register
-  implementer:
-    - persona: covered-entity
-      basis: integration
-      applies_when: [third-parties]
-      coverage: documented
-      overview: |
-        Review HDS's subprocessor list as part of your vendor due diligence.
-      templates: [baa]
-    - persona: business-associate
-      basis: integration
-      applies_when: [third-parties]
-      coverage: documented
-      overview: |
-        Execute written agreements with each of your own downstream
-        subcontractors that handle ePHI, flowing the Security Rule obligations
-        through.
-      templates: [subcontractor, subprocessor]
     - persona: individual
       coverage: out-of-scope
 
