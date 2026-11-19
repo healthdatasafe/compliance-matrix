@@ -135,23 +135,32 @@ is part of why it can't.
 ## Layer 4: Rectification trail (Art.16 / Art.5(1)(d) "without losing audit")
 
 When inaccurate data IS detected and corrected, `events.update`
-preserves the prior version. Implementation:
+writes the corrected value. Whether the prior version is kept
+depends on your configuration (full treatment in
+`context/event-history.md`):
 
-- `mall.events.getHistory(userId, eventId)` returns the version
-  chain (`open-pryv.io/components/api-server/src/methods/events.ts:185`).
-- `GET /events/:id?includeHistory=true` (route definition same
-  file) exposes the history to the implementer.
-- Every update is recorded in the audit log (audit captures the
-  method call + access ref + timestamp, NOT the request body,
-  see `context/data-masking-projection-vs-transformation.md` for
-  the audit-minimality note).
+- With `versioning.forceKeepHistory: true`, both built-in stores
+  keep the prior version as a history row;
+  `mall.events.getHistory(userId, eventId)` returns the version
+  chain and `GET /events/:id?includeHistory=true` exposes it
+  (`open-pryv.io/components/api-server/src/methods/events.ts`).
+- With the default (`false`), the update overwrites the value and
+  `includeHistory=true` returns an empty `history`.
+- Either way, every update is recorded in the audit log: the
+  access, the time, the method, and the event's key and integrity
+  hash as written; NOT the request body or the prior value (see
+  `context/data-masking-projection-vs-transformation.md` for the
+  audit-minimality note).
 
 Combined effect: an Art.5(1)(d) "rectified without delay" claim is
-defensible, the corrected event is queryable, the rectification
-event is auditable, and the prior (inaccurate) value is preserved
-for traceability. This satisfies Art.16 + Art.5(1)(d) on the
-**evidence** axis; the implementer still has to operationalise
-*detection* of inaccuracy (Layer 3 above).
+defensible, the corrected event is queryable and the rectification
+is audited on every deployment. Preserving the prior (inaccurate)
+value for traceability is a configuration choice you make
+(`forceKeepHistory: true`), or a modelling one (record the
+correction as a new event referencing the old). This satisfies
+Art.16 + Art.5(1)(d) on the **evidence** axis; the implementer
+still has to operationalise *detection* of inaccuracy (Layer 3
+above).
 
 ## Implementer takeaway
 
@@ -168,9 +177,10 @@ accuracy?":
 3. **Semantic accuracy is your app layer**: be explicit about
    which checks live where (drug-interaction service, device-
    calibration metadata, clinical-workflow rules, …).
-4. **Rectification IS auditable**: `events.update` +
-   `includeHistory=true` + audit log together preserve the
-   "rectified without delay" trail.
+4. **Rectification IS auditable**: the audit log records every
+   `events.update`; with `versioning.forceKeepHistory: true` set,
+   `includeHistory=true` also returns the value before correction.
+   Say which configuration your deployment runs.
 
 ## See also
 

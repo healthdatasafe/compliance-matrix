@@ -2,6 +2,8 @@
 
 **Status: SHIPPED 2026-05-27** on `pryv/open-pryv.io` master. A.1 (engine-agnostic erasure) at [`891090d`](https://github.com/pryv/open-pryv.io/commit/891090d) + audit-routing follow-up at [`853e1cb`](https://github.com/pryv/open-pryv.io/commit/853e1cb) + A.2 (operator setting `audit.onUserDelete: erase|keep|pseudonymise`) at [`405b3a1`](https://github.com/pryv/open-pryv.io/commit/405b3a1) + test-file rename at [`a143de5`](https://github.com/pryv/open-pryv.io/commit/a143de5). Both bug chips (3: `gdpr.Art.17` / `ccpa.1798.105` / `iso-27701.A.7.4.5`) and companion feature chips (3: `gdpr.Art.17` / `ccpa.1798.105` / `hipaa-security.164.316(b)(2)(i)`) discharged on this commit. GH#75 closed. macroPryv backlog file archived to `_plans/_archives/`.
 
+**Follow-up shipped in open-pryv.io 2.0.0-rc.46 (2026-10-10):** `keep` now also holds on the SQLite audit engine. The directory wipe used to erase the per-user audit database, so `keep` behaved like `erase` there; the audit file now stays at its path in the user directory, readable by user id, and everything else is removed (`[DKP1]`; open-pryv.io#154). Rows updated: `gdpr.Art.17`, `hipaa-security.164.316(b)(2)(i)`.
+
 ---
 
 **(historical proposal preserved below)**

@@ -87,7 +87,7 @@ When the deployment targets children (under 16 EU / lower in
 specific Member States, see Art.8(1)), the controller must
 verify parental responsibility. Pryv is age-blind by design
 (no `birthDate` / `minor` field in the default account schema);
-the operator extends `customExtensions.systemStreams` to add an
+the operator extends `custom.systemStreams.account` to add an
 age field + records the verification trail on `clientData`:
 
 - `account.clientData.age_verification_method`: free-text or

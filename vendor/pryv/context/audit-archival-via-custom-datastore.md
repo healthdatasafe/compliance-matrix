@@ -82,11 +82,12 @@ APIs remain identical.
 
 ### Flavour B: custom `@pryv/datastore` replacing `_audit`
 
-(Cleaner config, but requires the `BUILTIN-STORE-OVERRIDE`
-backlog enhancement to ship first, today the load order
-silently overwrites the operator's custom entry. See the
-`BUILTIN-STORE-OVERRIDE` internal backlog slug for the
-`override: true` config-flag proposal.)
+(Config only, from open-pryv.io 2.0.0-rc.86: a `custom.dataStores`
+entry with the id `_audit` and `override: true` replaces the
+built-in audit store. Without the flag the entry is not loaded and
+boot logs a warning; before rc.86 the built-in store silently kept
+the id. Like the built-in audit store, the replacing store is not
+covered by a `*` permission.)
 
 1. Write a custom datastore module:
 
@@ -113,7 +114,7 @@ silently overwrites the operator's custom entry. See the
    });
    ```
 
-2. Register via config (after `BUILTIN-STORE-OVERRIDE` ships):
+2. Register via config (open-pryv.io 2.0.0-rc.86 or later):
 
    ```yaml
    custom:
@@ -161,8 +162,8 @@ In their DPIA / ISMS:
 
 ## Related
 
-- Internal backlog slug `BUILTIN-STORE-OVERRIDE` (DX
-  enhancement to make Flavour B usable via config alone).
+- `custom.dataStores` `override: true` (open-pryv.io 2.0.0-rc.86),
+  which makes Flavour B usable via config alone.
 - `proposals/audit-on-user-delete.md` (Q8, the
   `audit.onUserDelete: keep` mode + this tiering pattern are
   the two halves of "operator-controlled audit retention").

@@ -105,6 +105,15 @@ The migration itself is operational (script-driven, not real-time);
 plan downtime windows. The per-user data + access lifetimes survive
 the migration; access tokens stay valid afterwards.
 
+**High-frequency series need open-pryv.io 2.0.0-rc.34 or later on
+the source.** Backups made by earlier releases carry no series data
+(on every series engine, with no warning), and series backed up from
+InfluxDB could not be restored, so an engine switch through an older
+backup silently drops every series point. Since 2.0.0-rc.34 series
+move between any two series engines; `just test-backup-roundtrip` in
+open-pryv.io exercises a PostgreSQL to SQLite to PostgreSQL to SQLite
+round trip and compares the four bundles.
+
 ## Operator mitigation patterns for PG deployments
 
 If the implementer's risk model demands stronger isolation on

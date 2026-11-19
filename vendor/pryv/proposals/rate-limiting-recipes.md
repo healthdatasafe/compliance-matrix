@@ -1,5 +1,21 @@
 # Reference rate-limiting / DoS-protection configurations
 
+**Status: shipped (nginx + fail2ban) on 2026-10-05**, dev-site2 `53894f5`, live at
+https://pryv.github.io/customer-resources/rate-limiting/ (published `pryv.github.io` `b80804b`).
+Verified end to end against a running core: `nginx -t`, every limit firing with the documented
+counts, fail2ban banning, the audit log recording the real client address. Chips discharged on
+iso-27001 A.8.21 and hipaa-security 164.308(a)(5)(ii)(C); the page is also cited on iso-27001
+A.8.6, hipaa-security 164.308(a)(6)(i) and diga A1.4.3. HAProxy, Cloudflare, Traefik and Caddy
+snippets are not shipped (no chips; the nginx page states the same route table applies).
+
+**Update 2026-10-13:** open-pryv.io 2.0.0-rc.47 and 2.0.0-rc.50 added targeted in-code budgets
+(failed passwords per account and per client address across cores, live access requests per
+address, pending MFA sessions per account, batch / paging / upload / socket.io bounds, an
+invitation-check budget, preview limits). The edge recipes stay the front for general traffic
+shaping; the per-address budgets read the client address through `http.trustedProxies` only, which
+the page's "How Pryv reads the client IP" paragraph should now explain. See
+`context/rate-limiting-and-dos-protection.md`.
+
 **Proposal mirror of**: `_plans/XXX-Backlog/COMPLIANCE-RATE-LIMITING-RECIPES.md`
 (macroPryv-side backlog file).
 **Filed during:** Q6 implementer-perspective gap-probing session (follow-up).

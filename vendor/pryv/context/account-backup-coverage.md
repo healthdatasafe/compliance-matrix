@@ -79,7 +79,7 @@ every Pryv core), which continues to work post-removal AND supports
 | per-file integrity manifest | ✅ CLI only: `manifest.json` (sha256 per file). ❌ webapp omits, deliberate trade-off | `manifest.verify(rootDir)` available for tamper-detect on the CLI side; webapp ZIPs are signed by the operator's TLS instead |
 | portable sync-state | ✅ **CLI + webapp** (v0.7.0+): `sync-state.json` written via the `StorageWriter` at run-end. Kv-only snapshot (`lastRunAt` + per-resource `lastModifiedSince` + tool/format version). | full schema: `pryv-account-backup/docs/sync-state.md`. CLI auto-reads on the next run; webapp accepts it as an upload on the login screen. Drives cross-session / cross-device incremental |
 | followed-slices | n/a | v0.3.0 dropped the v1-only `/followed-slices` fetch |
-| MFA enrolment metadata | ✅ **already covered** (re-verified during 0.5.0 audit) | `profile.mfa = { content, recoveryCodes }` lives in the user's private profile and `profile.get` returns the full profile verbatim, so `profile_private.json` carries MFA state today, including the 10 SMS-bypass recovery codes. **Operator security note:** treat the backup file as a secret on par with a password-reset link; consider rotating recovery codes after the disclosure. |
+| MFA enrolment metadata | ✅ **covered, without secrets** (re-verified for open-pryv.io 2.0.0-rc.27) | `profile.get` of the private profile returns `profile.mfa` as `{ method, content, totp: { confirmedAt, algorithm, digits, periodSeconds } }` (open-pryv.io `7ce9ea6f`), so `profile_private.json` carries the subject's own MFA enrolment: the method, its `content` (for SMS, the phone number and template values) and the TOTP parameters. It carries **no usable MFA secret**: the encrypted TOTP secret, the replay step, the recovery-code hashes and the failed-attempt tally stay server-side, and `profile.update` refuses `mfa` / `mfaThrottle` (open-pryv.io `25239783`). Recovery codes are stored hashed since open-pryv.io `ef66853e`. **Operator note:** the bundle is confidential personal data (phone number, account content) and needs a secure transport, but it is not MFA-bypass material; no recovery-code rotation is needed after delivery. |
 
 ## Restore-side coverage (Art.20 portability: the round-trip)
 
@@ -111,6 +111,12 @@ data + multi-attachment events without loss.
 | (g) source of data | event `createdBy` + audit + clientData | derivable from `events-YYYY-MM.json` + `/audit/logs` | ✅ all sources wired in v0.5.0 |
 | (h) automated decision-making | nothing native to Pryv | application layer | ✅ (out of scope) |
 
+Recipients of the past, (c): `/accesses?includeDeletions=true` lists every
+deleted access by default. Since open-pryv.io 2.0.0-rc.56 an operator may set
+`accesses.deletionRecords.retentionDays` above 0, and the deletion records
+older than that are purged; the export then lists only those still kept, and
+the audit rows of a purged access name it by id only.
+
 ## Map to Art.20 (data portability)
 
 - "structured, commonly used, machine-readable format", JSON
@@ -141,10 +147,14 @@ manual augmentation needed:
    - `profile_private.json`, `profile_public.json`, `app_profiles/`
    - `events-YYYY-MM.json` (one per month), `attachments/`, `hf-data/`
    - `audit_logs.json`, `webhooks.json`, `manifest.json`
-5. **Operator security note**: `profile_private.json` carries
-   `profile.mfa.recoveryCodes` (10 SMS-bypass tokens) verbatim.
-   Treat the bundle as a secret on par with a password-reset
-   link; consider rotating recovery codes after delivery.
+5. **Operator security note**: `profile_private.json` carries the
+   subject's MFA enrolment (method, `content` such as the SMS phone
+   number, TOTP parameters) but no usable MFA secret: since
+   open-pryv.io 2.0.0-rc.27 (`7ce9ea6f`) the private-profile read
+   leaves out the encrypted TOTP secret, the replay step and the
+   recovery-code hashes. Treat the bundle as confidential personal
+   data (secure transport, documented destruction); it is not
+   MFA-bypass material.
 
 The matrix's `Implemented | High` claim on Art.15 / Art.20 holds
 because all the data IS exportable via existing API endpoints,

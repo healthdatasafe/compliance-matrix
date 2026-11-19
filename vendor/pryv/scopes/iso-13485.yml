@@ -100,7 +100,10 @@ requirements:
       Pryv as a document-control
       surface: events on a designated `qms-docs/*` stream tree carry
       the document content (or a reference to it); event versioning
-      preserves change history; audit log tracks who-accessed-what
+      preserves change history once you set
+      `versioning.forceKeepHistory: true` (off by default, in which
+      case an update overwrites the previous revision: keep each
+      revision as its own event instead); audit log tracks who-accessed-what
       for the "prevention of obsolete-document misuse" element. The
       manufacturer's approval-workflow / review-cadence procedure
       sits on top.
@@ -225,7 +228,8 @@ requirements:
       device's design lifetime. Pryv supports it by storing each
       design record as an event on a designated
       `design-history/<device-id>/*` stream, with event versioning
-      for change traceability + audit log for tamper evidence +
+      for change traceability (set `versioning.forceKeepHistory: true`;
+      it is off by default) + audit log for tamper evidence +
       backup-restore for retention. The curation methodology (what's
       "in" the file vs ambient project history) is the manufacturer's
       editorial decision.

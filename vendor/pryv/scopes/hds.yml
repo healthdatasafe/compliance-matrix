@@ -65,7 +65,8 @@ requirements:
       hoster running Pryv covers Activity 3 by inheriting Pryv's
       primitive set: per-user storage isolation (system-streams +
       per-user files when SQLite engine), stream-scoped permissions,
-      default-on TLS, mTLS between cores, AES-256-GCM at-rest secrets,
+      TLS in the core or at your proxy (configured, not default), mTLS
+      between cores once bootstrapped, AES-256-GCM at-rest secrets,
       MFA, audit log, backup-restore, observability adapter. The
       operator still does the operational + organizational work the
       HDS audit checks (governance, incident response, ISMS).
@@ -76,7 +77,15 @@ requirements:
       CHANGELOG-v2-back (change control evidence); audit-log per-user
       SQLite (forensic evidence); observability metrics (operational
       monitoring evidence); release tags + Docker image SHAs
-      (configuration management evidence).
+      (configuration management evidence). For vulnerability
+      management on the software side: the 2026 code-level security
+      review of open-pryv.io and its fix releases (2.0.0-rc.40 to
+      2.0.0-rc.51; public report `SECURITY-AUDIT.md`, published
+      2026-10-14,
+      https://github.com/pryv/open-pryv.io/blob/master/SECURITY-AUDIT.md;
+      `context/code-security-review-2026.md`). Running a release that
+      carries the fixes, and the vulnerability management of your own
+      hosting, stay yours.
 
   - ref: Activity.4
     title: Activity 4, Sysadmin and operations of the information system
@@ -115,6 +124,48 @@ requirements:
       key management, transport, retention, and the "outsourced"
       (separate physical location) element. Pryv provides the
       backup-generation, payload-encryption, and restoration primitives.
+    detail: |
+      **Backups taken before open-pryv.io 2.0.0-rc.34 are incomplete:**
+      they carry no high-frequency series data, on every series engine,
+      and nothing warned. Take a new backup after upgrading, and do not
+      count older archives as a full copy of series data. Since
+      2.0.0-rc.34 the series are exported and restored (series move
+      between any two series engines, InfluxDB included), and the
+      manifest's `coreVersion` reports the core's release, which you
+      can record in your backup register. Backup and restore round
+      trips are tested in open-pryv.io (`[BKSR]`, `[BKEV]`, `[BKVR]`).
+
+      **Incremental backups (open-pryv.io 2.0.0-rc.51).** Before
+      2.0.0-rc.51 an `--incremental` run overwrote the full backup it
+      continued, leaving a directory that restores only the last delta;
+      `node bin/backup.js --inspect <dir>` reports such a directory
+      `DAMAGED` and a restore refuses it `[BKIC2]`: remove it from your
+      backup register and take a new full backup. Since 2.0.0-rc.51 each
+      run is written next to the full backup (`incrementals/<runId>/`,
+      indexed by `chain.json`), each encrypted run with its own envelope
+      and decrypt script, and a restore replays the chain, or stops at a
+      given run with `--through-run` `[BKC1]`, `[BKC2]`, `[BKC5]`,
+      `[BKIC1]`. Your retention schedule applies per chain: a run is only
+      restorable with the full backup and every run before it.
+
+      **Outsourced copies you can check (open-pryv.io 2.0.0-rc.86).**
+      Each run's manifest lists every file with its size and hash, and a
+      restore refuses a run whose files were added, removed, changed, cut
+      short or swapped between accounts `[BKSM1]`, `[BKSM2]`. With a
+      recipient public key, sign the runs (`--signing-key` at backup,
+      `--signing-pubkey` at restore): whoever can write to the outsourced
+      destination and holds the public key can otherwise replace a run
+      `[BKSM4]`, `[BKSM5]`. `--inspect --verify-files` checks every file
+      of a backup without restoring it, a check you can schedule after
+      each transfer to the backup host `[BKIS3]`. Keep the destination
+      directory for the backup only: a file the backup did not write is
+      refused at restore, while files that storage appliances create by
+      themselves (`@eaDir`, `.snapshot`, `.zfs`, ...) are ignored with a
+      notice `[BKSM7]`. A backup written by 2.0.0-rc.86 or later restores
+      with that release or later; runs written earlier restore as
+      before, reported as "file list not verified".
+    docs: [customer-resources/backup.md]
+    tests: [BKSR, BKEV, BKVR, BKC1, BKC2, BKC5, BKIC1, BKIC2, BKSM1, BKSM2, BKSM4, BKSM5, BKSM7, BKIS3]
 
   - ref: Activity.6
     title: Activity 6, Archival of health data
@@ -128,8 +179,11 @@ requirements:
     pryv_primitives: [event, stream, backup-restore]
     overview: |
       Pryv stores events with
-      retained `class/format` semantics (data-types schemas) and
-      per-event version history. For long-term archival, the operator
+      retained `class/format` semantics (data-types schemas), and keeps
+      per-event version history when you set
+      `versioning.forceKeepHistory: true` (off by default; with
+      `versioning.deletionMode: keep-nothing`, the default, a deleted
+      event's history is removed with it). For long-term archival, the operator
       typically combines Pryv's event store with an external archival
       system (WORM storage, blockchain-anchored hashes etc.), Pryv
       is not an archival product itself but feeds it. Integrity
@@ -282,15 +336,20 @@ requirements:
     text: |
       ePHI in transit shall be protected via TLS; cryptographic key
       management shall follow the operator's documented procedures.
-    coverage: implemented
-    pryv_effort_saved: high
+    coverage: configurable
+    pryv_effort_saved: medium
     draft: true
     pryv_primitives: [letsEncrypt-integration, multi-core-mTLS, encryption-at-rest-secrets]
     derives_from: [iso-27001.A.8.24, hipaa-security.164.312(e)(1)]
-    config_keys: [letsEncrypt.enabled, letsEncrypt.atRestKey]
+    config_keys: [http.ssl.keyFile, http.ssl.certFile, letsEncrypt.enabled, letsEncrypt.atRestKey, storages.engines.rqlite.tls]
     tests: [ACMEINT, ACMEORCH, CERTUTILS, BUNDLEENC, ATRENC]
     overview: |
-      HDS Activity 3 cryptography sub-control: TLS 1.3 in transit
-      (built-in ACME), mTLS between cores, AES-256-GCM at-rest for
-      operator secrets. Cross-link to ISO 27001 A.8.24 +
+      HDS Activity 3 cryptography sub-control: TLS in transit once you
+      configure it, in the core (`http.ssl.*`, certificates from the
+      built-in ACME integration when `letsEncrypt.enabled` is set) or
+      at your reverse proxy (the core then serves plain HTTP behind
+      it); the core sets no TLS version of its own (Node.js defaults,
+      TLS 1.2 floor on Node 24). mTLS between cores once
+      `bin/bootstrap.js` has written `storages.engines.rqlite.tls`,
+      AES-256-GCM at-rest for operator secrets. Cross-link to ISO 27001 A.8.24 +
       HIPAA-Security §164.312(e)(1) for the parallel control rows.

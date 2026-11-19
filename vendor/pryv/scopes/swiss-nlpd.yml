@@ -61,8 +61,9 @@ requirements:
     overview: |
       Same Pryv contributions as GDPR Art. 5: permissions enforce
       purpose-limitation technically; audit + access versioning give
-      the accountability artefact; events.update with version history
-      addresses accuracy. The Swiss-specific "recognisability" criterion
+      the accountability artefact; events.update addresses accuracy
+      (keeping the prior value only with
+      `versioning.forceKeepHistory: true`, off by default). The Swiss-specific "recognisability" criterion
       (purpose recognisable to the subject at collection) maps to the
       consent UX layer, where the purpose written into
       `access.clientData.purpose` should be the same purpose presented
@@ -95,6 +96,10 @@ requirements:
       stays on the implementer is the per-deployment default
       configuration (token scopes minted, retention chosen, notice
       shown at registration).
+    detail: |
+      Same principle as GDPR Art.25, which this row derives from. The
+      architectural commitments and the catalogue of Pryv defaults are
+      in `context/privacy-by-design-and-default.md`.
 
   - ref: Art.8
     title: Data security
@@ -135,7 +140,9 @@ requirements:
       Same mapping as GDPR
       Art. 13/14: notice text lives in
       `access.clientData.privacy_notice` (or a dedicated `consent/*`
-      event when CMC is in play), preserved immutably. The customer-
+      event when CMC is in play), kept with every previous version on
+      the access (on an event, only with
+      `versioning.forceKeepHistory: true`). The customer-
       facing `app-web-auth3` template is the surface where the notice
       is typically shown. Pryv records what you presented;
       presentation itself is your editorial responsibility.
@@ -301,15 +308,24 @@ requirements:
     coverage: implemented
     pryv_effort_saved: high
     draft: true
-    pryv_primitives: [event, stream, backup-restore]
+    pryv_primitives: [event, stream, backup-restore, account-auto-deletion]
     derives_from: [gdpr.Art.16, gdpr.Art.17]
     config_keys: [storages.userAccountStorage.engine, user-account.delete]
-    tests: [PTU1, USAD]
+    docs: [customer-resources/account-auto-deletion.md]
+    tests: [PTU1, USAD, ACST3, ACST10, ACRM1, ADSW8]
     overview: |
       Rectification and erasure: same mapping as GDPR Art. 16 + 17.
       `events.update` for rectification (with version preservation);
       `system.users.delete` for erasure (with the same engine-dependent
       backup semantics noted under GDPR Art. 17).
+    detail: |
+      Account auto-deletion, since open-pryv.io 2.0.0-rc.66
+      (`8521c8d5`, see gdpr.Art.17). The person can schedule the
+      erasure of their own account, at a date or after a period
+      without use, where your `user-account.delete` lets them delete
+      it directly (`[ACST10]`, arming needs the password, `[ACST3]`),
+      with reminder mails before it (`[ACRM1]`); the erasure is the
+      same as `system.users.delete`, guards included (`[ADSW8]`).
 
   - ref: Art.34
     title: Disclosure of personal data abroad

@@ -13,8 +13,8 @@ PlatformDB is the rqlite-backed key-value store replicated
 single-region cluster, replication stays inside one jurisdiction
 and the cross-border question doesn't arise. In a multi-region
 cluster (e.g., the production pryv.me topology with `core-use1`
-in Virginia + `core-euc1` in Frankfurt), **every PlatformDB
-row lives on both cores**.
+in Virginia (US) and `core-euc1` in Geneva (Switzerland)),
+**every PlatformDB row lives on both cores**.
 
 Verified contents (read from `storages/interfaces/platformStorage/
 PlatformDB.ts:120-244`):
@@ -22,11 +22,12 @@ PlatformDB.ts:120-244`):
 | Keyspace | Contents | Personal-data class |
 |---|---|---|
 | `user-core/<username>` | username → coreId mapping (residency anchor, Q12) | **PII** (username identifies a person) |
-| User unique fields (`setUserUniqueField`) | system-stream-driven uniqueness check: typically **username**, **email**, optionally phone / employee-id / SSN-equivalent per `customExtensions.systemStreams` config | **PII**, possibly sensitive |
+| User unique fields (`setUserUniqueField`) | system-stream-driven uniqueness check: typically **username**, **email**, optionally phone / employee-id / SSN-equivalent per `custom.systemStreams.account` config | **PII**, possibly sensitive |
 | User indexed fields (`setUserIndexedField`) | deployment-configured non-unique fields (country code, language, etc.) | typically PII |
 | `dns/<subdomain>` | per-user subdomain → core address mapping (subdomain == username in standard deployments) | **PII** |
-| `access-state/<key>` | transient cross-worker access-flow state during `/reg/access` | PII (per-user, lifetime ~minutes) |
-| `cluster_kv/*` | MFA SessionStore, other ephemeral cross-worker state | PII (lifetime ~hours) |
+| `access-state/<key>` | short-lived OAuth2 rows: authorization codes (10 min) and refresh-token chains (up to 90 days), keyed by the SHA-256 of the code or token, never the credential itself, and carrying no access token; also email-verification challenge counters (hashed keys) | PII (the OAuth rows carry the username and user id) |
+
+Not in PlatformDB (core-local, never replicated): `/reg/access` sign-in request state (including the app token once the user accepts and, since open-pryv.io 2.0.0-rc.32, the capability URLs of any cross-account consent invites the app sent with `cmcInvites`) and MFA sessions live in `cluster_kv`, an in-memory store held by each core's master process and shared only by that core's workers. Until open-pryv.io `3e72be4f`, `/reg/access` request state was stored in PlatformDB, so accepted app tokens and usernames were replicated to every core for up to an hour.
 | `tls-cert/<hostname>`, `tls-acme-account` | LE certs + account (optional ACME integration) | operator metadata only |
 | `observability/*` | encrypted observability secrets | operator secrets |
 | `mail-template/<type>/<lang>/<part>` | (planned mail-template admin work) | operator-controlled (could leak example PII in templates) |
@@ -77,7 +78,11 @@ breach. Runtime + replication path unchanged.
 
 **Legal status**: same as today, Art.46 mechanism still required
 for the live replication of personal data. Doesn't change the
-classification.
+classification. The same holds for an off-host backup: an
+encrypted copy stored in another jurisdiction is still personal
+data under the controller's control; encryption changes the
+security posture (breach notification, what the storage provider
+can read), not the classification.
 
 **Value**: real defence-in-depth against passive forfeiture
 scenarios. Cheap (~1 day).

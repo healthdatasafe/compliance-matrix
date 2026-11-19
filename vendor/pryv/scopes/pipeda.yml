@@ -112,10 +112,11 @@ requirements:
     coverage: configurable
     pryv_effort_saved: medium
     draft: true
-    pryv_primitives: [access, permissions, event, stream, backup-restore]
+    pryv_primitives: [access, permissions, event, stream, backup-restore, account-auto-deletion]
     derives_from: [gdpr.Art.5, gdpr.Art.17, ccpa.1798.105, iso-27701.A.7.4.5]
-    config_keys: [storages.userAccountStorage.engine, user-account.delete]
-    tests: [AA02, ACCP, USAD]
+    config_keys: [storages.userAccountStorage.engine, user-account.delete, account.autoDeletion.inactivity.defaultDays, account.autoDeletion.reminders.minNoticeDays]
+    docs: [customer-resources/account-auto-deletion.md]
+    tests: [AA02, ACCP, USAD, ACXP2, ACXP3, ACXP8, ACST14, ADSW9]
     overview: |
       Limit-use enforced by permissions; limit-disclosure enforced by
       access scope to recipient. Retention has the same
@@ -123,10 +124,24 @@ requirements:
       GDPR Art. 17 + HIPAA-Security §164.310(d)(1): SQLite per-user
       file deletion vs PG row deletion + backup rotation.
       Automatic / scheduled retention enforcement is **operator-
-      owned** (Pryv ships no TTL primitive; the operator's external
+      owned** for events and streams (Pryv ships no TTL primitive
+      for records; whole accounts are covered by account
+      auto-deletion, see detail); the operator's external
       retention job composes `events.get toTime=<cutoff>` +
       `events.delete` + audit-log inactivity oracle,
       `context/data-retention-operator-owned.md`).
+    detail: |
+      Account auto-deletion, since open-pryv.io 2.0.0-rc.66
+      (`8521c8d5`, see gdpr.Art.5 §1(e)). For the account level,
+      "retained only as long as necessary" is a setting: your
+      inactivity preset (`account.autoDeletion.inactivity.defaultDays`,
+      default none) deletes accounts unused for that many days, its
+      clock starting the day it first applies (`[ACXP2]`), after
+      reminder mails (`[ACXP3]`) and at least 7 days after the first
+      notice (`[ACXP8]`), and each individual may schedule their own
+      account's deletion. A preset covers only plain accounts with an
+      email address (`[ACST14]`, `[ADSW9]`); state it in your privacy
+      policy. Event-level retention stays your retention job.
 
   - ref: Principle.4.6
     title: Schedule 1, Principle 6, Accuracy
@@ -142,9 +157,11 @@ requirements:
     functional_specs: [EVENT.BASE]
     tests: [PTU1]
     overview: |
-      `events.update` rectifies events with version history preserved
-      (matching GDPR Art. 16). The "necessary for the purposes"
-      determination is editorial.
+      `events.update` rectifies events (matching GDPR Art. 16); the
+      prior value is kept only on a deployment with
+      `versioning.forceKeepHistory: true` (off by default), while the
+      audit log records who rectified which event and when either way.
+      The "necessary for the purposes" determination is editorial.
 
   - ref: Principle.4.7
     title: Schedule 1, Principle 7, Safeguards
