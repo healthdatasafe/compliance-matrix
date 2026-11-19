@@ -140,8 +140,9 @@ needed.
       <div class="lh">Pryv platform <span class="b implemented">implemented</span> </div>
       <p>Same Pryv contributions as GDPR Art. 5: permissions enforce
 purpose-limitation technically; audit + access versioning give
-the accountability artefact; events.update with version history
-addresses accuracy. The Swiss-specific &quot;recognisability&quot; criterion
+the accountability artefact; events.update addresses accuracy
+(keeping the prior value only with
+`versioning.forceKeepHistory: true`, off by default). The Swiss-specific &quot;recognisability&quot; criterion
 (purpose recognisable to the subject at collection) maps to the
 consent UX layer, where the purpose written into
 `access.clientData.purpose` should be the same purpose presented
@@ -329,7 +330,9 @@ controller identity, purpose, recipients and any transfer abroad.
       <p>Same mapping as GDPR
 Art. 13/14: notice text lives in
 `access.clientData.privacy_notice` (or a dedicated `consent/*`
-event when CMC is in play), preserved immutably. The customer-
+event when CMC is in play), kept with every previous version on
+the access (on an event, only with
+`versioning.forceKeepHistory: true`). The customer-
 facing `app-web-auth3` template is the surface where the notice
 is typically shown. Pryv records what you presented;
 presentation itself is your editorial responsibility.

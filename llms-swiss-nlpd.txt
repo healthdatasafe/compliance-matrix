@@ -32,7 +32,7 @@ being built cannot be described publicly, write instead to
 HDS's own position on Swiss nLPD:
   - vault: HDS is controller. The individual's vault. HDS determines the purposes and means of operating it, so HDS is the controller under the Act. Data enters only with the individual's explicit consent, and the individual decides who may access it afterwards.
   External assurance: self-assessed. No FDPIC review, no certification under Art.13 nLPD and no independent audit has been performed. This is HDS's own assessment. Nothing is on file for the Swiss hosting region either: the physical safeguards HDS inherits there are asserted by the provider, not evidenced by a third-party audit.
-  Evidence: 11 of 30 requirements answered from approved HDS documentation (24 cite internal evidence), as of 2026-11-04.
+  Evidence: 11 of 30 requirements answered from approved HDS documentation (24 cite internal evidence), as of 2026-11-19.
   Swiss residency is the strongest part of this position: the ch region runs on Swiss
   infrastructure and the data does not leave it, which is what most of this Act's
   residency and transfer concern is about. Thirteen of the thirty requirements rest on
@@ -103,10 +103,11 @@ HDS's own position on Swiss nLPD:
   PRYV PLATFORM: implemented
     Same Pryv contributions as GDPR Art. 5: permissions enforce purpose-limitation
     technically; audit + access versioning give the accountability artefact; events.update
-    with version history addresses accuracy. The Swiss-specific "recognisability" criterion
-    (purpose recognisable to the subject at collection) maps to the consent UX layer, where
-    the purpose written into `access.clientData.purpose` should be the same purpose
-    presented to the subject.
+    addresses accuracy (keeping the prior value only with `versioning.forceKeepHistory:
+    true`, off by default). The Swiss-specific "recognisability" criterion (purpose
+    recognisable to the subject at collection) maps to the consent UX layer, where the
+    purpose written into `access.clientData.purpose` should be the same purpose presented to
+    the subject.
     Detail: Storage limitation: see Art.17-equivalent (GDPR Art.17 erasure; revFADP Art. 32
     §2 lit c on data destruction when no longer needed). The configurable erasure mechanics
     from `gdpr.Art.17` apply equivalently.
@@ -144,6 +145,9 @@ HDS's own position on Swiss nLPD:
     separate personal/app/shared access types, system streams for privileged data,
     audit-by-default. What stays on the implementer is the per-deployment default
     configuration (token scopes minted, retention chosen, notice shown at registration).
+    Detail: Same principle as GDPR Art.25, which this row derives from. The architectural
+    commitments and the catalogue of Pryv defaults are in
+    `context/privacy-by-design-and-default.md`.
   HDS: facilitated (effort saved: high) (mode: infrastructure)
     The Pryv architecture HDS operates is privacy-protective by construction: per-user
     storage isolation, stream-scoped permissions, distinct access types, system streams for
@@ -209,7 +213,8 @@ HDS's own position on Swiss nLPD:
   Anchor: https://compliance.datasafe.dev/swiss-nlpd.html#req-art-19
   PRYV PLATFORM: facilitated (mode: storage)
     Same mapping as GDPR Art. 13/14: notice text lives in `access.clientData.privacy_notice`
-    (or a dedicated `consent/*` event when CMC is in play), preserved immutably. The
+    (or a dedicated `consent/*` event when CMC is in play), kept with every previous version
+    on the access (on an event, only with `versioning.forceKeepHistory: true`). The
     customer- facing `app-web-auth3` template is the surface where the notice is typically
     shown. Pryv records what you presented; presentation itself is your editorial
     responsibility.
@@ -448,6 +453,12 @@ HDS's own position on Swiss nLPD:
     Rectification and erasure: same mapping as GDPR Art. 16 + 17. `events.update` for
     rectification (with version preservation); `system.users.delete` for erasure (with the
     same engine-dependent backup semantics noted under GDPR Art. 17).
+    Detail: Account auto-deletion, since open-pryv.io 2.0.0-rc.66 (`8521c8d5`, see
+    gdpr.Art.17). The person can schedule the erasure of their own account, at a date or
+    after a period without use, where your `user-account.delete` lets them delete it
+    directly (`[ACST10]`, arming needs the password, `[ACST3]`), with reminder mails before
+    it (`[ACRM1]`); the erasure is the same as `system.users.delete`, guards included
+    (`[ADSW8]`).
   HDS: implemented (effort saved: high)
     HDS exposes event update as the rectification primitive with version preservation, and
     operates account deletion as the erasure path. The backup semantics of erasure depend on

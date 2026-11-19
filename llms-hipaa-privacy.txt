@@ -32,7 +32,7 @@ being built cannot be described publicly, write instead to
 HDS's own position on HIPAA-Privacy:
   - vault: HDS is not-applicable. Every vault. The individual holds the account and decides who may see the data, so HDS holds it for them and never on a covered entity's behalf, whoever put it there and wherever it physically sits. A business associate is defined by acting on a covered entity's behalf, so HDS is not one here and HIPAA does not reach it.
   External assurance: self-assessed. No independent Privacy Rule assessment covers HDS.
-  Evidence: 33 of 35 requirements answered from approved HDS documentation (33 cite internal evidence), as of 2026-11-04.
+  Evidence: 30 of 35 requirements answered from approved HDS documentation (33 cite internal evidence), as of 2026-11-19.
   HIPAA does not reach HDS in the vault. Thirty-three of the thirty-five requirements are
   answered from approved HDS documentation, which is what an implementer holding a
   covered-entity or business-associate role inherits when it builds here. Most of this
@@ -134,16 +134,20 @@ HDS's own position on HIPAA-Privacy:
     The authorization Pryv mints when your subject grants an access IS the §164.508
     authorization record, versioned, immutable per version, with the granted scope
     (permissions) and the authorization text (clientData or a `consent/request-cmc` event)
-    inseparable. Withdrawal is a single API call. For cross-account / cross-entity
-    authorizations, the CMC plugin carries the negotiation state.
+    inseparable. The access keeps every previous version; a request event keeps its previous
+    versions only with `versioning.forceKeepHistory: true` (off by default), so do not edit
+    it after sending unless that is on. Withdrawal is a single API call. For cross-account /
+    cross-entity authorizations, the CMC plugin carries the negotiation state.
     Detail: Section 508(c) elements (description, identification, signature equivalent,
     expiration, right to revoke, etc.) map naturally to access + clientData fields: -
     description of information disclosed → `permissions[]` - description of authorized
     recipients → access type + counterparty (CMC pair) - signature equivalent → the act of
     granting the access through the auth flow (auditable) - expiration → `access.expires` -
-    right to revoke → `accesses.delete` + audit row at revocation - re-disclosure statement
-    → `clientData.redisclosure_notice` Implementer responsibility: ensure the consent UX
-    presents the §508(c) elements at the grant moment.
+    right to revoke → `accesses.delete` + audit row at revocation; for a cross-account (CMC)
+    authorization, the individual's own accept event also records the revocation, whichever
+    party ended it (`content.withdrawal`, open-pryv.io 2.0.0-rc.36) `[CN58]`, `[CN59]`,
+    `[CN60]` - re-disclosure statement → `clientData.redisclosure_notice` Implementer
+    responsibility: ensure the consent UX presents the §508(c) elements at the grant moment.
   HDS: facilitated (effort saved: high) (mode: primitive)
     HDS exposes consent primitives (the @pryv/cmc consent flow and access grant) so the
     authorization captured when an individual grants an access is a versioned, immutable
@@ -433,10 +437,16 @@ HDS's own position on HIPAA-Privacy:
   Requirement: An individual has the right to have a covered entity amend PHI or a record
   about the individual in a designated record set.
   Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-526
-  PRYV PLATFORM: implemented
-    `events.update` is the amendment primitive; event versioning preserves the prior content
-    so the amendment trail is auditable. The §164.526 process (request → decision → action →
-    notice) is yours to run; the technical record-keeping is shipped.
+  PRYV PLATFORM: configurable
+    `events.update` is the amendment primitive, and the audit log records who amended which
+    event and when. The prior content is kept, so the amendment trail shows what changed,
+    only on a deployment with `versioning.forceKeepHistory: true` (off by default; see
+    `context/event-history.md`): set it, or record each amendment as a new event linked to
+    the one it amends. Configurable rather than implemented: §164.526(c)(1) asks you to
+    append the amendment to, or link it from, the record it amends, and on the default
+    configuration an update overwrites that record; one setting (or that modelling
+    convention) gives you the trail. The §164.526 process (request → decision → action →
+    notice) is yours to run.
     Detail: For denied amendments where the individual files a statement of disagreement
     (§526(d)), store the statement as a separate event on a designated-record-set stream
     linked back to the original via `clientData.amends_event_id`, so the disagreement
@@ -527,7 +537,6 @@ HDS's own position on HIPAA-Privacy:
     programme. The covered entity's privacy-official designation is a programme element
     outside HDS's scope.
     Evidence: internal:hipaa/policies/privacy-program-governance, internal:hipaa/registers/designated-roles
-    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: always; basis: entity
     Designate and document your privacy official and complaint contact.
@@ -683,7 +692,6 @@ HDS's own position on HIPAA-Privacy:
     reference so disclosures are attributable to the BAA, while the contract itself is
     signed between the parties.
     Evidence: internal:hipaa/registers/baa-register
-    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: [third-parties]; basis: entity
     Execute a BAA with each business associate before disclosing PHI and scope their access
@@ -781,9 +789,10 @@ HDS's own position on HIPAA-Privacy:
   Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-530-i
   PRYV PLATFORM: facilitated (mode: storage)
     Same pattern as HIPAA- Security §164.316(a): policies-as-data on a
-    `compliance/policies/*` stream get versioning + retention + audit. The drafting +
-    approval + review-cycle procedure is the privacy officer's. Cross-link to §164.316(a)
-    preserves the Security Rule's parallel obligation.
+    `compliance/policies/*` stream get retention + audit, and versioning once
+    `versioning.forceKeepHistory: true` is set (off by default). The drafting + approval +
+    review-cycle procedure is the privacy officer's. Cross-link to §164.316(a) preserves the
+    Security Rule's parallel obligation.
   HDS: facilitated (effort saved: medium) (mode: storage)
     As with the Security Rule's documentation requirement, HDS provides the means to hold
     policies as versioned, retained, audited data on a dedicated stream. The drafting,
@@ -976,13 +985,30 @@ HDS's own position on HIPAA-Privacy:
   uses and disclosures of PHI, subject to exceptions for abuse, neglect or endangerment
   concerns.
   Anchor: https://compliance.datasafe.dev/hipaa.html#req-164-502-g
-  PRYV PLATFORM: facilitated (mode: storage)
-    Pryv pattern: the personal representative holds an `app` or `shared` access to the
-    subject's data with full scope (the effective "treat as individual" technical
-    permission). The access's `clientData.representative_relationship` +
-    `clientData.legal_basis` capture the relationship; the revocation-by-exception pattern
-    is `accesses.update` to narrow / `accesses.delete` to remove. The "abuse / neglect /
-    endangerment" determination is clinical / legal judgement.
+  PRYV PLATFORM: facilitated (mode: primitive)
+    Pryv's account-delegation primitive (`open-pryv.io/components/delegation/`) is the
+    technical mechanism for "treat the personal representative as the individual": the
+    representative holds an **owner-equivalent delegate token** over the subject's account,
+    full owner authority over the data, with the single exception that a delegate can never
+    remove its own delegation. Every action the representative takes is **audited per
+    delegate on the subject's account**, so uses and disclosures made under the
+    representative's authority are attributable. The individual **revokes** the
+    representative by a genuine login on their own account and detaching (the authoritative
+    teardown; a delegate cannot block it), which is the technical shape of §164.502(g)'s
+    exceptions (abuse / neglect / endangerment) once the covered entity makes that clinical
+    / legal determination. Same-core and cross-core (same platform) both carry the audited
+    attribution; see `context/delegation-model.md`. The representative can also authorize an
+    app for the individual through the auth request: the app receives an ordinary app access
+    on the individual's account (never the representative's owner-equivalent token), stamped
+    by the server with a non-forgeable lineage attribute naming the representative, and its
+    uses and disclosures are audited on the individual's account with the representative
+    named on every record. Revoking the representative revokes every app access granted that
+    way (open-pryv.io 2.0.0-rc.23). A lighter-weight alternative where full
+    owner-equivalence is not wanted: the representative holds a scoped `app` / `shared`
+    access instead, with `clientData.representative_relationship` + `clientData.legal_basis`
+    capturing the relationship and `accesses.update` / `accesses.delete` narrowing or
+    removing it. The "abuse / neglect / endangerment" determination is clinical / legal
+    judgement either way.
   HDS: facilitated (effort saved: low) (mode: storage)
     HDS supports the representative holding an access to the individual's data with the
     appropriate scope — the technical "treat as the individual" permission — with the
@@ -1073,11 +1099,27 @@ HDS's own position on HIPAA-Privacy:
     mints a platform-unique `r-XXXXXXXX` alias that is random by construction (does not
     encode PHI), so it satisfies §514(c)(1)(ii) out of the box. The platform holds the
     alias-to-user mapping and the aliased access exposes only the alias, the covered entity
-    re-identifies by resolving the alias, and the code is used for no other purpose. When
-    the workflow instead needs an explicit code-to-PHI map, keep it on a dedicated
-    `re-id-map/*` system- stream-adjacent subtree with access permitted only to the
-    re-identification administrator role; the code generation method (random /
-    hash-of-non-PHI) must not encode PHI per §514(c)(1)(ii).
+    re-identifies by resolving the alias, and the code is used for no other purpose. Since
+    open-pryv.io `4547b32a` (2.0.0-rc.66) the alias survives a backup and restore
+    (`[BKAL1]`) and routes on a single core answering DNS (`[ALRT1]`). The alias keeps the
+    username from the recipient, and since open-pryv.io 2.0.0-rc.69 the token is accepted
+    under its alias only, so a recipient who suspects whose record it is cannot confirm the
+    guess with the token (`[AL13]`, `[OPSE5]`; earlier releases accepted it under every name
+    of the account). The data stays linked to the account, so the alias does not by itself
+    make it de-identified under §514(b): that determination stays yours. When the workflow
+    instead needs an explicit code-to-PHI map, keep it on a dedicated `re-id-map/*` system-
+    stream-adjacent subtree with access permitted only to the re-identification
+    administrator role; the code generation method (random / hash-of-non-PHI) must not
+    encode PHI per §514(c)(1)(ii). To link an account to a record id your EHR already uses
+    (a patient id), external ids (open-pryv.io 2.0.0-rc.58, `external-id-index`) keep the
+    re-identification means with you, not the platform: your service sends
+    `HMAC(K_namespace, recordId)` under a key it holds, and Pryv stores only a token of that
+    value mapped to a core, never the record id nor the key, and never returns the value
+    `[XIDC1]`, `[XIDG1]`, `[XIDN4]`. The blinded value is derived from the record id, so it
+    is not by itself a code "not derived from" information about the individual
+    (§514(c)(1)): whether your design meets §514(c) rests on your key custody (the key, the
+    means of re-identification, is not disclosed nor used for another purpose, §514(c)(2))
+    and is your determination.
   HDS: facilitated (effort saved: low) (mode: storage)
     The platform's alias primitive provides the re-identification code directly:
     `accesses.create {randomAlias:true}` (deployed on the HDS cores since 2026-07-28) mints
@@ -1160,7 +1202,6 @@ HDS's own position on HIPAA-Privacy:
     down to its own subcontractors. The access tags and audit log support enforcement and
     evidence of the §164.504(e) terms.
     Evidence: internal:hipaa/registers/baa-register
-    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: [third-parties]; basis: entity
     Execute a BAA meeting §164.504(e)(2) before any business associate handles PHI.

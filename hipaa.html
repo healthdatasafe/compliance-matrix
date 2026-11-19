@@ -145,7 +145,7 @@ the technical raw material and its own programme as evidence of operator
 diligence.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/security-management-process</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 shared/registers/technology-stack</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 shared/registers/data-residency-regions</span> <span class="onreq">available on request</span></li></ul>
-      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -211,7 +211,7 @@ only on request under NDA, signed BAA or audit engagement, as is normal for
 a document whose contents are an inventory of what could go wrong.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/risk/risk-analysis</span> <span class="onreq">available on request</span></li></ul>
-      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -267,7 +267,7 @@ risk carries a decision, including the decisions to accept. The register's
 contents, like the analysis, are confidential and released on request.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/plans/risk-management</span> <span class="onreq">available on request</span></li></ul>
-      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -692,11 +692,19 @@ malicious software.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b out-of-scope">out-of-scope</span> </div>
-      <p>Anti-malware is a host / endpoint / network-layer control,
-Pryv-the-software doesn't include AV. Same out-of-scope reasoning
-as ISO 27001 A.8.7. The operator's hosting environment carries
-this control.
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
+      <p>Guarding against, detecting and reporting malicious software is
+mostly a host / endpoint / network-layer control: Pryv-the-software
+doesn't include AV, and your hosting environment carries that
+part. Pryv contributes one narrow guard on the files it stores:
+since open-pryv.io 2.0.0-rc.34 an attachment whose declared type
+a browser executes or renders as a document (HTML, SVG and other
+XML, JavaScript) is served in a sandbox (`Content-Security-Policy:
+sandbox; default-src 'none'`), so it cannot run script on the API
+origin. Pryv does not scan attachment content or refuse uploads by
+type: if ePHI workflows exchange files, scan them in your app or
+at your proxy, and keep the detection and reporting procedures in
+your security program. Same reasoning as ISO 27001 A.8.7.
 </p>
     </div>
     <div class="layer hds">
@@ -756,7 +764,7 @@ discrepancies.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> <a class="pl low" href="https://github.com/orgs/pryv/projects/5?pane=issue&amp;itemId=219705775&amp;issue=pryv%7Copen-pryv.io%7C117" title="Reference reverse-proxy rate-limiting configurations add an enforcement companion to log-in monitoring on the authentication endpoints">⏳ enhancement</a></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Login + authentication-
 failure events are captured in the audit log (per `auth.*` API
 method calls). Observability data aggregates rate + anomaly
@@ -949,10 +957,42 @@ copies of ePHI.
   <div class="layers">
     <div class="layer pryv">
       <div class="lh">Pryv platform <span class="b implemented">implemented</span> </div>
-      <p>`bin/backup.js` produces per-user backup files (events, streams,
-accesses, attachments). `--restore` rebuilds a user from a backup
+      <p>`bin/backup.js` produces per-user backup files (account data,
+streams, accesses, profile, webhooks, events, attachments, audit,
+high-frequency series). `--restore` rebuilds a user from a backup
 file. The backup procedure (&quot;when, where, how often&quot;) is yours to
 schedule; the underlying primitive is shipped.
+
+**Take a new backup after upgrading to open-pryv.io 2.0.0-rc.34
+or later.** Earlier backups carry no high-frequency series data
+on any series engine, with no warning: backup and restore
+addressed each user's series under a different key than the one
+the series are stored under. Since 2.0.0-rc.34 the series are
+exported and restored, series move between any two series engines
+(InfluxDB backups could not be restored before), and the backup
+manifest's `coreVersion` reports the core's release.
+
+**If you ever ran `bin/backup.js --incremental` before
+open-pryv.io 2.0.0-rc.51, check those backup directories.** An
+incremental run overwrote the full backup it continued, and a
+restore of such a directory reported success while restoring only
+the last delta: it is not a retrievable exact copy and cannot be
+repaired. `node bin/backup.js --inspect &lt;dir&gt;` reports it
+`DAMAGED` and `--restore` now refuses it `[BKIC2]`, `[BKC6]`.
+Take a new full backup into a new directory and continue the
+incrementals from there. Full backups written by earlier releases
+are not affected.
+
+**Three procedure points from open-pryv.io 2.0.0-rc.86.** A backup
+written by 2.0.0-rc.86 or later restores with that release or
+later: if you go back to an earlier release, start a new chain in
+a new directory (a run an earlier release appends to the chain is
+refused at restore) `[BKSM6]`. Keep each backup directory for the
+backup only: a file the backup did not write is refused at restore,
+and a backup refuses to start in a directory holding other files
+`[BKSM7]`, `[BKSM8]`. With a recipient public key, sign the runs
+(`--signing-key` at backup, `--signing-pubkey` at restore; detail
+below), starting with a new full backup into a new directory.
 </p>
     </div>
     <div class="layer hds">
@@ -1009,11 +1049,17 @@ on request.
   <div class="layers">
     <div class="layer pryv">
       <div class="lh">Pryv platform <span class="b configurable">configurable</span> </div>
-      <p>Two layers Pryv gives you: (1) cold restore from `bin/backup.js
---restore`, the canonical recovery path; (2) hot redundancy via a
-multi-core cluster (rqlite replication + cluster-CA mTLS between
-cores), so a single-region failure doesn't lose live data. You
-compose them per your RTO / RPO.
+      <p>Two layers Pryv gives you, covering different data: (1) cold
+restore from `bin/backup.js --restore`, the only recovery path
+for user data; (2) a multi-core cluster replicates the platform
+DB (user-to-core index, shared settings, certificates) over rqlite
+Raft with cluster-CA mTLS, so losing one core does not lose the
+platform's control plane. User data is not replicated between
+cores: each user lives on one home core, so if that core's
+storage is lost, its users' data comes back only from your
+backups (or from replication you run under the storage engine,
+e.g. PostgreSQL streaming replication). You compose them per your
+RTO / RPO.
 </p>
     </div>
     <div class="layer hds">
@@ -1213,7 +1259,10 @@ are citable periodic-evaluation artefacts), Pryv's vulnerability
 disclosure program + GHSA advisory history (coordinated
 disclosure policy published in `SECURITY.md`; private
 vulnerability reporting enabled on the published
-repositories). The assessment write-up is operator-side.
+repositories), and the code-level security review of
+open-pryv.io (2026-06 to 2026-10, fixes in 2.0.0-rc.40 to
+2.0.0-rc.51, public report `SECURITY-AUDIT.md` published
+2026-10-14). The assessment write-up is operator-side.
 </p>
     </div>
     <div class="layer hds">
@@ -2002,7 +2051,9 @@ destruction.
       <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> <a class="pl medium" href="https://github.com/orgs/pryv/projects/5?pane=issue&amp;itemId=190467766&amp;issue=pryv%7Copen-pryv.io%7C74" title="Chained / signed audit log enforces log integrity at the primitive layer">⏳ feature</a></div>
       <p>Integrity is multi-
 layered: write authorization gated by `permissions`, event
-versioning preserves the prior value on every update, audit
+versioning preserves the prior value on every update (on a
+deployment with `versioning.forceKeepHistory: true`; the default
+keeps no event history), audit
 pins the (who, when, via which access) attribution, and
 `bin/backup.js` provides the recovery path if a destruction
 event needs to be reversed. The standard's overall programmatic
@@ -2068,11 +2119,20 @@ or destroyed in an unauthorized manner.
   <div class="layers">
     <div class="layer pryv">
       <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> <a class="pl medium" href="https://github.com/orgs/pryv/projects/5?pane=issue&amp;itemId=190467766&amp;issue=pryv%7Copen-pryv.io%7C74" title="Chained / signed audit log authenticates audit data (row moves F:Evidence|Low → F:Evidence|Med)">⏳ feature</a></div>
-      <p>Event versioning preserves
-the prior content on every update, so &quot;is this the original?&quot;
-is a tractable question, compare against the history. The
-audit row references the access that performed the update,
-anchoring the change to an authenticated actor. Tamper
+      <p>Every event carries an integrity hash (SHA-256 by default,
+SHA-512 optional, on by default; an unkeyed checksum, see detail),
+and the audit row of each create or update records that hash
+with the event's key and the access that performed the write,
+anchoring the change to an authenticated actor `[WNWM]`: an
+event whose stored state no longer hashes to the value its last
+audited create or update recorded was changed since by
+something other than an audited create or update: a trash or an
+attachment deletion (audited, but the row records no new hash),
+a server-internal stamp, or an alteration at the storage layer.
+&quot;What was
+the original?&quot; needs the prior versions, which Pryv keeps only
+when you set `versioning.forceKeepHistory: true` (off by
+default; see `context/event-history.md`). Tamper
 detection beyond this (e.g., end-to-end content hashing under
 a customer-held key) is on the implementer or an extension.
 </p>
@@ -2199,12 +2259,19 @@ ePHI being transmitted over an electronic communications network.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b implemented">implemented</span> </div>
-      <p>All Pryv API traffic terminates on TLS 1.3 by default, with
-certificates issued + auto-renewed via the built-in ACME
-integration. Inter-core traffic in a multi-core cluster runs over
-mTLS using a cluster-private CA. There is no plaintext path
-shipped.
+      <div class="lh">Pryv platform <span class="b configurable">configurable</span> </div>
+      <p>You choose where TLS terminates, and you must choose. The core
+serves HTTPS when you configure it to: a certificate at
+`http.ssl.keyFile` / `http.ssl.certFile`, issued and auto-renewed
+by the built-in ACME integration when `letsEncrypt.enabled` is
+set. Without that configuration it serves plain HTTP (the default
+`http.ip` is 127.0.0.1) and your reverse proxy terminates TLS
+(`open-pryv.io/INSTALL.md`, &quot;Running behind nginx&quot;;
+`open-pryv.io/docs/nginx-ingress-sample.conf`). Between cores,
+Raft traffic runs over mutual TLS on a cluster-private CA once
+`bin/bootstrap.js` has written `storages.engines.rqlite.tls`; with
+the default `tls: null` it is plain TCP (single core, or a
+VPN-protected cluster).
 </p>
     </div>
     <div class="layer hds">
@@ -2255,13 +2322,14 @@ not improperly modified without detection until disposed of.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b implemented">implemented</span> </div>
-      <p>TLS 1.3 provides cryptographic integrity (AEAD) on every byte in
-transit. End-to-end transmission integrity is therefore a
-property of the connection, modification in transit is
-cryptographically detectable. Endpoint-to-endpoint integrity
-across multiple hops (e.g., proxy chains) requires the
-implementer's chain to preserve this property.
+      <div class="lh">Pryv platform <span class="b configurable">configurable</span> </div>
+      <p>Once TLS is in place (in the core or in your proxy, see
+164.312(e)(1)), every TLS record is integrity-protected, so
+modification in transit is detectable. The core does not enforce TLS on its own: without a
+configured certificate it serves plain HTTP, which is only safe
+behind your TLS-terminating proxy. Endpoint-to-endpoint integrity
+across multiple hops (e.g., proxy chains) requires your chain to
+preserve this property.
 </p>
     </div>
     <div class="layer hds">
@@ -2312,11 +2380,17 @@ at-rest encryption is addressed under §164.312(a)(2)(iv).
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b implemented">implemented</span> </div>
-      <p>TLS 1.3 in transit is default-on via the built-in ACME
-integration; mTLS between cores is the inter-node default once
-a cluster is bootstrapped. &quot;Whenever deemed appropriate&quot;, Pryv's
-default for ePHI transit is: always.
+      <div class="lh">Pryv platform <span class="b configurable">configurable</span> </div>
+      <p>Encryption in transit is a configuration you set, not a default.
+Two supported placements: the core terminates TLS itself
+(`http.ssl.keyFile` / `http.ssl.certFile`, with certificates
+issued and renewed by the built-in ACME integration when
+`letsEncrypt.enabled` is set), or your reverse proxy terminates
+TLS and the core serves plain HTTP behind it. Between cores, Raft
+traffic is mutual TLS once `bin/bootstrap.js` has written
+`storages.engines.rqlite.tls` (default `tls: null`, plain TCP).
+For ePHI, configure one of the two placements so no network hop
+carries plaintext.
 </p>
     </div>
     <div class="layer hds">
@@ -2400,7 +2474,7 @@ register. HDS offers the BAA template (templates/baa) and supplies the
 technical-safeguards evidence such a contract would rely on.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/registers/baa-register</span> <span class="onreq">available on request</span></li></ul>
-      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -2462,7 +2536,7 @@ residency. This gives the contractual &quot;reasonable and appropriate
 safeguards&quot; clause a concrete, auditable backing.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/registers/baa-register</span> <span class="onreq">available on request</span></li></ul>
-      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -2477,6 +2551,68 @@ on, and retain the safeguards exhibit with the executed contract.
         <a class="tpl" href="templates.html#tpl-baa">📄 baa</a><a class="tpl" href="templates.html#tpl-subcontractor">📄 subcontractor</a>
         <p>Ensure the safeguards you commit to your covered entity are matched by
 the controls you and your downstream processors actually operate.
+</p>
+      </div><div class="persona">
+        <strong>individual</strong> <span class="b out-of-scope">out-of-scope</span>
+        
+        
+      </div>
+    </div>
+  </div>
+</article><article class="req" id="req-164-314-a-2-i-b" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.314(a)(2)(i)(b) business associate contract — extend safeguards to subcontractors hds executes back-to-back agreements with each subcontractor that may
+touch ephi and tracks them in its baa register, so the flow-down exists
+wherever a baa is in force. hds also provides the implementer a
+subcontractor agreement template to flow the same obligations down their
+own chain.
+" data-planned="0">
+  <h3><code>164.314(a)(2)(i)(B)</code> Business associate contract — extend safeguards to subcontractors </h3>
+  <p class="text">Where applicable, the business associate must ensure that any subcontractors
+that create, receive, maintain, or transmit ePHI on its behalf agree, via a
+written contract, to comply with the applicable Security Rule requirements.
+Applied to the contract with the subcontractor by §164.314(a)(2)(iii).
+</p>
+  <div class="layers">
+    <div class="layer pryv">
+      <div class="lh">Pryv platform <span class="b out-of-scope">out-of-scope</span> </div>
+      <p>Subcontracting chains are contractual; no software role. The
+only built-in subprocessor Pryv-the-software carries is the
+observability-provider adapter (default disabled); when enabled,
+the BA's subcontractor list adds the observability provider as
+a sub-processor under both HIPAA-Security §164.314(a)(2)(i)(B)
+and GDPR Art.28(4). (Listed as §164.314(a)(2)(ii)(B) until
+2026-11-19: that paragraph is &quot;other arrangements&quot; and has no
+subcontractor clause.)
+</p>
+    </div>
+    <div class="layer hds">
+      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
+      <p>HDS executes back-to-back agreements with each subcontractor that may
+touch ePHI and tracks them in its BAA register, so the flow-down exists
+wherever a BAA is in force. HDS also provides the implementer a
+subcontractor agreement template to flow the same obligations down their
+own chain.
+</p>
+      <details><summary>detail</summary><p>HDS maintains a current list of its ePHI-relevant subprocessors and holds a
+written contract with each that flows down the applicable Security Rule
+obligations. The subprocessor list is made available to implementers so
+they can satisfy their own §164.314(a)(2)(i)(B) due diligence.
+</p></details>
+      <ul class="ev"><li><span class="lock">🔒 hipaa/registers/baa-register</span> <span class="onreq">available on request</span></li></ul>
+      
+    </div>
+    <div class="layer impl">
+      <div class="lh">Implementer</div>
+      <div class="persona">
+        <strong>covered-entity</strong> <span class="b documented">documented</span>
+        <a class="tpl" href="templates.html#tpl-baa">📄 baa</a>
+        <p>Review HDS's subprocessor list as part of your vendor due diligence.
+</p>
+      </div><div class="persona">
+        <strong>business-associate</strong> <span class="b documented">documented</span>
+        <a class="tpl" href="templates.html#tpl-subcontractor">📄 subcontractor</a><a class="tpl" href="templates.html#tpl-subprocessor">📄 subprocessor</a>
+        <p>Execute written agreements with each of your own downstream
+subcontractors that handle ePHI, flowing the Security Rule obligations
+through.
 </p>
       </div><div class="persona">
         <strong>individual</strong> <span class="b out-of-scope">out-of-scope</span>
@@ -2527,7 +2663,7 @@ the implementer; HDS's incident-response procedure governs how that report
 is produced and what evidence it carries.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/registers/baa-register</span> <span class="onreq">available on request</span></li></ul>
-      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -2542,68 +2678,6 @@ procedure.
         <a class="tpl" href="templates.html#tpl-baa">📄 baa</a><a class="tpl" href="templates.html#tpl-subcontractor">📄 subcontractor</a>
         <p>Flow the incident-report obligation through to your covered entity and
 down to your subcontractors.
-</p>
-      </div><div class="persona">
-        <strong>individual</strong> <span class="b out-of-scope">out-of-scope</span>
-        
-        
-      </div>
-    </div>
-  </div>
-</article><article class="req" id="req-164-314-a-2-ii-b" data-coverage="facilitated" data-personas="covered-entity business-associate individual" data-text="164.314(a)(2)(ii)(b) business associate contract — extend safeguards to subcontractors hds executes back-to-back agreements with each subcontractor that may
-touch ephi and tracks them in its baa register, so the flow-down exists
-wherever a baa is in force. hds also provides the implementer a
-subcontractor agreement template to flow the same obligations down their
-own chain.
-" data-planned="0">
-  <h3><code>164.314(a)(2)(ii)(B)</code> Business associate contract — extend safeguards to subcontractors </h3>
-  <p class="text">Where applicable, the business associate must ensure that any subcontractors
-that create, receive, maintain, or transmit ePHI on its behalf agree, via a
-written contract, to comply with the applicable Security Rule requirements.
-The provision is 45 CFR §164.314(a)(2)(i)(B), applied to the contract with
-the subcontractor by §164.314(a)(2)(iii); the row id is Pryv's pinned key
-and is raised with Pryv for renaming.
-</p>
-  <div class="layers">
-    <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b out-of-scope">out-of-scope</span> </div>
-      <p>Subcontracting chains are contractual; no software role. The
-only built-in subprocessor Pryv-the-software carries is the
-observability-provider adapter (default disabled); when enabled,
-the BA's subcontractor list adds the observability provider as
-a sub-processor under both HIPAA-Security §164.314(a)(2)(ii)(B)
-and GDPR Art.28(4).
-</p>
-    </div>
-    <div class="layer hds">
-      <div class="lh">HDS <span class="b facilitated">facilitated</span> <span class="rg">US</span><span class="rg">CH</span> </div>
-      <p>HDS executes back-to-back agreements with each subcontractor that may
-touch ePHI and tracks them in its BAA register, so the flow-down exists
-wherever a BAA is in force. HDS also provides the implementer a
-subcontractor agreement template to flow the same obligations down their
-own chain.
-</p>
-      <details><summary>detail</summary><p>HDS maintains a current list of its ePHI-relevant subprocessors and holds a
-written contract with each that flows down the applicable Security Rule
-obligations. The subprocessor list is made available to implementers so
-they can satisfy their own §164.314(a)(2)(i)(B) due diligence.
-</p></details>
-      <ul class="ev"><li><span class="lock">🔒 hipaa/registers/baa-register</span> <span class="onreq">available on request</span></li></ul>
-      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
-    </div>
-    <div class="layer impl">
-      <div class="lh">Implementer</div>
-      <div class="persona">
-        <strong>covered-entity</strong> <span class="b documented">documented</span>
-        <a class="tpl" href="templates.html#tpl-baa">📄 baa</a>
-        <p>Review HDS's subprocessor list as part of your vendor due diligence.
-</p>
-      </div><div class="persona">
-        <strong>business-associate</strong> <span class="b documented">documented</span>
-        <a class="tpl" href="templates.html#tpl-subcontractor">📄 subcontractor</a><a class="tpl" href="templates.html#tpl-subprocessor">📄 subprocessor</a>
-        <p>Execute written agreements with each of your own downstream
-subcontractors that handle ePHI, flowing the Security Rule obligations
-through.
 </p>
       </div><div class="persona">
         <strong>individual</strong> <span class="b out-of-scope">out-of-scope</span>
@@ -2688,7 +2762,10 @@ documented.
 is operational (activity logs, assessment outputs), Pryv events
 on a designated `compliance/*` stream carry the documentation
 alongside the audit log's automatic operational record. Event
-versioning preserves the change history of policies-as-data;
+versioning preserves the change history of policies-as-data
+once you set `versioning.forceKeepHistory: true` (off by
+default, in which case an update overwrites the previous
+revision: keep each revision as its own event instead);
 backup-restore preserves them across the §164.316(b)(2)
 retention window.
 </p>
@@ -2805,9 +2882,10 @@ environmental or operational changes affecting the security of the ePHI.
       <p>Periodic review cadence is
 the operator's procedure. Pryv's contribution: when policies-
 as-data are stored as events on a `compliance/policies/*`
-stream, the event-version chain shows when each policy was
-last reviewed and what changed; audit log shows who-reviewed-
-what.
+stream, the audit log shows who updated which policy event and
+when, and, on a deployment with
+`versioning.forceKeepHistory: true` (off by default), the
+event-version chain also shows what changed.
 </p>
     </div>
     <div class="layer hds">
@@ -2986,6 +3064,10 @@ authorization from the individual that meets defined content requirements.
 the §164.508 authorization record, versioned, immutable per
 version, with the granted scope (permissions) and the authorization
 text (clientData or a `consent/request-cmc` event) inseparable.
+The access keeps every previous version; a request event keeps
+its previous versions only with `versioning.forceKeepHistory:
+true` (off by default), so do not edit it after sending unless
+that is on.
 Withdrawal is a single API call. For cross-account / cross-entity
 authorizations, the CMC plugin carries the negotiation state.
 </p>
@@ -3470,11 +3552,19 @@ about the individual in a designated record set.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b implemented">implemented</span> </div>
-      <p>`events.update` is the amendment primitive; event versioning
-preserves the prior content so the amendment trail is auditable.
-The §164.526 process (request → decision → action → notice) is
-yours to run; the technical record-keeping is shipped.
+      <div class="lh">Pryv platform <span class="b configurable">configurable</span> </div>
+      <p>`events.update` is the amendment primitive, and the audit log
+records who amended which event and when. The prior content is
+kept, so the amendment trail shows what changed, only on a
+deployment with `versioning.forceKeepHistory: true` (off by
+default; see `context/event-history.md`): set it, or record each
+amendment as a new event linked to the one it amends. Configurable
+rather than implemented: §164.526(c)(1) asks you to append the
+amendment to, or link it from, the record it amends, and on the
+default configuration an update overwrites that record; one
+setting (or that modelling convention) gives you the trail. The
+§164.526 process (request → decision → action → notice) is yours
+to run.
 </p>
     </div>
     <div class="layer hds">
@@ -3612,7 +3702,7 @@ its own programme. The covered entity's privacy-official designation
 is a programme element outside HDS's scope.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/policies/privacy-program-governance</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/registers/designated-roles</span> <span class="onreq">available on request</span></li></ul>
-      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -3904,7 +3994,7 @@ contract reference so disclosures are attributable to the BAA, while the
 contract itself is signed between the parties.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/registers/baa-register</span> <span class="onreq">available on request</span></li></ul>
-      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -4102,8 +4192,9 @@ with the standards and implementation specifications of the Privacy Rule.
       <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Same pattern as HIPAA-
 Security §164.316(a): policies-as-data on a
-`compliance/policies/*` stream get versioning + retention +
-audit. The drafting + approval + review-cycle procedure is the
+`compliance/policies/*` stream get retention + audit, and
+versioning once `versioning.forceKeepHistory: true` is set (off by
+default). The drafting + approval + review-cycle procedure is the
 privacy officer's. Cross-link to §164.316(a) preserves the
 Security Rule's parallel obligation.
 </p>
@@ -4462,15 +4553,41 @@ endangerment concerns.
   <div class="layers">
     <div class="layer pryv">
       <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
-      <p>Pryv pattern: the personal
-representative holds an `app` or `shared` access to the subject's
-data with full scope (the effective &quot;treat as individual&quot;
-technical permission). The access's
-`clientData.representative_relationship` +
-`clientData.legal_basis` capture the relationship; the
-revocation-by-exception pattern is `accesses.update` to narrow
-/ `accesses.delete` to remove. The &quot;abuse / neglect /
-endangerment&quot; determination is clinical / legal judgement.
+      <p>Pryv's account-delegation primitive
+(`open-pryv.io/components/delegation/`) is the technical
+mechanism for &quot;treat the personal representative as the
+individual&quot;: the representative holds an **owner-equivalent
+delegate token** over the subject's account, full owner
+authority over the data, with the single exception that a
+delegate can never remove its own delegation. Every action the
+representative takes is **audited per delegate on the subject's
+account**, so uses and disclosures made under the
+representative's authority are attributable. The individual
+**revokes** the representative by a genuine login on their own
+account and detaching (the authoritative teardown; a delegate
+cannot block it), which is the technical shape of §164.502(g)'s
+exceptions (abuse / neglect / endangerment) once the covered
+entity makes that clinical / legal determination. Same-core and
+cross-core (same platform) both carry the audited attribution;
+see `context/delegation-model.md`.
+
+The representative can also authorize an app for the individual
+through the auth request: the app receives an ordinary app
+access on the individual's account (never the representative's
+owner-equivalent token), stamped by the server with a
+non-forgeable lineage attribute naming the representative, and
+its uses and disclosures are audited on the individual's account
+with the representative named on every record. Revoking the
+representative revokes every app access granted that way
+(open-pryv.io 2.0.0-rc.23).
+
+A lighter-weight alternative where full owner-equivalence is not
+wanted: the representative holds a scoped `app` / `shared`
+access instead, with `clientData.representative_relationship` +
+`clientData.legal_basis` capturing the relationship and
+`accesses.update` / `accesses.delete` narrowing or removing it.
+The &quot;abuse / neglect / endangerment&quot; determination is clinical /
+legal judgement either way.
 </p>
     </div>
     <div class="layer hds">
@@ -4648,11 +4765,31 @@ random by construction (does not encode PHI), so it satisfies
 §514(c)(1)(ii) out of the box. The platform holds the alias-to-user
 mapping and the aliased access exposes only the alias, the covered
 entity re-identifies by resolving the alias, and the code is used for
-no other purpose. When the workflow instead needs an explicit
+no other purpose. Since open-pryv.io `4547b32a` (2.0.0-rc.66) the alias survives a backup and restore (`[BKAL1]`)
+and routes on a single core answering DNS (`[ALRT1]`). The alias
+keeps the username from the recipient, and since open-pryv.io
+2.0.0-rc.69 the token is accepted under its alias only, so a
+recipient who suspects whose record it is cannot confirm the guess
+with the token (`[AL13]`, `[OPSE5]`; earlier releases accepted it
+under every name of the account). The data stays linked to the
+account, so the alias does not by itself make it de-identified
+under §514(b): that determination stays yours. When the workflow instead needs an explicit
 code-to-PHI map, keep it on a dedicated `re-id-map/*` system-
 stream-adjacent subtree with access permitted only to the
 re-identification administrator role; the code generation method
 (random / hash-of-non-PHI) must not encode PHI per §514(c)(1)(ii).
+To link an account to a record id your EHR already uses (a patient
+id), external ids (open-pryv.io 2.0.0-rc.58, `external-id-index`)
+keep the re-identification means with you, not the platform: your
+service sends `HMAC(K_namespace, recordId)` under a key it holds,
+and Pryv stores only a token of that value mapped to a core, never
+the record id nor the key, and never returns the value `[XIDC1]`,
+`[XIDG1]`, `[XIDN4]`. The blinded value is derived from the record
+id, so it is not by itself a code &quot;not derived from&quot; information
+about the individual (§514(c)(1)): whether your design meets
+§514(c) rests on your key custody (the key, the means of
+re-identification, is not disclosed nor used for another purpose,
+§514(c)(2)) and is your determination.
 </p>
     </div>
     <div class="layer hds">
@@ -4800,7 +4937,7 @@ subcontractors. The access tags and audit log support enforcement and
 evidence of the §164.504(e) terms.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/registers/baa-register</span> <span class="onreq">available on request</span></li></ul>
-      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -4949,9 +5086,10 @@ information.
       <p>Subpart D applies only
 to &quot;unsecured&quot; PHI, PHI that has not been rendered unusable
 through encryption or destruction per HHS guidance (NIST SP
-800-111 / SP 800-88). Pryv's posture (TLS in transit by default,
-operator-side encryption-at-rest, per-user backup files
-transportable as encrypted bundles) lets you put PHI inside the
+800-111 / SP 800-88). Pryv's posture (TLS in transit in the core
+or at your proxy, as you configure it; operator-side
+encryption-at-rest; per-user backup files that `bin/backup.js`
+can encrypt itself) lets you put PHI inside the
 safe-harbor where you choose to, narrowing what §400 actually
 reaches in your deployment.
 </p>
@@ -4976,7 +5114,7 @@ described under 164.402(2), where media exposures of at-rest content
 fall inside the safe harbor and live-system compromises do not.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/risk/at-rest-encryption</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/evidence/at-rest-encryption-verification</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/procedures/breach-notification</span> <span class="onreq">available on request</span></li></ul>
-      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -5158,9 +5296,11 @@ in-transit standards, and NIST SP 800-88 for destruction).
 narrows what triggers Subpart D notification: PHI that's
 actually secured per HHS guidance is outside §164.402's
 &quot;unsecured PHI&quot; definition and a leak of it doesn't compel
-notification. Pryv's default posture (TLS 1.3 in transit via
-built-in ACME, AES-256-GCM for platform secrets at rest) puts
-the in-transit half firmly inside the safe-harbor; the at-rest
+notification. With TLS configured (in the core via `http.ssl.*`
+and the built-in ACME integration, or at your proxy), plus
+AES-256-GCM for platform secrets at rest, the in-transit half
+sits inside the safe-harbor; without that configuration the
+core serves plain HTTP, so make sure no hop carries it. The at-rest
 half for ePHI content itself depends on the operator's chosen
 at-rest encryption (operator-side LUKS / PG TDE / dm-crypt).
 </p>
@@ -5255,7 +5395,7 @@ under the FTC Health Breach Notification Rule, which sets its own
 delivery requirements. This matrix has no scope for that rule yet.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/procedures/breach-notification</span> <span class="onreq">available on request</span></li></ul>
-      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -5316,7 +5456,7 @@ Acting on the evidence within the window — and recording when discovery
 occurred — remains the implementer's responsibility.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/procedures/breach-notification</span> <span class="onreq">available on request</span></li></ul>
-      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -5382,7 +5522,7 @@ are composed by the covered entity. HDS therefore facilitates the
 evidence-derivable element and documents the rest.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/procedures/breach-notification</span> <span class="onreq">available on request</span></li></ul>
-      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -5492,7 +5632,7 @@ assemble. Identifying and notifying prominent media outlets is entirely the
 covered entity's process.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/procedures/breach-notification</span> <span class="onreq">available on request</span></li></ul>
-      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -5546,7 +5686,7 @@ while the act of submitting and tracking the report sits with the covered
 entity.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/procedures/breach-notification</span> <span class="onreq">available on request</span></li></ul>
-      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -5615,7 +5755,7 @@ health information on HDS uses the same evidence for its own upstream
 notification chain.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/procedures/breach-notification</span> <span class="onreq">available on request</span></li></ul>
-      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -5671,7 +5811,7 @@ evidence intact for the duration so notification can proceed once the delay
 lapses.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/procedures/breach-notification</span> <span class="onreq">available on request</span></li></ul>
-      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>
@@ -5734,7 +5874,7 @@ to maintain. HDS also retains its own breach-procedure execution records as
 evidence of its §164.410 performance.
 </p></details>
       <ul class="ev"><li><span class="lock">🔒 hipaa/registers/breach-log</span> <span class="onreq">available on request</span></li><li><span class="lock">🔒 hipaa/procedures/breach-notification</span> <span class="onreq">available on request</span></li></ul>
-      <span class="apv" title="Every internal document cited by this row has completed approval. The absence of this marker on another row is not a negative claim: most rows without it cite no internal document at all.">✓ backed by approved documentation</span>
+      
     </div>
     <div class="layer impl">
       <div class="lh">Implementer</div>

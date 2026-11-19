@@ -1,6 +1,6 @@
 {
   "format": 2,
-  "generated": "2026-11-06",
+  "generated": "2026-11-19",
   "note": "Digests cover STRUCTURAL fields only; prose may change without moving any digest. Digests are comparable only within the same `format`: a format bump means the computation changed, so compare content across one by diffing, not by hash.",
   "fields": [
     "ref",
@@ -11,7 +11,7 @@
     "implementer[].nature",
     "implementer[].applies_when"
   ],
-  "combined": "a83cb1da01b8b314",
+  "combined": "f872be1ea8b95361",
   "profiles": {
     "version": 1,
     "digest": "bd5c667c7a134ce6"
@@ -135,7 +135,7 @@
     },
     "hipaa-security": {
       "rows": 43,
-      "digest": "551e9fe39ff62351",
+      "digest": "5f7d67d3302cbfb9",
       "requirements": {
         "164.308(a)(1)(i)": "cba61ad1a17afd22",
         "164.308(a)(1)(ii)(A)": "0fd60bd182e8efe1",
@@ -174,8 +174,8 @@
         "164.312(e)(2)(ii)": "d1c11a6f6bcc5eaf",
         "164.314(a)(1)": "10dbc7b9eaaa4d19",
         "164.314(a)(2)(i)(A)": "7ec52c31d36a606c",
+        "164.314(a)(2)(i)(B)": "c18632128c433483",
         "164.314(a)(2)(i)(C)": "d0185d4856a550ce",
-        "164.314(a)(2)(ii)(B)": "85cb956f9a83b668",
         "164.316(a)": "f9760bf596298db9",
         "164.316(b)(1)": "fdc9705932e69a5d",
         "164.316(b)(2)(i)": "0447402492c49523",

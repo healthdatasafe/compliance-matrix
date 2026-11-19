@@ -1103,10 +1103,12 @@ events.
       <p>Logical access is enforced by Pryv at the API surface: every
 read/write is checked against the access's per-stream + level
 permissions, token-based authentication is the default, and MFA is
-available via the mfa.* methods when you enable it. System streams
-isolate privileged data (credentials, MFA state). No plaintext
-transport path ships. You define who gets which access; Pryv
-enforces it.
+available via the mfa.* methods (on by default since open-pryv.io
+2.0.0-rc.14 with authenticator-app TOTP; each account holder
+enrols) `[MA15C]`, `[MA11A]`. System streams
+isolate privileged data (credentials, MFA state). Transport
+encryption is configured (in the core or at your proxy, see
+CC6.7). You define who gets which access; Pryv enforces it.
 </p>
     </div>
     <div class="layer hds">
@@ -1422,14 +1424,19 @@ threats originating outside its system boundaries.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b implemented">implemented</span> </div>
-      <p>The external boundary is the TLS-terminating HTTPS API: TLS 1.3 in
-transit with the built-in ACME integration (auto-renewal +
-cluster-replicated rotation), token-gated access on every request,
-no plaintext path. Inter-core traffic in a cluster runs over mTLS
-on a private CA, separating the control plane from the user-facing
-plane. Edge controls (WAF, firewall, rate limiting) sit in your
-reverse proxy by design, see context/rate-limiting-and-dos-protection.md.
+      <div class="lh">Pryv platform <span class="b configurable">configurable</span> </div>
+      <p>Every API request is token-gated, whatever the deployment. The
+transport side of the boundary is configured: the core terminates
+TLS itself when `http.ssl.*` is set (with the built-in ACME
+integration issuing, renewing and replicating certificates when
+`letsEncrypt.enabled` is set), otherwise it serves plain HTTP
+(default `http.ip` 127.0.0.1) and your reverse proxy terminates
+TLS. Inter-core Raft traffic runs over mTLS on a private CA once
+`bin/bootstrap.js` has written `storages.engines.rqlite.tls`
+(default `tls: null`, plain TCP), separating the control plane
+from the user-facing plane. Edge controls (WAF, firewall, rate
+limiting) sit in your reverse proxy by design, see
+context/rate-limiting-and-dos-protection.md.
 </p>
     </div>
     <div class="layer hds">
@@ -1487,14 +1494,27 @@ or removal.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b implemented">implemented</span> </div>
-      <p>Transmission is TLS 1.3 end-to-end (client ↔ core direct, no
-Pryv-shipped intermediary that could log or cache). Movement is
+      <div class="lh">Pryv platform <span class="b configurable">configurable</span> </div>
+      <p>Transmission is TLS once you configure where it terminates: in
+the core (`http.ssl.*`, certificates from the built-in ACME
+integration when `letsEncrypt.enabled` is set) or in your reverse
+proxy, with the core serving plain HTTP behind it. The core sets
+no TLS version of its own, so Node.js defaults apply (TLS 1.2
+floor on the Node 24 the image runs). Pryv ships no intermediary
+that could log or cache traffic. Movement is
 restricted by the permission model, a credential only moves the
 data its scope permits. Operator secrets at rest use AES-256-GCM
 (HKDF-derived per-key); bootstrap bundles for core-to-core movement
 are AES-256-GCM (scrypt). Bulk event-data at-rest encryption is an
 operator-side storage-layer choice (LUKS / SSE-KMS / customer keys).
+If your proxy terminates TLS, set `hostedSites.&lt;name&gt;.hsts: always`
+so the sites the core hosts keep sending `Strict-Transport-Security`
+(open-pryv.io 2.0.0-rc.34); see hipaa-security 164.312(e)(2)(ii).
+Since open-pryv.io 2.0.0-rc.56 the calls Pryv makes to a
+counterparty (cross-account deliveries, which carry a data grant's
+endpoint, and the related notices) refuse plain `http:` unless
+`cluster.allowInsecurePeerUrl` is set for a development or test
+cluster `[PFR4]`.
 </p>
     </div>
     <div class="layer hds">
@@ -1561,6 +1581,13 @@ server-side event-type validation rejects malformed payloads at
 ingest, the dependency-audit pipeline guards the software supply
 chain, and audit + observability surface anomalous behaviour. AV +
 application-allowlisting on the hosts is your operator scope.
+One prevention control is built in: since open-pryv.io
+2.0.0-rc.34 an attachment whose declared type a browser executes
+or renders as a document (HTML, SVG and other XML, JavaScript) is
+served in a sandbox (`Content-Security-Policy: sandbox;
+default-src 'none'`), so an uploaded file cannot run script on
+the API origin. It does not scan attachment content: uploads are
+not refused for their type.
 </p>
     </div>
     <div class="layer hds">
@@ -1633,8 +1660,10 @@ config-validation step that fails fast on malformed
 configuration at master start round this out; observability
 + audit surface runtime anomalies. Base-image OS-level CVEs
 remain visible to the scanners (a slimmer-base migration is
-a tracked follow-up). Your own scanning cadence for the
-layers you add sits on top.
+a tracked follow-up); the image installs the Debian security
+updates available at build time and no longer ships `curl`
+(2.0.0-rc.42) nor `npm` / `npx` (2.0.0-rc.50). Your own
+scanning cadence for the layers you add sits on top.
 </p>
     </div>
     <div class="layer hds">
@@ -1883,10 +1912,12 @@ identified security incidents.
     <div class="layer pryv">
       <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Recovery primitives: bin/backup.js + --restore rebuild a user from
-backup; a multi-core cluster gives in-line Raft replication +
-cluster-replicated TLS certs so a surviving core keeps serving when
-a peer fails. The recovery-objective targets (RTO / RPO) and the
-drill cadence are your policy.
+backup, the recovery path for user data; a multi-core cluster
+replicates the platform DB and TLS certs over Raft, so the other
+cores keep serving their own users when a peer fails (the failed
+core's users wait for that core or its restore: user data is not
+replicated between cores). The recovery-objective targets
+(RTO / RPO) and the drill cadence are your policy.
 </p>
     </div>
     <div class="layer hds">
@@ -2206,9 +2237,10 @@ recovery infrastructure to meet its objectives.
     <div class="layer pryv">
       <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Backup + recovery infrastructure ships: bin/backup.js produces
-per-user backups, multi-core topology gives in-line Raft
-replication, TLS certs replicate across the cluster so a surviving
-core stays user-facing. Environmental protections (power, cooling,
+per-user backups (the only copy of user data Pryv makes),
+multi-core topology replicates the platform DB and TLS certs over
+Raft so the remaining cores stay user-facing for their own users;
+user data is not replicated between cores. Environmental protections (power, cooling,
 fire suppression) are facility-side; your hoster's certification
 covers them. Backup cadence, retention, and offsite policy are
 yours.
@@ -2339,7 +2371,12 @@ reachable only by credentials granted them. System streams add a
 privileged tier independent of your scheme; clientData / event
 type can carry machine-readable classification labels. Masking is
 by projection (stream + permissions), not value transformation,
-see context/data-masking-projection-vs-transformation.md.
+see context/data-masking-projection-vs-transformation.md. For
+the account name, accesses created with `randomAlias:true` carry
+an alias in place of the username, hidden from the holder; since
+open-pryv.io 2.0.0-rc.69 the token is accepted under its alias
+only, so a holder who guesses the username cannot confirm it with
+the token.
 </p>
     </div>
     <div class="layer hds">
@@ -2578,11 +2615,21 @@ that meet its objectives.
   <div class="layers">
     <div class="layer pryv">
       <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
-      <p>Pryv's processing model is deterministic + attributable: events
-are immutable-when-written (history-only append for
-audit/consent/attestation), events.update snapshots prior state
-into version history, and every mutation is authorised by the
-permission model and recorded in the audit log. The
+      <p>Pryv's processing model is deterministic + attributable: the
+audit log is append-only by convention of its write path (no
+hash chain, see `proposals/audit-log-chaining.md`), an access keeps
+every previous version, events.update snapshots the prior state
+of an event into version history only with
+`versioning.forceKeepHistory: true` (the default keeps no event
+history; see `context/event-history.md`), and every mutation is
+authorised by the permission model and recorded in the audit log.
+Concurrent writes do not silently drop data: since open-pryv.io
+2.0.0-rc.38 (merge `461f3c4c`) an update, a trash (a
+shared-secret event excepted) or an attachment deletion is applied onto the event as stored at write time
+(atomically on the built-in PostgreSQL and SQLite stores), so a
+top-level field written meanwhile and not changed by the request
+is kept, server-written processing status included `[ESR1]`,
+`[ESR4]`, `[ESR5]`, `[ESR6A]`. The
 business-logic processing your application performs on top is your
 control responsibility.
 </p>
@@ -2703,12 +2750,27 @@ specifications to meet its objectives.
   <div class="layers">
     <div class="layer pryv">
       <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
-      <p>Storage integrity: event version history preserves prior states,
-the audit log can carry a per-event integrity checksum, and
+      <p>Storage integrity: event version history preserves prior states
+on a deployment with `versioning.forceKeepHistory: true` (off by
+default), the audit log carries the integrity hash of each event
+as created or updated (integrity is on by default), and
 backup-restore provides a recoverable copy. Together these give an
 accuracy + completeness signal for stored data. Tamper-evidence on
 the audit log itself (hash chaining) is a future primitive, see
-the CC7.4 chain proposal.
+the CC7.4 chain proposal. The recoverable copy is complete for
+high-frequency series only from open-pryv.io 2.0.0-rc.34 (earlier
+operator backups held no series data); the backup and restore
+round trip is tested (`[BKSR]`, `[BKEV]`). Incremental backups are
+complete from 2.0.0-rc.51: before it an incremental run overwrote
+the full backup it continued and missed changes made while the
+previous run was in progress; since then each run is kept next to
+the full backup and the restore replays the whole chain `[BKC1]`,
+`[BKC2]`, `[BKC3]`. Since 2.0.0-rc.86 each run's manifest lists
+every file with its size and hash, and a restore refuses a run with
+a file added, removed, changed or cut short, so the recoverable
+copy is checked for completeness and accuracy before it is used;
+`--inspect --verify-files` runs the same check without restoring
+`[BKSM1]`, `[BKSM2]`, `[BKIS3]`.
 </p>
     </div>
     <div class="layer hds">
@@ -3061,9 +3123,11 @@ related to privacy.
       <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Retention metadata (period, basis, scheduled disposal date) can
 ride on event / access clientData so each record carries its own
-retention contract. Pryv ships no automatic TTL / expiry primitive,
-enforcement of the retention schedule is an operator job today
-(a scheduled sweep calling events/streams delete). The retention
+retention contract. Pryv ships no automatic TTL / expiry
+primitive for records: enforcement of their retention schedule
+is an operator job (a scheduled sweep calling events/streams
+delete); whole accounts are covered by account auto-deletion
+since 2.0.0-rc.66, see detail. The retention
 policy itself is yours; treat the absence of auto-expiry as an
 operator responsibility when you attest P4.2.
 </p>
@@ -3183,7 +3247,11 @@ provides copies to meet its objectives related to privacy.
       <div class="lh">Pryv platform <span class="b implemented">implemented</span> </div>
       <p>Subject access is subject-runnable: the data subject holds their
 own credentials, so events.get / streams.get return their data
-directly, and the pryv-account-backup CLI produces a complete
+directly (since open-pryv.io 2.0.0-rc.84 their accesses.get also
+reports how much each access was used, as approximate lifetime
+call counts that only the owner receives `[AUG1]`, `[AUG3]`, and
+since rc.86 audit.getSummary counts their audited calls over a
+period `[ASM1]`, `[ASM4]`; see gdpr.Art.15), and the pryv-account-backup CLI produces a complete
 portable export, account, profiles, app profiles, streams,
 accesses (incl. revoked / expired + opt-in per-access version
 history), events (chunked + incremental), audit log, HF series
@@ -3250,9 +3318,12 @@ or required, to meet its objectives related to privacy.
   <div class="layers">
     <div class="layer pryv">
       <div class="lh">Pryv platform <span class="b implemented">implemented</span> </div>
-      <p>Correction is events.update (which snapshots the prior value into
-version history, preserving the amendment trail) and account.update
-for profile fields; the audit log records who amended what, when.
+      <p>Correction is events.update and account.update for profile
+fields; the audit log records who amended which event, when (not
+the prior value). events.update keeps the prior value in version
+history, preserving the amendment trail, only on a deployment
+with `versioning.forceKeepHistory: true` (off by default; see
+`context/event-history.md`).
 Propagation to third parties who hold a shared/CMC access can use
 webhooks to signal the change. Judging the correctness of a
 correction request is your process.
@@ -3317,6 +3388,17 @@ nothing more, and the access's clientData records the purpose +
 consent basis. There is no out-of-band data-dump path; disclosure
 is always a tracked, revocable grant. Deciding the lawful purpose
 is yours.
+
+A grant is a set of streams, and what a stream carries can grow
+with a Pryv release. Since open-pryv.io 2.0.0-rc.44, a grant
+that reads the account email stream
+(`:system:email`, shown as &quot;Read Email&quot;) can also request, by
+type, a read-only, server-derived `verification/email` event:
+whether ownership of the primary address was proved, how, and
+when. Apps granted it earlier can request it without new consent;
+other addresses of the account are never disclosed. If your consent
+text should say so, rename the field's `name` in
+`custom.systemStreams`.
 </p>
     </div>
     <div class="layer hds">
@@ -3377,10 +3459,24 @@ record of who accessed what, when. Since open-pryv.io `07b6d3b6`
 the *authorization* of a disclosure is recorded too: OAuth2
 `oauth.*` audit events capture the consent grant, the code
 exchange and every token issuance / refresh / revocation that
-underlie a delegated-app disclosure. The audit-event-stream can
+underlie a delegated-app disclosure. Since open-pryv.io
+2.0.0-rc.73 a resource server that exchanges a user's token for
+its own is recorded in the subject's trail as
+`oauth.token.exchanged`, naming the resource server and the app
+whose token it received `[OTX03]`, `[OTXE10]`; an introspection
+(which resource server asked about whose token) is in syslog
+(`oauth.token.introspected`, rc.69) `[OXI06]`. The audit-event-stream can
 surface the same record into the subject's own streams. This is
 the technical disclosure register; how long you retain it is your
-policy.
+policy. Since open-pryv.io 2.0.0-rc.84 the account owner also gets,
+per access and per deletion record, approximate lifetime call
+counts by method (`usage` on `accesses.get`, never returned to an
+app or shared caller) `[AUG1]`, `[AUG3]`, `[AUG4]`: a summary of
+how much each recipient used its grant, not a substitute for the
+per-call record, which stays the audit log. Since rc.86
+`audit.getSummary` gives the owner the same audit log counted per
+hour, day or week for chosen accesses `[ASM2]`, `[ASM3]`: when each
+recipient used its grant, still a summary of the record.
 </p>
     </div>
     <div class="layer hds">
@@ -3678,7 +3774,15 @@ log (which accesses read which data, when) plus the accesses list
 (who holds a grant). The audit-event-stream can expose this to the
 subject directly. Packaging it into a subject-facing report on
 request is your workflow; the underlying record is complete and
-attributable.
+attributable. The reference account app (app-web-user-account
+0.34.0) gives the subject a self-service view of it: an Audit trail
+tab, linkable and filtered by app, access, date or kind of call,
+each row naming the access that made it (a revoked one included),
+and per-access lifetime call counts read from open-pryv.io
+2.0.0-rc.84 or later (app tests `[ACTV]`, `[TRLP]`). Its next
+release adds charts of that activity over a chosen period, counted
+by the core (`audit.getSummary`, open-pryv.io 2.0.0-rc.86; older
+cores fall back to counting the audit rows in the app).
 </p>
     </div>
     <div class="layer hds">
@@ -3732,8 +3836,9 @@ relevant personal information to meet its objectives related to privacy.
       <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
       <p>Structural data quality is enforced at ingest by event-type schema
 validation (HTTP 400 on malformed input); subjects keep their data
-up-to-date via events.update / account.update (with version
-history). &quot;Relevant&quot;, collecting no more than the purpose needs,
+up-to-date via events.update / account.update (prior event values
+kept only with `versioning.forceKeepHistory: true`, off by
+default). &quot;Relevant&quot;, collecting no more than the purpose needs,
 is bounded by the permission scope you grant. Judging semantic
 accuracy of a specific value is your application's responsibility.
 </p>

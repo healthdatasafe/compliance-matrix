@@ -33,7 +33,7 @@ HDS's own position on SOC 2:
   - vault: HDS is service-organization. HDS is the service organisation operating the vault; an organisation building on it is a user entity. The hosting providers are subservice organisations, carved in or out depending on the criterion.
   External assurance: none. HDS holds NO SOC 2 report. There is no Type I and no Type II, no audit period has been defined and no CPA firm has been engaged. Nothing on this site should be read as a SOC 2 opinion.
   Certificates HDS relies on but does NOT hold: AWS SOC 2 (hosting layer only, as a subservice organisation)
-  Evidence: 42 of 61 requirements answered from approved HDS documentation (61 cite internal evidence), as of 2026-11-04.
+  Evidence: 42 of 61 requirements answered from approved HDS documentation (61 cite internal evidence), as of 2026-11-19.
   Forty-five of the sixty-one Trust Services Criteria are answered from approved HDS
   documentation, and the remaining sixteen are evidenced by documents still moving through
   review. This is a readiness map: it shows which criteria the existing control
@@ -442,6 +442,15 @@ HDS's own position on SOC 2:
     control-effectiveness (e.g., that access scoping actually blocks out-of-scope reads),
     observability evidences operational health. You define the evaluation cadence and the
     sampling method.
+    Detail: **A separate evaluation of the platform code.** The open-pryv.io maintainers ran
+    a code-level security review of the source in 2026 (2026-06 to 2026-10); its confirmed
+    findings were fixed with regression tests in open-pryv.io 2.0.0-rc.40 to 2.0.0-rc.51,
+    each described in the release notes. The public report, `SECURITY-AUDIT.md`
+    (https://github.com/pryv/open-pryv.io/blob/master/SECURITY-AUDIT.md, published
+    2026-10-14), lists each finding with its severity and fix release and the known residual
+    risks. Cite it as a supplier evaluation of the software component; it does not evaluate
+    your deployment's controls, and it was not performed by an independent party. See
+    `context/code-security-review-2026.md`.
   HDS: facilitated (effort saved: medium) (mode: evidence)
     The platform supplies the data an ongoing evaluation samples: the audit log evidences
     control effectiveness (for instance that access scoping actually blocks out-of-scope
@@ -604,9 +613,11 @@ HDS's own position on SOC 2:
   PRYV PLATFORM: implemented
     Logical access is enforced by Pryv at the API surface: every read/write is checked
     against the access's per-stream + level permissions, token-based authentication is the
-    default, and MFA is available via the mfa.* methods when you enable it. System streams
-    isolate privileged data (credentials, MFA state). No plaintext transport path ships. You
-    define who gets which access; Pryv enforces it.
+    default, and MFA is available via the mfa.* methods (on by default since open-pryv.io
+    2.0.0-rc.14 with authenticator-app TOTP; each account holder enrols) `[MA15C]`,
+    `[MA11A]`. System streams isolate privileged data (credentials, MFA state). Transport
+    encryption is configured (in the core or at your proxy, see CC6.7). You define who gets
+    which access; Pryv enforces it.
     Detail: **OAuth2 as a second logical-access path.** Alongside token + MFA
     authentication, Pryv ships a standards-based OAuth2 authorization-code + PKCE
     authorization server (`open-pryv.io/components/oauth2/`, open-pryv.io 2.0.0-rc.8):
@@ -617,8 +628,26 @@ HDS's own position on SOC 2:
     (`open-pryv.io/components/oauth2/src/clientRegistry.ts`). Client registration is
     curated-only, the operator promotes an account to an OAuth client via
     `bin/oauth-client.js`; open self-service registration (`POST /oauth2/register`) is
-    deliberately disabled. **Credential transmission to third parties.** When a credential
-    must be handed to a counterparty, the shared-secrets endpoints
+    deliberately disabled. **The OAuth2 surface since open-pryv.io 2.0.0-rc.64.** Added and
+    tested: token revocation (`POST /oauth2/revoke`, RFC 7009) and introspection for clients
+    registered `--can-introspect` (`POST /oauth2/introspect`, RFC 7662), OpenID Connect
+    discovery, key set and id tokens when `oauth.signingKeys` lists a key (rc.69) `[ORVK1]`,
+    `[OXI01]`, `[OXD01]`; resource indicators (RFC 8707), refused as `invalid_target`
+    (rc.70) `[ORI03]`; token exchange for resource servers registered `--can-exchange` (RFC
+    8693, rc.73) `[OTX05]`; clients identified by a client metadata document URL when
+    `oauth.clientMetadataDocuments.mode` is not `off` (rc.74, see CC6.2) `[OCMDE06]`. Since
+    rc.74 the OAuth2 and discovery endpoints answer CORS with their own policy (any origin,
+    never credentials) instead of the API's `[OACO1]`. Per-user addresses (rc.75) bind an
+    authorization to the account its address names `[OPUE2]`; with `oauth.perUserIssuer`
+    (rc.77, opt-in) each account host is its own issuer `[OPIS4]`. The access-control effect
+    of these is recorded on CC6.3 and `hipaa-security.164.312(a)(1)`. **Federated sign-in
+    (SSO).** An account holder may also authenticate through an external OpenID Connect
+    provider (`sso.*`, beta, off by default). It mints a normal Pryv session but is gated so
+    an external identity cannot claim an account whose email was never inbox-proved, MFA
+    (when active) is still enforced, and the session token reaches the auth app via a
+    one-time shared secret, never a URL. Sign-ins and refusals are recorded in the audit
+    trail (`sso.login`, `sso.refused`). **Credential transmission to third parties.** When a
+    credential must be handed to a counterparty, the shared-secrets endpoints
     (`open-pryv.io/components/shared-secrets/`) replace URL-embedded tokens with a one-time
     random key: redeemable exactly once (with atomic single-winner semantics under
     concurrent redemption), mandatory TTL, only the SHA-256 of the key's random half stored
@@ -629,7 +658,25 @@ HDS's own position on SOC 2:
     signature on redemption. Browser history, referrer headers, and access logs therefore
     stop carrying live credentials. A `secretSharing: forbidden` feature permission,
     inherited by child accesses and not strippable via `accesses.update`, lets you exclude
-    designated access classes from minting shared secrets at all.
+    designated access classes from minting shared secrets at all. **Delegate-account access
+    path.** Account delegation (`open-pryv.io/components/delegation/`) lets one account hold
+    an owner-equivalent delegate token over another. It rides the same per-stream permission
+    enforcement as any token, and its logical- access guarantee is the non-forgeable
+    teardown: a delegate can never remove a delegation, and dissolving one requires a
+    genuine login on the controlled account (a personal token with no forge-protected
+    delegation marker). The `:_delegation:*` namespace is plugin-owned and guarded (no user
+    create/write/ delete; internal subtree read-guarded and excluded from wildcard reads);
+    each delegate's actions are audited on the controlled account. See
+    `context/delegation-model.md`. **Privileged streams, by every spelling of an id**
+    (open-pryv.io 2.0.0-rc.56). The guards that isolate the account fields (the primary
+    email, written only through `account.update`; the non-editable and hidden fields; the
+    level caps on account-stream permissions), the delegation namespace and the
+    plugin-managed regions of the cross-account (CMC) namespace judge the stream an id
+    resolves to, whatever store-prefixed spelling a request uses, for every token `[ASA1]`,
+    `[ASA2]`, `[ASA6]`, `[CNRP6]`, `[CNRP7]`. Before this release a store-prefixed spelling
+    was not recognised by these guards, so the isolation held only for requests using the
+    canonical ids; in particular an access holding `contribute` on the email field could
+    change the primary email through the events API.
     PLANNED (enhancement, impact medium): Reference TOTP / WebAuthn MFA plugins + AAL-tier mapping strengthen the CC6.1 authentication-strength evidence
   HDS: implemented (effort saved: high)
     Logical access is enforced by the HDS-operated platform at the API surface: every read
@@ -677,7 +724,56 @@ HDS's own position on SOC 2:
     confidential clients, a rotatable `client_secret`. The authorization decision (who
     becomes a client, which redirect URIs + scopes are appropriate) stays your policy; the
     issuance + rotation mechanism is shipped (`open-pryv.io/components/oauth2/`,
-    open-pryv.io 2.0.0-rc.8).
+    open-pryv.io 2.0.0-rc.8). **Operator-registered clients and their vetting (open-pryv.io
+    2.0.0-rc.68 and 2.0.0-rc.71).** `bin/oauth-client.js create-registry` registers a client
+    for an installed OAuth extension, with a mandatory subject type (`public` or `pairwise`,
+    no default), audiences, lifetimes, an optional region and a secret, `private_key_jwt`
+    keys or none (public, PKCE). Since rc.71 a change to what an active client may do
+    (redirect URIs, scope, keys, auth method, audiences, allowed features, lifetimes) moves
+    it to `review` until the operator approves it, and a client under review or suspended is
+    refused everywhere, the data API included `[OCLI19]`, `[ORF1]`. A rotated secret can
+    keep the previous one valid for at most 30 days `[OCAK14]`; logos are shown only from
+    hosts listed in `oauth.logoHosts` `[ORF4]`. **Correction and opt-in: client metadata
+    documents (open-pryv.io 2.0.0-rc.74).** "Curated only" holds while
+    `oauth.clientMetadataDocuments.mode` is `off`, the default. With `allowList` (hosts you
+    list) or `any`, a client may identify itself by an https URL whose JSON document Pryv
+    fetches: identity and display come from the document, reach comes only from your
+    `client` template (scope, audiences, subject type, lifetimes), never from the document.
+    Such a client can never hold a secret, introspection, token exchange, allowed features
+    or "any audience", and authenticates with `none` or `private_key_jwt` only `[OCMD01]`,
+    `[OCMD05]`, `[OCMDE03]`, `[OCMDE06]`. The fetch is a guarded outbound call (see
+    `CC6.6`), every fetch and refusal is in the audit trail without the document body
+    (`oauth.client. metadata_fetched` / `metadata_refused`) `[OCMDE13]`, and the consent
+    screen must show the client's host next to its name. `mode: any` lets any party present
+    a client to your users' consent screen: prefer `allowList`, keep `deniedHosts` current.
+    Open registration (`POST /oauth2/register`) stays disabled in every mode.
+    **Delegate-credential issuance + de-provisioning.** Account delegation
+    (`open-pryv.io/components/delegation/`) issues a delegate an owner-equivalent personal
+    token over another account through a controlled-account-initiated invite / accept
+    handshake (the only no-credential step is the operator-admin-key-gated invite);
+    create-from-delegate can provision a fresh controlled account at the same time.
+    De-provisioning is authoritative and reserved to the controlled account: a delegate can
+    never remove a delegation, and detach is gated on a genuine login of the controlled
+    account. Issuance and teardown are audited per delegate on the controlled account
+    (same-core + cross-core). See `context/delegation-model.md`. Credentials a delegate
+    issues to apps for the controlled account follow the same lifecycle: each is an ordinary
+    app access on the controlled account, marked by the server as granted through the
+    delegation `[DCH01]`, and they are removed together with the delegation: detach deletes
+    every access granted through it, and nothing the account holder granted `[DCH12]`. So
+    credentials issued under a delegate's authority do not survive the end of that
+    authority. In open-pryv.io 2.0.0-rc.23. **Group accounts over CMC** (open-pryv.io
+    2.0.0-rc.53, release commit `61fb28dd`,
+    https://github.com/pryv/open-pryv.io/issues/158). For a team sharing one account, a
+    member is registered and authorized before any credential reaches them: the member's
+    membership request is accepted by an administrator of the group `[GA01]`, and only then
+    can the member obtain, per patient, a short-lived credential minted by the group's core
+    and returned once in the answer to the member's request, never stored, logged or retried
+    `[GA10]`, `[MA50]`; asking again with the same permissions while it has more than five
+    minutes left returns the same access `[GA11]`, and any other caller is refused
+    (`cmc-member-access-not-member`) `[GA12]`. When the membership ends, including when the
+    delegate who approved it is detached, the group's core deletes those credentials on
+    every patient account and records the outcome `[GA20]`, `[GA22]`, `[GA23]`. See
+    `context/workforce-access-patterns.md`, Pattern 3.
   HDS: implemented (effort saved: high)
     The full credential lifecycle is platform-native and HDS-operated: registration mints an
     account, a scoped access token issues a credential, updating an access modifies its
@@ -717,22 +813,78 @@ HDS's own position on SOC 2:
     system rather than implementing roles + groups itself, two integration patterns (group
     access + callerId audit suffix; seed access + sub-access derivation) are documented in
     context/workforce-access-patterns.md. The IdP stays the source of truth for identity;
-    Pryv records the access state + per-individual audit trail. **OAuth2 revoke +
-    refresh-chain teardown.** For delegated apps, the durable consent behind an OAuth2 grant
-    is a cross-account CMC data-grant; revoking it (deleting the counterparty access) kills
-    the refresh chain, the next `refresh_token` exchange sees the data-grant gone and fails
-    `invalid_grant`, so no fresh access is minted
-    (`open-pryv.io/components/oauth2/src/grants/refresh_token.ts`, open-pryv.io 2.0.0-rc.8).
-    Access modification propagates the same way: narrowing the granted permissions on the
-    data-grant narrows what the next rotated token can do; widening requires a fresh
-    consent, never a refresh. **Operator client revocation reaches live tokens.** Revoking a
-    delegated app (`bin/oauth-client.js revoke <clientId>`) no longer merely blocks new
-    grants while issued tokens live out their TTL: it writes a platform-wide tombstone and
-    every core rejects that client's existing access tokens at validation time within
-    `oauth.clientRevokeCheckSeconds` (default 30 s), open socket.io connections are swept
-    and dropped too. So "remove access for app X, everywhere, now" is one operator command
-    with a bounded propagation window (open-pryv.io `7b6321aa`). For DPoP-bound apps the
-    same is available per client key (`revoke-key <jkt>`, open-pryv.io `4c0a5ade`).
+    Pryv records the access state + per-individual audit trail. A third pattern ships in
+    open-pryv.io 2.0.0-rc.53 (release commit `61fb28dd`,
+    https://github.com/pryv/open-pryv.io/issues/158): members of a team sharing one account
+    each get, per patient, a short-lived access minted by the group's core, limited to their
+    team streams and to named data streams of the patient's offer, never beyond the
+    membership's expiry, unable to manage accesses, and deleted when their membership ends
+    `[GA12]`, `[GA14]`, `[GA15]`, `[GA20]`, `[CMCMA]`. The membership itself is least
+    privilege too: team streams only, `read` or `contribute`, no feature permission, never
+    delegable `[GA02]`, no chat or alert channel to the group `[MB21]`, and a delegate
+    administrator cannot approve their own membership `[MB34]`. Teams are streams and
+    memberships are consent relationships; there is still no role, role-to-permission
+    mapping or hierarchy inside Pryv (Pattern 3 of the same note). **Least privilege when
+    streams move** (open-pryv.io 2.0.0-rc.56). A permission on a stream reaches its
+    descendants, so a move could widen who reaches a subtree. An app or shared access now
+    moves a stream only with manage rights on every stream of the moved subtree, trashed
+    ones included `[SMV1]` to `[SMV4]`, and no access can move a stream under its own
+    descendant `[SMV10]`. Before this release a child granted to the moving access at a
+    lower level (`read`, `create-only`, `none`) moved along into the target parent's
+    inherited permissions, so the "cannot touch out-of-scope data" property above did not
+    hold for stream moves. **OAuth2 revoke + refresh-chain teardown.** For delegated apps,
+    the durable consent behind an OAuth2 grant is a cross-account CMC data-grant; revoking
+    it (deleting the counterparty access) kills the refresh chain, the next `refresh_token`
+    exchange sees the data-grant gone and fails `invalid_grant`, so no fresh access is
+    minted (`open-pryv.io/components/oauth2/src/grants/refresh_token.ts`, open-pryv.io
+    2.0.0-rc.8). Access modification propagates the same way: narrowing the granted
+    permissions on the data-grant narrows what the next rotated token can do; widening
+    requires a fresh consent, never a refresh. **Operator client revocation reaches live
+    tokens.** Revoking a delegated app (`bin/oauth-client.js revoke <clientId>`) no longer
+    merely blocks new grants while issued tokens live out their TTL: it writes a
+    platform-wide tombstone and every core rejects that client's existing access tokens at
+    validation time within `oauth.clientRevokeCheckSeconds` (default 30 s), open socket.io
+    connections are swept and dropped too. So "remove access for app X, everywhere, now" is
+    one operator command with a bounded propagation window (open-pryv.io `7b6321aa`). For
+    DPoP-bound apps the same is available per client key (`revoke-key <jkt>`, open-pryv.io
+    `4c0a5ade`). **Removal and modification reach live tokens (open-pryv.io 2.0.0-rc.64 to
+    2.0.0-rc.76).** Deleting a consent grant deletes the app's live sessions and the
+    accesses they created at once (rc.64; before, a live access token ran out its lifetime,
+    up to `oauth.accessTokenTTL`) `[OE31]`. Narrowing a grant re-cuts every live session at
+    once (rc.68) and narrows the accesses sessions created, deleting those left with nothing
+    (rc.70); a refresh never mints more than the grant now holds (rc.66) `[OSUB3]`,
+    `[PMRG2]`. An app ends a token itself with `/oauth2/revoke` (rc.69); a refreshed token's
+    predecessor expires after `oauth.refreshRetireGraceSeconds` (default 60 s) instead of
+    living out its lifetime; a refresh refused for bad client authentication no longer uses
+    up the refresh token, so a leaked refresh token without the client's credential cannot
+    end the user's consent `[ORVK1]`, `[ORET1]`, `[ORL04]`. Suspending a client (or putting
+    it under review) stops its live tokens on the data API within
+    `oauth.clientRevokeCheckSeconds` and its `client_credentials` grant since rc.71 (rc.68
+    to rc.70 stopped neither) `[ORF1]`. `purge-grants <clientId>` deletes a client's grants,
+    sessions, created accesses and refresh chains on a core (rc.71) `[ORGP1]`. Since rc.74
+    everything a revoked client was issued up to 5 s after the revoke stays refused even if
+    the id is registered again `[OCR02]`, `[OCMD18]`. Deleting an address alias withdraws
+    the grant that adopted it (rc.76) `[OPAL4]`. Expiry removes derived access too: a
+    `shared` access managed by an app access can no longer outlive it (it inherits the app
+    access's expiry at creation, clearing that expiry is refused, and authentication refuses
+    a never-expiring shared access once its app access has expired, `5d609bfa`), and a
+    webhook stops firing and becomes `inactive` once its access has expired (`3394b95f`),
+    both in open-pryv.io 2.0.0-rc.23. **Delegate-account access removal.** Account
+    delegation (`open-pryv.io/components/delegation/`) is a deliberately BROAD,
+    owner-equivalent grant, so where least privilege matters choose a scoped `app` /
+    `shared` access instead; delegation is for the "act as the account holder" case. What
+    CC6.3 relies on where full delegation IS used is the removal + review half: each
+    delegate's actions are audited per delegate on the controlled account (same-core +
+    cross-core), and removal is authoritative and reserved to the account holder, a delegate
+    can never remove a delegation, and detach is gated on a genuine login of the controlled
+    account (a personal token with no forge-protected delegation marker). See
+    `context/delegation-model.md`. Least privilege also holds for apps a delegate authorizes
+    on the controlled account: they receive a scoped `app` access with the permissions they
+    requested, never the owner-equivalent token. Such an access can be modified or revoked
+    by the account holder or the delegate, and revoked by the app itself, like any app
+    access (revocation cascades to what the app created) `[DCH06]`, `[DCH08]`, `[DCH09]`,
+    and is removed automatically when the delegation is removed `[DCH12]`. In open-pryv.io
+    2.0.0-rc.23.
   HDS: implemented (effort saved: high)
     Least privilege is native to the HDS-operated platform: an access carries only the
     per-stream, per-level permissions it needs, so a credential cannot touch out-of-scope
@@ -802,6 +954,13 @@ HDS's own position on SOC 2:
     PostgreSQL deletes rows but historical pg_dump artefacts retain them until rotated.
     Choose the engine that matches your destruction policy; physical media sanitisation is
     your hosting procedure.
+    Detail: Account auto-deletion, since open-pryv.io 2.0.0-rc.66 (`8521c8d5`, see
+    gdpr.Art.17 and gdpr.Art.5 §1(e)). Whole-account destruction is schedulable, by the
+    account holder or by your inactivity preset, and runs through the same erasure as
+    system.users.delete, guards included (`[ADSW8]`); each scheduled erasure is logged
+    before and after, and kept as an audit row where `audit.onUserDelete: keep`
+    (`[ADSW17]`); an erasure interrupted halfway is completed at a later pass (`[ADSW19]`),
+    and `maxDeletionsPerPass` caps a pass (`[ADSW12]`). The backup reach above is unchanged.
   HDS: configurable (effort saved: medium)
     Logical destruction is per-user on the HDS-operated platform: account deletion removes a
     user's data from the live store, and event- and stream-level deletion cover per-record
@@ -831,13 +990,34 @@ HDS's own position on SOC 2:
   Requirement: The entity implements logical access security measures to protect against
   threats originating outside its system boundaries.
   Anchor: https://compliance.datasafe.dev/soc2.html#req-cc6-6
-  PRYV PLATFORM: implemented
-    The external boundary is the TLS-terminating HTTPS API: TLS 1.3 in transit with the
-    built-in ACME integration (auto-renewal + cluster-replicated rotation), token-gated
-    access on every request, no plaintext path. Inter-core traffic in a cluster runs over
-    mTLS on a private CA, separating the control plane from the user-facing plane. Edge
-    controls (WAF, firewall, rate limiting) sit in your reverse proxy by design, see
-    context/rate-limiting-and-dos-protection.md.
+  PRYV PLATFORM: configurable
+    Every API request is token-gated, whatever the deployment. The transport side of the
+    boundary is configured: the core terminates TLS itself when `http.ssl.*` is set (with
+    the built-in ACME integration issuing, renewing and replicating certificates when
+    `letsEncrypt.enabled` is set), otherwise it serves plain HTTP (default `http.ip`
+    127.0.0.1) and your reverse proxy terminates TLS. Inter-core Raft traffic runs over mTLS
+    on a private CA once `bin/bootstrap.js` has written `storages.engines.rqlite.tls`
+    (default `tls: null`, plain TCP), separating the control plane from the user-facing
+    plane. Edge controls (WAF, firewall, rate limiting) sit in your reverse proxy by design,
+    see context/rate-limiting-and-dos-protection.md.
+    Detail: The boundary also holds outbound (open-pryv.io 2.0.0-rc.56): a URL supplied by a
+    counterparty cannot make Pryv call inside your network. Cross-account deliveries, chat,
+    revocations, scope updates, delegation and OAuth revocation notices are refused, before
+    any connection, when the host is or resolves to a loopback, private, link-local or
+    otherwise reserved address (checked again at connect time), and redirects are not
+    followed `[PFR1]`, `[PFR2]`, `[PFR5]`, `[CO22]`. The platform's own host names are
+    allowed; other private peers must be listed in `cmc.allowedPrivateHosts` `[PFR3]`. The
+    same guard covers the key sets (`jwks_uri`, rc.70) and client metadata documents (rc.74)
+    Pryv fetches for OAuth2 clients, https only, size, time and per-host bounded
+    `[OCMD03B]`, `[OCMD03G]`, `[OCMD03H]`; a host you list in `cmc.allowedPrivateHosts` is
+    allowed for them too. Inbound, adapter routes (open-pryv.io 2.0.0-rc.73, off unless
+    `adapterRoutes` is set) open `/adapter/<name>/…` on every host the core serves and
+    forward it to a sidecar you run, without authentication, CORS, audit or rate limiting by
+    the core: the sidecar is part of your boundary and must authenticate every request, and
+    its port must stay closed to the outside. The core refuses traversal paths, caps bodies
+    and idle time, sets the forwarding headers itself, and since rc.75 names the addressed
+    account in `X-Adapter-Name` / `X-Adapter-Base` (client copies removed) or answers `421`
+    for an account of another core `[ADRI03]`, `[ADRI06]`, `[ADRI09]`, `[ADRU3]`, `[ADRU4]`.
   HDS: implemented (effort saved: high)
     The external boundary is the TLS-terminating HTTPS API HDS operates: TLS in transit with
     automated certificate renewal, token-gated access on every request, and no plaintext
@@ -867,13 +1047,22 @@ HDS's own position on SOC 2:
   to authorized users and processes, and protects it during transmission, movement, or
   removal.
   Anchor: https://compliance.datasafe.dev/soc2.html#req-cc6-7
-  PRYV PLATFORM: implemented
-    Transmission is TLS 1.3 end-to-end (client ↔ core direct, no Pryv-shipped intermediary
-    that could log or cache). Movement is restricted by the permission model, a credential
-    only moves the data its scope permits. Operator secrets at rest use AES-256-GCM
-    (HKDF-derived per-key); bootstrap bundles for core-to-core movement are AES-256-GCM
-    (scrypt). Bulk event-data at-rest encryption is an operator-side storage-layer choice
-    (LUKS / SSE-KMS / customer keys).
+  PRYV PLATFORM: configurable
+    Transmission is TLS once you configure where it terminates: in the core (`http.ssl.*`,
+    certificates from the built-in ACME integration when `letsEncrypt.enabled` is set) or in
+    your reverse proxy, with the core serving plain HTTP behind it. The core sets no TLS
+    version of its own, so Node.js defaults apply (TLS 1.2 floor on the Node 24 the image
+    runs). Pryv ships no intermediary that could log or cache traffic. Movement is
+    restricted by the permission model, a credential only moves the data its scope permits.
+    Operator secrets at rest use AES-256-GCM (HKDF-derived per-key); bootstrap bundles for
+    core-to-core movement are AES-256-GCM (scrypt). Bulk event-data at-rest encryption is an
+    operator-side storage-layer choice (LUKS / SSE-KMS / customer keys). If your proxy
+    terminates TLS, set `hostedSites.<name>.hsts: always` so the sites the core hosts keep
+    sending `Strict-Transport-Security` (open-pryv.io 2.0.0-rc.34); see hipaa-security
+    164.312(e)(2)(ii). Since open-pryv.io 2.0.0-rc.56 the calls Pryv makes to a counterparty
+    (cross-account deliveries, which carry a data grant's endpoint, and the related notices)
+    refuse plain `http:` unless `cluster.allowInsecurePeerUrl` is set for a development or
+    test cluster `[PFR4]`.
   HDS: implemented (effort saved: high)
     Transmission is protected by TLS end to end (client to core direct, with no HDS-shipped
     intermediary that could log or cache), and movement is restricted by the permission
@@ -911,7 +1100,12 @@ HDS's own position on SOC 2:
     Pryv's contribution is detection-adjacent: server-side event-type validation rejects
     malformed payloads at ingest, the dependency-audit pipeline guards the software supply
     chain, and audit + observability surface anomalous behaviour. AV +
-    application-allowlisting on the hosts is your operator scope.
+    application-allowlisting on the hosts is your operator scope. One prevention control is
+    built in: since open-pryv.io 2.0.0-rc.34 an attachment whose declared type a browser
+    executes or renders as a document (HTML, SVG and other XML, JavaScript) is served in a
+    sandbox (`Content-Security-Policy: sandbox; default-src 'none'`), so an uploaded file
+    cannot run script on the API origin. It does not scan attachment content: uploads are
+    not refused for their type.
   HDS: facilitated (effort saved: low) (mode: infrastructure)
     Anti-malware and endpoint protection are host-and-network controls, not platform
     features. HDS operates malware protection and patching at the hosting layer for the
@@ -950,8 +1144,18 @@ HDS's own position on SOC 2:
     build-provenance attestation. Dependabot alerts, CHANGELOG announcements, and a
     config-validation step that fails fast on malformed configuration at master start round
     this out; observability + audit surface runtime anomalies. Base-image OS-level CVEs
-    remain visible to the scanners (a slimmer-base migration is a tracked follow-up). Your
-    own scanning cadence for the layers you add sits on top.
+    remain visible to the scanners (a slimmer-base migration is a tracked follow-up); the
+    image installs the Debian security updates available at build time and no longer ships
+    `curl` (2.0.0-rc.42) nor `npm` / `npx` (2.0.0-rc.50). Your own scanning cadence for the
+    layers you add sits on top.
+    Detail: **Vulnerabilities in Pryv's own code.** The dependency feed above does not see
+    defects in open-pryv.io itself. Those were the subject of a code-level security review
+    by the maintainers in 2026 (2026-06 to 2026-10), fixed in open-pryv.io 2.0.0-rc.40 to
+    2.0.0-rc.51 (most of those release notes say "upgrade promptly" and list operator
+    steps); public report `SECURITY-AUDIT.md`, published 2026-10-14
+    (https://github.com/pryv/open-pryv.io/blob/master/SECURITY-AUDIT.md). Your
+    susceptibility depends on the release you run: track the release notes and `SECURITY.md`
+    advisories and upgrade. See `context/code-security-review-2026.md`.
   HDS: facilitated (effort saved: low) (mode: evidence)
     Substrate-vulnerability detection on the platform side is partial: a committed
     dependency lockfile, dependency alerts on the open-source codebase, published fix
@@ -1088,10 +1292,12 @@ HDS's own position on SOC 2:
   identified security incidents.
   Anchor: https://compliance.datasafe.dev/soc2.html#req-cc7-5
   PRYV PLATFORM: facilitated (mode: infrastructure)
-    Recovery primitives: bin/backup.js + --restore rebuild a user from backup; a multi-core
-    cluster gives in-line Raft replication + cluster-replicated TLS certs so a surviving
-    core keeps serving when a peer fails. The recovery-objective targets (RTO / RPO) and the
-    drill cadence are your policy.
+    Recovery primitives: bin/backup.js + --restore rebuild a user from backup, the recovery
+    path for user data; a multi-core cluster replicates the platform DB and TLS certs over
+    Raft, so the other cores keep serving their own users when a peer fails (the failed
+    core's users wait for that core or its restore: user data is not replicated between
+    cores). The recovery-objective targets (RTO / RPO) and the drill cadence are your
+    policy.
   HDS: facilitated (effort saved: medium) (mode: infrastructure)
     Recovery primitives ship and HDS operates them: per-user backup and restore rebuild a
     subject from backup, and a replicated multi-core topology with cluster-replicated
@@ -1270,11 +1476,29 @@ HDS's own position on SOC 2:
   infrastructure to meet its objectives.
   Anchor: https://compliance.datasafe.dev/soc2.html#req-a1-2
   PRYV PLATFORM: facilitated (mode: infrastructure)
-    Backup + recovery infrastructure ships: bin/backup.js produces per-user backups,
-    multi-core topology gives in-line Raft replication, TLS certs replicate across the
-    cluster so a surviving core stays user-facing. Environmental protections (power,
-    cooling, fire suppression) are facility-side; your hoster's certification covers them.
-    Backup cadence, retention, and offsite policy are yours.
+    Backup + recovery infrastructure ships: bin/backup.js produces per-user backups (the
+    only copy of user data Pryv makes), multi-core topology replicates the platform DB and
+    TLS certs over Raft so the remaining cores stay user-facing for their own users; user
+    data is not replicated between cores. Environmental protections (power, cooling, fire
+    suppression) are facility-side; your hoster's certification covers them. Backup cadence,
+    retention, and offsite policy are yours.
+    Detail: Two open-pryv.io 2.0.0-rc.34 changes to plan for. Backups taken before
+    2.0.0-rc.34 carry no high-frequency series data (on every series engine, with no
+    warning): take a new backup after upgrading. The replicated platform DB moves to rqlite
+    10.5.1 (crash-safe, checksummed snapshot store; a node stops on a node-local SQLite
+    error); its data directory upgrade is one-way, so back up every node before the first
+    start (`open-pryv.io/INSTALL.md`, "Upgrading the bundled rqlite (9.x to 10.x)"). One
+    open-pryv.io 2.0.0-rc.51 change to plan for: before that release, `bin/backup.js
+    --incremental` overwrote the full backup it continued, so a directory that received
+    incrementals restores only the last delta. `--inspect <dir>` reports it `DAMAGED` and a
+    restore refuses it; take a new full backup into a new directory. Since 2.0.0-rc.51 the
+    incrementals form a chain next to the full backup, restorable as of any run
+    (`--through-run`); see `iso-27001.A.8.13`. One open-pryv.io 2.0.0-rc.86 change to plan
+    for: a backup written by 2.0.0-rc.86 or later restores with that release or later, so a
+    rollback plan to an earlier release starts a new backup chain in a new directory. The
+    same release checks every file of a run against the run's manifest before restoring it,
+    optionally verifies an Ed25519 signature per run, and no longer leaves an account
+    half-restored after a failed restore; see `iso-27001.A.8.13`.
   HDS: facilitated (effort saved: high) (mode: infrastructure)
     The platform ships per-user backup and restore and a replicated multi-core topology, and
     HDS operates these with cluster-replicated TLS so a surviving core stays user-facing.
@@ -1344,7 +1568,11 @@ HDS's own position on SOC 2:
     streams are reachable only by credentials granted them. System streams add a privileged
     tier independent of your scheme; clientData / event type can carry machine-readable
     classification labels. Masking is by projection (stream + permissions), not value
-    transformation, see context/data-masking-projection-vs-transformation.md.
+    transformation, see context/data-masking-projection-vs-transformation.md. For the
+    account name, accesses created with `randomAlias:true` carry an alias in place of the
+    username, hidden from the holder; since open-pryv.io 2.0.0-rc.69 the token is accepted
+    under its alias only, so a holder who guesses the username cannot confirm it with the
+    token.
     PLANNED (feature, impact low): End-to-end (proxy re-encryption / BYOK) keeps confidential content opaque to the operator; the natural future confidentiality primitive
   HDS: implemented (effort saved: high)
     Confidential data is identified and isolated structurally on the HDS-operated platform:
@@ -1381,6 +1609,10 @@ HDS's own position on SOC 2:
     system.users.delete for whole-account, event/stream deletion for per-record. Backup
     reach is engine-dependent (SQLite per-user file vs PostgreSQL row + pg_dump rotation),
     pick the engine that matches your disposal commitment.
+    Detail: Account auto-deletion (open-pryv.io 2.0.0-rc.66, `8521c8d5`), as under CC6.5:
+    whole-account disposal schedulable by the holder or by your inactivity preset, same
+    erasure path, guards included (`[ADSW8]`), an interrupted erasure completed later
+    (`[ADSW19]`).
   HDS: facilitated (effort saved: medium) (mode: storage)
     The platform provides per-user erasure (whole-account deletion, plus event- and
     stream-level deletion) from the live store, which HDS operates. Whether disposal reaches
@@ -1478,10 +1710,17 @@ HDS's own position on SOC 2:
   that meet its objectives.
   Anchor: https://compliance.datasafe.dev/soc2.html#req-pi1-3
   PRYV PLATFORM: facilitated (mode: primitive)
-    Pryv's processing model is deterministic + attributable: events are
-    immutable-when-written (history-only append for audit/consent/attestation),
-    events.update snapshots prior state into version history, and every mutation is
-    authorised by the permission model and recorded in the audit log. The business-logic
+    Pryv's processing model is deterministic + attributable: the audit log is append-only by
+    convention of its write path (no hash chain, see `proposals/audit-log-chaining.md`), an
+    access keeps every previous version, events.update snapshots the prior state of an event
+    into version history only with `versioning.forceKeepHistory: true` (the default keeps no
+    event history; see `context/event-history.md`), and every mutation is authorised by the
+    permission model and recorded in the audit log. Concurrent writes do not silently drop
+    data: since open-pryv.io 2.0.0-rc.38 (merge `461f3c4c`) an update, a trash (a
+    shared-secret event excepted) or an attachment deletion is applied onto the event as
+    stored at write time (atomically on the built-in PostgreSQL and SQLite stores), so a
+    top-level field written meanwhile and not changed by the request is kept, server-written
+    processing status included `[ESR1]`, `[ESR4]`, `[ESR5]`, `[ESR6A]`. The business-logic
     processing your application performs on top is your control responsibility.
   HDS: facilitated (effort saved: medium) (mode: primitive)
     The platform's processing model is deterministic and attributable: writes are authorised
@@ -1544,10 +1783,22 @@ HDS's own position on SOC 2:
   meet its objectives.
   Anchor: https://compliance.datasafe.dev/soc2.html#req-pi1-5
   PRYV PLATFORM: facilitated (mode: storage)
-    Storage integrity: event version history preserves prior states, the audit log can carry
-    a per-event integrity checksum, and backup-restore provides a recoverable copy. Together
-    these give an accuracy + completeness signal for stored data. Tamper-evidence on the
-    audit log itself (hash chaining) is a future primitive, see the CC7.4 chain proposal.
+    Storage integrity: event version history preserves prior states on a deployment with
+    `versioning.forceKeepHistory: true` (off by default), the audit log carries the
+    integrity hash of each event as created or updated (integrity is on by default), and
+    backup-restore provides a recoverable copy. Together these give an accuracy +
+    completeness signal for stored data. Tamper-evidence on the audit log itself (hash
+    chaining) is a future primitive, see the CC7.4 chain proposal. The recoverable copy is
+    complete for high-frequency series only from open-pryv.io 2.0.0-rc.34 (earlier operator
+    backups held no series data); the backup and restore round trip is tested (`[BKSR]`,
+    `[BKEV]`). Incremental backups are complete from 2.0.0-rc.51: before it an incremental
+    run overwrote the full backup it continued and missed changes made while the previous
+    run was in progress; since then each run is kept next to the full backup and the restore
+    replays the whole chain `[BKC1]`, `[BKC2]`, `[BKC3]`. Since 2.0.0-rc.86 each run's
+    manifest lists every file with its size and hash, and a restore refuses a run with a
+    file added, removed, changed or cut short, so the recoverable copy is checked for
+    completeness and accuracy before it is used; `--inspect --verify-files` runs the same
+    check without restoring `[BKSM1]`, `[BKSM2]`, `[BKIS3]`.
   HDS: facilitated (effort saved: medium) (mode: storage)
     Storage integrity on the HDS-operated platform rests on event version history (prior
     states preserved), the per-user audit log (every change attributed), and operational
@@ -1735,18 +1986,31 @@ HDS's own position on SOC 2:
   PRYV PLATFORM: facilitated (mode: storage)
     Retention metadata (period, basis, scheduled disposal date) can ride on event / access
     clientData so each record carries its own retention contract. Pryv ships no automatic
-    TTL / expiry primitive, enforcement of the retention schedule is an operator job today
-    (a scheduled sweep calling events/streams delete). The retention policy itself is yours;
-    treat the absence of auto-expiry as an operator responsibility when you attest P4.2.
-    Detail: This is **voluntarily missing + operator-owned** by design, the same
-    classification as GDPR Art.5(1)(e) storage limitation. Pryv stays
-    retention-policy-neutral: no TTL / auto-delete / scheduler primitive ships, so automatic
-    disposal is the operator's external scheduled job composing existing primitives
-    (`events.get toTime=<cutoff>` + two-stage `events.delete` + `streams.delete` +
-    `auth.delete`, with the audit log as the inactivity oracle). `clientData.retention` is
-    advisory metadata, not an enforcement hook; every retention deletion is itself
-    audit-logged. Full rationale + the recommended operator retention-job pattern in
-    `context/data-retention-operator-owned.md`.
+    TTL / expiry primitive for records: enforcement of their retention schedule is an
+    operator job (a scheduled sweep calling events/streams delete); whole accounts are
+    covered by account auto-deletion since 2.0.0-rc.66, see detail. The retention policy
+    itself is yours; treat the absence of auto-expiry as an operator responsibility when you
+    attest P4.2.
+    Detail: For records inside an account this is **voluntarily missing + operator-owned**
+    by design, the same classification as GDPR Art.5(1)(e) storage limitation. Pryv stays
+    retention-policy-neutral: no TTL / auto-delete / scheduler primitive ships for events
+    and streams, so their automatic disposal is the operator's external scheduled job
+    composing existing primitives (`events.get toTime=<cutoff>` + two-stage `events.delete`
+    + `streams.delete` + `auth.delete`, with the audit log as the inactivity oracle).
+    `clientData.retention` is advisory metadata, not an enforcement hook; every retention
+    deletion is itself audit-logged. Full rationale + the recommended operator retention-job
+    pattern in `context/data-retention-operator-owned.md`. Account auto-deletion, since
+    open-pryv.io 2.0.0-rc.66 (`8521c8d5`). For whole accounts, retention is a platform
+    setting: your inactivity preset (`account.autoDeletion.inactivity.defaultDays`, default
+    none) deletes plain accounts with an email address after that many days without use
+    (`[ACST14]`), with reminder mails (`[ACXP3]`), a 7-day minimum notice (`[ACXP8]`) and a
+    clock that starts the day the preset first applies (`[ACXP2]`); holders may schedule
+    their own deletion, `allowUserOptOut: false` keeps them from opting out of your preset
+    (`[ACST8]`) and `userOverride: false` from choosing another date or period (`[ACST9]`).
+    `dryRun: true` lets you measure a preset before arming it (`[ADSW13]`). Retention of
+    records inside an account (events, streams) stays your scheduled job, which is why the
+    row stays facilitated. When you attest P4.2, the preset's period is part of your stated
+    retention policy.
   HDS: facilitated (effort saved: low) (mode: storage)
     Retention metadata (period, basis, scheduled disposal date) can ride on each record so
     it carries its own retention contract, but the platform ships no automatic expiry
@@ -1779,6 +2043,10 @@ HDS's own position on SOC 2:
     event/stream deletion for per-record. Backup reach is engine-dependent (SQLite per-user
     file unlink vs PostgreSQL row + pg_dump rotation), choose the engine that matches your
     disposal commitment, same as GDPR Art.17.
+    Detail: Account auto-deletion (open-pryv.io 2.0.0-rc.66, `8521c8d5`, see P4.2 and
+    CC6.5): scheduled whole-account disposal, by the holder or by your inactivity preset,
+    through the same erasure path, guards included (`[ADSW8]`), an interrupted erasure
+    completed later (`[ADSW19]`).
   HDS: facilitated (effort saved: medium) (mode: storage)
     Disposal uses the platform's per-user erasure path (whole-account deletion, plus event-
     and stream-level deletion) from the live store, which HDS operates. Backup reach is
@@ -1809,14 +2077,17 @@ HDS's own position on SOC 2:
   Anchor: https://compliance.datasafe.dev/soc2.html#req-p5-1
   PRYV PLATFORM: implemented
     Subject access is subject-runnable: the data subject holds their own credentials, so
-    events.get / streams.get return their data directly, and the pryv-account-backup CLI
-    produces a complete portable export, account, profiles, app profiles, streams, accesses
-    (incl. revoked / expired + opt-in per-access version history), events (chunked +
-    incremental), audit log, HF series data points, webhooks, and attachments, with a
-    per-file sha256 integrity manifest, with no operator dependency for routine requests.
-    The browser-based webapp flavour covers the read-side text resources only; route
-    subjects who need attachments / HF series / webhooks to the CLI. See
-    context/account-backup-coverage.md.
+    events.get / streams.get return their data directly (since open-pryv.io 2.0.0-rc.84
+    their accesses.get also reports how much each access was used, as approximate lifetime
+    call counts that only the owner receives `[AUG1]`, `[AUG3]`, and since rc.86
+    audit.getSummary counts their audited calls over a period `[ASM1]`, `[ASM4]`; see
+    gdpr.Art.15), and the pryv-account-backup CLI produces a complete portable export,
+    account, profiles, app profiles, streams, accesses (incl. revoked / expired + opt-in
+    per-access version history), events (chunked + incremental), audit log, HF series data
+    points, webhooks, and attachments, with a per-file sha256 integrity manifest, with no
+    operator dependency for routine requests. The browser-based webapp flavour covers the
+    read-side text resources only; route subjects who need attachments / HF series /
+    webhooks to the CLI. See context/account-backup-coverage.md.
   HDS: implemented (effort saved: high)
     Subject access is user-centric and subject-runnable on the HDS-operated platform: the
     data subject holds their own credentials, so reads return their data directly, and an
@@ -1847,11 +2118,12 @@ HDS's own position on SOC 2:
   to meet its objectives related to privacy.
   Anchor: https://compliance.datasafe.dev/soc2.html#req-p5-2
   PRYV PLATFORM: implemented
-    Correction is events.update (which snapshots the prior value into version history,
-    preserving the amendment trail) and account.update for profile fields; the audit log
-    records who amended what, when. Propagation to third parties who hold a shared/CMC
-    access can use webhooks to signal the change. Judging the correctness of a correction
-    request is your process.
+    Correction is events.update and account.update for profile fields; the audit log records
+    who amended which event, when (not the prior value). events.update keeps the prior value
+    in version history, preserving the amendment trail, only on a deployment with
+    `versioning.forceKeepHistory: true` (off by default; see `context/event-history.md`).
+    Propagation to third parties who hold a shared/CMC access can use webhooks to signal the
+    change. Judging the correctness of a correction request is your process.
   HDS: implemented (effort saved: medium)
     Correction is a first-class operation on the HDS-operated platform: an update snapshots
     the prior value into version history (preserving the amendment trail) and the audit log
@@ -1883,7 +2155,14 @@ HDS's own position on SOC 2:
     Third-party disclosure happens by issuing a scoped shared / CMC access, the disclosure
     is exactly the permissions granted, nothing more, and the access's clientData records
     the purpose + consent basis. There is no out-of-band data-dump path; disclosure is
-    always a tracked, revocable grant. Deciding the lawful purpose is yours.
+    always a tracked, revocable grant. Deciding the lawful purpose is yours. A grant is a
+    set of streams, and what a stream carries can grow with a Pryv release. Since
+    open-pryv.io 2.0.0-rc.44, a grant that reads the account email stream (`:system:email`,
+    shown as "Read Email") can also request, by type, a read-only, server-derived
+    `verification/email` event: whether ownership of the primary address was proved, how,
+    and when. Apps granted it earlier can request it without new consent; other addresses of
+    the account are never disclosed. If your consent text should say so, rename the field's
+    `name` in `custom.systemStreams`.
   HDS: facilitated (effort saved: medium) (mode: primitive)
     Third-party disclosure on the HDS-operated platform happens by issuing a scoped,
     revocable shared access — the disclosure is exactly the permissions granted, nothing
@@ -1916,9 +2195,20 @@ HDS's own position on SOC 2:
     complete, attributable record of who accessed what, when. Since open-pryv.io `07b6d3b6`
     the *authorization* of a disclosure is recorded too: OAuth2 `oauth.*` audit events
     capture the consent grant, the code exchange and every token issuance / refresh /
-    revocation that underlie a delegated-app disclosure. The audit-event-stream can surface
-    the same record into the subject's own streams. This is the technical disclosure
-    register; how long you retain it is your policy.
+    revocation that underlie a delegated-app disclosure. Since open-pryv.io 2.0.0-rc.73 a
+    resource server that exchanges a user's token for its own is recorded in the subject's
+    trail as `oauth.token.exchanged`, naming the resource server and the app whose token it
+    received `[OTX03]`, `[OTXE10]`; an introspection (which resource server asked about
+    whose token) is in syslog (`oauth.token.introspected`, rc.69) `[OXI06]`. The
+    audit-event-stream can surface the same record into the subject's own streams. This is
+    the technical disclosure register; how long you retain it is your policy. Since
+    open-pryv.io 2.0.0-rc.84 the account owner also gets, per access and per deletion
+    record, approximate lifetime call counts by method (`usage` on `accesses.get`, never
+    returned to an app or shared caller) `[AUG1]`, `[AUG3]`, `[AUG4]`: a summary of how much
+    each recipient used its grant, not a substitute for the per-call record, which stays the
+    audit log. Since rc.86 `audit.getSummary` gives the owner the same audit log counted per
+    hour, day or week for chosen accesses `[ASM2]`, `[ASM3]`: when each recipient used its
+    grant, still a summary of the record.
   HDS: implemented (effort saved: high)
     Every disclosure is a read against a shared access, and the per-user audit log records
     each invocation with the access identity that made it — a complete, attributable record
@@ -2084,7 +2374,13 @@ HDS's own position on SOC 2:
     read which data, when) plus the accesses list (who holds a grant). The
     audit-event-stream can expose this to the subject directly. Packaging it into a
     subject-facing report on request is your workflow; the underlying record is complete and
-    attributable.
+    attributable. The reference account app (app-web-user-account 0.34.0) gives the subject
+    a self-service view of it: an Audit trail tab, linkable and filtered by app, access,
+    date or kind of call, each row naming the access that made it (a revoked one included),
+    and per-access lifetime call counts read from open-pryv.io 2.0.0-rc.84 or later (app
+    tests `[ACTV]`, `[TRLP]`). Its next release adds charts of that activity over a chosen
+    period, counted by the core (`audit.getSummary`, open-pryv.io 2.0.0-rc.86; older cores
+    fall back to counting the audit rows in the app).
   HDS: implemented (effort saved: medium)
     The accounting-of-disclosures answer is computable from the audit log (which accesses
     read which data, when) plus the list of granted accesses (who holds a grant) on the
@@ -2112,9 +2408,10 @@ HDS's own position on SOC 2:
   PRYV PLATFORM: facilitated (mode: primitive)
     Structural data quality is enforced at ingest by event-type schema validation (HTTP 400
     on malformed input); subjects keep their data up-to-date via events.update /
-    account.update (with version history). "Relevant", collecting no more than the purpose
-    needs, is bounded by the permission scope you grant. Judging semantic accuracy of a
-    specific value is your application's responsibility.
+    account.update (prior event values kept only with `versioning.forceKeepHistory: true`,
+    off by default). "Relevant", collecting no more than the purpose needs, is bounded by
+    the permission scope you grant. Judging semantic accuracy of a specific value is your
+    application's responsibility.
   HDS: facilitated (effort saved: medium) (mode: primitive)
     Structural data quality is enforced at ingest by event-type schema validation (malformed
     input rejected), subjects keep their data current via updates with version history, and

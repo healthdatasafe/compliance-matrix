@@ -32,7 +32,7 @@ being built cannot be described publicly, write instead to
 HDS's own position on HIPAA-Breach:
   - vault: HDS is not-applicable. Every vault. The individual holds the account and decides who may see the data, so HDS holds it for them and never on a covered entity's behalf, whoever put it there and wherever it physically sits. A business associate is defined by acting on a covered entity's behalf, so HDS is not one here and HIPAA does not reach it.
   External assurance: self-assessed. No independent review. The incident and breach procedure has been rehearsed, not tested by a real reportable breach.
-  Evidence: 12 of 13 requirements answered from approved HDS documentation (12 cite internal evidence), as of 2026-11-04.
+  Evidence: 3 of 13 requirements answered from approved HDS documentation (12 cite internal evidence), as of 2026-11-19.
   HIPAA does not reach HDS in the vault, but the question this rule turns on is one the
   platform can answer: who was affected and what did they hold. The breach-scope primitive
   is deployed to every core with the access index backfilled, so the blast radius of a
@@ -59,9 +59,10 @@ HDS's own position on HIPAA-Breach:
   PRYV PLATFORM: facilitated (mode: infrastructure)
     Subpart D applies only to "unsecured" PHI, PHI that has not been rendered unusable
     through encryption or destruction per HHS guidance (NIST SP 800-111 / SP 800-88). Pryv's
-    posture (TLS in transit by default, operator-side encryption-at-rest, per-user backup
-    files transportable as encrypted bundles) lets you put PHI inside the safe-harbor where
-    you choose to, narrowing what §400 actually reaches in your deployment.
+    posture (TLS in transit in the core or at your proxy, as you configure it; operator-side
+    encryption-at-rest; per-user backup files that `bin/backup.js` can encrypt itself) lets
+    you put PHI inside the safe-harbor where you choose to, narrowing what §400 actually
+    reaches in your deployment.
   HDS: facilitated (effort saved: low) (mode: infrastructure)
     Subpart D only reaches PHI that is "unsecured" — PHI not rendered unusable per HHS
     guidance. HDS narrows that surface on both halves of the data path: TLS is enforced in
@@ -76,7 +77,6 @@ HDS's own position on HIPAA-Breach:
     transit, at-rest and in-use posture described under 164.402(2), where media exposures of
     at-rest content fall inside the safe harbor and live-system compromises do not.
     Evidence: internal:hipaa/risk/at-rest-encryption, internal:hipaa/evidence/at-rest-encryption-verification, internal:hipaa/procedures/breach-notification
-    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: always; basis: integration; nature: orientation (not a duty)
     Determine which of your data flows on HDS fall inside the unsecured-PHI scope and
@@ -102,16 +102,17 @@ HDS's own position on HIPAA-Breach:
     Subpart E" a queryable property (was the access within its granted scope?) rather than
     an after-the-fact narrative.
     Detail: §402(2) safe-harbor, "unsecured" excludes PHI made unusable through encryption
-    guidance. Pryv default: TLS 1.3 in transit (always); operator-side at-rest encryption
-    (when configured). AES-256-GCM is the at-rest cipher for the Pryv-managed secrets
-    (platform DB), aligning with the NIST SP 800-111 AES guidance, though for ePHI content
-    at rest, the operator-side encryption (LUKS / PG TDE / dm-crypt) is what governs the
-    §402(2) status. §402(1) risk-assessment factors → Pryv data sources: - Nature + extent
-    of PHI involved → audit row → API method + key request fields → infer streams + event
-    types touched. - Unauthorized person → audit row → accessId → access holder. - Whether
-    PHI was actually acquired or merely accessed → audit row → method (read vs. download
-    attachments etc.). - Extent to which risk was mitigated → access version chain (was
-    access revoked? when?), audit on revocation timestamp.
+    guidance. In transit: TLS once configured, in the core (`http.ssl.*` / `letsEncrypt.*`)
+    or at your proxy (the core serves plain HTTP without that configuration); at rest:
+    operator-side encryption (when configured). AES-256-GCM is the at-rest cipher for the
+    Pryv-managed secrets (platform DB), aligning with the NIST SP 800-111 AES guidance,
+    though for ePHI content at rest, the operator-side encryption (LUKS / PG TDE / dm-crypt)
+    is what governs the §402(2) status. §402(1) risk-assessment factors → Pryv data sources:
+    - Nature + extent of PHI involved → audit row → API method + key request fields → infer
+    streams + event types touched. - Unauthorized person → audit row → accessId → access
+    holder. - Whether PHI was actually acquired or merely accessed → audit row → method
+    (read vs. download attachments etc.). - Extent to which risk was mitigated → access
+    version chain (was access revoked? when?), audit on revocation timestamp.
   HDS: facilitated (effort saved: medium) (mode: evidence)
     HDS supplies the technical substrate that lets an implementer apply the §164.402
     definitions to a concrete incident: the per-user audit log shows what was accessed, and
@@ -189,10 +190,12 @@ HDS's own position on HIPAA-Breach:
   PRYV PLATFORM: facilitated (mode: infrastructure)
     The safe-harbor narrows what triggers Subpart D notification: PHI that's actually
     secured per HHS guidance is outside §164.402's "unsecured PHI" definition and a leak of
-    it doesn't compel notification. Pryv's default posture (TLS 1.3 in transit via built-in
-    ACME, AES-256-GCM for platform secrets at rest) puts the in-transit half firmly inside
-    the safe-harbor; the at-rest half for ePHI content itself depends on the operator's
-    chosen at-rest encryption (operator-side LUKS / PG TDE / dm-crypt).
+    it doesn't compel notification. With TLS configured (in the core via `http.ssl.*` and
+    the built-in ACME integration, or at your proxy), plus AES-256-GCM for platform secrets
+    at rest, the in-transit half sits inside the safe-harbor; without that configuration the
+    core serves plain HTTP, so make sure no hop carries it. The at-rest half for ePHI
+    content itself depends on the operator's chosen at-rest encryption (operator-side LUKS /
+    PG TDE / dm-crypt).
     Detail: Practical guidance: pair `letsEncrypt.enabled: true` with operator- side
     full-disk encryption on every node + encrypted backup archives to maximize §402(2)
     safe-harbor reach. NIST SP 800-111-equivalent at-rest encryption applies whether the PHI
@@ -266,7 +269,6 @@ HDS's own position on HIPAA-Breach:
     Notification Rule, which sets its own delivery requirements. This matrix has no scope
     for that rule yet.
     Evidence: internal:hipaa/procedures/breach-notification
-    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: always; basis: entity
     Notify each affected individual within the 60-day window and retain proof of the
@@ -301,7 +303,6 @@ HDS's own position on HIPAA-Breach:
     within the window — and recording when discovery occurred — remains the implementer's
     responsibility.
     Evidence: internal:hipaa/procedures/breach-notification
-    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: always; basis: entity
     Track the discovery date and complete notification within 60 days, documenting the
@@ -338,7 +339,6 @@ HDS's own position on HIPAA-Breach:
     and the contact procedures are not data HDS holds; they are composed by the covered
     entity. HDS therefore facilitates the evidence-derivable element and documents the rest.
     Evidence: internal:hipaa/procedures/breach-notification
-    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: always; basis: entity
     Author each notice with all required content elements; use HDS audit output to populate
@@ -397,7 +397,6 @@ HDS's own position on HIPAA-Breach:
     Identifying and notifying prominent media outlets is entirely the covered entity's
     process.
     Evidence: internal:hipaa/procedures/breach-notification
-    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: always; basis: entity
     Where the threshold is met, notify prominent media in the affected jurisdiction and
@@ -425,7 +424,6 @@ HDS's own position on HIPAA-Breach:
     cases the factual inputs can be drawn from HDS evidence, while the act of submitting and
     tracking the report sits with the covered entity.
     Evidence: internal:hipaa/procedures/breach-notification
-    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: always; basis: entity
     File the required HHS notification on the applicable schedule and keep the submission
@@ -461,7 +459,6 @@ HDS's own position on HIPAA-Breach:
     itself a business associate to a covered entity and stores protected health information
     on HDS uses the same evidence for its own upstream notification chain.
     Evidence: internal:hipaa/procedures/breach-notification
-    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: always; basis: integration
     On receipt of an HDS breach notice, run your own §164.404/406/408 notification
@@ -493,7 +490,6 @@ HDS's own position on HIPAA-Breach:
     notifications accordingly. HDS retention keeps the underlying evidence intact for the
     duration so notification can proceed once the delay lapses.
     Evidence: internal:hipaa/procedures/breach-notification
-    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: always; basis: entity
     Document any law-enforcement delay request and the resumption of notification once the
@@ -530,7 +526,6 @@ HDS's own position on HIPAA-Breach:
     decision not to notify — are the implementer's to maintain. HDS also retains its own
     breach-procedure execution records as evidence of its §164.410 performance.
     Evidence: internal:hipaa/registers/breach-log, internal:hipaa/procedures/breach-notification
-    Evidence backing: every internal document cited above has completed approval.
   IMPLEMENTER [covered-entity] coverage: documented
     applies_when: always; basis: entity
     Maintain the documentation that demonstrates notification or a justified no-breach

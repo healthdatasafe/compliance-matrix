@@ -298,7 +298,7 @@ audit chain tied to the consent state, structural accuracy via
 schema-validated writes. lawfulness, fairness and transparency remain the
 controller's. storage limitation (automated retention) is a known gap —
 hds exposes no ttl/scheduler primitive.
-" data-planned="0">
+" data-planned="1">
   <h3><code>Art.5</code> Principles relating to processing of personal data <span class="draft">draft</span></h3>
   <p class="text">Lawfulness, fairness, transparency; purpose limitation; data minimisation;
 accuracy; storage limitation; integrity and confidentiality;
@@ -306,11 +306,14 @@ accountability.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b implemented">implemented</span> </div>
+      <div class="lh">Pryv platform <span class="b implemented">implemented</span> <span class="pl low" title="Account transfer to a beneficiary (release after the deletion one): §1(c) minimisation of the beneficiary's data (email required; name and date of birth optional, encrypted, erased with the transfer)">⏳ feature</span></div>
       <p>Several Art.5 principles are technically enforced for you by Pryv
 rather than left to policy: purpose limitation (per-stream
 permissions), accountability (audit chain to the consent state),
-accuracy (event versioning). Lawfulness, fairness and transparency
+accuracy (schema validation at ingest; the prior value of a
+corrected event is kept when you turn on event history with
+`versioning.forceKeepHistory: true`, off by default). Lawfulness,
+fairness and transparency
 stay on your shoulders; Pryv stores the notice/consent text you
 present but doesn't generate it for you.
 </p>
@@ -355,14 +358,14 @@ record the chosen basis on the access clientdata so it travels with the
 technical grant and into the audit trail. determining which art.6 basis
 applies, and assessing any purpose pivot under art.6(4), is the
 controller's responsibility.
-" data-planned="0">
+" data-planned="1">
   <h3><code>Art.6</code> Lawfulness of processing <span class="draft">draft</span></h3>
   <p class="text">Processing is lawful only if at least one of six bases applies; further
 processing for a new purpose needs a compatibility test or a fresh basis.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> <span class="pl low" title="Account transfer to a beneficiary (implemented, not released): the platform stores a third party's email, and optionally name and date of birth, on the holder's instruction; the operator needs a basis for that processing">⏳ feature</span></div>
       <p>You decide which Art.6 basis
 you're relying on for each processing activity. Pryv doesn't
 impose or check the basis. You can record your chosen basis in
@@ -426,8 +429,12 @@ the request must be intelligible and the consent withdrawable.
 durable consent record, versioned permissions + clientData
 together prove what was authorised, with what text, at what time.
 Withdrawal is a single API call. For cross-account sharing, the
-`consent/*` events carry the negotiation state transitions. Both
-records are immutable per their primitive's semantics.
+`consent/*` events carry the negotiation state transitions. The
+access keeps every previous version; an event keeps its previous
+versions only on a deployment with
+`versioning.forceKeepHistory: true` (off by default), and the
+server-written parts of the accept event (who approved, the
+withdrawal) cannot be changed by any client.
 </p>
     </div>
     <div class="layer hds">
@@ -543,14 +550,22 @@ consent.
   <div class="layers">
     <div class="layer pryv">
       <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
-      <p>Pryv neither knows nor validates a subject's age, age +
+      <p>Pryv still neither knows nor validates a subject's age, age +
 parental-authority verification happens at your app's
-registration / consent UX. The platform is age-blind by
+registration / consent UX, and the platform is age-blind by
 design (verified: default `custom.systemStreams.account`
 ships only `email`; no `birthDate` / `dateOfBirth` /
-`minor` field in the catalogue). Once verified, the
-artefacts you keep travel alongside the access via the
-`clientData` convention family (see
+`minor` field in the catalogue). What Pryv now DOES give you
+is a technical control for the &quot;parental holder of
+responsibility&quot; case itself: **account delegation**. A
+parent or guardian holds an owner-equivalent delegate token
+over the child's account, every action is audited per
+delegate on the child's account, and the child reclaims sole
+control at the age of majority through a genuine login (which
+is what lets them detach the guardian). Age is still verified
+by you; delegation is the control mechanism, not the age
+check. The consent artefacts you keep travel alongside the
+access via the `clientData` convention family (see
 `context/client-data-conventions.md`).
 </p>
     </div>
@@ -647,9 +662,10 @@ and respond to data-subject requests within one month.
   <div class="layers">
     <div class="layer pryv">
       <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
-      <p>Pryv preserves whatever
-notice / consent text you presented to the subject, immutably,
-versioned, retrievable later. The response operations
+      <p>Pryv keeps the
+notice / consent text you presented to the subject, retrievable
+later: versioned on every change when it lives on the access,
+and on an event only with `versioning.forceKeepHistory: true`. The response operations
 (Art.15-22) execute in sub-second; the 1-month rule is your
 process target, not a software limit.
 </p>
@@ -692,14 +708,14 @@ service info (controller identity, dpo contact, terms) returned to every
 client app, and per-access clientdata (purposes, basis, recipients,
 retention, rights notice). hds preserves them immutably; the controller
 authors the content and surfaces it at collection time.
-" data-planned="0">
+" data-planned="1">
   <h3><code>Art.13</code> Information to be provided where data are collected from the data subject <span class="draft">draft</span></h3>
   <p class="text">Controller identity, purposes, legal basis, recipients, retention and
 rights must be provided at the time of collection.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> <span class="pl low" title="Account transfer (implemented, not released): the holder is told, at entry and in the confirmation, when and how the operator may read a beneficiary's name and date of birth">⏳ feature</span></div>
       <p>The information items split across two operator-controlled
 surfaces:
 
@@ -715,9 +731,11 @@ surfaces:
   `context/client-data-conventions.md`,
   `lawful_basis`, `purpose`, `transfer_basis`, `retention`,
   `consent`, `consent_event_id`, etc. (or a
-  `consent/request-cmc` event when using CMC). Pryv preserves
-  them immutably with version chain (`?includeHistory=true`);
-  your app surfaces them at the right moment.
+  `consent/request-cmc` event when using CMC). Pryv keeps them
+  with their version chain (`?includeHistory=true`): every
+  version on an access, and on an event only with
+  `versioning.forceKeepHistory: true`; your app surfaces them
+  at the right moment.
 </p>
     </div>
     <div class="layer hds">
@@ -757,14 +775,14 @@ disclosure artefact (incl. the source under art.14(2)(f)) be recorded
 alongside the data, the same way as for direct collection, and the audit
 log proves when disclosure happened against the one-month/first-contact
 deadlines.
-" data-planned="0">
+" data-planned="1">
   <h3><code>Art.14</code> Information to be provided where data have not been obtained from the data subject <span class="draft">draft</span></h3>
   <p class="text">The same disclosures as Art.13 must be provided within a reasonable period
 when data are obtained indirectly.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> </div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> <span class="pl low" title="Account transfer to a beneficiary (implemented, not released): the beneficiary is informed when named (atSetup) or at the claim (atTrigger, resting on an Art.14(5)(b) analysis that is not yet confirmed)">⏳ feature</span></div>
       <p>When you ingest data into
 Pryv from third parties (not directly from the subject), you
 still owe the same disclosures as Art.13. Pryv lets you record
@@ -879,9 +897,12 @@ tool to identify what needs rectifying before raising a request.
   <div class="layers">
     <div class="layer pryv">
       <div class="lh">Pryv platform <span class="b implemented">implemented</span> </div>
-      <p>`events.update` rectifies an event; event versioning preserves the
-prior (inaccurate) value for traceability, addressing the
-Art.5(1)(d) accuracy principle without losing the audit trail.
+      <p>`events.update` rectifies an event, and the audit log records who
+rectified which event and when. The prior (inaccurate) value is
+kept for traceability only if your deployment sets
+`versioning.forceKeepHistory: true`; by default the update
+overwrites it. Set it if you must be able to show what was
+corrected.
 </p>
     </div>
     <div class="layer hds">
@@ -1728,12 +1749,12 @@ CIA, restoration and regular testing.
 </p>
   <div class="layers">
     <div class="layer pryv">
-      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> <a class="pl low" href="https://github.com/orgs/pryv/projects/5?pane=issue&amp;itemId=180707914&amp;issue=pryv%7Copen-pryv.io%7C34" title="End-to-end encryption shifts encryption from Configurable infrastructure to a Pryv-managed primitive">⏳ feature</a><a class="pl low" href="https://github.com/orgs/pryv/projects/5?pane=issue&amp;itemId=219705795&amp;issue=pryv%7Copen-pryv.io%7C118" title="Read-only effective-configuration endpoint strengthens the evidence narrative around operator-visible safeguards">⏳ feature</a></div>
+      <div class="lh">Pryv platform <span class="b facilitated">facilitated</span> <a class="pl low" href="https://github.com/orgs/pryv/projects/5?pane=issue&amp;itemId=180707914&amp;issue=pryv%7Copen-pryv.io%7C34" title="End-to-end encryption shifts encryption from Configurable infrastructure to a Pryv-managed primitive">⏳ feature</a><a class="pl low" href="https://github.com/orgs/pryv/projects/5?pane=issue&amp;itemId=219705795&amp;issue=pryv%7Copen-pryv.io%7C118" title="Read-only effective-configuration endpoint strengthens the evidence narrative around operator-visible safeguards">⏳ feature</a><span class="pl low" title="Account transfer to a beneficiary (implemented, not released): a beneficiary's name and date of birth encrypted at rest, unreadable before the transfer starts">⏳ feature</span></div>
       <p>Multi-aspect article,
 Pryv implements several aspects for you (access control,
-encryption-in-transit, restoration) and provides configurable
-controls for others (encryption-at-rest, pseudonymisation, data
-residency). Organizational measures (regular testing, incident
+restoration) and provides configurable controls for others
+(encryption-in-transit, encryption-at-rest, pseudonymisation,
+data residency). Organizational measures (regular testing, incident
 response procedures) stay in your court.
 </p>
     </div>
