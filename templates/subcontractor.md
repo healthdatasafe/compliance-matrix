@@ -6,7 +6,7 @@ signer: business-associate
 counterparty: subcontractor
 frameworks: [hipaa]
 covers:
-  - hipaa-security.164.314(a)(2)(ii)(B)
+  - hipaa-security.164.314(a)(2)(i)(B)
   - hipaa-security.164.314(a)(1)
 status: draft
 version: "0.1.0"
