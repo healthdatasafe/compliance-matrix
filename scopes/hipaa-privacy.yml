@@ -18,8 +18,8 @@ hds_posture:
   evidence_backing:
     rows_total: 35
     rows_evidenced: 33
-    rows_approved: 33
-    as_of: "2026-11-04"
+    rows_approved: 30
+    as_of: "2026-11-19"
   roles:
     - arrangement: vault
       role: not-applicable
@@ -746,7 +746,6 @@ requirements:
         HDS names a responsible official and a contact point as a matter of
         its own programme. The covered entity's privacy-official designation
         is a programme element outside HDS's scope.
-      evidence_approved: true
       evidence:
         internal_docs:
           - hipaa/policies/privacy-program-governance
@@ -977,7 +976,6 @@ requirements:
         capability pattern. The access carries its business-associate role and
         contract reference so disclosures are attributable to the BAA, while the
         contract itself is signed between the parties.
-      evidence_approved: true
       evidence:
         internal_docs:
           - hipaa/registers/baa-register
@@ -1692,7 +1690,6 @@ requirements:
         its own behalf, and flows the obligations down to its own
         subcontractors. The access tags and audit log support enforcement and
         evidence of the §164.504(e) terms.
-      evidence_approved: true
       evidence:
         internal_docs:
           - hipaa/registers/baa-register
