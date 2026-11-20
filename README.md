@@ -141,4 +141,4 @@ Maintained by Health Data Safe.
 
 ## License
 
-[PolyForm Shield 1.0.0](LICENSE): you may use, copy and adapt this material, including in paid work with or for Health Data Safe, but not to provide a product that competes with Health Data Safe. See [NOTICE](NOTICE) for the parts under other terms.
+[PolyForm Shield 1.0.0](LICENSE): you may use, copy and adapt this material for any purpose except to provide a product that competes with Health Data Safe. Implementers, integrators and consultants are explicitly allowed: see the additional permission in [NOTICE](NOTICE).

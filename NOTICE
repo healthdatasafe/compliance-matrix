@@ -4,6 +4,16 @@ The code and content of this repository are licensed under the PolyForm Shield L
 exceptions below. Health Data Safe published this repository under the BSD 3-Clause License until 2026-11-20; copies
 obtained before that date remain available under it.
 
+Additional permission: who counts as a competitor
+
+In applying the Noncompete of the PolyForm Shield License, Health Data Safe treats as competing only a service, run
+by anyone other than Health Data Safe (a company, a non-profit or a public body), that offers people or organisations
+the hosting and sharing of personal health data as a substitute for the Health Data Safe platform. The following are
+not competing, whoever the client is:
+- applications, bridges and integrations that run on or connect to Health Data Safe;
+- advisory, audit, integration, implementation and compliance services.
+For any other use you are unsure about, ask Health Data Safe: contact@healthdatasafe.org.
+
 NOTE on vendored Pryv content
 
 `vendor/pryv/` is a snapshot of https://github.com/pryv/compliance-matrix
@@ -23,7 +33,9 @@ included in this repository.
 NOTE on agreement templates
 
 Templates under `templates/` are provided as engineering/operational guidance,
-NOT legal advice. Review with qualified counsel before use.
+NOT legal advice. Review with qualified counsel before use. Agreements you draw up
+from them (filled in, adapted or signed) need not carry the PolyForm Shield terms
+or the Required Notice, and belong to their parties.
 
 NOTE on name and logos
 
