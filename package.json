@@ -38,6 +38,6 @@
     "type": "git",
     "url": "git+https://github.com/healthdatasafe/compliance-matrix.git"
   },
-  "license": "BSD-3-Clause",
+  "license": "PolyForm-Shield-1.0.0",
   "author": "Health Data Safe (https://www.healthdatasafe.org)"
 }

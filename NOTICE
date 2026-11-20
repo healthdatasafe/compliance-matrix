@@ -1,7 +1,8 @@
 compliance-matrix: notices
 
-The code and content of this repository are licensed under the BSD 3-Clause License (see LICENSE),
-with the exceptions below.
+The code and content of this repository are licensed under the PolyForm Shield License 1.0.0 (see LICENSE), with the
+exceptions below. Health Data Safe published this repository under the BSD 3-Clause License until 2026-11-20; copies
+obtained before that date remain available under it.
 
 NOTE on vendored Pryv content
 
@@ -23,3 +24,7 @@ NOTE on agreement templates
 
 Templates under `templates/` are provided as engineering/operational guidance,
 NOT legal advice. Review with qualified counsel before use.
+
+NOTE on name and logos
+
+The Health Data Safe and HDS names and logos are not licensed. All rights reserved.
