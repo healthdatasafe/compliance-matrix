@@ -37,14 +37,6 @@ if [ "$GH_BRANCH" != "gh-pages" ]; then
   exit 1
 fi
 
-# Reset the worktree to remote gh-pages HEAD so the deploy works from a checkout
-# left behind by deploys from other workspaces (mirrors doctor-dashboard's deploy).
-# Without it the push is rejected as non-fast-forward (B-2026-11-04, 25 deploys behind).
-echo "Resetting $WORKTREE to origin/gh-pages..."
-git -C "$WORKTREE" fetch origin gh-pages
-git -C "$WORKTREE" reset --hard origin/gh-pages
-git -C "$WORKTREE" clean -fdx -e .git
-
 # Fetch + ff-only merge FETCH_HEAD (not `pull --ff-only origin main`, which can
 # spuriously fail "Cannot fast-forward to multiple branches" even when current).
 git fetch origin main
@@ -94,6 +86,15 @@ if [ ! -f "$LINK_GUARD" ]; then
   exit 1
 fi
 node "$LINK_GUARD" .
+
+# Reset the worktree to remote gh-pages HEAD so the deploy works from a checkout
+# left behind by deploys from other workspaces (mirrors doctor-dashboard's deploy).
+# Without it the push is rejected as non-fast-forward (B-2026-11-04, 25 deploys behind).
+# Done after the checks above, so a refused deploy leaves $WORKTREE untouched.
+echo "Resetting $WORKTREE to origin/gh-pages..."
+git -C "$WORKTREE" fetch origin gh-pages
+git -C "$WORKTREE" reset --hard origin/gh-pages
+git -C "$WORKTREE" clean -fdx -e .git
 
 
 echo "Validating + building..."
