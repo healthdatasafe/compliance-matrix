@@ -159,5 +159,8 @@ fi
 git -C "$WORKTREE" commit -m "deploy $COMMIT_SHORT ($COMMIT_FULL)"
 git -C "$WORKTREE" push origin gh-pages
 
+# A push is not a deploy: wait until the site serves it (B-2026-11-06-12).
+"$scriptsFolder/verify-pages.sh" healthdatasafe/compliance-matrix compliance.datasafe.dev "$(git -C "$WORKTREE" rev-parse HEAD)" "$COMMIT_FULL"
+
 echo "Deployed $COMMIT_SHORT to gh-pages."
 echo "Live at: https://compliance.datasafe.dev"
