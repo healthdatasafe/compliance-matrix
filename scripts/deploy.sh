@@ -106,21 +106,23 @@ echo "Validating + building..."
 # lands here, at the one point where both repos are on the operator's machine.
 # Without it the most prominent number on the site could drift, or be inflated,
 # with every automated gate still green.
-if node scripts/evidence-status.js > /tmp/cm-evidence-status.txt 2>&1; then
-  if grep -q '(was ' /tmp/cm-evidence-status.txt; then
+EVIDENCE_STATUS="$(mktemp "${TMPDIR:-/tmp}/cm-evidence-status.XXXXXX")"
+trap 'rm -f "$EVIDENCE_STATUS"' EXIT
+if node scripts/evidence-status.js > "$EVIDENCE_STATUS" 2>&1; then
+  if grep -q '(was ' "$EVIDENCE_STATUS"; then
     echo "ERROR: hds_posture.evidence_backing is out of date - the standing page would publish wrong figures."
-    grep '(was ' /tmp/cm-evidence-status.txt
+    grep '(was ' "$EVIDENCE_STATUS"
     echo "Refresh, review the diff, and commit:  npm run evidence:status -- --write"
     exit 1
   fi
   echo "[OK]   evidence_backing matches compliance-internal."
-elif grep -q '\[SKIP\]' /tmp/cm-evidence-status.txt; then
+elif grep -q '\[SKIP\]' "$EVIDENCE_STATUS"; then
   echo "ERROR: compliance-internal is not checked out, so the standing page's"
   echo "       approved-documentation figures cannot be verified before publishing."
   echo "       Check it out beside this repo, or set INTERNAL_REPO, then re-run."
   exit 1
 else
-  cat /tmp/cm-evidence-status.txt
+  cat "$EVIDENCE_STATUS"
   echo "ERROR: evidence-status check failed."
   exit 1
 fi
